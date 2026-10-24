@@ -1,4 +1,37 @@
 (() => {
+  const baseDraw = draw;
+  draw = function(canvas,data,compact=false,currentPrice=null){
+    baseDraw(canvas,data,compact,currentPrice);
+    if(currentPrice==null) return;
+    const ctx=canvas.getContext('2d'), W=canvas.width, H=canvas.height;
+    const d=[...(data||[])];
+    if(!d.length) return;
+    d.push({date:'最新',close:currentPrice});
+    const ys=d.map(x=>Number(x.close)).filter(Number.isFinite);
+    if(!ys.length) return;
+    const min=Math.min(...ys), max=Math.max(...ys), span=max-min||1;
+    const lo=min-span*.08, hi=max+span*.08;
+    const p={l:compact?4:46,r:compact?4:12,t:8,b:compact?4:22};
+    const x=W-p.r;
+    const y=p.t+(H-p.t-p.b)*(1-(currentPrice-lo)/(hi-lo));
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x,y,compact?4:5,0,Math.PI*2);
+    ctx.fillStyle='#ffd166';
+    ctx.fill();
+    ctx.lineWidth=2;
+    ctx.strokeStyle='#071321';
+    ctx.stroke();
+    if(!compact){
+      ctx.font='12px sans-serif';
+      ctx.fillStyle='#ffd166';
+      ctx.textAlign='right';
+      ctx.fillText(`最新 ${F(currentPrice)}`,x-8,Math.max(16,y-8));
+      ctx.textAlign='left';
+    }
+    ctx.restore();
+  };
+
   const originalRender = render;
   async function silentRender(allowNetwork=false){
     if(!allowNetwork) return originalRender(false);
@@ -44,6 +77,7 @@
         $('dChange').className='v '+cls(ch);
         $('dRange').textContent=`${F(q.high??row.HighestPrice)} / ${F(q.low??row.LowestPrice)}`;
         $('dVolume').textContent=F(q.volume??row.TradeVolume,0);
+        if(h.length) draw($('bigChart'),h,false,q.price);
       }
     }
   }

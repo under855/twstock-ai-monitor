@@ -1,0 +1,13 @@
+{
+  "name":"台股 AI 監控台",
+  "short_name":"台股監控台",
+  "id":"./",
+  "start_url":"./?source=pwa",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#060d18",
+  "theme_color":"#07111f",
+  "lang":"zh-Hant-TW",
+  "description":"台股搜尋、最近交易日行情、盤中更新、分析評分、新聞與近月除權息",
+  "icons":[{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

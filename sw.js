@@ -1,4 +1,4 @@
-const CACHE='tw-ai-monitor-v052';
+const CACHE='tw-ai-monitor-v053';
 const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./fix.js'];
 
 self.addEventListener('install',e=>e.waitUntil(
@@ -12,19 +12,16 @@ self.addEventListener('activate',e=>e.waitUntil(
 ));
 
 function injectFix(html){
-  if(html.includes('fix.js?v=052')) return html;
-  return html.replace('</body>','<script src="./fix.js?v=052"></script></body>');
+  if(html.includes('fix.js?v=053')) return html;
+  return html.replace('</body>','<script src="./fix.js?v=053"></script></body>');
 }
 
 self.addEventListener('fetch',e=>{
   if(e.request.method!=='GET') return;
   const u=new URL(e.request.url);
-
-  // 外部行情／新聞／API 不攔截、不快取。
   if(u.origin!==self.location.origin) return;
 
   const isPage=e.request.mode==='navigate' || u.pathname.endsWith('/index.html') || u.pathname.endsWith('/twstock-ai-monitor/');
-
   if(isPage){
     e.respondWith(
       fetch(e.request,{cache:'no-store'})

@@ -1,6 +1,42 @@
 (() => {
   const originalRender = render;
   const originalDraw = draw;
+  const originalHistory = history;
+
+  async function yahooHistory3m(symbol){
+    const url=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=3mo&includePrePost=false&events=div%2Csplits`;
+    const j=await jsonPublic(url,6000);
+    const r=j?.chart?.result?.[0];
+    if(!r) return [];
+    const ts=r.timestamp||[],q=r.indicators?.quote?.[0]||{};
+    const out=[];
+    for(let i=0;i<ts.length;i++){
+      const close=N(q.close?.[i]);
+      if(close==null) continue;
+      const d=new Date(ts[i]*1000);
+      const date=`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+      out.push({date,open:N(q.open?.[i]),high:N(q.high?.[i]),low:N(q.low?.[i]),close,volume:N(q.volume?.[i])});
+    }
+    return out;
+  }
+
+  history = async function(code){
+    if(historyCache[code]?.length) return historyCache[code];
+    const u=universeMap.get(String(code));
+    let out=[];
+    if(u?.market==='TPEx'){
+      try{out=await yahooHistory3m(`${code}.TWO`)}catch{}
+      if(!out.length){try{out=await originalHistory(code)}catch{}}
+    }else{
+      try{out=await originalHistory(code)}catch{}
+      if(!out.length){
+        try{out=await yahooHistory3m(`${code}.TW`)}catch{}
+      }
+    }
+    out=[...new Map((out||[]).map(x=>[x.date,x])).values()].sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+    historyCache[code]=out;
+    return out;
+  };
 
   function sameDay(a,b){
     if(!a||!b) return false;

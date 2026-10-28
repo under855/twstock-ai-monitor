@@ -30,9 +30,12 @@ jobs:
           grep -q "data/dividends.json" sw.js
           grep -q "./data/dividends.json?ts=" dividend-enhance.js
           grep -q "啟動與 15 秒更新由 index 統一排程" fix.js
+          grep -q "immediatePrefetch:false" hotfix-v065.js
+          grep -q "officialRefreshOnOpen:false" hotfix-v066.js
           grep -q "liveParams.get('browserqa')!=='1'" index.html
           if grep -q 'setInterval(refresh,15000)' index.html; then echo 'old full refresh interval remains'; exit 1; fi
           if grep -q 'startupTimer=setInterval' fix.js; then echo 'old startup polling remains'; exit 1; fi
+          if grep -q 'render(true).catch(()=>{});' hotfix-v067.js; then echo 'v067 immediate live update remains'; exit 1; fi
           python - <<'PY'
           import json
           m=json.load(open('data/latest.json',encoding='utf-8'))
@@ -108,7 +111,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html sw.js dividend-enhance.js fix.js
+          git add index.html sw.js dividend-enhance.js fix.js hotfix-v065.js hotfix-v066.js hotfix-v067.js
           if git diff --cached --quiet; then
             echo "No app change"
           else

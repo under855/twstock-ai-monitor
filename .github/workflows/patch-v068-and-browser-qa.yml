@@ -1,0 +1,85 @@
+name: Patch v068 and browser QA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-v068-and-browser-qa.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-test-commit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index to use verified same-origin latest data directly
+        run: |
+          python - <<'PY'
+          import json, pathlib, re
+          p=pathlib.Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          j=json.loads(pathlib.Path('data/latest.json').read_text(encoding='utf-8'))
+          td=j['tradeDate']
+          sy=j['symbols']
+          s=s.replace('<title>台股 AI 監控台 v0.5.0 Web</title>','<title>台股 AI 監控台 v0.6.8 Web</title>')
+          s=re.sub(r"const APP_VERSION='[^']+';", "const APP_VERSION='0.6.8';", s)
+          if "'./data/latest.json'," not in s:
+              s=s.replace("const MARKET_DATA_URLS=[\n", "const MARKET_DATA_URLS=[\n './data/latest.json',\n")
+          s=re.sub(r"const UNIVERSE_CACHE_KEY='[^']+';", "const UNIVERSE_CACHE_KEY='twMarketUniverseV068';", s)
+          s=re.sub(r"const SNAPSHOT_DATE='[^']+';", f"const SNAPSHOT_DATE='{td.replace('-','/')}';", s)
+          defaults=['0050','3711','3293','2610','2002','00878','00919']
+          pe={'3711':47.32,'3293':18.18,'2610':9.43}
+          lines=['const SNAPSHOT={']
+          for c in defaults:
+              x=sy[c]
+              extra=f",pe:{pe[c]}" if c in pe else ''
+              lines.append(f" '{c}':{{name:{json.dumps(x['name'],ensure_ascii=False)},price:{json.dumps(x['close'])},change:{json.dumps(x['change'])},open:{json.dumps(x['open'])},high:{json.dumps(x['high'])},low:{json.dumps(x['low'])},volume:{json.dumps(x['volume'])}{extra}}},")
+          lines[-1]=lines[-1].rstrip(',')
+          lines.append('};')
+          block='\n'.join(lines)
+          s=re.sub(r"const SNAPSHOT=\{.*?\n\};\nconst TAIEX_SNAPSHOT=", block+"\nconst TAIEX_SNAPSHOT=", s, flags=re.S)
+          s=re.sub(r"const TAIEX_SNAPSHOT=\{[^;]+\};", "const TAIEX_SNAPSHOT={date:SNAPSHOT_DATE,price:null,change:null};", s)
+          s=s.replace("'<div class=\"sparkFallback\">10/22<br>收盤</div>'", "`<div class=\"sparkFallback\">${SNAPSHOT_DATE.slice(5)}<br>收盤</div>`")
+          scripts='''\n<script src="./fix.js?v=067"></script>\n<script src="./dividend-enhance.js?v=067"></script>\n<script src="./hotfix-v065.js?v=067"></script>\n<script src="./hotfix-v066.js?v=067"></script>\n<script src="./hotfix-v067.js?v=067"></script>\n'''
+          if '<script src="./hotfix-v067.js?v=067"></script>' not in s:
+              s=s.replace('</body>',scripts+'</body>')
+          p.write_text(s,encoding='utf-8')
+          print('patched tradeDate',td)
+          PY
+      - name: Static assertions
+        run: |
+          grep -q "const APP_VERSION='0.6.8'" index.html
+          grep -q "'./data/latest.json'" index.html
+          grep -q "twMarketUniverseV068" index.html
+          grep -q "const SNAPSHOT_DATE='2026/10/28'" index.html
+          grep -q 'hotfix-v067.js?v=067' index.html
+          if grep -q '>10/22<br>收盤<' index.html; then echo 'hardcoded 10/22 fallback remains'; exit 1; fi
+      - name: Browser self-test in real headless Chrome
+        run: |
+          python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/http.log 2>&1 &
+          SERVER=$!
+          trap 'kill $SERVER || true' EXIT
+          sleep 2
+          CHROME=$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser)
+          echo "Chrome: $CHROME"
+          test -n "$CHROME"
+          "$CHROME" --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --virtual-time-budget=12000 --dump-dom http://127.0.0.1:8000/ > /tmp/dom.html
+          grep -q '官方行情 2026/10/28' /tmp/dom.html
+          grep -q '2026/10/28' /tmp/dom.html
+          if grep -q '10/22<br>收盤' /tmp/dom.html; then echo 'browser still shows hardcoded 10/22'; exit 1; fi
+          echo 'BROWSER_QA_PASS'
+      - name: Commit only after browser QA passes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No index change"
+          else
+            git commit -m "Promote v068 latest data path after browser QA"
+            git push
+          fi

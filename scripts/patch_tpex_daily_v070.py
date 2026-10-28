@@ -4,10 +4,6 @@ import pathlib,re
 p=pathlib.Path('scripts/update_dividends.py')
 s=p.read_text(encoding='utf-8')
 
-# Add Referer to official requests if not already present.
-s=s.replace("UA={'User-Agent':'Mozilla/5.0 twstock-ai-monitor/0.7 (+https://github.com/under855/twstock-ai-monitor)','Accept':'application/json,text/plain,*/*'}",
-            "UA={'User-Agent':'Mozilla/5.0 twstock-ai-monitor/0.7 (+https://github.com/under855/twstock-ai-monitor)','Accept':'application/json,text/plain,*/*','Referer':'https://www.tpex.org.tw/'}")
-
 new_tpex=r'''def tpex_daily(date):
     ds=date.strftime('%Y/%m/%d')
     q=urllib.parse.urlencode({'date':ds,'type':'EW','response':'json'})

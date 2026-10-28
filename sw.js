@@ -1,4 +1,4 @@
-const CACHE='tw-ai-monitor-v061';
+const CACHE='tw-ai-monitor-v062';
 const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./fix.js'];
 
 self.addEventListener('install',e=>e.waitUntil(
@@ -20,8 +20,8 @@ self.addEventListener('activate',e=>e.waitUntil((async()=>{
 })()));
 
 function injectFix(html){
-  if(html.includes('fix.js?v=061')) return html;
-  return html.replace('</body>','<script src="./fix.js?v=061"></script></body>');
+  if(html.includes('fix.js?v=062')) return html;
+  return html.replace('</body>','<script src="./fix.js?v=062"></script></body>');
 }
 
 self.addEventListener('fetch',e=>{

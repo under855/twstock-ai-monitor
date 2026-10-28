@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-import json, urllib.request, datetime, pathlib, sys
+import json, urllib.request, urllib.parse, datetime, pathlib, sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / 'data' / 'latest.json'
+DIV_OUT = ROOT / 'data' / 'dividends.json'
 UA = {'User-Agent':'Mozilla/5.0 twstock-ai-monitor/1.0','Accept':'application/json'}
 
 def get(url, timeout=30):
@@ -18,22 +19,49 @@ def n(v):
     except:return None
 
 def roc_to_iso(v):
-    s=str(v or '').strip().replace('.','/').replace('-','/')
+    s=str(v or '').strip().replace('年','/').replace('月','/').replace('日','').replace('.','/').replace('-','/')
     p=s.split('/')
     if len(p)==3:
         try:
             y=int(p[0]); y=y+1911 if y<1911 else y
             return f'{y:04d}-{int(p[1]):02d}-{int(p[2]):02d}'
         except: pass
+    digits=''.join(ch for ch in s if ch.isdigit())
+    try:
+        if len(digits)==7:
+            return f'{int(digits[:3])+1911:04d}-{int(digits[3:5]):02d}-{int(digits[5:7]):02d}'
+        if len(digits)==8:
+            return f'{int(digits[:4]):04d}-{int(digits[4:6]):02d}-{int(digits[6:8]):02d}'
+    except: pass
     return None
 
-def latest_trade_date():
+def fmtqik_rows():
     j=get('https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK?response=json')
     rows=j.get('data') or []
     if not rows: raise RuntimeError('TWSE FMTQIK empty')
+    return rows
+
+def latest_trade_date(rows=None):
+    rows=rows or fmtqik_rows()
     d=roc_to_iso(rows[-1][0])
     if not d: raise RuntimeError('Cannot parse trade date')
     return d
+
+def fetch_taiex(trade_date, rows=None):
+    rows=rows or fmtqik_rows()
+    matched=None
+    for r in rows:
+        if r and roc_to_iso(r[0])==trade_date:
+            matched=r
+    if matched is None:
+        matched=rows[-1]
+    if len(matched)<6: raise RuntimeError('FMTQIK row missing TAIEX columns')
+    return {
+        'date':roc_to_iso(matched[0]),
+        'close':n(matched[4]),
+        'change':n(matched[5]),
+        'source':'TWSE FMTQIK'
+    }
 
 def fetch_twse(trade_date):
     rows=get('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL')
@@ -81,22 +109,56 @@ def fetch_tpex(trade_date):
         except Exception as e:last=e
     raise last or RuntimeError('TPEx failed')
 
+def fetch_etf_dividends(end_date):
+    end=datetime.date.fromisoformat(end_date)
+    start=end-datetime.timedelta(days=370)
+    params=urllib.parse.urlencode({
+        'stkNo':'',
+        'startDate':start.strftime('%Y%m%d'),
+        'endDate':end.strftime('%Y%m%d'),
+        'response':'json'
+    })
+    j=get('https://www.twse.com.tw/rwd/zh/ETF/etfDiv?'+params, timeout=40)
+    rows=j.get('data') or []
+    out=[]
+    for r in rows:
+        if not isinstance(r,list) or len(r)<6: continue
+        code=str(r[0] or '').strip()
+        exd=roc_to_iso(r[2]); rec=roc_to_iso(r[3]); pay=roc_to_iso(r[4])
+        if not code or not exd: continue
+        out.append({
+            'code':code,'name':str(r[1] or '').strip(),'type':'ETF','market':'TWSE',
+            'exDate':exd,'recordDate':rec,'paymentDate':pay,'cashDividend':n(r[5]),
+            'stockDividendRatio':None,'source':'TWSE ETF 收益分配','eventType':'ex-dividend'
+        })
+    if not any(x['code']=='0050' for x in out):
+        raise RuntimeError('ETF dividend feed missing 0050')
+    return out
+
+def write_json(path,payload):
+    path.parent.mkdir(parents=True,exist_ok=True)
+    tmp=path.with_suffix('.tmp')
+    tmp.write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+    tmp.replace(path)
+
 def main():
-    trade_date=latest_trade_date()
+    market_rows=fmtqik_rows()
+    trade_date=latest_trade_date(market_rows)
+    taiex=fetch_taiex(trade_date,market_rows)
     twse=fetch_twse(trade_date)
     tpex=fetch_tpex(trade_date)
+    dividends=fetch_etf_dividends(trade_date)
     symbols={**twse,**tpex}
     now=datetime.datetime.now(datetime.timezone.utc).isoformat()
     payload={
-        'generatedAt':now,'tradeDate':trade_date,
+        'generatedAt':now,'tradeDate':trade_date,'taiex':taiex,
         'counts':{'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},
         'symbols':symbols
     }
-    OUT.parent.mkdir(parents=True,exist_ok=True)
-    tmp=OUT.with_suffix('.tmp')
-    tmp.write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
-    tmp.replace(OUT)
-    print(json.dumps({'ok':True,'tradeDate':trade_date,'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},ensure_ascii=False))
+    div_payload={'generatedAt':now,'throughDate':trade_date,'count':len(dividends),'items':dividends}
+    write_json(OUT,payload)
+    write_json(DIV_OUT,div_payload)
+    print(json.dumps({'ok':True,'tradeDate':trade_date,'taiex':taiex,'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols),'dividends':len(dividends),'0050':sum(1 for x in dividends if x['code']=='0050')},ensure_ascii=False))
 
 if __name__=='__main__':
     try: main()

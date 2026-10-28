@@ -29,6 +29,10 @@ jobs:
           grep -q "tw-ai-monitor-v069" sw.js
           grep -q "data/dividends.json" sw.js
           grep -q "./data/dividends.json?ts=" dividend-enhance.js
+          grep -q "啟動與 15 秒更新由 index 統一排程" fix.js
+          grep -q "liveParams.get('browserqa')!=='1'" index.html
+          if grep -q 'setInterval(refresh,15000)' index.html; then echo 'old full refresh interval remains'; exit 1; fi
+          if grep -q 'startupTimer=setInterval' fix.js; then echo 'old startup polling remains'; exit 1; fi
           python - <<'PY'
           import json
           m=json.load(open('data/latest.json',encoding='utf-8'))
@@ -64,7 +68,7 @@ jobs:
           d.execute_cdp_cmd('Network.enable',{})
           d.execute_cdp_cmd('Network.setBlockedURLs',{'urls':['https://*']})
           try:
-              try:d.get('http://127.0.0.1:8000/')
+              try:d.get('http://127.0.0.1:8000/?browserqa=1')
               except TimeoutException:
                   try:d.execute_script('window.stop();')
                   except Exception:pass
@@ -104,7 +108,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html sw.js dividend-enhance.js
+          git add index.html sw.js dividend-enhance.js fix.js
           if git diff --cached --quiet; then
             echo "No app change"
           else

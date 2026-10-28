@@ -61,6 +61,7 @@ jobs:
           import time
           from selenium import webdriver
           from selenium.common.exceptions import TimeoutException
+          from selenium.webdriver.common.by import By
           from selenium.webdriver.chrome.options import Options
 
           o=Options();o.page_load_strategy='eager'
@@ -75,31 +76,36 @@ jobs:
               except TimeoutException:
                   try:d.execute_script('window.stop();')
                   except Exception:pass
+              d.set_page_load_timeout(30)
+              d.set_script_timeout(30)
               deadline=time.time()+20
               taiex=''
               while time.time()<deadline:
                   try:
-                      taiex=d.execute_script("return document.getElementById('taiex')?.textContent||''")
+                      taiex=d.find_element(By.ID,'taiex').text
                       if taiex=='47,035.58':break
                   except Exception:pass
                   time.sleep(.25)
               assert taiex=='47,035.58',taiex
-              tc=d.execute_script("return document.getElementById('taiexChg')?.textContent||''")
+              tc=d.find_element(By.ID,'taiexChg').text
               assert '+939.35' in tc and '2026/10/28' in tc,tc
 
-              d.execute_script("show('0050',{news:false});")
+              rows=d.find_elements(By.CSS_SELECTOR,'#watch .row')
+              row0050=next((r for r in rows if r.find_element(By.CSS_SELECTOR,'.sym').text.strip()=='0050'),None)
+              assert row0050 is not None,'0050 row missing'
+              row0050.click()
               deadline=time.time()+20;text=''
               while time.time()<deadline:
                   try:
-                      text=d.execute_script("return document.getElementById('dividendEvents')?.innerText||''")
+                      text=d.find_element(By.ID,'dividendEvents').text
                       if '2026-07-21' in text and '2026-01-22' in text:break
                   except Exception:pass
                   time.sleep(.25)
               assert '2026-07-21' in text and '0.6' in text and '2026-08-10' in text,text
               assert '2026-01-22' in text and '1' in text and '2026-02-11' in text,text
-              count=d.execute_script("return document.querySelectorAll('#dividendEvents .event').length")
-              assert 1 <= count <= 3,f'event count={count}'
-              title=d.execute_script("return document.querySelector('#dividendEvents')?.closest('.card')?.querySelector('h3')?.textContent||''")
+              events=d.find_elements(By.CSS_SELECTOR,'#dividendEvents .event')
+              assert 1 <= len(events) <= 3,f'event count={len(events)}'
+              title=d.find_element(By.CSS_SELECTOR,'#dividendEvents').find_element(By.XPATH,'..').find_element(By.TAG_NAME,'h3').text
               assert '近一年' in title and '最近 3 次' in title,title
               print('BROWSER_QA_PASS')
               print('TAIEX='+taiex+' '+tc)

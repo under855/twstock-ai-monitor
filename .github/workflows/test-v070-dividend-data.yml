@@ -1,0 +1,48 @@
+name: Test v070 dividend fill data
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/update_dividends.py'
+      - '.github/workflows/test-v070-dividend-data.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build official dividend and fill dataset in working tree
+        run: python scripts/update_dividends.py
+      - name: Validate output quality
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open('data/dividends.json',encoding='utf-8'))
+          assert d['throughDate']=='2026-10-28', d['throughDate']
+          assert d['count']>500, d['count']
+          events=[x for x in d['items'] if x.get('exDate') and x.get('eventType') in ('ex-event','ex-dividend')]
+          assert len(events)>100, len(events)
+          past=[x for x in events if x['exDate']<=d['throughDate']]
+          unknown=[x for x in past if x.get('fillState')=='unknown']
+          assert len(unknown)/max(1,len(past))<=0.08,(len(unknown),len(past))
+          assert any(x.get('code')=='0050' and x.get('cashDividend')==0.6 for x in d['items'])
+          assert any(x.get('code')=='0050' and x.get('cashDividend')==1.0 for x in d['items'])
+          tw=[x for x in past if x.get('market')=='TWSE' and x.get('fillState') in ('filled','unfilled')]
+          otc=[x for x in past if x.get('market')=='TPEx' and x.get('fillState') in ('filled','unfilled')]
+          assert tw,'no usable TWSE fill status'
+          assert otc,'no usable TPEx fill status'
+          print('V070_DATA_QA_PASS')
+          print('count',d['count'],'events',len(events),'past',len(past),'unknown',len(unknown))
+          for code in ['0050','0056','2002','3293','3711','6592']:
+              rows=[x for x in d['items'] if x.get('code')==code and x.get('exDate')]
+              print(code, rows[-3:])
+          PY

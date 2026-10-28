@@ -1,4 +1,4 @@
-const CACHE='tw-ai-monitor-v063';
+const CACHE='tw-ai-monitor-v064';
 const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./fix.js','./dividend-enhance.js'];
 
 self.addEventListener('install',e=>e.waitUntil(
@@ -21,8 +21,8 @@ self.addEventListener('activate',e=>e.waitUntil((async()=>{
 
 function injectScripts(html){
   let out=html;
-  if(!out.includes('fix.js?v=063')) out=out.replace('</body>','<script src="./fix.js?v=063"></script></body>');
-  if(!out.includes('dividend-enhance.js?v=063')) out=out.replace('</body>','<script src="./dividend-enhance.js?v=063"></script></body>');
+  if(!out.includes('fix.js?v=064')) out=out.replace('</body>','<script src="./fix.js?v=064"></script></body>');
+  if(!out.includes('dividend-enhance.js?v=064')) out=out.replace('</body>','<script src="./dividend-enhance.js?v=064"></script></body>');
   return out;
 }
 

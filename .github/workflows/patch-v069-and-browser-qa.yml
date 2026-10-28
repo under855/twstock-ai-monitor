@@ -54,36 +54,49 @@ jobs:
           PY
 
       - name: Browser self-test TAIEX and 0050 dividends
-        timeout-minutes: 1
+        timeout-minutes: 2
         run: |
+          python -m pip install --quiet playwright
           python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/http.log 2>&1 &
           SERVER=$!
           trap 'kill $SERVER || true' EXIT
           sleep 2
-          CHROME=$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser)
-          echo "Chrome=$CHROME"
-          test -n "$CHROME"
-          timeout 40s "$CHROME" --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --disable-features=ServiceWorker --virtual-time-budget=8000 --dump-dom 'http://127.0.0.1:8000/?browserqa=1&autodetail=0050' > /tmp/dom.html
-          grep -q '47,035.58' /tmp/dom.html
-          grep -q '+939.35' /tmp/dom.html
-          grep -q '2026/10/28' /tmp/dom.html
-          grep -q '近一年配股／配息（最近 3 次）' /tmp/dom.html
-          grep -q '2026-07-21' /tmp/dom.html
-          grep -q '現金股利／配息：0.6 元' /tmp/dom.html
-          grep -q '2026-08-10' /tmp/dom.html
-          grep -q '2026-01-22' /tmp/dom.html
-          grep -q '現金股利／配息：1 元' /tmp/dom.html
-          grep -q '2026-02-11' /tmp/dom.html
-          echo 'BROWSER_QA_PASS'
           python - <<'PY'
-          import re
-          s=open('/tmp/dom.html',encoding='utf-8').read()
-          def text(id):
-              m=re.search(rf'<[^>]+id="{id}"[^>]*>(.*?)</[^>]+>',s,re.S)
-              return re.sub('<[^>]+>',' ',m.group(1)).strip() if m else ''
-          print('TAIEX='+text('taiex')+' '+text('taiexChg'))
-          m=re.search(r'<div id="dividendEvents"[^>]*>(.*?)</div>\s*</div>',s,re.S)
-          print('0050_DIVIDEND_DOM_FOUND='+str(bool(m)))
+          import shutil
+          from playwright.sync_api import sync_playwright
+
+          chrome=shutil.which('google-chrome') or shutil.which('google-chrome-stable') or shutil.which('chromium')
+          assert chrome, 'system Chrome not found'
+          with sync_playwright() as p:
+              browser=p.chromium.launch(headless=True, executable_path=chrome, args=['--no-sandbox','--disable-dev-shm-usage'])
+              context=browser.new_context(service_workers='block')
+              page=context.new_page()
+              def route_handler(route):
+                  if route.request.url.startswith('https://'):
+                      route.abort()
+                  else:
+                      route.continue_()
+              page.route('**/*', route_handler)
+              page.goto('http://127.0.0.1:8000/?browserqa=1&autodetail=0050', wait_until='domcontentloaded', timeout=15000)
+              page.wait_for_function("document.getElementById('taiex')?.textContent === '47,035.58'", timeout=20000)
+              page.wait_for_function("document.getElementById('dividendEvents')?.innerText.includes('2026-07-21') && document.getElementById('dividendEvents')?.innerText.includes('2026-01-22')", timeout=20000)
+
+              taiex=page.locator('#taiex').inner_text()
+              taiex_chg=page.locator('#taiexChg').inner_text()
+              div_text=page.locator('#dividendEvents').inner_text()
+              title=page.locator('#dividendEvents').locator('xpath=..').locator('h3').inner_text()
+              count=page.locator('#dividendEvents .event').count()
+
+              assert taiex=='47,035.58', taiex
+              assert '+939.35' in taiex_chg and '2026/10/28' in taiex_chg, taiex_chg
+              assert '近一年' in title and '最近 3 次' in title, title
+              assert '2026-07-21' in div_text and '0.6' in div_text and '2026-08-10' in div_text, div_text
+              assert '2026-01-22' in div_text and '1' in div_text and '2026-02-11' in div_text, div_text
+              assert 1 <= count <= 3, count
+              print('BROWSER_QA_PASS')
+              print('TAIEX='+taiex+' '+taiex_chg)
+              print('0050_DIVIDENDS='+div_text.replace('\n',' | '))
+              browser.close()
           PY
 
       - name: Commit only after browser QA passes

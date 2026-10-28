@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/update_dividends.py'
+      - 'scripts/parallelize_dividend_fetch.py'
       - '.github/workflows/test-v070-dividend-data.yml'
 
 permissions:
@@ -14,14 +15,16 @@ permissions:
 jobs:
   test-data:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Build official dividend and fill dataset in working tree
-        run: python scripts/update_dividends.py
+        run: |
+          python scripts/parallelize_dividend_fetch.py
+          python scripts/update_dividends.py
       - name: Validate output quality
         run: |
           python - <<'PY'
@@ -42,6 +45,7 @@ jobs:
           assert otc,'no usable TPEx fill status'
           print('V070_DATA_QA_PASS')
           print('count',d['count'],'events',len(events),'past',len(past),'unknown',len(unknown))
+          print('stats',d.get('stats'))
           for code in ['0050','0056','2002','3293','3711','6592']:
               rows=[x for x in d['items'] if x.get('code')==code and x.get('exDate')]
               print(code, rows[-3:])

@@ -1,4 +1,5 @@
 name: Promote v070 final candidate TPEx3
+# Final rerun after workflow files were preconfigured outside Actions.
 
 on:
   workflow_dispatch:
@@ -103,7 +104,7 @@ jobs:
           grep -q 'tw-ai-monitor-v070' sw.js
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html sw.js dividend-enhance.js scripts/update_latest.py scripts/update_dividends.py scripts/patch_http_redirect_v070.py scripts/patch_tpex_daily_v070.py scripts/parallelize_dividend_fetch.py .github/workflows/update-latest.yml data/dividends.json
+          git add index.html sw.js dividend-enhance.js scripts/update_latest.py scripts/update_dividends.py scripts/patch_http_redirect_v070.py scripts/patch_tpex_daily_v070.py scripts/parallelize_dividend_fetch.py data/dividends.json
           git diff --cached --check
           git commit -m "Promote v070 final candidate after full regression QA"
           git push

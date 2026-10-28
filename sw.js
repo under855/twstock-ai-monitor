@@ -1,4 +1,4 @@
-const CACHE='tw-ai-monitor-v071';
+const CACHE='tw-ai-monitor-v072';
 const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./fix.js','./dividend-enhance.js','./hotfix-v065.js','./hotfix-v066.js','./hotfix-v067.js','./hotfix-v069.js','./data/latest.json','./data/dividends.json'];
 
 self.addEventListener('install',e=>e.waitUntil(
@@ -21,6 +21,17 @@ self.addEventListener('activate',e=>e.waitUntil((async()=>{
 
 function injectScripts(html){
   let out=html;
+  if(!out.includes('pwa-standalone-layout-fix')){
+    out=out.replace('</head>',`<style id="pwa-standalone-layout-fix">
+@media (display-mode: standalone){
+  html{height:100%;min-height:100%;overflow-y:auto!important}
+  body{height:auto!important;min-height:-webkit-fill-available;min-height:100dvh!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch}
+  .app{min-height:100dvh!important;padding-bottom:calc(110px + env(safe-area-inset-bottom))!important}
+  .sheet{height:100dvh!important;min-height:100dvh!important}
+  .panel{max-height:calc(100dvh - env(safe-area-inset-top))!important;padding-bottom:calc(36px + env(safe-area-inset-bottom))!important;-webkit-overflow-scrolling:touch}
+}
+</style></head>`);
+  }
   if(!out.includes('fix.js?v=067')) out=out.replace('</body>','<script src="./fix.js?v=067"></script></body>');
   if(!out.includes('dividend-enhance.js?v=070')) out=out.replace('</body>','<script src="./dividend-enhance.js?v=070"></script></body>');
   if(!out.includes('hotfix-v065.js?v=067')) out=out.replace('</body>','<script src="./hotfix-v065.js?v=067"></script></body>');

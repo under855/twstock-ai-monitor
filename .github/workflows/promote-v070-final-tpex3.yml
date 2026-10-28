@@ -1,0 +1,108 @@
+name: Promote v070 final candidate TPEx3
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/promote-v070-final-tpex3.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  final-qa-and-promote:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build candidate
+        run: |
+          python scripts/patch_v070.py
+          python scripts/patch_tpex_daily_v070.py
+          python scripts/parallelize_dividend_fetch.py
+          python scripts/update_dividends.py
+
+      - name: Data integrity
+        run: |
+          node --check dividend-enhance.js
+          node --check fix.js
+          python -m py_compile scripts/update_latest.py scripts/update_dividends.py scripts/patch_v070.py scripts/patch_tpex_daily_v070.py scripts/parallelize_dividend_fetch.py
+          python - <<'PY'
+          import json
+          m=json.load(open('data/latest.json',encoding='utf-8'))
+          assert m['tradeDate']=='2026-10-28'
+          assert m['taiex']['close']==47035.58
+          assert m['taiex']['change']==939.35
+          d=json.load(open('data/dividends.json',encoding='utf-8'))
+          stats=d.get('stats') or {};tw=stats.get('TWSE') or {};otc=stats.get('TPEx') or {}
+          assert tw.get('tradingDates',0)>=230,tw
+          assert otc.get('tradingDates',0)>=230,otc
+          assert tw.get('fetchErrors',999)<=5,tw
+          assert otc.get('fetchErrors',999)<=5,otc
+          events=[x for x in d['items'] if x.get('exDate')]
+          past=[x for x in events if x['exDate']<=d['throughDate']]
+          unknown=[x for x in past if x.get('fillState')=='unknown']
+          assert len(unknown)/max(1,len(past))<=0.02,(len(unknown),len(past))
+          for code in ('0050','0056','2002','3293','3711','6592'):
+              rows=[x for x in events if x.get('code')==code]
+              assert rows,code
+              print(code,rows[-3:])
+          assert any(x.get('code')=='0050' and x.get('cashDividend')==0.6 for x in events)
+          assert any(x.get('code')=='0050' and x.get('cashDividend')==1.0 for x in events)
+          print('DATA_FINAL_PASS',stats)
+          PY
+
+      - name: Browser regression desktop and mobile
+        timeout-minutes: 5
+        run: |
+          python -m pip install --quiet playwright
+          python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/http.log 2>&1 &
+          SERVER=$!
+          trap 'kill $SERVER || true' EXIT
+          sleep 2
+          python - <<'PY'
+          import shutil
+          from playwright.sync_api import sync_playwright
+          chrome=shutil.which('google-chrome') or shutil.which('google-chrome-stable') or shutil.which('chromium')
+          assert chrome
+          def block(page): page.route('**/*',lambda r:r.abort() if r.request.url.startswith('https://') else r.continue_())
+          with sync_playwright() as p:
+              b=p.chromium.launch(headless=True,executable_path=chrome,args=['--no-sandbox','--disable-dev-shm-usage'])
+              c=b.new_context(viewport={'width':1280,'height':900},service_workers='block');q=c.new_page();block(q)
+              q.goto('http://127.0.0.1:8000/?browserqa=1&autodetail=0050',wait_until='domcontentloaded',timeout=15000)
+              q.wait_for_function("document.getElementById('taiex')?.textContent==='47,035.58'",timeout=20000)
+              q.wait_for_function("document.getElementById('dividendEvents')?.innerText.includes('2026-07-21')",timeout=20000)
+              txt=q.locator('#dividendEvents').inner_text();assert '資料不足' not in txt,txt
+              assert '0.6' in txt and '2026-08-10' in txt and '2026-02-11' in txt,txt
+              assert q.locator('#dividendEvents .event').count()<=3
+              q.locator('#closeBtn').click();q.locator('#code').fill('華航');q.locator('#searchBtn').click();q.wait_for_timeout(300)
+              assert '2610' in q.locator('#searchResults').inner_text()
+              same=q.evaluate("""async()=>{const r=document.querySelector('#watch .row');await Promise.resolve(render(true));return r===document.querySelector('#watch .row')}""");assert same
+              h=q.evaluate("""async()=>{const x=await history('3293');return Array.isArray(x)?x.length:0}""");assert h>=2,h
+              c.close()
+              mc=b.new_context(viewport={'width':390,'height':844},device_scale_factor=3,is_mobile=True,has_touch=True,service_workers='block');m=mc.new_page();block(m)
+              m.goto('http://127.0.0.1:8000/?browserqa=1&autodetail=0050',wait_until='domcontentloaded',timeout=15000)
+              m.wait_for_function("document.getElementById('dividendEvents')?.innerText.includes('2026-07-21')",timeout=20000)
+              assert not m.evaluate('document.documentElement.scrollWidth>document.documentElement.clientWidth+2')
+              assert '資料不足' not in m.locator('#dividendEvents').inner_text()
+              mc.close();b.close()
+              print('BROWSER_FINAL_PASS')
+          PY
+
+      - name: Promote
+        run: |
+          grep -q "const APP_VERSION='0.7.0'" index.html
+          grep -q 'dividend-enhance.js?v=070' index.html
+          grep -q 'tw-ai-monitor-v070' sw.js
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html sw.js dividend-enhance.js scripts/update_latest.py scripts/update_dividends.py scripts/patch_tpex_daily_v070.py scripts/parallelize_dividend_fetch.py .github/workflows/update-latest.yml .github/workflows/update-dividends.yml data/dividends.json
+          git diff --cached --check
+          git commit -m "Promote v070 final candidate after full regression QA"
+          git push

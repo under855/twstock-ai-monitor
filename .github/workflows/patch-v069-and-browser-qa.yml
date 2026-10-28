@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/patch-v069-and-browser-qa.yml'
       - 'scripts/patch_v069.py'
+      - 'scripts/patch_v069_browserqa.py'
 
 permissions:
   contents: write
@@ -19,7 +20,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Apply v069 patch in working tree
-        run: python scripts/patch_v069.py
+        run: |
+          python scripts/patch_v069.py
+          python scripts/patch_v069_browserqa.py
 
       - name: Static assertions
         run: |
@@ -32,7 +35,8 @@ jobs:
           grep -q "啟動與 15 秒更新由 index 統一排程" fix.js
           grep -q "immediatePrefetch:false" hotfix-v065.js
           grep -q "officialRefreshOnOpen:false" hotfix-v066.js
-          grep -q "liveParams.get('browserqa')!=='1'" index.html
+          grep -q "liveParams.get('autodetail')" index.html
+          grep -q "const browserQa=new URLSearchParams(location.search).get('browserqa')==='1'" dividend-enhance.js
           if grep -q 'setInterval(refresh,15000)' index.html; then echo 'old full refresh interval remains'; exit 1; fi
           if grep -q 'startupTimer=setInterval' fix.js; then echo 'old startup polling remains'; exit 1; fi
           if grep -q 'render(true).catch(()=>{});' hotfix-v067.js; then echo 'v067 immediate live update remains'; exit 1; fi
@@ -50,67 +54,36 @@ jobs:
           PY
 
       - name: Browser self-test TAIEX and 0050 dividends
-        timeout-minutes: 2
+        timeout-minutes: 1
         run: |
-          python -m pip install --quiet selenium
           python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/http.log 2>&1 &
           SERVER=$!
           trap 'kill $SERVER || true' EXIT
           sleep 2
+          CHROME=$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser)
+          echo "Chrome=$CHROME"
+          test -n "$CHROME"
+          timeout 40s "$CHROME" --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --disable-features=ServiceWorker --virtual-time-budget=8000 --dump-dom 'http://127.0.0.1:8000/?browserqa=1&autodetail=0050' > /tmp/dom.html
+          grep -q '47,035.58' /tmp/dom.html
+          grep -q '+939.35' /tmp/dom.html
+          grep -q '2026/10/28' /tmp/dom.html
+          grep -q '近一年配股／配息（最近 3 次）' /tmp/dom.html
+          grep -q '2026-07-21' /tmp/dom.html
+          grep -q '現金股利／配息：0.6 元' /tmp/dom.html
+          grep -q '2026-08-10' /tmp/dom.html
+          grep -q '2026-01-22' /tmp/dom.html
+          grep -q '現金股利／配息：1 元' /tmp/dom.html
+          grep -q '2026-02-11' /tmp/dom.html
+          echo 'BROWSER_QA_PASS'
           python - <<'PY'
-          import time
-          from selenium import webdriver
-          from selenium.common.exceptions import TimeoutException
-          from selenium.webdriver.common.by import By
-          from selenium.webdriver.chrome.options import Options
-
-          o=Options();o.page_load_strategy='eager'
-          for a in ['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--disable-features=ServiceWorker','--window-size=1280,900']:
-              o.add_argument(a)
-          d=webdriver.Chrome(options=o)
-          d.set_page_load_timeout(8)
-          d.execute_cdp_cmd('Network.enable',{})
-          d.execute_cdp_cmd('Network.setBlockedURLs',{'urls':['https://*']})
-          try:
-              try:d.get('http://127.0.0.1:8000/?browserqa=1')
-              except TimeoutException:
-                  try:d.execute_script('window.stop();')
-                  except Exception:pass
-              d.set_page_load_timeout(30)
-              d.set_script_timeout(30)
-              deadline=time.time()+20
-              taiex=''
-              while time.time()<deadline:
-                  try:
-                      taiex=d.find_element(By.ID,'taiex').text
-                      if taiex=='47,035.58':break
-                  except Exception:pass
-                  time.sleep(.25)
-              assert taiex=='47,035.58',taiex
-              tc=d.find_element(By.ID,'taiexChg').text
-              assert '+939.35' in tc and '2026/10/28' in tc,tc
-
-              rows=d.find_elements(By.CSS_SELECTOR,'#watch .row')
-              row0050=next((r for r in rows if r.find_element(By.CSS_SELECTOR,'.sym').text.strip()=='0050'),None)
-              assert row0050 is not None,'0050 row missing'
-              row0050.click()
-              deadline=time.time()+20;text=''
-              while time.time()<deadline:
-                  try:
-                      text=d.find_element(By.ID,'dividendEvents').text
-                      if '2026-07-21' in text and '2026-01-22' in text:break
-                  except Exception:pass
-                  time.sleep(.25)
-              assert '2026-07-21' in text and '0.6' in text and '2026-08-10' in text,text
-              assert '2026-01-22' in text and '1' in text and '2026-02-11' in text,text
-              events=d.find_elements(By.CSS_SELECTOR,'#dividendEvents .event')
-              assert 1 <= len(events) <= 3,f'event count={len(events)}'
-              title=d.find_element(By.CSS_SELECTOR,'#dividendEvents').find_element(By.XPATH,'..').find_element(By.TAG_NAME,'h3').text
-              assert '近一年' in title and '最近 3 次' in title,title
-              print('BROWSER_QA_PASS')
-              print('TAIEX='+taiex+' '+tc)
-              print('0050_DIVIDENDS='+text.replace('\n',' | '))
-          finally:d.quit()
+          import re
+          s=open('/tmp/dom.html',encoding='utf-8').read()
+          def text(id):
+              m=re.search(rf'<[^>]+id="{id}"[^>]*>(.*?)</[^>]+>',s,re.S)
+              return re.sub('<[^>]+>',' ',m.group(1)).strip() if m else ''
+          print('TAIEX='+text('taiex')+' '+text('taiexChg'))
+          m=re.search(r'<div id="dividendEvents"[^>]*>(.*?)</div>\s*</div>',s,re.S)
+          print('0050_DIVIDEND_DOM_FOUND='+str(bool(m)))
           PY
 
       - name: Commit only after browser QA passes

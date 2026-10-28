@@ -59,19 +59,48 @@ jobs:
           grep -q 'hotfix-v067.js?v=067' index.html
           if grep -q '>10/22<br>收盤<' index.html; then echo 'hardcoded 10/22 fallback remains'; exit 1; fi
       - name: Browser self-test in real headless Chrome
+        timeout-minutes: 2
         run: |
+          python -m pip install --quiet selenium
           python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/http.log 2>&1 &
           SERVER=$!
           trap 'kill $SERVER || true' EXIT
           sleep 2
-          CHROME=$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser)
-          echo "Chrome: $CHROME"
-          test -n "$CHROME"
-          "$CHROME" --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --virtual-time-budget=12000 --dump-dom http://127.0.0.1:8000/ > /tmp/dom.html
-          grep -q '官方行情 2026/10/28' /tmp/dom.html
-          grep -q '2026/10/28' /tmp/dom.html
-          if grep -q '10/22<br>收盤' /tmp/dom.html; then echo 'browser still shows hardcoded 10/22'; exit 1; fi
-          echo 'BROWSER_QA_PASS'
+          python - <<'PY'
+          import json, time
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+          from selenium.webdriver.support.ui import WebDriverWait
+
+          expected=json.load(open('data/latest.json',encoding='utf-8'))
+          trade=expected['tradeDate'].replace('-','/')
+          opts=Options()
+          opts.add_argument('--headless=new')
+          opts.add_argument('--no-sandbox')
+          opts.add_argument('--disable-gpu')
+          opts.add_argument('--disable-dev-shm-usage')
+          opts.add_argument('--window-size=1280,900')
+          driver=webdriver.Chrome(options=opts)
+          try:
+              driver.get('http://127.0.0.1:8000/')
+              WebDriverWait(driver,25).until(lambda d: f'官方行情 {trade}' in d.find_element(By.ID,'liveBadge').text)
+              WebDriverWait(driver,25).until(lambda d: len(d.find_elements(By.CSS_SELECTOR,'#watch .row')) >= 6)
+              watch=driver.find_element(By.ID,'watch').text
+              assert trade in watch, f'watchlist does not show {trade}: {watch[:1000]}'
+              assert '10/22' not in watch, f'stale 10/22 remains in watchlist: {watch[:1000]}'
+              rows=driver.find_elements(By.CSS_SELECTOR,'#watch .row')
+              row0050=next((r for r in rows if '0050' in r.text),None)
+              assert row0050 is not None, '0050 row missing'
+              expected_price=str(expected['symbols']['0050']['close']).rstrip('0').rstrip('.')
+              assert expected_price in row0050.text, f'0050 expected {expected_price}, got {row0050.text}'
+              assert trade in row0050.text, f'0050 missing {trade}: {row0050.text}'
+              print('BROWSER_QA_PASS')
+              print('liveBadge=',driver.find_element(By.ID,'liveBadge').text)
+              print('0050=',row0050.text.replace('\n',' | '))
+          finally:
+              driver.quit()
+          PY
       - name: Commit only after browser QA passes
         run: |
           git config user.name "github-actions[bot]"

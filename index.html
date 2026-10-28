@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="台股監控台">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>台股 AI 監控台 v0.6.8 Web</title>
+<title>台股 AI 監控台 v0.6.9 Web</title>
 <style>
 :root{--bg:#060d18;--panel:#0d1929;--panel2:#11233a;--line:#213954;--text:#edf5ff;--muted:#93a9c2;--accent:#78adff;--up:#ff6b6b;--down:#63d49a;--warn:#ffd166;--neutral:#d2dceb;--shadow:0 12px 28px rgba(0,0,0,.22)}
 *{box-sizing:border-box}html{background:var(--bg)}body{margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;background:radial-gradient(circle at 50% -10%,#13325a 0,#07111f 35%,#050b13 72%);min-height:100vh}
@@ -72,7 +72,7 @@ button,input{font:inherit}.app{max-width:1200px;margin:auto;padding:max(14px,env
   </section>
 </div>
 <script>
-const APP_VERSION='0.6.8';
+const APP_VERSION='0.6.9';
 const IS_WEB = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 window.addEventListener('DOMContentLoaded',()=>{
   if(!IS_WEB){
@@ -216,7 +216,7 @@ async function show(code,opts={}){try{active=code;const row=rowForCode(code)||{C
 function closeSheet(){$('sheet').classList.remove('show');document.body.style.overflow='';active=null}
 function showSnapshotMarket(){const ch=TAIEX_SNAPSHOT.change;$('taiex').textContent=F(TAIEX_SNAPSHOT.price,2);$('taiexChg').textContent=`${ch>0?'+':''}${F(ch,2)}｜最近交易日 ${TAIEX_SNAPSHOT.date}`;$('taiexChg').className='s '+cls(ch);$('liveBadge').textContent=`休市／最近交易日 ${SNAPSHOT_DATE}`;$('liveBadge').className='liveBadge ok';$('marketStatus').textContent='休市';$('marketTime').textContent=`最近交易日 ${SNAPSHOT_DATE}`}
 async function refreshRemote(){const results=await Promise.allSettled([jsonPublic(API.daily,4500),jsonPublic(API.val,4500),jsonPublic(API.ex,4500),jsonPublic(API.otc,4500)]);const r0=results[0].status==='fulfilled'&&Array.isArray(results[0].value)?results[0].value:[],r1=results[1].status==='fulfilled'&&Array.isArray(results[1].value)?results[1].value:[],r2=results[2].status==='fulfilled'&&Array.isArray(results[2].value)?results[2].value:[],r3=normalizeTpexRows(results[3].status==='fulfilled'?results[3].value:[]);if(r0.length||r3.length){allRows=[...r0,...r3.filter(o=>!r0.some(t=>String(t.Code).trim()===o.Code))];for(const r of r0){if(r.Code&&r.Name)nameCache[String(r.Code).trim()]=String(r.Name).trim()}lastRemoteOk=new Date()}if(r1.length)allVals=r1;if(r2.length)allEx=r2;quoteCache={};await render(true);if(lastRemoteOk){$('liveBadge').textContent='資料已連線';$('liveBadge').className='liveBadge ok';$('marketStatus').textContent='正常';$('marketTime').textContent=`更新 ${lastRemoteOk.toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})}`}}
-async function boot(){allRows=seedRows();allVals=seedVals();showSnapshotMarket();await render(false);try{await loadFullUniverse()}catch{};await render(false);if(new URLSearchParams(location.search).get('qa')!=='1')refreshRemote().catch(()=>{})}
+async function boot(){allRows=seedRows();allVals=seedVals();showSnapshotMarket();await render(false);try{await loadFullUniverse()}catch{};await render(false)}
 async function refresh(){quoteCache={};await refreshRemote().catch(()=>{})}
 function normalizeSearchText(v){return String(v||'').trim().toLowerCase().replace(/股份有限公司|有限公司|公司/g,'').replace(/[\s　._-]/g,'')}
 function searchUniverse(term){
@@ -251,14 +251,15 @@ $('searchBtn').onclick=doSearch;$('code').onkeydown=e=>{if(e.key==='Enter')doSea
 $('addWatchBtn').onclick=async()=>{if(!active||watchlist().includes(active))return;saveWatch([active,...watchlist()]);$('addWatchBtn').textContent='已在監控';$('addWatchBtn').disabled=true;await render(false)};
 $('closeBtn').onclick=closeSheet;$('sheet').onclick=e=>{if(e.target===$('sheet'))closeSheet()};$('removeBtn').onclick=async()=>{if(!active)return;saveWatch(watchlist().filter(x=>x!==active));$('addWatchBtn').disabled=false;$('addWatchBtn').textContent='加入監控';await render(false)};$('yahooBtn').onclick=()=>active&&window.open(`https://tw.stock.yahoo.com/quote/${active}.TW`,'_blank');$('twseBtn').onclick=()=>active&&window.open(`https://www.twse.com.tw/IIH2/zh/company/stock.html?code=${active}`,'_blank');
 async function runQaIfRequested(){if(new URLSearchParams(location.search).get('qa')!=='1')return;await loadFullUniverse();const tests=[['華航','2610'],['2610','2610'],['台積電','2330'],['世界','5347'],['啟賦','7956'],['00878','00878']];const results=tests.map(([q,c])=>({q,c,ok:searchUniverse(q).some(x=>x.code===c)}));let flow=[];for(const c of ['2610','2330','5347','7956','00878']){try{await showSearchResult(c);const ok=$('sheet').classList.contains('show')&&$('dTitle').textContent.includes(c);flow.push({c,ok});closeSheet()}catch(e){flow.push({c,ok:false,error:String(e)})}}const scoreChecks=[];for(const c of ['2610','2330','5347','7956','00878']){const row=rowForCode(c),val=allVals.find(x=>String(x.Code).trim()===c)||{},q=universeQuote(c)||snapshotQuote(c),s=scoreStock(row,val,historyCache[c]||[],q);scoreChecks.push({c,close:q?.price??null,total:s.total,noFake50:s.total!==50||s.available>0})}const ok=results.every(x=>x.ok)&&flow.every(x=>x.ok)&&scoreChecks.every(x=>x.close!=null&&x.noFake50);document.body.dataset.qa=ok?'PASS':'FAIL';document.body.dataset.qaResults=JSON.stringify({search:results,flow,scoreChecks});const d=document.createElement('div');d.id='qaResult';d.style.cssText='position:fixed;bottom:4px;right:4px;z-index:9999;font:12px monospace;background:#000;color:#fff;padding:4px';d.textContent=(ok?'QA PASS ':'QA FAIL ')+flow.map(x=>x.c+':'+x.ok).join(',');document.body.appendChild(d)}
-function tick(){const d=new Date();$('clock').textContent=d.toLocaleString('zh-TW',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'})}tick();setInterval(tick,1000);boot().then(runQaIfRequested);if(new URLSearchParams(location.search).get('qa')!=='1')setInterval(refresh,15000);
+function tick(){const d=new Date();$('clock').textContent=d.toLocaleString('zh-TW',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'})}tick();setInterval(tick,1000);boot().then(runQaIfRequested);const liveParams=new URLSearchParams(location.search);if(liveParams.get('qa')!=='1'&&liveParams.get('browserqa')!=='1'){setTimeout(()=>Promise.resolve(render(true)).catch(()=>{}),1500);setInterval(()=>Promise.resolve(render(true)).catch(()=>{}),15000);}
 if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js?v='+APP_VERSION,{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{});
 </script>
 
 <script src="./fix.js?v=067"></script>
-<script src="./dividend-enhance.js?v=067"></script>
+<script src="./dividend-enhance.js?v=069"></script>
 <script src="./hotfix-v065.js?v=067"></script>
 <script src="./hotfix-v066.js?v=067"></script>
 <script src="./hotfix-v067.js?v=067"></script>
+<script src="./hotfix-v069.js?v=069"></script>
 </body>
 </html>

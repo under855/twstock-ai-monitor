@@ -177,6 +177,5 @@
   };
 
   const p=$('refreshPill');if(p)p.textContent='自動更新：15 秒（靜默整批）';
-  let startupDone=false;const start=async()=>{if(startupDone)return;const rows=$('watch')?.querySelectorAll('.row')?.length||0;if(!rows)return;startupDone=true;await silentRender(true).catch(()=>{});};
-  const startupTimer=setInterval(()=>{start().finally(()=>{if(startupDone)clearInterval(startupTimer)});},300);setTimeout(()=>clearInterval(startupTimer),12000);
+  // v069: 啟動與 15 秒更新由 index 統一排程，避免與同網域官方快照競爭。
 })();

@@ -4,6 +4,11 @@ import pathlib,re
 # Patch dividend renderer.
 p=pathlib.Path('dividend-enhance.js')
 s=p.read_text(encoding='utf-8')
+old_etf="function isEtfCode(code){return /^00\\d{3}[A-Z]?$/.test(String(code).toUpperCase());}"
+new_etf="function isEtfCode(code){return /^00\\d{2,4}[A-Z]?$/.test(String(code).toUpperCase());}"
+if old_etf not in s: raise SystemExit('ETF detector anchor missing')
+s=s.replace(old_etf,new_etf)
+
 new_load='''async function loadEtfRows(){
     if(etfCache.loaded&&etfCache.rows.length)return etfCache.rows;
     if(etfCache.loading)return etfCache.loading;

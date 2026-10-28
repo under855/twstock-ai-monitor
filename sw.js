@@ -1,5 +1,5 @@
-const CACHE='tw-ai-monitor-v062';
-const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./fix.js'];
+const CACHE='tw-ai-monitor-v063';
+const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./fix.js','./dividend-enhance.js'];
 
 self.addEventListener('install',e=>e.waitUntil(
   caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())
@@ -19,9 +19,11 @@ self.addEventListener('activate',e=>e.waitUntil((async()=>{
   }));
 })()));
 
-function injectFix(html){
-  if(html.includes('fix.js?v=062')) return html;
-  return html.replace('</body>','<script src="./fix.js?v=062"></script></body>');
+function injectScripts(html){
+  let out=html;
+  if(!out.includes('fix.js?v=063')) out=out.replace('</body>','<script src="./fix.js?v=063"></script></body>');
+  if(!out.includes('dividend-enhance.js?v=063')) out=out.replace('</body>','<script src="./dividend-enhance.js?v=063"></script></body>');
+  return out;
 }
 
 self.addEventListener('fetch',e=>{
@@ -35,14 +37,14 @@ self.addEventListener('fetch',e=>{
       fetch(e.request,{cache:'no-store'})
         .then(async r=>{
           if(!r.ok) throw new Error('HTTP '+r.status);
-          const html=injectFix(await r.text());
+          const html=injectScripts(await r.text());
           const out=new Response(html,{status:r.status,statusText:r.statusText,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
           caches.open(CACHE).then(c=>c.put('./index.html',out.clone())).catch(()=>{});
           return out;
         })
         .catch(()=>caches.match('./index.html').then(async r=>{
           if(!r) return new Response('離線且無快取頁面',{status:503});
-          const html=injectFix(await r.text());
+          const html=injectScripts(await r.text());
           return new Response(html,{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
         }))
     );

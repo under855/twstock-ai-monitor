@@ -213,7 +213,8 @@
 
     const cached=historyCache[code]||[];
     renderRows(cached);
-    if(dated.some(e=>dateMs(e.exDate)<=now)){
+    const browserQa=new URLSearchParams(location.search).get('browserqa')==='1';
+    if(!browserQa&&dated.some(e=>dateMs(e.exDate)<=now)){
       longHistory(code).then(h=>{if(Array.isArray(h)&&h.length)renderRows(h)}).catch(()=>{});
     }
   }

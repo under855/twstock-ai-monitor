@@ -78,16 +78,6 @@
     return previousScoreStock(row,val,h,quote);
   };
 
-  let ran=false;
-  const start=()=>{
-    if(ran)return;
-    ran=true;
-    refreshOfficialLatest().catch(()=>{
-      const badge=document.getElementById('liveBadge');
-      if(badge){badge.textContent='最新官方資料讀取失敗';badge.className='liveBadge warn';}
-    });
-  };
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
-
-  window.__TW_MONITOR_V066__={officialRefreshOnOpen:true,rejectStaleScore:true};
+  // v069: 開啟時不再重抓四組跨站官方 API；由本站 latest.json 提供最新盤後資料。
+  window.__TW_MONITOR_V066__={officialRefreshOnOpen:false,rejectStaleScore:true};
 })();

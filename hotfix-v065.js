@@ -75,22 +75,10 @@
     setTimeout(()=>clearInterval(t),10000);
   }
 
-  let started=false;
-  const startPrefetch=()=>{
-    if(started)return;
-    const rows=document.querySelectorAll('#watch .row');
-    if(!rows.length)return;
-    started=true;
-    const list=watchlist().map(String);
-    for(const code of list){ history(code).catch(()=>{}); }
-    render(true).catch(()=>{});
-  };
-  const startup=setInterval(()=>{startPrefetch();if(started)clearInterval(startup)},200);
-  setTimeout(()=>clearInterval(startup),10000);
-
+  // v069 統一由 index 排程行情與歷史補載，避免舊版啟動預抓造成競爭。
   window.__TW_MONITOR_V065__={
     historyFallback3293:fallback3293.length,
     dividendLimit:3,
-    immediatePrefetch:true
+    immediatePrefetch:false
   };
 })();

@@ -57,7 +57,6 @@
     const ms=document.getElementById('marketStatus');if(ms)ms.textContent='官方最新資料';
 
     await render(false);
-    render(true).catch(()=>{});
     return j;
   }
 

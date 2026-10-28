@@ -1,0 +1,139 @@
+name: Promote v070 final candidate fast
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/promote-v070-final-fast.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  final-qa-and-promote:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build v070 candidate from official sources
+        run: |
+          python scripts/patch_v070.py
+          python scripts/parallelize_dividend_fetch.py
+          python scripts/update_dividends.py
+
+      - name: Static and data integrity checks
+        run: |
+          grep -q "const APP_VERSION='0.7.0'" index.html
+          grep -q '台股 AI 監控台 v0.7.0 Web' index.html
+          grep -q 'dividend-enhance.js?v=070' index.html
+          grep -q "tw-ai-monitor-v070" sw.js
+          grep -q 'git add data/latest.json' .github/workflows/update-latest.yml
+          if grep -q 'git add data/latest.json data/dividends.json' .github/workflows/update-latest.yml; then echo '5-minute updater still overwrites dividends'; exit 1; fi
+          test -f .github/workflows/update-dividends.yml
+          node --check dividend-enhance.js
+          node --check fix.js
+          node --check hotfix-v065.js
+          node --check hotfix-v066.js
+          node --check hotfix-v067.js
+          node --check hotfix-v069.js
+          python -m py_compile scripts/update_latest.py scripts/update_dividends.py scripts/patch_v070.py scripts/parallelize_dividend_fetch.py
+          python - <<'PY'
+          import json
+          m=json.load(open('data/latest.json',encoding='utf-8'))
+          assert m['tradeDate']=='2026-10-28',m['tradeDate']
+          assert m['taiex']['close']==47035.58,m['taiex']
+          assert m['taiex']['change']==939.35,m['taiex']
+          d=json.load(open('data/dividends.json',encoding='utf-8'))
+          assert d['throughDate']=='2026-10-28',d['throughDate']
+          events=[x for x in d['items'] if x.get('exDate')]
+          past=[x for x in events if x['exDate']<=d['throughDate']]
+          unknown=[x for x in past if x.get('fillState')=='unknown']
+          assert len(events)>100,len(events)
+          ratio=len(unknown)/max(1,len(past))
+          assert ratio<=0.08,(len(unknown),len(past),ratio)
+          assert any(x.get('code')=='0050' and x.get('cashDividend')==0.6 for x in events)
+          assert any(x.get('code')=='0050' and x.get('cashDividend')==1.0 for x in events)
+          assert any(x.get('market')=='TWSE' and x.get('fillState') in ('filled','unfilled') for x in past)
+          assert any(x.get('market')=='TPEx' and x.get('fillState') in ('filled','unfilled') for x in past)
+          print('STATIC_FINAL_QA_PASS',{'events':len(events),'past':len(past),'unknown':len(unknown),'ratio':ratio,'stats':d.get('stats')})
+          for c in ('0050','0056','2002','3293','3711','6592'):
+              x=[r for r in events if r.get('code')==c]
+              print(c,x[-3:])
+          PY
+
+      - name: Browser regression QA desktop and mobile
+        timeout-minutes: 5
+        run: |
+          python -m pip install --quiet playwright
+          python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/http.log 2>&1 &
+          SERVER=$!
+          trap 'kill $SERVER || true' EXIT
+          sleep 2
+          python - <<'PY'
+          import shutil
+          from playwright.sync_api import sync_playwright
+          chrome=shutil.which('google-chrome') or shutil.which('google-chrome-stable') or shutil.which('chromium')
+          assert chrome,'system Chrome not found'
+          def block_external(page):
+              def h(route):
+                  if route.request.url.startswith('https://'):route.abort()
+                  else:route.continue_()
+              page.route('**/*',h)
+          with sync_playwright() as p:
+              browser=p.chromium.launch(headless=True,executable_path=chrome,args=['--no-sandbox','--disable-dev-shm-usage'])
+              ctx=browser.new_context(viewport={'width':1280,'height':900},service_workers='block')
+              page=ctx.new_page();block_external(page)
+              page.goto('http://127.0.0.1:8000/?browserqa=1&autodetail=0050',wait_until='domcontentloaded',timeout=15000)
+              page.wait_for_function("document.getElementById('taiex')?.textContent==='47,035.58'",timeout=20000)
+              page.wait_for_function("document.getElementById('dividendEvents')?.innerText.includes('2026-07-21')",timeout=20000)
+              assert '+939.35' in page.locator('#taiexChg').inner_text()
+              assert '2026/10/28' in page.locator('#taiexChg').inner_text()
+              div=page.locator('#dividendEvents').inner_text()
+              assert '0.6' in div and '2026-08-10' in div,div
+              assert '1' in div and '2026-02-11' in div,div
+              assert '資料不足' not in div,div
+              assert page.locator('#dividendEvents .event').count()<=3
+
+              page.locator('#closeBtn').click()
+              page.locator('#code').fill('華航');page.locator('#searchBtn').click();page.wait_for_timeout(300)
+              st=page.locator('#searchResults').inner_text();assert '2610' in st and '華航' in st,st
+              page.locator('#code').fill('2610');page.locator('#searchBtn').click();page.wait_for_timeout(300)
+              st2=page.locator('#searchResults').inner_text();assert '2610' in st2 and '華航' in st2,st2
+
+              same=page.evaluate("""async()=>{const r=document.querySelector('#watch .row');window.__qaRow=r;await Promise.resolve(render(true));return r===document.querySelector('#watch .row')&&window.__qaRow===r;}""")
+              assert same,'render(true) rebuilt first watch row'
+              hlen=page.evaluate("""async()=>{const h=await history('3293');return Array.isArray(h)?h.length:0;}""")
+              assert hlen>=2,f'3293 history length={hlen}'
+              page.evaluate("show('3293',{news:false})");page.wait_for_timeout(500)
+              assert '3293' in page.locator('#dTitle').inner_text()
+              assert 'NaN' not in page.locator('body').inner_text()
+              ctx.close()
+
+              mctx=browser.new_context(viewport={'width':390,'height':844},device_scale_factor=3,is_mobile=True,has_touch=True,service_workers='block')
+              mp=mctx.new_page();block_external(mp)
+              mp.goto('http://127.0.0.1:8000/?browserqa=1&autodetail=0050',wait_until='domcontentloaded',timeout=15000)
+              mp.wait_for_function("document.getElementById('taiex')?.textContent==='47,035.58'",timeout=20000)
+              mp.wait_for_function("document.getElementById('dividendEvents')?.innerText.includes('2026-07-21')",timeout=20000)
+              assert not mp.evaluate('document.documentElement.scrollWidth>document.documentElement.clientWidth+2'),'mobile horizontal overflow'
+              assert mp.locator('#sheet').evaluate("e=>e.classList.contains('show')")
+              assert mp.locator('#dividendEvents').is_visible()
+              assert '資料不足' not in mp.locator('#dividendEvents').inner_text()
+              mctx.close();browser.close()
+              print('BROWSER_FINAL_QA_PASS')
+          PY
+
+      - name: Promote only after all QA passes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html sw.js dividend-enhance.js scripts/update_latest.py scripts/update_dividends.py scripts/parallelize_dividend_fetch.py .github/workflows/update-latest.yml .github/workflows/update-dividends.yml data/dividends.json
+          git diff --cached --check
+          if git diff --cached --quiet; then echo 'No candidate change'; exit 1; fi
+          git commit -m "Promote v070 final candidate after full regression QA"
+          git push

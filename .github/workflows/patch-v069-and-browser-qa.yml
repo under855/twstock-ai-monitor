@@ -54,7 +54,6 @@ jobs:
           import time
           from selenium import webdriver
           from selenium.common.exceptions import TimeoutException
-          from selenium.webdriver.common.by import By
           from selenium.webdriver.chrome.options import Options
 
           o=Options();o.page_load_strategy='eager'
@@ -86,11 +85,11 @@ jobs:
               while time.time()<deadline:
                   try:
                       text=d.execute_script("return document.getElementById('dividendEvents')?.innerText||''")
-                      if '2026/07/21' in text and '2026/01/22' in text:break
+                      if '2026-07-21' in text and '2026-01-22' in text:break
                   except Exception:pass
                   time.sleep(.25)
-              assert '2026/07/21' in text and '0.6' in text and '2026/08/10' in text,text
-              assert '2026/01/22' in text and '1' in text and '2026/02/11' in text,text
+              assert '2026-07-21' in text and '0.6' in text and '2026-08-10' in text,text
+              assert '2026-01-22' in text and '1' in text and '2026-02-11' in text,text
               count=d.execute_script("return document.querySelectorAll('#dividendEvents .event').length")
               assert 1 <= count <= 3,f'event count={count}'
               title=d.execute_script("return document.querySelector('#dividendEvents')?.closest('.card')?.querySelector('h3')?.textContent||''")

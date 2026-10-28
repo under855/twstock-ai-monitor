@@ -83,6 +83,62 @@ s,n=re.subn(r'async function renderDividendDetail\(code\)\{.*?\n  show=async fun
 if n!=1: raise SystemExit(f'renderDividendDetail patch count {n}')
 p.write_text(s,encoding='utf-8')
 
+# Disable legacy v065 startup prefetch; retain 3293 fallback/history wrapper and dividend limit.
+p=pathlib.Path('hotfix-v065.js');s=p.read_text(encoding='utf-8')
+legacy_v065="""  let started=false;
+  const startPrefetch=()=>{
+    if(started)return;
+    const rows=document.querySelectorAll('#watch .row');
+    if(!rows.length)return;
+    started=true;
+    const list=watchlist().map(String);
+    for(const code of list){ history(code).catch(()=>{}); }
+    render(true).catch(()=>{});
+  };
+  const startup=setInterval(()=>{startPrefetch();if(started)clearInterval(startup)},200);
+  setTimeout(()=>clearInterval(startup),10000);
+
+  window.__TW_MONITOR_V065__={
+    historyFallback3293:fallback3293.length,
+    dividendLimit:3,
+    immediatePrefetch:true
+  };"""
+quiet_v065="""  // v069 統一由 index 排程行情與歷史補載，避免舊版啟動預抓造成競爭。
+  window.__TW_MONITOR_V065__={
+    historyFallback3293:fallback3293.length,
+    dividendLimit:3,
+    immediatePrefetch:false
+  };"""
+if legacy_v065 in s:s=s.replace(legacy_v065,quiet_v065)
+elif 'immediatePrefetch:false' not in s:raise SystemExit('v065 startup anchor missing')
+p.write_text(s,encoding='utf-8')
+
+# Disable legacy v066 official API burst; v067 same-origin latest snapshot supersedes it.
+p=pathlib.Path('hotfix-v066.js');s=p.read_text(encoding='utf-8')
+legacy_v066="""  let ran=false;
+  const start=()=>{
+    if(ran)return;
+    ran=true;
+    refreshOfficialLatest().catch(()=>{
+      const badge=document.getElementById('liveBadge');
+      if(badge){badge.textContent='最新官方資料讀取失敗';badge.className='liveBadge warn';}
+    });
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+
+  window.__TW_MONITOR_V066__={officialRefreshOnOpen:true,rejectStaleScore:true};"""
+quiet_v066="""  // v069: 開啟時不再重抓四組跨站官方 API；由本站 latest.json 提供最新盤後資料。
+  window.__TW_MONITOR_V066__={officialRefreshOnOpen:false,rejectStaleScore:true};"""
+if legacy_v066 in s:s=s.replace(legacy_v066,quiet_v066)
+elif 'officialRefreshOnOpen:false' not in s:raise SystemExit('v066 startup anchor missing')
+p.write_text(s,encoding='utf-8')
+
+# v067 loads same-origin latest only; do not immediately trigger live network render.
+p=pathlib.Path('hotfix-v067.js');s=p.read_text(encoding='utf-8')
+s=s.replace("    await render(false);\n    render(true).catch(()=>{});\n    return j;","    await render(false);\n    return j;")
+if 'render(true).catch(()=>{});' in s:raise SystemExit('v067 live render still present')
+p.write_text(s,encoding='utf-8')
+
 # Patch fix.js so it no longer launches a competing 300 ms startup poll.
 p=pathlib.Path('fix.js');s=p.read_text(encoding='utf-8')
 old="""  const p=$('refreshPill');if(p)p.textContent='自動更新：15 秒（靜默整批）';

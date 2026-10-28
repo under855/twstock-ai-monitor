@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="台股監控台">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>台股 AI 監控台 v0.6.9 Web</title>
+<title>台股 AI 監控台 v0.7.0 Web</title>
 <style>
 :root{--bg:#060d18;--panel:#0d1929;--panel2:#11233a;--line:#213954;--text:#edf5ff;--muted:#93a9c2;--accent:#78adff;--up:#ff6b6b;--down:#63d49a;--warn:#ffd166;--neutral:#d2dceb;--shadow:0 12px 28px rgba(0,0,0,.22)}
 *{box-sizing:border-box}html{background:var(--bg)}body{margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;background:radial-gradient(circle at 50% -10%,#13325a 0,#07111f 35%,#050b13 72%);min-height:100vh}
@@ -64,15 +64,15 @@ button,input{font:inherit}.app{max-width:1200px;margin:auto;padding:max(14px,env
     </div>
     <div class="cards">
       <div class="card"><h3>專業判讀</h3><div id="analysis" class="analysis"></div></div>
-      <div class="card"><h3>最近 1 個月除權息／股利事件</h3><div id="dividendEvents"></div></div>
+      <div class="card"><h3>配股／配息與填權息</h3><div id="dividendEvents"></div></div>
     </div>
-    <div class="card" style="margin-top:9px"><h3>近期新聞</h3><div id="newsState" class="muted small">載入中…</div><div id="news"></div><div class="notice">新聞以外部公開來源彙整；若來源阻擋跨站讀取，會改顯示可直接開啟的新聞搜尋，不會用虛構新聞補空白。</div></div>
+    <div class="card" style="margin-top:9px"><h3>近期新聞（最近 1 個月）</h3><div id="newsState" class="muted small">載入中…</div><div id="news"></div><div class="notice">新聞以外部公開來源彙整；若來源阻擋跨站讀取，會改顯示可直接開啟的新聞搜尋，不會用虛構新聞補空白。</div></div>
     <div class="actions"><button id="addWatchBtn" class="primary">加入監控</button><button id="yahooBtn">Yahoo 股市</button><button id="twseBtn">證交所個股資訊</button><button id="removeBtn" class="danger">移除監控</button></div>
     <div class="notice">分數沿用 v0.2 的可追溯規則：趨勢 36%、短期動能 34%、估值 18%、殖利率 12%。它是分析輔助，不是明日漲跌機率。</div>
   </section>
 </div>
 <script>
-const APP_VERSION='0.6.9';
+const APP_VERSION='0.7.0';
 const IS_WEB = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 window.addEventListener('DOMContentLoaded',()=>{
   if(!IS_WEB){
@@ -256,7 +256,7 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 </script>
 
 <script src="./fix.js?v=067"></script>
-<script src="./dividend-enhance.js?v=069"></script>
+<script src="./dividend-enhance.js?v=070"></script>
 <script src="./hotfix-v065.js?v=067"></script>
 <script src="./hotfix-v066.js?v=067"></script>
 <script src="./hotfix-v067.js?v=067"></script>

@@ -28,7 +28,11 @@
   function isEtfCode(code){return /^00\d{2,4}[A-Z]?$/.test(String(code).toUpperCase());}
   function eventLabel(e){
     if(e?.eventType==='distribution') return '股利分派';
-    const hasCash=(e.cashDividend??0)>0,hasStock=(e.stockDividendRatio??0)>0;
+    const k=String(e?.kind||e?.eventText||'');
+    if(k.includes('權')&&k.includes('息'))return '除權息';
+    if(k.includes('權'))return '除權';
+    if(k.includes('息'))return '除息';
+    const hasCash=(e.cashDividend??0)>0,hasStock=(e.stockDividendRatio??0)>0||(e.stockSharesPer1000??0)>0;
     if(hasCash&&hasStock)return '除權息';if(hasStock)return '除權';return '除息';
   }
   function first(obj,keys){for(const k of keys){if(obj?.[k]!=null&&String(obj[k]).trim()!=='')return obj[k];}return null;}
@@ -64,6 +68,14 @@
     if(eventCache.loaded&&eventCache.rows.length)return eventCache.rows;
     if(eventCache.loading)return eventCache.loading;
     eventCache.loading=(async()=>{
+      // v070: 正式資料優先讀本站由 GitHub 端預先整理的官方資料，避免手機跨網域失敗。
+      try{
+        const r=await fetch(`./data/dividends.json?ts=${Date.now()}`,{cache:'no-store'});
+        if(r.ok){
+          const j=await r.json(),rows=Array.isArray(j?.items)?j.items:[];
+          if(rows.length){eventCache.rows=rows;eventCache.loaded=true;return rows;}
+        }
+      }catch{}
       const [twsePre,tpexPre,tpexDaily,twseDist]=await Promise.allSettled([
         jsonPublic('https://openapi.twse.com.tw/v1/exchangeReport/TWT48U_ALL',7000),
         jsonPublic('https://www.tpex.org.tw/openapi/v1/tpex_exright_prepost',7000),
@@ -81,7 +93,7 @@
 
       if(tpexPre.status==='fulfilled'&&Array.isArray(tpexPre.value)){
         for(const r of tpexPre.value){
-          const code=String(first(r,['SecuritiesCompanyCode','Code','股票代號'])||'').trim();
+          const code=String(first(r,['SecuritiesCompanyCode','Code','股票代號','代號'])||'').trim();
           const exDate=isoDate(first(r,['ExRrightsExDividendDate','Date','除權息日期','資料日期']));if(!code||!exDate)continue;
           out.push({code,name:String(first(r,['CompanyName','Name','股票名稱'])||'').trim(),market:'TPEx',exDate,cashDividend:num(first(r,['CashDividend','現金股利','息值'])),stockDividendRatio:num(first(r,['StockDividendRatio','無償配股率','股票股利'])),eventText:String(first(r,['ExRrightsExDividend','Exdividend','權息'])||''),source:'TPEx 除權除息預告',eventType:'ex-event'});
         }
@@ -89,7 +101,7 @@
 
       if(tpexDaily.status==='fulfilled'&&Array.isArray(tpexDaily.value)){
         for(const r of tpexDaily.value){
-          const code=String(first(r,['SecuritiesCompanyCode','Code','股票代號'])||'').trim();
+          const code=String(first(r,['SecuritiesCompanyCode','Code','股票代號','代號'])||'').trim();
           const exDate=isoDate(first(r,['ExRrightsExDividendDate','Date','除權息日期','資料日期']));if(!code||!exDate)continue;
           out.push({code,name:String(first(r,['CompanyName','Name','股票名稱'])||'').trim(),market:'TPEx',exDate,cashDividend:num(first(r,['CashDividend','現金股利','息值'])),stockDividendRatio:num(first(r,['StockDividendRatio','無償配股率','股票股利'])),eventText:String(first(r,['ExRrightsExDividend','Exdividend','權息'])||''),source:'TPEx 除權除息結果',eventType:'ex-event'});
         }
@@ -146,13 +158,23 @@
   }
 
   function fillStatus(event,h){
-    if(!event?.exDate||!Array.isArray(h)||h.length<2)return {text:'資料不足',days:null};
-    const ex=dateMs(event.exDate);if(!Number.isFinite(ex))return {text:'資料不足',days:null};
+    const target=num(event?.fillTarget??event?.preClose);
+    const kind=event?.fillKind||(eventLabel(event)==='除權'?'填權':eventLabel(event)==='除權息'?'填權息':'填息');
+    if(event?.fillState==='filled'&&num(event.fillTradingDays)!=null){
+      const days=Math.round(num(event.fillTradingDays));
+      return {text:`${days} 個交易日完成${kind}${event.fillDate?`（${event.fillDate}）`:''}`,days,target};
+    }
+    if(event?.fillState==='unfilled'){
+      const observed=num(event.fillTradingDays)!=null?Math.round(num(event.fillTradingDays)):null;
+      const suffix=[event.checkedThrough?`截至 ${event.checkedThrough}`:'',observed!=null?`已觀察 ${observed} 個交易日`:''].filter(Boolean).join('，');
+      return {text:`尚未${kind}${suffix?`（${suffix}）`:''}`,days:null,target};
+    }
+    if(!event?.exDate||!Array.isArray(h)||h.length<2)return {text:'資料不足',days:null,target};
+    const ex=dateMs(event.exDate);if(!Number.isFinite(ex))return {text:'資料不足',days:null,target};
     const rows=h.map(x=>({...x,ms:dateMs(x.date)})).filter(x=>Number.isFinite(x.ms)).sort((a,b)=>a.ms-b.ms);
-    const prev=[...rows].reverse().find(x=>x.ms<ex&&num(x.close)!=null);if(!prev)return {text:'資料不足',days:null};
-    const after=rows.filter(x=>x.ms>=ex);if(!after.length)return {text:'尚無除權息後交易資料',days:null};
+    const prev=[...rows].reverse().find(x=>x.ms<ex&&num(x.close)!=null);if(!prev)return {text:'資料不足',days:null,target};
+    const after=rows.filter(x=>x.ms>=ex);if(!after.length)return {text:'尚無除權息後交易資料',days:null,target:prev.close};
     const hit=after.findIndex(x=>(num(x.high)??num(x.close))>=prev.close);
-    const kind=eventLabel(event)==='除權'?'填權':eventLabel(event)==='除權息'?'填權息':'填息';
     return hit>=0?{text:`${hit+1} 個交易日完成${kind}`,days:hit+1,target:prev.close}:{text:`尚未${kind}`,days:null,target:prev.close};
   }
 
@@ -162,14 +184,23 @@
       const key=e.eventType==='distribution'?`${e.code}|dist|${e.dividendYear}|${e.decisionDate||''}`:`${e.code}|${e.exDate}`;
       const old=m.get(key);
       if(!old){m.set(key,e);continue;}
-      m.set(key,{...old,...e,cashDividend:e.cashDividend??old.cashDividend,stockDividendRatio:e.stockDividendRatio??old.stockDividendRatio,paymentDate:e.paymentDate??old.paymentDate,recordDate:e.recordDate??old.recordDate});
+      m.set(key,{...old,...e,
+        cashDividend:e.cashDividend??old.cashDividend,
+        stockDividendRatio:e.stockDividendRatio??old.stockDividendRatio,
+        stockSharesPer1000:e.stockSharesPer1000??old.stockSharesPer1000,
+        paymentDate:e.paymentDate??old.paymentDate,recordDate:e.recordDate??old.recordDate,
+        preClose:e.preClose??old.preClose,fillTarget:e.fillTarget??old.fillTarget,
+        fillState:e.fillState??old.fillState,fillDate:e.fillDate??old.fillDate,
+        fillTradingDays:e.fillTradingDays??old.fillTradingDays,fillKind:e.fillKind??old.fillKind,
+        checkedThrough:e.checkedThrough??old.checkedThrough,kind:e.kind??old.kind
+      });
     }
     return [...m.values()];
   }
 
   function eventHtml(e,fill){
     const cash=e.cashDividend!=null?`<div>現金股利／配息：${fmtMoney(e.cashDividend)}</div>`:'';
-    const stock=e.stockDividendRatio!=null&&e.stockDividendRatio!==0?`<div>股票股利／配股：${F(e.stockDividendRatio,4)} 元／股</div>`:'';
+    const stock=e.stockSharesPer1000!=null&&e.stockSharesPer1000!==0?`<div>股票股利／配股：每千股配 ${F(e.stockSharesPer1000,4)} 股</div>`:(e.stockDividendRatio!=null&&e.stockDividendRatio!==0?`<div>股票股利／配股：${F(e.stockDividendRatio,4)} 元／股</div>`:'');
     const payment=e.paymentDate?`<div>發放日：${e.paymentDate}</div>`:'';
     const record=e.recordDate?`<div>基準日：${e.recordDate}</div>`:'';
     const decision=e.decisionDate?`<div>決議／擬議日：${e.decisionDate}</div>`:'';
@@ -214,7 +245,8 @@
     const cached=historyCache[code]||[];
     renderRows(cached);
     const browserQa=new URLSearchParams(location.search).get('browserqa')==='1';
-    if(!browserQa&&dated.some(e=>dateMs(e.exDate)<=now)){
+    const needsFallbackHistory=dated.some(e=>dateMs(e.exDate)<=now&&!['filled','unfilled'].includes(e.fillState));
+    if(!browserQa&&needsFallbackHistory){
       longHistory(code).then(h=>{if(Array.isArray(h)&&h.length)renderRows(h)}).catch(()=>{});
     }
   }

@@ -6,6 +6,7 @@ import pathlib
 import time
 import urllib.parse
 import urllib.request
+import urllib.error
 
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 LATEST=ROOT/'data'/'latest.json'
@@ -18,13 +19,23 @@ def request_json(url, *, data=None, timeout=40, attempts=3):
     if data is not None:
         body=urllib.parse.urlencode(data).encode();headers['Content-Type']='application/x-www-form-urlencoded'
     last=None
+    current=url
     for i in range(attempts):
         try:
-            req=urllib.request.Request(url,data=body,headers=headers,method='POST' if body is not None else 'GET')
-            with urllib.request.urlopen(req,timeout=timeout) as r:return json.loads(r.read().decode('utf-8-sig'))
+            req=urllib.request.Request(current,data=body,headers=headers,method='POST' if body is not None else 'GET')
+            with urllib.request.urlopen(req,timeout=timeout) as r:
+                return json.loads(r.read().decode('utf-8-sig'))
+        except urllib.error.HTTPError as e:
+            if e.code in (301,302,303,307,308):
+                loc=e.headers.get('Location') if e.headers else None
+                if loc:
+                    current=urllib.parse.urljoin(current,loc)
+                    last=e
+                    continue
+            last=e
         except Exception as e:
             last=e
-            if i+1<attempts:time.sleep(i+1)
+        if i+1<attempts:time.sleep(i+1)
     raise last
 
 
@@ -154,13 +165,24 @@ def roc_date(d):return f'{d.year-1911}/{d.month:02d}/{d.day:02d}'
 
 
 def tpex_daily(date):
-    q=urllib.parse.urlencode({'l':'zh-tw','o':'json','d':roc_date(date),'s':'0,asc,0'})
-    j=request_json('https://www.tpex.org.tw/web/stock/aftertrading/daily_close_quotes/stk_quote_result.php?'+q,timeout=35,attempts=2)
+    ds=date.strftime('%Y/%m/%d')
+    q=urllib.parse.urlencode({'date':ds,'type':'EW','response':'json'})
+    j=request_json('https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes?'+q,timeout=30,attempts=3)
+    if str(j.get('stat','')).lower()!='ok':
+        return {}
     out={}
-    for r in j.get('aaData') or []:
-        if not isinstance(r,list) or len(r)<7:continue
-        code=str(r[0] or '').strip();close=n(r[2]);high=n(r[5])
-        if code and (high is not None or close is not None):out[code]={'high':high,'close':close}
+    for t in j.get('tables') or []:
+        fields=t.get('fields') or []
+        ci=field_index(fields,['代號','股票代號','證券代號'])
+        hi=field_index(fields,['最高','最高價'])
+        cl=field_index(fields,['收盤','收盤價'])
+        if ci is None or cl is None:continue
+        for r in t.get('data') or []:
+            if not isinstance(r,list):continue
+            code=str(rv(r,ci) or '').strip();high=n(rv(r,hi));close=n(rv(r,cl))
+            if code and (high is not None or close is not None):
+                out[code]={'high':high,'close':close}
+        if len(out)>100:return out
     return out
 
 
@@ -176,30 +198,58 @@ def calculate_market_fill(events,market,start_date,end_date):
     active={}
     for i,e in enumerate(ev):active.setdefault(e['code'],[]).append(i)
     fetcher=twse_daily if market=='TWSE' else tpex_daily
-    d=start_date;requests=0;trading_dates=0
+    if not ev:
+        return ev,{'requests':0,'tradingDates':0,'events':0,'unknown':0,'filled':0,'unfilled':0,'fetchErrors':0}
+
+    earliest=max(start_date,min(dt.date.fromisoformat(e['exDate']) for e in ev))
+    dates=[];d=earliest
     while d<=end_date:
-        if d.weekday()<5:
-            try:quotes=fetcher(d);requests+=1
-            except Exception as e:print(f'WARN {market} daily {d}: {e}');quotes={}
-            if quotes:
-                trading_dates+=1;ds=d.isoformat()
-                for code,indexes in list(active.items()):
-                    q=quotes.get(code)
-                    if not q:continue
-                    for idx in indexes:
-                        e=ev[idx]
-                        if e['fillState']=='filled' or ds<e['exDate']:continue
-                        e['_days']+=1;e['checkedThrough']=ds
-                        h=q.get('high') if q.get('high') is not None else q.get('close')
-                        if h is not None and h>=e['preClose']:
-                            e['fillState']='filled';e['fillDate']=ds;e['fillTradingDays']=e['_days']
-                active={c:idxs for c,idxs in active.items() if any(ev[i]['fillState']!='filled' for i in idxs)}
-            time.sleep(0.10)
+        if d.weekday()<5:dates.append(d)
         d+=dt.timedelta(days=1)
+
+    def fetch_one(day):
+        try:
+            return day,fetcher(day),None
+        except Exception as exc:
+            return day,{},str(exc)
+
+    # Bounded concurrency keeps the official sources under modest load while
+    # avoiding a 20+ minute serial scan. Results are sorted before calculation,
+    # so fill-day counting remains deterministic and chronological.
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+        fetched=list(pool.map(fetch_one,dates))
+    fetched.sort(key=lambda x:x[0])
+
+    trading_dates=0;fetch_errors=0
+    for day,quotes,error in fetched:
+        if error:
+            fetch_errors+=1
+            print(f'WARN {market} daily {day}: {error}',flush=True)
+        if not quotes:continue
+        trading_dates+=1;ds=day.isoformat()
+        for code,indexes in list(active.items()):
+            q=quotes.get(code)
+            if not q:continue
+            for idx in indexes:
+                e=ev[idx]
+                if e['fillState']=='filled' or ds<e['exDate']:continue
+                e['_days']+=1;e['checkedThrough']=ds
+                h=q.get('high') if q.get('high') is not None else q.get('close')
+                if h is not None and h>=e['preClose']:
+                    e['fillState']='filled';e['fillDate']=ds;e['fillTradingDays']=e['_days']
+        active={c:idxs for c,idxs in active.items() if any(ev[i]['fillState']!='filled' for i in idxs)}
+
     for e in ev:
-        if e['fillState']!='filled' and e['_days']>0:e['fillState']='unfilled';e['fillTradingDays']=e['_days']
+        if e['fillState']!='filled' and e['_days']>0:
+            e['fillState']='unfilled';e['fillTradingDays']=e['_days']
         e['fillKind']=fill_kind(e.get('kind'));e.pop('_days',None)
-    return ev,{'requests':requests,'tradingDates':trading_dates,'events':len(ev),'unknown':sum(1 for x in ev if x['fillState']=='unknown'),'filled':sum(1 for x in ev if x['fillState']=='filled'),'unfilled':sum(1 for x in ev if x['fillState']=='unfilled')}
+    return ev,{
+        'requests':len(dates),'tradingDates':trading_dates,'events':len(ev),
+        'unknown':sum(1 for x in ev if x['fillState']=='unknown'),
+        'filled':sum(1 for x in ev if x['fillState']=='filled'),
+        'unfilled':sum(1 for x in ev if x['fillState']=='unfilled'),
+        'fetchErrors':fetch_errors
+    }
 
 
 def merge_ex_and_etf(ex_events,etf_rows):

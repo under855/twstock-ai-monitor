@@ -1,4 +1,4 @@
-const CACHE='tw-ai-monitor-v069';
+const CACHE='tw-ai-monitor-v070';
 const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./fix.js','./dividend-enhance.js','./hotfix-v065.js','./hotfix-v066.js','./hotfix-v067.js','./hotfix-v069.js','./data/latest.json','./data/dividends.json'];
 
 self.addEventListener('install',e=>e.waitUntil(
@@ -22,7 +22,7 @@ self.addEventListener('activate',e=>e.waitUntil((async()=>{
 function injectScripts(html){
   let out=html;
   if(!out.includes('fix.js?v=067')) out=out.replace('</body>','<script src="./fix.js?v=067"></script></body>');
-  if(!out.includes('dividend-enhance.js?v=069')) out=out.replace('</body>','<script src="./dividend-enhance.js?v=069"></script></body>');
+  if(!out.includes('dividend-enhance.js?v=070')) out=out.replace('</body>','<script src="./dividend-enhance.js?v=070"></script></body>');
   if(!out.includes('hotfix-v065.js?v=067')) out=out.replace('</body>','<script src="./hotfix-v065.js?v=067"></script></body>');
   if(!out.includes('hotfix-v066.js?v=067')) out=out.replace('</body>','<script src="./hotfix-v066.js?v=067"></script></body>');
   if(!out.includes('hotfix-v067.js?v=067')) out=out.replace('</body>','<script src="./hotfix-v067.js?v=067"></script></body>');

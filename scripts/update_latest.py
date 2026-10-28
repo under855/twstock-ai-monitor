@@ -147,7 +147,6 @@ def main():
     taiex=fetch_taiex(trade_date,market_rows)
     twse=fetch_twse(trade_date)
     tpex=fetch_tpex(trade_date)
-    dividends=fetch_etf_dividends(trade_date)
     symbols={**twse,**tpex}
     now=datetime.datetime.now(datetime.timezone.utc).isoformat()
     payload={
@@ -155,10 +154,8 @@ def main():
         'counts':{'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},
         'symbols':symbols
     }
-    div_payload={'generatedAt':now,'throughDate':trade_date,'count':len(dividends),'items':dividends}
     write_json(OUT,payload)
-    write_json(DIV_OUT,div_payload)
-    print(json.dumps({'ok':True,'tradeDate':trade_date,'taiex':taiex,'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols),'dividends':len(dividends),'0050':sum(1 for x in dividends if x['code']=='0050')},ensure_ascii=False))
+    print(json.dumps({'ok':True,'tradeDate':trade_date,'taiex':taiex,'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},ensure_ascii=False))
 
 if __name__=='__main__':
     try: main()

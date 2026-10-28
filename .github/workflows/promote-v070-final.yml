@@ -2,12 +2,18 @@ name: Promote v070 final candidate
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/promote-v070-final.yml'
+      - 'scripts/patch_v070.py'
 
 permissions:
   contents: write
 
 jobs:
   final-qa-and-promote:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -69,7 +75,7 @@ jobs:
           trap 'kill $SERVER || true' EXIT
           sleep 2
           python - <<'PY'
-          import shutil,time
+          import shutil
           from playwright.sync_api import sync_playwright
 
           chrome=shutil.which('google-chrome') or shutil.which('google-chrome-stable') or shutil.which('chromium')
@@ -84,8 +90,6 @@ jobs:
 
           with sync_playwright() as p:
               browser=p.chromium.launch(headless=True,executable_path=chrome,args=['--no-sandbox','--disable-dev-shm-usage'])
-
-              # Desktop: latest market + ETF dividends + precomputed fill status.
               ctx=browser.new_context(viewport={'width':1280,'height':900},service_workers='block')
               page=ctx.new_page();block_external(page)
               page.goto('http://127.0.0.1:8000/?browserqa=1&autodetail=0050',wait_until='domcontentloaded',timeout=15000)
@@ -99,35 +103,28 @@ jobs:
               assert '資料不足' not in div,div
               assert page.locator('#dividendEvents .event').count()<=3
 
-              # Search by Chinese name and code must find 2610/華航.
               page.locator('#closeBtn').click()
-              page.locator('#code').fill('華航');page.locator('#searchBtn').click()
-              page.wait_for_timeout(300)
-              st=page.locator('#searchResults').inner_text()
-              assert '2610' in st and '華航' in st,st
+              page.locator('#code').fill('華航');page.locator('#searchBtn').click();page.wait_for_timeout(300)
+              st=page.locator('#searchResults').inner_text();assert '2610' in st and '華航' in st,st
               page.locator('#code').fill('2610');page.locator('#searchBtn').click();page.wait_for_timeout(300)
               st2=page.locator('#searchResults').inner_text();assert '2610' in st2 and '華航' in st2,st2
 
-              # Silent update must preserve existing row nodes rather than rebuilding watch wall.
               same=page.evaluate("""async()=>{const r=document.querySelector('#watch .row');window.__qaRow=r;await Promise.resolve(render(true));return r===document.querySelector('#watch .row')&&window.__qaRow===r;}""")
               assert same,'render(true) rebuilt first watch row'
 
-              # 3293 TPEx historical fallback must return plot-able data.
               hlen=page.evaluate("""async()=>{const h=await history('3293');return Array.isArray(h)?h.length:0;}""")
               assert hlen>=2,f'3293 history length={hlen}'
-              page.evaluate("show('3293',{news:false})")
-              page.wait_for_timeout(500)
-              assert page.locator('#dTitle').inner_text().find('3293')>=0
+              page.evaluate("show('3293',{news:false})");page.wait_for_timeout(500)
+              assert '3293' in page.locator('#dTitle').inner_text()
+              assert 'NaN' not in page.locator('body').inner_text()
               ctx.close()
 
-              # Mobile layout: same core data, no horizontal overflow, detail usable.
               mctx=browser.new_context(viewport={'width':390,'height':844},device_scale_factor=3,is_mobile=True,has_touch=True,service_workers='block')
               mp=mctx.new_page();block_external(mp)
               mp.goto('http://127.0.0.1:8000/?browserqa=1&autodetail=0050',wait_until='domcontentloaded',timeout=15000)
               mp.wait_for_function("document.getElementById('taiex')?.textContent==='47,035.58'",timeout=20000)
               mp.wait_for_function("document.getElementById('dividendEvents')?.innerText.includes('2026-07-21')",timeout=20000)
-              overflow=mp.evaluate('document.documentElement.scrollWidth>document.documentElement.clientWidth+2')
-              assert not overflow,'mobile horizontal overflow'
+              assert not mp.evaluate('document.documentElement.scrollWidth>document.documentElement.clientWidth+2'),'mobile horizontal overflow'
               assert mp.locator('#sheet').evaluate("e=>e.classList.contains('show')")
               assert mp.locator('#dividendEvents').is_visible()
               mdiv=mp.locator('#dividendEvents').inner_text();assert '資料不足' not in mdiv,mdiv

@@ -1,19 +1,27 @@
-const CACHE='tw-ai-monitor-v060';
+const CACHE='tw-ai-monitor-v061';
 const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./fix.js'];
 
 self.addEventListener('install',e=>e.waitUntil(
   caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())
 ));
 
-self.addEventListener('activate',e=>e.waitUntil(
-  caches.keys()
-    .then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))
-    .then(()=>self.clients.claim())
-));
+self.addEventListener('activate',e=>e.waitUntil((async()=>{
+  const keys=await caches.keys();
+  await Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)));
+  await self.clients.claim();
+  const clients=await self.clients.matchAll({type:'window',includeUncontrolled:true});
+  await Promise.all(clients.map(c=>{
+    try{
+      const u=new URL(c.url);
+      if(u.origin===self.location.origin) return c.navigate(c.url);
+    }catch{}
+    return Promise.resolve();
+  }));
+})()));
 
 function injectFix(html){
-  if(html.includes('fix.js?v=060')) return html;
-  return html.replace('</body>','<script src="./fix.js?v=060"></script></body>');
+  if(html.includes('fix.js?v=061')) return html;
+  return html.replace('</body>','<script src="./fix.js?v=061"></script></body>');
 }
 
 self.addEventListener('fetch',e=>{
@@ -43,7 +51,7 @@ self.addEventListener('fetch',e=>{
 
   e.respondWith(
     fetch(e.request,{cache:'no-store'}).then(r=>{
-      if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy)).catch(()=>{});} 
+      if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy)).catch(()=>{});}
       return r;
     }).catch(()=>caches.match(e.request))
   );

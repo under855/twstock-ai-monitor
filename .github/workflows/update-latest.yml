@@ -1,0 +1,36 @@
+name: Update latest official market data
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/update_latest.py'
+      - '.github/workflows/update-latest.yml'
+  schedule:
+    - cron: '*/5 * * * 1-5'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch official market data
+        run: python scripts/update_latest.py
+      - name: Commit latest data if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/latest.json
+          if git diff --cached --quiet; then
+            echo "No data change"
+          else
+            git commit -m "Update official latest market data"
+            git push
+          fi

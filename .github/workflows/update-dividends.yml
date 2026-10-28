@@ -1,0 +1,41 @@
+name: Update official dividend and fill data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 10 * * 1-5'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build official dividend and fill dataset
+        run: python scripts/update_dividends.py
+      - name: Validate before commit
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open('data/dividends.json',encoding='utf-8'))
+          past=[x for x in d['items'] if x.get('exDate') and x['exDate']<=d['throughDate']]
+          unknown=[x for x in past if x.get('fillState')=='unknown']
+          assert past and len(unknown)/len(past)<=0.08,(len(unknown),len(past))
+          PY
+      - name: Commit dividend data if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/dividends.json
+          if git diff --cached --quiet; then
+            echo "No dividend data change"
+          else
+            git commit -m "Update official dividend and fill data"
+            git push
+          fi

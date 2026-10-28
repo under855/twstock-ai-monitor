@@ -207,14 +207,21 @@
     if(!allowNetwork) return originalRender(false);
     const list=watchlist();
     $('watchCount').textContent=list.length;
-    let live=new Map();
-    try{live=await fetchBatchQuotes(list)}catch{}
+
+    // 先立即畫官方最近交易日／既有資料，絕不等待外部盤中 API。
     let count=0;
     for(const code of list){
-      const q=live.get(String(code))||fallbackQuote(code);
-      if(paintQuote(String(code),q)) count++;
+      if(paintQuote(String(code),fallbackQuote(code))) count++;
     }
+
+    // 再於背景等待整批盤中行情；成功後只覆蓋數字。
+    let live=new Map();
+    try{live=await fetchBatchQuotes(list)}catch{}
     if(live.size){
+      for(const code of list){
+        const q=live.get(String(code));
+        if(q) paintQuote(String(code),q);
+      }
       $('liveBadge').textContent='盤中行情已更新';
       $('liveBadge').className='liveBadge ok';
       $('marketStatus').textContent='正常';

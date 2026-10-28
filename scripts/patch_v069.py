@@ -6,8 +6,8 @@ p=pathlib.Path('dividend-enhance.js')
 s=p.read_text(encoding='utf-8')
 old_etf="function isEtfCode(code){return /^00\\d{3}[A-Z]?$/.test(String(code).toUpperCase());}"
 new_etf="function isEtfCode(code){return /^00\\d{2,4}[A-Z]?$/.test(String(code).toUpperCase());}"
-if old_etf not in s: raise SystemExit('ETF detector anchor missing')
-s=s.replace(old_etf,new_etf)
+if old_etf in s:s=s.replace(old_etf,new_etf)
+elif new_etf not in s:raise SystemExit('ETF detector anchor missing')
 
 new_load='''async function loadEtfRows(){
     if(etfCache.loaded&&etfCache.rows.length)return etfCache.rows;
@@ -83,12 +83,33 @@ s,n=re.subn(r'async function renderDividendDetail\(code\)\{.*?\n  show=async fun
 if n!=1: raise SystemExit(f'renderDividendDetail patch count {n}')
 p.write_text(s,encoding='utf-8')
 
-# Patch index.
+# Patch fix.js so it no longer launches a competing 300 ms startup poll.
+p=pathlib.Path('fix.js');s=p.read_text(encoding='utf-8')
+old="""  const p=$('refreshPill');if(p)p.textContent='自動更新：15 秒（靜默整批）';
+  let startupDone=false;const start=async()=>{if(startupDone)return;const rows=$('watch')?.querySelectorAll('.row')?.length||0;if(!rows)return;startupDone=true;await silentRender(true).catch(()=>{});};
+  const startupTimer=setInterval(()=>{start().finally(()=>{if(startupDone)clearInterval(startupTimer)});},300);setTimeout(()=>clearInterval(startupTimer),12000);
+})();"""
+new="""  const p=$('refreshPill');if(p)p.textContent='自動更新：15 秒（靜默整批）';
+  // v069: 啟動與 15 秒更新由 index 統一排程，避免與同網域官方快照競爭。
+})();"""
+if old in s:s=s.replace(old,new)
+elif '啟動與 15 秒更新由 index 統一排程' not in s:raise SystemExit('fix.js startup anchor missing')
+p.write_text(s,encoding='utf-8')
+
+# Patch index: same-origin snapshot first; one delayed live batch update; then 15-second quote-only updates.
 p=pathlib.Path('index.html');s=p.read_text(encoding='utf-8')
 s=re.sub(r'<title>台股 AI 監控台 v[^<]+ Web</title>','<title>台股 AI 監控台 v0.6.9 Web</title>',s)
 s=re.sub(r"const APP_VERSION='[^']+';","const APP_VERSION='0.6.9';",s)
 s=s.replace('dividend-enhance.js?v=067','dividend-enhance.js?v=069')
 if 'hotfix-v069.js?v=069' not in s:s=s.replace('</body>','<script src="./hotfix-v069.js?v=069"></script>\n</body>')
+old_boot="async function boot(){allRows=seedRows();allVals=seedVals();showSnapshotMarket();await render(false);try{await loadFullUniverse()}catch{};await render(false);if(new URLSearchParams(location.search).get('qa')!=='1')refreshRemote().catch(()=>{})}"
+new_boot="async function boot(){allRows=seedRows();allVals=seedVals();showSnapshotMarket();await render(false);try{await loadFullUniverse()}catch{};await render(false)}"
+if old_boot in s:s=s.replace(old_boot,new_boot)
+elif new_boot not in s:raise SystemExit('index boot anchor missing')
+old_end="tick();setInterval(tick,1000);boot().then(runQaIfRequested);if(new URLSearchParams(location.search).get('qa')!=='1')setInterval(refresh,15000);"
+new_end="tick();setInterval(tick,1000);boot().then(runQaIfRequested);const liveParams=new URLSearchParams(location.search);if(liveParams.get('qa')!=='1'&&liveParams.get('browserqa')!=='1'){setTimeout(()=>Promise.resolve(render(true)).catch(()=>{}),1500);setInterval(()=>Promise.resolve(render(true)).catch(()=>{}),15000);}"
+if old_end in s:s=s.replace(old_end,new_end)
+elif new_end not in s:raise SystemExit('index interval anchor missing')
 p.write_text(s,encoding='utf-8')
 
 # Patch service worker.

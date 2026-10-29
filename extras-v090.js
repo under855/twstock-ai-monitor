@@ -110,6 +110,64 @@
     return true;
   }
 
+  async function loadHistoryFor(code){
+    try{
+      const key=String(code),cached=typeof historyCache!=='undefined'?historyCache[key]:null;
+      if(Array.isArray(cached)&&cached.length>=2)return cached;
+      if(typeof history==='function'){
+        const h=await history(key);
+        if(Array.isArray(h)&&h.length>=2)return h;
+      }
+    }catch{}
+    return [];
+  }
+  function rowFor(code){return [...document.querySelectorAll('#watch article.row')].find(r=>r.querySelector('.sym')?.textContent?.trim()===String(code))||null}
+  function priceFor(code){
+    try{return quoteCache?.[String(code)]?.price??rowForCode?.(String(code))?.ClosingPrice??null}catch{return null}
+  }
+  function paintHistoryCanvas(code,h){
+    if(!Array.isArray(h)||h.length<2||typeof draw!=='function')return false;
+    const livePoints=window.__TW_LIVE_V091__?.stocks?.[String(code)]?.seriesPoints||0;
+    if(livePoints>=2)return false;
+    const r=rowFor(code);if(!r)return false;
+    let c=r.querySelector('canvas.spark');
+    if(!c){const f=r.querySelector('.sparkFallback');if(!f)return false;c=document.createElement('canvas');c.className='spark';c.width=420;c.height=50;f.replaceWith(c)}
+    try{draw(c,h,true,priceFor(code));c.dataset.history='1';return true}catch{return false}
+  }
+  async function refreshHistoryCharts(){
+    if(typeof watchlist!=='function')return false;
+    const codes=[...new Set(watchlist().map(String))];
+    const hs=await Promise.all(codes.map(loadHistoryFor));
+    let painted=0;codes.forEach((code,i)=>{if(paintHistoryCanvas(code,hs[i]))painted++});
+    return painted>0;
+  }
+  function installDetailHistory(){
+    if(typeof show!=='function')return false;
+    const baseShow=show;
+    show=async function(code,opts={}){
+      const key=String(code);await loadHistoryFor(key);
+      const out=await baseShow(key,opts);
+      try{
+        const h=historyCache?.[key]||[],c=document.getElementById('bigChart');
+        if(h.length>=2&&c&&typeof draw==='function'){
+          draw(c,h,false,priceFor(key));c.dataset.history='1';
+          const msg=document.getElementById('chartMsg');if(msg)msg.textContent=`近 3 個月走勢｜共 ${h.length} 個交易日`;
+          const title=c.closest('.card')?.querySelector('h3');if(title&&!(window.__TW_LIVE_V091__?.marketWindow))title.textContent='近 3 個月走勢';
+        }
+      }catch{}
+      return out;
+    };
+    return true;
+  }
+  function startHistoryCharts(){
+    let timer=null,busy=false;
+    const run=()=>{if(busy)return;busy=true;refreshHistoryCharts().finally(()=>{busy=false})};
+    const watch=document.getElementById('watch');
+    if(watch){new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(run,250)}).observe(watch,{childList:true,subtree:true})}
+    setTimeout(run,600);setTimeout(run,2500);setTimeout(run,7000);setTimeout(run,18000);
+    return true;
+  }
+
   function limitDividendCards(){
     const box=document.getElementById('dividendEvents');if(!box)return;
     [...box.querySelectorAll(':scope > .event')].slice(3).forEach(x=>x.remove());
@@ -120,6 +178,8 @@
   function boot(){
     if(!installFuzzySearch())setTimeout(installFuzzySearch,0);
     if(!installNews())setTimeout(installNews,0);
+    if(!installDetailHistory())setTimeout(installDetailHistory,0);
+    startHistoryCharts();
     if(!startDividendLimit()){const t=setInterval(()=>{if(startDividendLimit())clearInterval(t)},250);setTimeout(()=>clearInterval(t),10000)}
     window.__TW_EXTRAS_V090__={ok:true,version:VERSION};
   }

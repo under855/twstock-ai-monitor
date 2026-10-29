@@ -1,10 +1,12 @@
 name: Build trusted news cache v0.9.4r5
 on:
   push:
-    branches: ['server-news-cache-v094r5']
+    branches: ['main']
     paths:
       - 'scripts/update_news.py'
       - '.github/workflows/build-news-cache-v094r5.yml'
+  schedule:
+    - cron: '17 */2 * * *'
   workflow_dispatch:
 permissions:
   contents: write
@@ -15,6 +17,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: main
       - name: Generate trusted news cache
         run: python scripts/update_news.py
       - name: Validate cache
@@ -27,10 +30,15 @@ jobs:
             assert xs, (c,'empty')
             print(c,len(xs),xs[0]['publisher'],xs[0]['title'])
           PY
-      - name: Commit cache
+      - name: Commit cache if changed
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add data/news.json
-          git commit -m 'Generate trusted stock news cache'
-          git push origin HEAD:server-news-cache-v094r5
+          if git diff --cached --quiet; then
+            echo 'News cache unchanged'
+            exit 0
+          fi
+          git commit -m 'Refresh trusted stock news cache'
+          git pull --rebase origin main
+          git push origin HEAD:main

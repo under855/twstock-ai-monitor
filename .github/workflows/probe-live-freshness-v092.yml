@@ -1,0 +1,44 @@
+name: Probe live source freshness v092
+on:
+  push:
+    paths:
+      - '.github/workflows/probe-live-freshness-v092.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compare source timestamps across 15 seconds
+        run: |
+          cat > /tmp/probe.mjs <<'JS'
+          const chans=['tse_t00.tw','tse_0050.tw','tse_3711.tw','tse_2002.tw','otc_3293.tw','tse_00878.tw','tse_00919.tw'];
+          const summarize=j=>(j?.msgArray||[]).map(m=>({c:m.c,d:m.d,t:m.t,z:m.z,trade_z:m.trade?.z,trade_t:m.trade?.t,tlong:m.tlong}));
+          async function mis(kind){
+            const upstream=`https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=${encodeURIComponent(chans.join('|'))}&json=1&delay=0&_=${Date.now()}`;
+            const url=kind==='direct'?upstream:`https://proxy.cors.dev/${upstream}`;
+            const r=await fetch(url,{headers:{'user-agent':'Mozilla/5.0','cache-control':'no-cache'}});const j=await r.json();return {status:r.status,rows:summarize(j)};
+          }
+          async function mcp(codes,market){
+            const r=await fetch('https://twse-mcp.taux.io/mcp',{method:'POST',headers:{'content-type':'application/json',accept:'application/json, text/event-stream','mcp-protocol-version':'2025-06-18'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/call',params:{name:'quote.realtime',arguments:{codes,market}}})});
+            const text=await r.text();const line=text.split('\n').find(x=>x.startsWith('data:'));const p=JSON.parse(line?line.slice(5):text);let body=p?.result?.content?.[0]?.text;try{body=JSON.parse(body)}catch{}return {status:r.status,body};
+          }
+          async function sample(label){
+            const out={label,at:new Date().toISOString()};
+            for(const k of ['direct','proxy']){try{out[k]=await mis(k)}catch(e){out[k]={error:String(e)}}}
+            try{out.mcpTse=await mcp(['0050','3711','2002','00878','00919'],'tse')}catch(e){out.mcpTse={error:String(e)}}
+            try{out.mcpOtc=await mcp(['3293'],'otc')}catch(e){out.mcpOtc={error:String(e)}}
+            console.log('SAMPLE',JSON.stringify(out));return out;
+          }
+          const a=await sample('A');await new Promise(r=>setTimeout(r,16000));const b=await sample('B');
+          function idx(x){return x?.rows?.find(r=>r.c==='t00')?.tlong||x?.rows?.find(r=>r.c==='t00')?.t||null}
+          console.log('DIRECT_INDEX',idx(a.direct),'->',idx(b.direct));console.log('PROXY_INDEX',idx(a.proxy),'->',idx(b.proxy));
+          if(String(idx(a.direct))===String(idx(b.direct)))console.log('WARN_DIRECT_NOT_ADVANCED');
+          if(String(idx(a.proxy))===String(idx(b.proxy)))console.log('WARN_PROXY_NOT_ADVANCED');
+          JS
+          node /tmp/probe.mjs

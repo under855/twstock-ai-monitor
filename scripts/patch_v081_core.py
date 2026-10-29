@@ -1,4 +1,5 @@
 from pathlib import Path
+# v0.8.1 core promotion trigger
 p=Path('index.html')
 s=p.read_text(encoding='utf-8')
 repls={

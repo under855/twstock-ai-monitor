@@ -110,11 +110,21 @@
       return out;
     }catch{return []}
   }
+  async function cachedSiteNews(code){
+    try{
+      const j=await fetchJson(`./data/news.json?_=${Date.now()}`,5000);
+      const xs=j?.stocks?.[String(code)];
+      return Array.isArray(xs)?xs.filter(x=>x&&x.title&&x.link):[];
+    }catch{return []}
+  }
+
   function installNews(){
     if(typeof news!=='function')return false;
     news=async function(code,name){
       const box=document.getElementById('news'),state=document.getElementById('newsState');if(!box||!state)return;
       box.innerHTML='';state.textContent='載入可信來源近期新聞…';
+      const cached=await cachedSiteNews(code);
+      if(cached.length){cached.sort((a,b)=>(b.time||0)-(a.time||0));renderNewsItems(cached,state,box);return}
       const settled=await Promise.allSettled(NEWS_FEEDS.map(fetchPublisherFeed)),seen=new Set(),items=[];
       for(const r of settled){if(r.status!=='fulfilled')continue;for(const it of r.value){if(!relevantHeadline(it.title,code,name))continue;const k=normNews(it.title);if(!k||seen.has(k))continue;seen.add(k);items.push(it)}}
       if(items.length<4){for(const it of await googleTrustedDirect(code,name)){const k=normNews(it.title);if(!k||seen.has(k))continue;seen.add(k);items.push(it)}}

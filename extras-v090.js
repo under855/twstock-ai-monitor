@@ -218,11 +218,19 @@
   const observer=new MutationObserver(limitDividendCards);
   function startDividendLimit(){const box=document.getElementById('dividendEvents');if(!box)return false;observer.observe(box,{childList:true});limitDividendCards();return true;}
 
+  async function refreshWatchHistoryAndScores(){
+    if(typeof watchlist!=='function'||typeof render!=='function')return false;
+    const codes=[...new Set(watchlist().map(String))];
+    await Promise.allSettled(codes.map(loadHistoryFor));
+    try{await render(false)}catch{}
+    return codes.some(code=>Array.isArray(historyCache?.[code])&&historyCache[code].length>=2);
+  }
+
   function boot(){
     if(!installFuzzySearch())setTimeout(installFuzzySearch,0);
     if(!installNews())setTimeout(installNews,0);
     if(!installDetailChartTabs())setTimeout(installDetailChartTabs,0);
-    startTodayOnlyMainCharts();
+    refreshWatchHistoryAndScores().catch(()=>{});
     if(!startDividendLimit()){const t=setInterval(()=>{if(startDividendLimit())clearInterval(t)},250);setTimeout(()=>clearInterval(t),10000)}
     window.__TW_EXTRAS_V090__={ok:true,version:VERSION};
   }

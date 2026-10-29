@@ -1,0 +1,63 @@
+name: Fix today main chart v0.9.4
+on:
+  push:
+    branches: ['fix-today-chart-v094']
+    paths:
+      - 'scripts/patch_today_intraday_main_v094.py'
+      - '.github/workflows/fix-today-main-chart-v094.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preserve everything except display layer
+        run: sha256sum live-v091.js index.html scripts/update_latest.py data/latest.json > /tmp/core.before
+      - name: Apply isolated today chart patch
+        run: python scripts/patch_today_intraday_main_v094.py
+      - name: Validate syntax and today-chart contract
+        run: |
+          node --check extras-v090.js
+          node - <<'JS'
+          const fs=require('fs'); const s=fs.readFileSync('extras-v090.js','utf8');
+          const checks={
+            todayFallback:s.includes('fetchTodayIntraday')&&s.includes('range=1d&interval=5m'),
+            localSeries:s.includes('tw_live091_series_'),
+            mainOnly:s.includes('ensureTodayMainChart')&&s.includes('mainCanvas'),
+            detailsKept:s.includes("['today','今日']")&&s.includes("['5','5日']")&&s.includes("['20','20日']")&&s.includes("['60','60日']"),
+            newsKept:['鉅亨網','MoneyDJ','中央社'].every(x=>s.includes(x)),
+          };
+          console.log(checks); const bad=Object.entries(checks).filter(([,v])=>!v).map(([k])=>k); if(bad.length) throw new Error(bad.join(','));
+          JS
+      - name: Confirm core untouched
+        run: |
+          sha256sum live-v091.js index.html scripts/update_latest.py data/latest.json > /tmp/core.after
+          diff -u /tmp/core.before /tmp/core.after
+      - name: Verify current-day intraday fallback source
+        run: |
+          node - <<'JS'
+          const up='https://query1.finance.yahoo.com/v8/finance/chart/0050.TW?range=1d&interval=5m&includePrePost=false';
+          const r=await fetch(up,{headers:{'user-agent':'Mozilla/5.0'}}); const j=await r.json();
+          const x=j?.chart?.result?.[0], n=(x?.timestamp||[]).length, closes=(x?.indicators?.quote?.[0]?.close||[]).filter(Number.isFinite).length;
+          console.log('status',r.status,'timestamps',n,'closes',closes); if(!r.ok||n<2||closes<2) throw new Error('intraday source insufficient');
+          JS
+      - name: Commit display-layer change only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js
+          git diff --cached --name-only
+          test "$(git diff --cached --name-only)" = "extras-v090.js"
+          git commit -m 'Restore today intraday chart on main screen'
+          git push origin HEAD:fix-today-chart-v094

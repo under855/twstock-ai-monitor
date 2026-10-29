@@ -1,0 +1,25 @@
+name: Accept v0.9.4 current production data
+on:
+  push:
+    paths:
+      - '.github/workflows/accept-v094-current-production.yml'
+      - 'scripts/accept_current_production.mjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  accept:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright-core@latest >/dev/null 2>&1
+      - name: Verify deployed current index stocks details and charts
+        run: |
+          sleep 45
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node scripts/accept_current_production.mjs

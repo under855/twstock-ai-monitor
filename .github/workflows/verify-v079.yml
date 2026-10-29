@@ -25,7 +25,7 @@ jobs:
       - name: Verify batch TWSE MIS live quotes through CORS proxy
         run: |
           python - <<'PY'
-          import json, urllib.request, urllib.parse, datetime
+          import json, urllib.request, urllib.parse
           codes=['0050','3711','2002','2330','3293']
           channels=[]
           for c in codes:
@@ -37,15 +37,23 @@ jobs:
               j=json.loads(r.read().decode('utf-8-sig'))
               cors=r.headers.get('Access-Control-Allow-Origin')
           arr=j.get('msgArray') or []
-          found={str(x.get('c')):x for x in arr if x.get('c') and x.get('z') not in (None,'','-','--')}
-          print(json.dumps({'cors':cors,'count':len(arr),'found':{c:{'z':found[c].get('z'),'t':found[c].get('t'),'d':found[c].get('d')} for c in found}},ensure_ascii=False))
+          print('SAMPLE',json.dumps(arr[:4],ensure_ascii=False))
           if cors not in ('*','https://under855.github.io'):
               raise SystemExit('CORS unavailable')
-          must=['0050','3711','2002','2330']
-          missing=[c for c in must if c not in found]
+          usable={}
+          for x in arr:
+              c=str(x.get('c') or '')
+              if not c: continue
+              z=x.get('z')
+              a=(str(x.get('a') or '').split('_') or [''])[0]
+              b=(str(x.get('b') or '').split('_') or [''])[0]
+              px=z if z not in (None,'','-','--') else (a if a not in ('','-','--') else b)
+              if px not in (None,'','-','--'):
+                  usable[c]={'px':px,'z':z,'a':a,'b':b,'t':x.get('t'),'d':x.get('d'),'ch':x.get('ch')}
+          print(json.dumps({'cors':cors,'count':len(arr),'usable':usable},ensure_ascii=False))
+          must=['0050','3711','2002','2330','3293']
+          missing=[c for c in must if c not in usable]
           if missing:
-              raise SystemExit('Missing live TWSE symbols: '+','.join(missing))
-          if '3293' not in found:
-              print('3293 OTC did not return a trade in this sample; not fatal')
+              raise SystemExit('Missing usable live symbols: '+','.join(missing))
           print('V079_BATCH_MIS_PASS')
           PY

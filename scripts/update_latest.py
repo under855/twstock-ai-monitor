@@ -95,12 +95,14 @@ def fetch_twse(trade_date):
     for r in rows if isinstance(rows,list) else []:
         c=str(r.get('Code','')).strip()
         if not c: continue
+        row_date=roc_to_iso(r.get('Date'))
+        if not row_date: continue
         out[c]={
             'symbol':c,'name':str(r.get('Name','')).strip(),'market':'TWSE',
             'close':n(r.get('ClosingPrice')),'open':n(r.get('OpeningPrice')),
             'high':n(r.get('HighestPrice')),'low':n(r.get('LowestPrice')),
             'volume':n(r.get('TradeVolume')),'change':n(r.get('Change')),
-            'tradeDate':trade_date,'source':'TWSE STOCK_DAY_ALL'
+            'tradeDate':row_date,'source':'TWSE STOCK_DAY_ALL'
         }
     if len(out)<500: raise RuntimeError(f'TWSE rows too few: {len(out)}')
     return out
@@ -118,6 +120,8 @@ def fetch_tpex(trade_date):
             for r in rows if isinstance(rows,list) else []:
                 c=str(r.get('SecuritiesCompanyCode') or r.get('Code') or '').strip()
                 if not c: continue
+                row_date=roc_to_iso(r.get('Date'))
+                if not row_date: continue
                 out[c]={
                     'symbol':c,
                     'name':str(r.get('CompanyName') or r.get('SecuritiesCompanyName') or r.get('SecuritiesName') or '').strip(),
@@ -128,7 +132,7 @@ def fetch_tpex(trade_date):
                     'low':n(r.get('Low') or r.get('LowPrice')),
                     'volume':n(r.get('TradingShares') or r.get('TradeVolume')),
                     'change':n(r.get('Change') or r.get('ChangeAmount')),
-                    'tradeDate':trade_date,'source':'TPEx OpenAPI'
+                    'tradeDate':row_date,'source':'TPEx OpenAPI'
                 }
             if len(out)>=300:return out
             last=RuntimeError(f'TPEx rows too few: {len(out)} from {url}')

@@ -119,7 +119,7 @@ const NAMES={
  '2610':'中華航空','3293':'鈊象','3711':'日月光投控','4934':'太極','6592':'和潤企業'
 };
 const ALIASES={'華航':'2610','中華航空':'2610','中華航空公司':'2610','台積電':'2330','台灣積體電路':'2330','台灣積體電路製造':'2330','世界先進':'5347','世界':'5347','啟賦':'7956','日月光':'3711','日月光投控':'3711','中鋼':'2002','鈊象':'3293'};
-// 2026/10/22 最近有效交易日快照：讓 file://、休市、來源暫斷時仍有可驗證畫面。
+// 2026/10/28 最近有效交易日快照：讓 file://、休市、來源暫斷時仍有可驗證畫面。
 // 上市/ETF 以 TWSE 2026/10/22 收盤表為基準；3293 為上櫃，交叉核對 10/22 收盤資料。
 const SNAPSHOT_DATE='2026/10/28';
 const SNAPSHOT={
@@ -165,7 +165,6 @@ async function loadFullUniverse(force=false){
  if(universeReady&&!force)return universeMap;if(universeLoadPromise&&!force)return universeLoadPromise;
  universeLoadPromise=(async()=>{
    if(new URLSearchParams(location.search).get('qa')==='1'){applyUniverse(Object.values(QA_FIXTURE),'QA fixture');return universeMap}
-   if(!force&&loadUniverseCache())return universeMap;
    $('universePill').textContent='台股名冊：載入中…';
    let lastErr=null;
    for(const url of MARKET_DATA_URLS){try{const j=await json(url,12000);const obj=j?.symbols||{};const items=Object.values(obj);if(items.length<1000)throw Error('名冊筆數異常 '+items.length);if(applyUniverse(items,'TWSE／TPEx 官方資料彙整')){cacheUniverse();return universeMap}}catch(e){lastErr=e}}

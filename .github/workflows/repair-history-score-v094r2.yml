@@ -24,25 +24,15 @@ jobs:
           s=p.read_text(encoding='utf-8')
           needle="  function boot(){\n"
           assert needle in s
-          add=r'''  async function refreshWatchHistoryAndScores(){
-    if(typeof watchlist!=='function'||typeof render!=='function')return false;
-    const codes=[...new Set(watchlist().map(String))];
-    await Promise.allSettled(codes.map(loadHistoryFor));
-    try{await render(false)}catch{}
-    return codes.some(code=>Array.isArray(historyCache?.[code])&&historyCache[code].length>=2);
-  }
-
-'''
+          add="  async function refreshWatchHistoryAndScores(){\n    if(typeof watchlist!=='function'||typeof render!=='function')return false;\n    const codes=[...new Set(watchlist().map(String))];\n    await Promise.allSettled(codes.map(loadHistoryFor));\n    try{await render(false)}catch{}\n    return codes.some(code=>Array.isArray(historyCache?.[code])&&historyCache[code].length>=2);\n  }\n\n"
           s=s.replace(needle,add+needle,1)
           old="    startTodayOnlyMainCharts();\n"
           assert old in s
           s=s.replace(old,"    refreshWatchHistoryAndScores().catch(()=>{});\n",1)
           p.write_text(s,encoding='utf-8')
-
           p=Path('index.html'); s=p.read_text(encoding='utf-8')
           s=s.replace('./extras-v090.js?v=094r1','./extras-v090.js?v=094r2')
           p.write_text(s,encoding='utf-8')
-
           p=Path('sw.js'); s=p.read_text(encoding='utf-8')
           s=s.replace("const CACHE='tw-ai-monitor-v094r1';","const CACHE='tw-ai-monitor-v094r2';")
           p.write_text(s,encoding='utf-8')
@@ -51,7 +41,7 @@ jobs:
         run: |
           node --check extras-v090.js
           grep -F 'refreshWatchHistoryAndScores().catch(()=>{});' extras-v090.js
-          ! grep -F '    startTodayOnlyMainCharts();' extras-v090.js
+          if grep -F '    startTodayOnlyMainCharts();' extras-v090.js; then exit 1; fi
           grep -F './extras-v090.js?v=094r2' index.html
           grep -F "const CACHE='tw-ai-monitor-v094r2';" sw.js
           sha256sum live-v091.js scripts/update_latest.py > /tmp/core.after

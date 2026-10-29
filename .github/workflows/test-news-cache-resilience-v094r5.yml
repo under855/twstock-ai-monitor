@@ -1,0 +1,30 @@
+name: Test news cache resilience v0.9.4r5
+on:
+  push:
+    branches: ['news-cache-resilience-v094r5']
+    paths:
+      - 'scripts/update_news.py'
+      - '.github/workflows/test-news-cache-resilience-v094r5.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preserve existing cache and refresh
+        run: |
+          cp data/news.json /tmp/news-before.json
+          python scripts/update_news.py
+      - name: Validate final cache
+        run: |
+          python - <<'PY'
+          import json
+          j=json.load(open('data/news.json',encoding='utf-8'))
+          for c in ['3711','3293']:
+              xs=j['stocks'].get(c,[])
+              assert xs, (c,'empty')
+              print(c,len(xs),j.get('refreshStatus',{}).get(c),xs[0]['publisher'],xs[0]['title'])
+          print('NEWS_RESILIENCE_PASS')
+          PY

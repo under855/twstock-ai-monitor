@@ -22,34 +22,31 @@ jobs:
             twseDaily:'https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL',
             twseIndex:'https://openapi.twse.com.tw/v1/exchangeReport/MI_INDEX',
             tpex:'https://www.tpex.org.tw/openapi/v1/tpex_mainboard_quotes',
-            tpexHistory:'https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingInfo?code=3293&date=2026/10/01&response=json',
             mis:'https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_t00.tw%7Ctse_0050.tw%7Ctse_3711.tw%7Cotc_3293.tw%7Ctse_2002.tw%7Ctse_00878.tw%7Ctse_00919.tw&json=1&delay=0',
+            misChart:'https://mis.twse.com.tw/stock/api/getChartOhlcStatis.jsp?ex=tse&ch=0050.tw&fqy=1'
           };
           const probes=[
             ['TWSE_DAILY',urls.twseDaily],
             ['TWSE_INDEX',urls.twseIndex],
             ['TPEX',urls.tpex],
-            ['TPEX_HISTORY',urls.tpexHistory],
             ['MIS_DIRECT',urls.mis],
             ['MIS_CORSDEV','https://proxy.cors.dev/'+urls.mis],
-            ['MIS_ALLORIGINS','https://api.allorigins.win/raw?url='+encodeURIComponent(urls.mis)],
-            ['YAHOO_DIRECT','https://query1.finance.yahoo.com/v8/finance/chart/0050.TW?range=1d&interval=1m&includePrePost=false'],
-            ['YAHOO_CORSDEV','https://proxy.cors.dev/https://query1.finance.yahoo.com/v8/finance/chart/0050.TW?range=1d&interval=1m&includePrePost=false'],
+            ['MIS_CHART_DIRECT',urls.misChart],
+            ['MIS_CHART_CORSDEV','https://proxy.cors.dev/'+urls.misChart]
           ];
           const timeout=async(url)=>{const c=new AbortController();const t=setTimeout(()=>c.abort(),12000);try{return await fetch(url,{headers:{'user-agent':'Mozilla/5.0'},signal:c.signal})}finally{clearTimeout(t)}};
           for(const [name,url] of probes){
             try{
               const r=await timeout(url);const text=await r.text();
               console.log('\n###',name,'STATUS',r.status,'CTYPE',r.headers.get('content-type'),'ACAO',r.headers.get('access-control-allow-origin'));
-              console.log(text.slice(0,2000));
+              console.log(text.slice(0,2500));
               try{
                 const j=JSON.parse(text);
                 if(name==='TWSE_DAILY') console.log('SAMPLES',j.filter(x=>['0050','3711','2002','00878','00919'].includes(String(x.Code))).map(x=>({Code:x.Code,Date:x.Date,ClosingPrice:x.ClosingPrice,Change:x.Change})));
                 if(name==='TWSE_INDEX') console.log('TAIEX',j.find(x=>String(x['指數']).includes('發行量加權股價指數')));
                 if(name==='TPEX') console.log('3293',j.find(x=>String(x.SecuritiesCompanyCode||x.Code||x['證券代號'])==='3293'));
-                if(name==='TPEX_HISTORY') console.log('TPEX_HISTORY_KEYS',Object.keys(j),'TABLES',j?.tables?.map(x=>({title:x.title,rows:x.data?.length,fields:x.fields}))||null);
-                if(name.startsWith('MIS_')) console.log('MIS_ROWS',(j.msgArray||[]).map(x=>({c:x.c,d:x.d,t:x.t,z:x.z,y:x.y,trade:x.trade})).slice(0,10));
-                if(name.startsWith('YAHOO_')) console.log('YAHOO_META',j?.chart?.result?.[0]?.meta||j?.chart?.error||null);
+                if(name.startsWith('MIS_')&&!name.includes('CHART')) console.log('MIS_ROWS',(j.msgArray||[]).map(x=>({c:x.c,d:x.d,t:x.t,z:x.z,y:x.y,trade:x.trade})).slice(0,10));
+                if(name.includes('CHART')) console.log('CHART_KEYS',Object.keys(j),'CHART_SAMPLE',j);
               }catch(e){console.log('JSON_PARSE',String(e))}
             }catch(e){console.log('\n###',name,'ERROR',String(e))}
           }

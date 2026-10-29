@@ -311,7 +311,7 @@
 
   function installObserver(){
     const watch=document.getElementById('watch');if(!watch||observer)return;
-    observer=new MutationObserver(()=>{if(inMarketWindow())queueMicrotask(paintAll)});observer.observe(watch,{childList:true,subtree:true});
+    observer=new MutationObserver(()=>{if(inMarketWindow())queueMicrotask(paintAll)});observer.observe(watch,{childList:true,subtree:false});
   }
   function debugState(){
     const stocks={};for(const code of watchCodes()){const q=liveQuotes.get(code),arr=liveSeries.get(code)||[];stocks[code]={price:q?.price??null,date:q?.date??null,tradeTime:q?.tradeTime??null,stamp:q?.stamp??null,source:q?.source??null,seriesPoints:arr.length,seriesLastStamp:arr.at(-1)?.stamp??null,domState:rowForDom(code)?.dataset?.liveState||null,domPrice:rowForDom(code)?.dataset?.livePrice||null};}

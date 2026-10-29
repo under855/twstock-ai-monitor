@@ -1,0 +1,52 @@
+name: Apply v0.9.0 clean live core
+on:
+  push:
+    paths:
+      - 'scripts/patch_v090_core.py'
+      - '.github/workflows/apply-v090-core.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply clean v0.9.0 core patch
+        run: python scripts/patch_v090_core.py
+      - name: Validate clean runtime markers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text(encoding='utf-8')
+          w=Path('sw.js').read_text(encoding='utf-8')
+          assert "APP_VERSION='0.9.0'" in s
+          assert 'live-v090.js?v=090' in s
+          assert 'extras-v090.js?v=090' in s
+          assert 'dividend-enhance.js?v=090' in s
+          for legacy in ['fix.js?v=','hotfix-v065.js?v=','hotfix-v066.js?v=','hotfix-v067.js?v=','hotfix-v069.js?v=','live-v081.js?v=']:
+              assert legacy not in s, legacy
+          assert '-webkit-fill-available' not in s
+          assert '100dvh' not in s
+          assert "tw-ai-monitor-v090" in w
+          assert 'fix.js' not in w and 'hotfix-v065.js' not in w and 'live-v081.js' not in w
+          print('CLEAN_RUNTIME_MARKERS_PASS')
+          PY
+      - name: Syntax check new scripts
+        run: |
+          node --check live-v090.js
+          node --check extras-v090.js
+      - name: Commit promoted core
+        run: |
+          if git diff --quiet -- index.html sw.js; then
+            echo 'No changes to commit'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html sw.js
+          git commit -m 'Promote v0.9.0 single-source live runtime'
+          git push

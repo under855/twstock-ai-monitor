@@ -18,3 +18,4 @@ if "const CACHE='tw-ai-monitor-v081';" not in w: raise SystemExit('missing sw v0
 w=w.replace("const CACHE='tw-ai-monitor-v081';","const CACHE='tw-ai-monitor-v082';",1)
 sw.write_text(w,encoding='utf-8')
 print('PATCH_V082_OK')
+# trigger promotion

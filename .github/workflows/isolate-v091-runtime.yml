@@ -1,0 +1,51 @@
+name: Isolate v0.9.1 runtime layers
+on:
+  push:
+    paths:
+      - '.github/workflows/isolate-v091-runtime.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright-core@latest
+      - name: Run isolation matrix
+        env:
+          URL: https://under855.github.io/twstock-ai-monitor/
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); export CHROME
+          cat > isolate.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const cases=[
+            {name:'A_sw_block_all_scripts',sw:'block',blockExtras:false},
+            {name:'B_sw_block_live_only',sw:'block',blockExtras:true},
+            {name:'C_sw_allow_live_only',sw:'allow',blockExtras:true},
+            {name:'D_sw_allow_all_scripts',sw:'allow',blockExtras:false},
+          ];
+          for(const cfg of cases){
+            const ctx=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:3,isMobile:true,hasTouch:true,timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:cfg.sw});
+            const page=await ctx.newPage();page.setDefaultTimeout(15000);
+            const errs=[];page.on('pageerror',e=>errs.push('pageerror:'+e.message));
+            if(cfg.blockExtras)await page.route(/(extras-v090|dividend-enhance)\.js/,route=>route.abort());
+            let result={name:cfg.name};
+            try{
+              await page.goto(process.env.URL+'?isolate='+cfg.name+'_'+Date.now(),{waitUntil:'domcontentloaded',timeout:45000});
+              await page.waitForTimeout(7000);
+              result.first=await page.evaluate(()=>({title:document.title,live:window.__TW_LIVE_V091__||null,rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent?.trim(),state:r.dataset.liveState,date:r.dataset.liveDate,price:r.querySelector('.price')?.textContent})),w:document.documentElement.scrollWidth,iw:innerWidth,h:document.documentElement.scrollHeight,ih:innerHeight}));
+              await page.waitForTimeout(17000);
+              result.second=await page.evaluate(()=>({live:window.__TW_LIVE_V091__||null,rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent?.trim(),state:r.dataset.liveState,date:r.dataset.liveDate,price:r.querySelector('.price')?.textContent}))}));
+            }catch(e){result.error=String(e)}
+            result.errors=errs;console.log('CASE_RESULT',JSON.stringify(result));
+            await ctx.close();
+          }
+          await browser.close();
+          JS
+          timeout 210s node isolate.mjs

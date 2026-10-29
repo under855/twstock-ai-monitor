@@ -1,10 +1,11 @@
 (() => {
   'use strict';
-  const VERSION='0.9.2';
+  const VERSION='0.9.3';
   const INTERVAL=15000;
   const MAX_POINTS=600;
   const QKEY='tw_live091_quotes_';
   const SKEY='tw_live091_series_';
+  const IKEY='tw_live091_index_';
   const quotes=new Map();
   const series=new Map();
   const seeded=new Set();
@@ -97,12 +98,13 @@
 
   function loadToday(){
     const d=today();
+    try{const x=JSON.parse(localStorage.getItem(IKEY+d)||'null');if(x?.date===d&&sameDay(Number(x.stamp))&&num(x.price)!=null)taiex={...x,source:'本日最後盤中指數（重新連線中）'}}catch{}
     try{const obj=JSON.parse(localStorage.getItem(QKEY+d)||'{}');for(const [code,q] of Object.entries(obj)){if(q?.date===d&&sameDay(Number(q.stamp))&&num(q.price)!=null)quotes.set(code,{...q,source:'本日最後盤中成交（重新連線中）',live:true})}}catch{}
     try{const obj=JSON.parse(localStorage.getItem(SKEY+d)||'{}');for(const [code,a] of Object.entries(obj)){if(!Array.isArray(a))continue;const clean=a.filter(p=>sameDay(Number(p?.stamp))&&num(p?.close)!=null).sort((x,y)=>x.stamp-y.stamp).slice(-MAX_POINTS);if(clean.length)series.set(code,clean)}}catch{}
   }
   function saveToday(){
     const d=today(),qo={},so={};for(const [c,q] of quotes)if(q?.date===d&&sameDay(q.stamp))qo[c]=q;for(const [c,a] of series)so[c]=a.slice(-MAX_POINTS);
-    try{localStorage.setItem(QKEY+d,JSON.stringify(qo));localStorage.setItem(SKEY+d,JSON.stringify(so))}catch{}
+    try{localStorage.setItem(QKEY+d,JSON.stringify(qo));localStorage.setItem(SKEY+d,JSON.stringify(so));if(taiex?.date===d&&sameDay(taiex.stamp))localStorage.setItem(IKEY+d,JSON.stringify(taiex))}catch{}
   }
   function acceptQuote(q){
     const old=quotes.get(q.code);if(old&&Number(old.stamp)>Number(q.stamp))return false;quotes.set(q.code,q);

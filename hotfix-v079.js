@@ -2,6 +2,7 @@
   const INTERVAL = 15000;
   let timer = null;
   let busy = false;
+  let baseRender = null;
 
   const num = v => {
     if (v == null) return null;
@@ -33,6 +34,19 @@
     document.head.appendChild(s);
   }
 
+  function installRenderGuard() {
+    try {
+      if (window.__TW_RENDER_GUARD_V079__) return;
+      if (typeof render !== 'function') return;
+      baseRender = render;
+      render = async function(allowNetwork=false) {
+        if (allowNetwork) return;
+        return baseRender(false);
+      };
+      window.__TW_RENDER_GUARD_V079__ = true;
+    } catch {}
+  }
+
   async function fetchJson(url, timeout=7000) {
     const c = new AbortController();
     const id = setTimeout(() => c.abort(), timeout);
@@ -51,9 +65,7 @@
   async function fetchMisQuotes(list) {
     if (!list.length) return [];
     const channels = [];
-    for (const c of list) {
-      channels.push(`tse_${c}.tw`, `otc_${c}.tw`);
-    }
+    for (const c of list) channels.push(`tse_${c}.tw`, `otc_${c}.tw`);
     const upstream = `https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=${encodeURIComponent(channels.join('|'))}&json=1&delay=0&_=${Date.now()}`;
     const urls = [
       `https://proxy.cors.dev/${upstream}`,
@@ -72,19 +84,29 @@
   function toQuote(m) {
     const code = String(m?.c || '').trim();
     if (!code) return null;
-    let price = num(m.z);
-    const prev = num(m.y);
+    let price = num(m?.trade?.z);
+    if (price == null) price = num(m.z);
     if (price == null) price = num(m.a?.split?.('_')?.[0]);
+    if (price == null) price = num(m.b?.split?.('_')?.[0]);
     if (price == null) return null;
+    const prev = num(m.y);
     const tlong = num(m.tlong);
+    let time = tlong ? new Date(tlong) : new Date();
+    const tradeTime = String(m?.trade?.t || '').trim();
+    if (tradeTime && String(m.d || '').length === 8) {
+      const d = String(m.d);
+      const iso = `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}T${tradeTime}+08:00`;
+      const parsed = new Date(iso);
+      if (!Number.isNaN(parsed.getTime())) time = parsed;
+    }
     return {
       code,
       price,
       prev,
       change: prev == null ? null : price - prev,
       open:num(m.o), high:num(m.h), low:num(m.l), volume:num(m.v),
-      time:tlong ? new Date(tlong) : new Date(),
-      source:'TWSE MIS 盤中即時'
+      time,
+      source: num(m?.trade?.z) != null ? 'TWSE MIS 最新成交' : 'TWSE MIS 即時報價'
     };
   }
 
@@ -162,6 +184,7 @@
 
   function boot() {
     installMobileLayoutFix();
+    installRenderGuard();
     refreshLiveQuotes();
     if (timer) clearInterval(timer);
     timer = setInterval(refreshLiveQuotes, INTERVAL);

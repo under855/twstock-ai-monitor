@@ -9,7 +9,7 @@ permissions:
 jobs:
   diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 4
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -29,14 +29,16 @@ jobs:
           const p=await c.newPage();
           p.on('console',m=>console.log('BROWSER_CONSOLE',m.type(),m.text()));
           p.on('pageerror',e=>console.log('BROWSER_PAGEERROR',e.stack||e.message));
-          p.on('requestfailed',r=>{if(/mis\.twse|cors\.dev|allorigins|yahoo/.test(r.url()))console.log('REQUEST_FAILED',r.url(),r.failure()?.errorText)});
-          p.on('response',r=>{if(/mis\.twse|cors\.dev/.test(r.url()))console.log('RESPONSE',r.status(),r.url().slice(0,220))});
-          await p.goto(process.env.URL+'?diag090='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
-          for(let i=0;i<8;i++){
-            await p.waitForTimeout(5000);
-            const x=await p.evaluate(()=>({title:document.title,state:window.__TW_LIVE_V090__||null,rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent?.trim(),state:r.dataset.liveState,date:r.dataset.liveDate,price:r.querySelector('.price')?.textContent,meta:r.querySelector('.meta')?.textContent}))}));
+          p.on('requestfailed',r=>{if(/mis\.twse|cors\.dev|allorigins|yahoo/.test(r.url()))console.log('REQUEST_FAILED',r.url().slice(0,300),r.failure()?.errorText)});
+          p.on('response',r=>{if(/mis\.twse|cors\.dev|live-v090/.test(r.url()))console.log('RESPONSE',r.status(),r.url().slice(0,300))});
+          await p.goto(process.env.URL+'?diag090='+Date.now(),{waitUntil:'domcontentloaded',timeout:45000});
+          const scriptText=await p.evaluate(async()=>{const r=await fetch('./live-v090.js?v=090&diag='+Date.now(),{cache:'no-store'});return {status:r.status,text:(await r.text()).slice(0,180)}});
+          console.log('PUBLIC_SCRIPT',JSON.stringify(scriptText));
+          for(let i=0;i<5;i++){
+            await p.waitForTimeout(4000);
+            const x=await p.evaluate(()=>({title:document.title,state:window.__TW_LIVE_V090__||null,rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent?.trim(),state:r.dataset.liveState,date:r.dataset.liveDate,stamp:r.dataset.liveStamp,price:r.querySelector('.price')?.textContent,meta:r.querySelector('.meta')?.textContent}))}));
             console.log('SNAPSHOT',i,JSON.stringify(x));
           }
           await b.close();
           JS
-          node diag.mjs
+          timeout 90s node diag.mjs

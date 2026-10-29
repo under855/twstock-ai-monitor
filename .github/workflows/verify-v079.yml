@@ -1,0 +1,51 @@
+name: Verify v079 live quotes
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'hotfix-v079.js'
+      - 'sw.js'
+      - '.github/workflows/verify-v079.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check
+        run: node --check hotfix-v079.js
+      - name: Verify batch TWSE MIS live quotes through CORS proxy
+        run: |
+          python - <<'PY'
+          import json, urllib.request, urllib.parse, datetime
+          codes=['0050','3711','2002','2330','3293']
+          channels=[]
+          for c in codes:
+              channels += [f'tse_{c}.tw',f'otc_{c}.tw']
+          upstream='https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch='+urllib.parse.quote('|'.join(channels),safe='')+'&json=1&delay=0'
+          url='https://proxy.cors.dev/'+upstream
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/json','Origin':'https://under855.github.io'})
+          with urllib.request.urlopen(req,timeout=20) as r:
+              j=json.loads(r.read().decode('utf-8-sig'))
+              cors=r.headers.get('Access-Control-Allow-Origin')
+          arr=j.get('msgArray') or []
+          found={str(x.get('c')):x for x in arr if x.get('c') and x.get('z') not in (None,'','-','--')}
+          print(json.dumps({'cors':cors,'count':len(arr),'found':{c:{'z':found[c].get('z'),'t':found[c].get('t'),'d':found[c].get('d')} for c in found}},ensure_ascii=False))
+          if cors not in ('*','https://under855.github.io'):
+              raise SystemExit('CORS unavailable')
+          must=['0050','3711','2002','2330']
+          missing=[c for c in must if c not in found]
+          if missing:
+              raise SystemExit('Missing live TWSE symbols: '+','.join(missing))
+          if '3293' not in found:
+              print('3293 OTC did not return a trade in this sample; not fatal')
+          print('V079_BATCH_MIS_PASS')
+          PY

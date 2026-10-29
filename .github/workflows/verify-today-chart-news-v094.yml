@@ -1,0 +1,87 @@
+name: Verify today chart and trusted news v0.9.4
+on:
+  push:
+    branches: ['feature-today-chart-news-v094-work']
+    paths:
+      - 'scripts/patch_today_chart_news_v094.py'
+      - '.github/workflows/verify-today-chart-news-v094.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preserve core hashes before UI patch
+        run: |
+          sha256sum live-v091.js index.html scripts/update_latest.py > /tmp/core.before
+      - name: Apply UI/news patch
+        run: python scripts/patch_today_chart_news_v094.py
+      - name: Syntax and static checks
+        run: |
+          node --check extras-v090.js
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('extras-v090.js').read_text(encoding='utf-8')
+          checks={
+            'version unchanged':"const VERSION='0.9.4';" in s,
+            'today main only':'startTodayOnlyMainCharts()' in s and '今日走勢<br>等待即時資料' in s,
+            'detail tabs':'detailChartTabs' in s and "['today','今日']" in s and "['60','60日']" in s,
+            'trusted news sources':all(x in s for x in ['鉅亨網','MoneyDJ','中央社']),
+            'multi-source news':'Promise.allSettled(NEWS_FEEDS.map(fetchPublisherFeed))' in s,
+            'old yahoo news removed':'yahooStockNews' not in s,
+            'old google proxy news removed':'googleRssNews' not in s,
+            'history kept detail-only':'loadHistoryFor(key).then' in s,
+          }
+          print(checks)
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit('FAILED '+', '.join(bad))
+          PY
+      - name: Confirm market core unchanged
+        run: |
+          sha256sum live-v091.js index.html scripts/update_latest.py > /tmp/core.after
+          diff -u /tmp/core.before /tmp/core.after
+      - name: Verify trusted RSS sources directly
+        run: |
+          python - <<'PY'
+          import urllib.request, xml.etree.ElementTree as ET
+          feeds={
+            'anue':'https://news.cnyes.com/rss/v1/news/category/tw_stock',
+            'moneydj':'https://www.moneydj.com/KMDJ/RssCenter.aspx?svc=NR&fno=1&arg=MB06',
+            'cna':'https://feeds.feedburner.com/rsscna/finance',
+          }
+          ok=[]
+          for name,url in feeds.items():
+            try:
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+              data=urllib.request.urlopen(req,timeout=12).read()
+              root=ET.fromstring(data)
+              n=len(root.findall('.//item'))
+              print(name,'items',n,'bytes',len(data))
+              if n>0: ok.append(name)
+            except Exception as e:
+              print(name,'FAIL',repr(e))
+          if len(ok)<2: raise SystemExit('Need at least two working trusted RSS sources, got '+repr(ok))
+          print('TRUSTED_RSS_PASS',ok)
+          PY
+      - name: Commit UI layer only after checks pass
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js
+          if git diff --cached --quiet; then
+            echo 'No runtime change'
+            exit 0
+          fi
+          git commit -m 'Keep main charts today-only and add trusted multi-source news'
+          git push origin HEAD:feature-today-chart-news-v094-work

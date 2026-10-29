@@ -1,4 +1,4 @@
-name: Repair history and score v0.9.4r2
+name: Repair non-TSMC charts and news v0.9.4r3
 on:
   push:
     branches: ['repair-history-score-v094r2']
@@ -16,40 +16,47 @@ jobs:
           fetch-depth: 0
       - name: Preserve market core
         run: sha256sum live-v091.js scripts/update_latest.py > /tmp/core.before
-      - name: Patch display history bootstrap only
+      - name: Patch intraday and news display fallbacks
         run: |
           python - <<'PY'
           from pathlib import Path
           p=Path('extras-v090.js')
           s=p.read_text(encoding='utf-8')
-          needle="  function boot(){\n"
-          assert needle in s
-          add="  async function refreshWatchHistoryAndScores(){\n    if(typeof watchlist!=='function'||typeof render!=='function')return false;\n    const codes=[...new Set(watchlist().map(String))];\n    await Promise.allSettled(codes.map(loadHistoryFor));\n    try{await render(false)}catch{}\n    return codes.some(code=>Array.isArray(historyCache?.[code])&&historyCache[code].length>=2);\n  }\n\n"
-          s=s.replace(needle,add+needle,1)
-          old="    startTodayOnlyMainCharts();\n"
+          marker="  async function yahooDailyHistory(code){\n"
+          assert marker in s
+          add="""  function stockAliases(code,name){\n    const out=[String(code||''),String(name||'').trim()].filter(Boolean);\n    const n=String(name||'').trim();\n    for(const suffix of ['投控','控股','股份有限公司','公司'])if(n.endsWith(suffix)&&n.length>suffix.length+1)out.push(n.slice(0,-suffix.length));\n    return [...new Set(out.filter(x=>x.length>=2||/^\\d+$/.test(x)))];\n  }\n\n  async function googleTrustedDirect(code,name){\n    const aliases=stockAliases(code,name),query=encodeURIComponent(`${aliases.join(' OR ')} 股票 when:30d`),rss=`https://news.google.com/rss/search?q=${query}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant`;\n    for(const url of [`https://proxy.cors.dev/${rss}`,`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rss)}`]){\n      try{\n        if(url.includes('rss2json')){\n          const j=await fetchJson(url,8000);if(j?.status!=='ok')continue;\n          return (j.items||[]).map(x=>{let title=String(x?.title||'').trim(),publisher='';const m=title.match(/\\s+-\\s+([^\\-]+)$/);if(m){publisher=m[1].trim();title=title.slice(0,m.index).trim()}return {title,link:String(x?.link||''),publisher,time:Date.parse(x?.pubDate||'')}}).filter(x=>x.title&&x.link&&TRUSTED_GOOGLE_PUBLISHERS.some(n=>x.publisher.includes(n)));\n        }\n        const ac=new AbortController(),t=setTimeout(()=>ac.abort(),8000);\n        try{const r=await fetch(url,{cache:'no-store',signal:ac.signal});if(!r.ok)continue;const text=await r.text(),xml=new DOMParser().parseFromString(text,'text/xml'),out=[];for(const it of [...xml.querySelectorAll('item')]){let title=it.querySelector('title')?.textContent?.trim()||'',publisher=it.querySelector('source')?.textContent?.trim()||'';const link=it.querySelector('link')?.textContent?.trim()||'',ts=Date.parse(it.querySelector('pubDate')?.textContent||'');if(!publisher){const m=title.match(/\\s+-\\s+([^\\-]+)$/);if(m){publisher=m[1].trim();title=title.slice(0,m.index).trim()}}if(title&&link&&TRUSTED_GOOGLE_PUBLISHERS.some(n=>publisher.includes(n)))out.push({title,link,publisher,time:Number.isFinite(ts)?ts:null});}if(out.length)return out;}finally{clearTimeout(t)}\n      }catch{}\n    }\n    return [];\n  }\n\n  async function yahooTodayIntraday(code){\n    let market='';try{market=String(universeMap?.get?.(String(code))?.market||'')}catch{}\n    const symbols=market==='TPEx'?[`${code}.TWO`]:market==='TWSE'?[`${code}.TW`]:[`${code}.TW`,`${code}.TWO`];\n    const today=new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});\n    for(const symbol of symbols){\n      const upstream=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=1d&interval=5m&includePrePost=false&_=${Date.now()}`;\n      for(const url of [`https://proxy.cors.dev/${upstream}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(upstream)}`]){\n        try{const j=await fetchJson(url,7000),r=j?.chart?.result?.[0],ts=r?.timestamp||[],q=r?.indicators?.quote?.[0]||{},out=[];for(let i=0;i<ts.length;i++){const close=Number(q.close?.[i]);if(!Number.isFinite(close))continue;const d=new Date(Number(ts[i])*1000),day=d.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});if(day!==today)continue;out.push({time:d,close});}if(out.length>=2)return out;}catch{}\n      }\n    }\n    return [];\n  }\n\n  const todayFallbackCache=new Map();\n  async function ensureTodayChartFor(code){\n    const key=String(code);if(mainLivePoints(key)>=2)return [];\n    if(todayFallbackCache.has(key))return await todayFallbackCache.get(key);\n    const p=yahooTodayIntraday(key).then(points=>{const r=rowFor(key),c=r?.querySelector('canvas.spark');if(c&&points.length>=2&&typeof draw==='function')draw(c,points.map(x=>({date:x.time,close:x.close})),true,priceFor(key));return points}).catch(()=>[]);\n    todayFallbackCache.set(key,p);return await p;\n  }\n  async function refreshTodayFallbackCharts(){\n    if(typeof watchlist!=='function')return false;const codes=[...new Set(watchlist().map(String))];await Promise.allSettled(codes.map(ensureTodayChartFor));return true;\n  }\n\n"""
+          s=s.replace(marker,add+marker,1)
+          old="      if(items.length<4){for(const it of await trustedGoogleFallback(code,name)){const k=normNews(it.title);if(!k||seen.has(k))continue;seen.add(k);items.push(it)}}\n"
           assert old in s
-          s=s.replace(old,"    refreshWatchHistoryAndScores().catch(()=>{});\n",1)
+          s=s.replace(old,"      if(items.length<4){for(const it of await googleTrustedDirect(code,name)){const k=normNews(it.title);if(!k||seen.has(k))continue;seen.add(k);items.push(it)}}\n"+old,1)
+          oldboot="    refreshWatchHistoryAndScores().catch(()=>{});\n"
+          assert oldboot in s
+          s=s.replace(oldboot,"    refreshWatchHistoryAndScores().then(()=>refreshTodayFallbackCharts()).catch(()=>{});\n",1)
           p.write_text(s,encoding='utf-8')
-          p=Path('index.html'); s=p.read_text(encoding='utf-8')
-          s=s.replace('./extras-v090.js?v=094r1','./extras-v090.js?v=094r2')
+
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8').replace('./extras-v090.js?v=094r2','./extras-v090.js?v=094r3')
           p.write_text(s,encoding='utf-8')
-          p=Path('sw.js'); s=p.read_text(encoding='utf-8')
-          s=s.replace("const CACHE='tw-ai-monitor-v094r1';","const CACHE='tw-ai-monitor-v094r2';")
+          p=Path('sw.js')
+          s=p.read_text(encoding='utf-8').replace("const CACHE='tw-ai-monitor-v094r2';","const CACHE='tw-ai-monitor-v094r3';")
           p.write_text(s,encoding='utf-8')
           PY
-      - name: Static verification
+      - name: Verify patch and endpoints
         run: |
           node --check extras-v090.js
-          grep -F 'refreshWatchHistoryAndScores().catch(()=>{});' extras-v090.js
-          if grep -F '    startTodayOnlyMainCharts();' extras-v090.js; then exit 1; fi
-          grep -F './extras-v090.js?v=094r2' index.html
-          grep -F "const CACHE='tw-ai-monitor-v094r2';" sw.js
+          grep -F 'yahooTodayIntraday' extras-v090.js
+          grep -F 'googleTrustedDirect' extras-v090.js
+          grep -F './extras-v090.js?v=094r3' index.html
+          grep -F "const CACHE='tw-ai-monitor-v094r3';" sw.js
           sha256sum live-v091.js scripts/update_latest.py > /tmp/core.after
           diff -u /tmp/core.before /tmp/core.after
+          for sym in 0050.TW 3711.TW 3293.TWO; do
+            curl -fsSL --max-time 20 "https://query1.finance.yahoo.com/v8/finance/chart/$sym?range=1d&interval=5m" | grep -q 'timestamp'
+          done
       - name: Commit repair
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add extras-v090.js index.html sw.js
-          git commit -m 'Repair history bootstrap and score rendering in v0.9.4'
+          git commit -m 'Add non-TSMC intraday chart and news fallbacks'
           git push origin HEAD:repair-history-score-v094r2

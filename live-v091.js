@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.9.3';
+  const VERSION='0.9.4';
   const INTERVAL=15000;
   const MAX_POINTS=600;
   const QKEY='tw_live091_quotes_';

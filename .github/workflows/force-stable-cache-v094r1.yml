@@ -1,0 +1,48 @@
+name: Force stable v0.9.4 cache refresh
+on:
+  push:
+    branches: ['force-stable-cache-v094r1']
+    paths:
+      - '.github/workflows/force-stable-cache-v094r1.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Preserve stable logic hashes
+        run: sha256sum extras-v090.js live-v091.js scripts/update_latest.py > /tmp/core.before
+      - name: Bump only browser and service-worker asset cache keys
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          s=s.replace('./dividend-enhance.js?v=090','./dividend-enhance.js?v=094r1')
+          s=s.replace('./extras-v090.js?v=094','./extras-v090.js?v=094r1')
+          s=s.replace('./live-v091.js?v=094','./live-v091.js?v=094r1')
+          p.write_text(s,encoding='utf-8')
+          p=Path('sw.js'); s=p.read_text(encoding='utf-8')
+          s=s.replace("const CACHE='tw-ai-monitor-v094';","const CACHE='tw-ai-monitor-v094r1';")
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Verify only cache identifiers changed
+        run: |
+          grep -F './extras-v090.js?v=094r1' index.html
+          grep -F './live-v091.js?v=094r1' index.html
+          grep -F "const CACHE='tw-ai-monitor-v094r1';" sw.js
+          sha256sum extras-v090.js live-v091.js scripts/update_latest.py > /tmp/core.after
+          diff -u /tmp/core.before /tmp/core.after
+          git diff --name-only | sort > /tmp/changed
+          printf 'index.html\nsw.js\n' | sort > /tmp/expected
+          diff -u /tmp/expected /tmp/changed
+      - name: Commit cache refresh only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html sw.js
+          git commit -m 'Force browsers to reload verified stable v0.9.4 assets'
+          git push origin HEAD:force-stable-cache-v094r1

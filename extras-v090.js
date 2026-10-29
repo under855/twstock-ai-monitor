@@ -110,6 +110,26 @@
     return true;
   }
 
+  async function yahooDailyHistory(code){
+    let market='';try{market=String(universeMap?.get?.(String(code))?.market||'')}catch{}
+    const symbols=market==='TPEx'?[`${code}.TWO`]:market==='TWSE'?[`${code}.TW`]:[`${code}.TW`,`${code}.TWO`];
+    for(const symbol of symbols){
+      const upstream=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=3mo&interval=1d&includePrePost=false&_=${Date.now()}`;
+      for(const url of [upstream,`https://proxy.cors.dev/${upstream}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(upstream)}`]){
+        try{
+          const j=await fetchJson(url,7000),r=j?.chart?.result?.[0],ts=r?.timestamp||[],q=r?.indicators?.quote?.[0]||{},out=[];
+          for(let i=0;i<ts.length;i++){
+            const close=Number(q.close?.[i]);if(!Number.isFinite(close))continue;
+            const d=new Date(Number(ts[i])*1000),date=d.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}).replaceAll('-','/');
+            const n=v=>Number.isFinite(Number(v))?Number(v):null;
+            out.push({date,open:n(q.open?.[i]),high:n(q.high?.[i]),low:n(q.low?.[i]),close,change:null,volume:n(q.volume?.[i])});
+          }
+          if(out.length>=2)return out;
+        }catch{}
+      }
+    }
+    return [];
+  }
   async function loadHistoryFor(code){
     try{
       const key=String(code),cached=typeof historyCache!=='undefined'?historyCache[key]:null;
@@ -118,6 +138,8 @@
         const h=await history(key);
         if(Array.isArray(h)&&h.length>=2)return h;
       }
+      const yh=await yahooDailyHistory(key);
+      if(yh.length>=2){try{historyCache[key]=yh}catch{}return yh}
     }catch{}
     return [];
   }

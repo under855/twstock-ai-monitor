@@ -9,17 +9,19 @@ permissions:
 jobs:
   diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - run: node --check extras-v090.js
       - run: npm install --no-save playwright-core@latest >/dev/null 2>&1
-      - name: Inspect production chart pixels and live series
+      - name: Wait for Pages deployment and verify production charts
         env:
           URL: https://under855.github.io/twstock-ai-monitor/
         run: |
+          sleep 45
           CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); export CHROME
           cat > chartdiag.mjs <<'JS'
           import { chromium } from 'playwright-core';
@@ -27,18 +29,22 @@ jobs:
           const ctx=await b.newContext({viewport:{width:390,height:844},deviceScaleFactor:3,isMobile:true,hasTouch:true,timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'allow'});
           const p=await ctx.newPage();
           const errs=[];p.on('pageerror',e=>errs.push(e.message));p.on('console',m=>{if(m.type()==='error')errs.push(m.text())});
-          await p.goto(process.env.URL+'?chartdiag='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
-          await p.waitForTimeout(35000);
-          const out=await p.evaluate(()=>{
-            function canvasInk(c){if(!c)return null;try{const x=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let n=0;for(let i=3;i<x.length;i+=4)if(x[i]>0)n++;return n}catch{return -1}}
-            return {
-              title:document.title,
-              live:window.__TW_LIVE_V091__||null,
-              rows:[...document.querySelectorAll('#watch article.row')].map(r=>{const c=r.querySelector('canvas.spark');return {code:r.querySelector('.sym')?.textContent?.trim(),hasCanvas:!!c,w:c?.width||0,h:c?.height||0,ink:canvasInk(c),text:r.querySelector('.sparkFallback')?.textContent||''}})
-            }
+          await p.goto(process.env.URL+'?chartaccept='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForTimeout(18000);
+          const rows=await p.evaluate(()=>{
+            function ink(c){if(!c)return 0;try{const x=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let n=0;for(let i=3;i<x.length;i+=4)if(x[i]>0)n++;return n}catch{return 0}}
+            return [...document.querySelectorAll('#watch article.row')].map(r=>{const c=r.querySelector('canvas.spark');return {code:r.querySelector('.sym')?.textContent?.trim(),canvas:!!c,ink:ink(c),fallback:r.querySelector('.sparkFallback')?.textContent||''}})
           });
-          out.errors=errs;
-          console.log(JSON.stringify(out,null,2));
+          if(!rows.length)throw new Error('no monitor rows');
+          const failed=rows.filter(x=>!x.canvas||x.ink<=0);
+          console.log('ROWS',JSON.stringify(rows));
+          if(failed.length)throw new Error('missing row line charts '+JSON.stringify(failed));
+          await p.locator('#watch article.row').first().click();
+          await p.waitForTimeout(2500);
+          const detail=await p.evaluate(()=>{const c=document.getElementById('bigChart');if(!c)return {canvas:false,ink:0};const x=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let n=0;for(let i=3;i<x.length;i+=4)if(x[i]>0)n++;return {canvas:true,ink:n,msg:document.getElementById('chartMsg')?.textContent||''}});
+          console.log('DETAIL',JSON.stringify(detail),'ERRORS',JSON.stringify(errs));
+          if(!detail.canvas||detail.ink<=0)throw new Error('detail line chart missing');
+          if(errs.length)throw new Error('page errors '+errs.join(' | '));
           await b.close();
           JS
           node chartdiag.mjs

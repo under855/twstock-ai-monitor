@@ -1,0 +1,4 @@
+Verified display/news layer deployment marker
+Base stable core: c48b9d8d498e4731e276c993ca587d9a7d7da6ee
+Feature verification head: 945e070247a3a725c057fbc7ed3029c48bae47c3
+Core live-v091.js, index.html, scripts/update_latest.py unchanged from stable backup during verification.

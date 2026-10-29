@@ -34,10 +34,10 @@ jobs:
             return {
               title:document.title,
               live:window.__TW_LIVE_V091__||null,
-              rows:[...document.querySelectorAll('#watch article.row')].map(r=>{const c=r.querySelector('canvas.spark');return {code:r.querySelector('.sym')?.textContent?.trim(),hasCanvas:!!c,w:c?.width||0,h:c?.height||0,ink:canvasInk(c),text:r.querySelector('.sparkFallback')?.textContent||''}}),
-              errors:errs
+              rows:[...document.querySelectorAll('#watch article.row')].map(r=>{const c=r.querySelector('canvas.spark');return {code:r.querySelector('.sym')?.textContent?.trim(),hasCanvas:!!c,w:c?.width||0,h:c?.height||0,ink:canvasInk(c),text:r.querySelector('.sparkFallback')?.textContent||''}})
             }
           });
+          out.errors=errs;
           console.log(JSON.stringify(out,null,2));
           await b.close();
           JS

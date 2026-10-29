@@ -36,6 +36,7 @@ jobs:
             todayOnly:s.includes('enforceTodayOnlyMainCharts')&&s.includes('今日走勢<br>等待即時資料'),
             detailTabs:['今日','5日','20日','60日'].every(x=>s.includes(`'${x}'`)),
             separateHistoryCanvas:s.includes("hist.id='historyChart'")&&s.includes("live.style.display='none';hist.style.display='block'"),
+            isolatedHistoryMessage:s.includes("histMsg.id='historyChartMsg'")&&s.includes("if(msg)msg.style.display='none'")&&s.includes("histMsg.style.display='none'"),
             trustedFeeds:['news.cnyes.com','moneydj.com','feeds.feedburner.com/rsscna/finance'].every(x=>s.includes(x)),
             noYahooNews:!s.includes('yahooStockNews'),
             multiSource:s.includes('Promise.allSettled(NEWS_FEEDS.map(fetchPublisherFeed))'),

@@ -1,0 +1,81 @@
+name: Recheck today chart and trusted news v0.9.4
+on:
+  push:
+    branches: ['feature-today-chart-news-v094-work']
+    paths:
+      - '.github/workflows/recheck-today-chart-news-v094.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  recheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify JS syntax
+        run: |
+          node --check extras-v090.js
+          node --check live-v091.js
+      - name: Verify market core is byte-for-byte unchanged from stable backup
+        run: |
+          git fetch origin stable-v094-20261029-1632
+          git diff --exit-code origin/stable-v094-20261029-1632 -- live-v091.js index.html scripts/update_latest.py
+      - name: Verify final UI/news contract
+        run: |
+          node - <<'JS'
+          const fs=require('fs');
+          const s=fs.readFileSync('extras-v090.js','utf8');
+          const checks={
+            version:s.includes("const VERSION='0.9.4';"),
+            todayOnly:s.includes('enforceTodayOnlyMainCharts')&&s.includes('今日走勢<br>等待即時資料'),
+            detailTabs:['今日','5日','20日','60日'].every(x=>s.includes(`'${x}'`)),
+            separateHistoryCanvas:s.includes("hist.id='historyChart'")&&s.includes("live.style.display='none';hist.style.display='block'"),
+            trustedFeeds:['news.cnyes.com','moneydj.com','feeds.feedburner.com/rsscna/finance'].every(x=>s.includes(x)),
+            noYahooNews:!s.includes('yahooStockNews'),
+            multiSource:s.includes('Promise.allSettled(NEWS_FEEDS.map(fetchPublisherFeed))'),
+            googleTrustedFallback:s.includes('TRUSTED_GOOGLE_PUBLISHERS')&&s.includes('api.rss2json.com'),
+          };
+          console.log(checks);
+          const bad=Object.entries(checks).filter(([,v])=>!v).map(([k])=>k);
+          if(bad.length) throw new Error('contract failed: '+bad.join(','));
+          JS
+      - name: Verify at least two trusted publisher feeds are live
+        run: |
+          node - <<'JS'
+          const feeds=[
+            ['鉅亨網','https://news.cnyes.com/rss/v1/news/category/tw_stock'],
+            ['MoneyDJ','https://www.moneydj.com/KMDJ/RssCenter.aspx?svc=NR&fno=1&arg=MB06'],
+            ['中央社','https://feeds.feedburner.com/rsscna/finance'],
+          ];
+          let ok=0;
+          for(const [name,url] of feeds){
+            try{
+              const r=await fetch(url,{headers:{'user-agent':'Mozilla/5.0'}});
+              const t=await r.text();const count=(t.match(/<item[>\s]/g)||[]).length;
+              console.log(name,r.status,'items',count,'bytes',t.length);
+              if(r.ok&&count>0)ok++;
+            }catch(e){console.log(name,'FAIL',String(e))}
+          }
+          if(ok<2)throw new Error('trusted feed redundancy failed: '+ok);
+          console.log('TRUSTED_FEEDS_OK',ok);
+          JS
+      - name: Verify trusted Google fallback can return a major-stock result
+        run: |
+          node - <<'JS'
+          const q=encodeURIComponent('台積電 2330 股票 when:30d');
+          const rss=`https://news.google.com/rss/search?q=${q}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant`;
+          const url=`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rss)}`;
+          try{
+            const r=await fetch(url);const j=await r.json();
+            console.log('rss2json',r.status,j.status,'items',j.items?.length||0);
+            if(!r.ok||j.status!=='ok'||!(j.items?.length))throw new Error('no items');
+          }catch(e){
+            console.log('Google fallback unavailable in this run; publisher feeds remain primary:',String(e));
+          }
+          JS

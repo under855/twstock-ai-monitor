@@ -67,7 +67,7 @@ news_new=r'''  const NEWS_FEEDS=[
 
 '''
 pat_news=re.compile(r"  async function yahooStockNews\(code,name\)\{.*?(?=  async function yahooDailyHistory\(code\))",re.S)
-s,n=pat_news.subn(news_new,s)
+s,n=pat_news.subn(lambda m: news_new,s)
 if n!=1: raise SystemExit(f'news block replace count={n}')
 
 charts_new=r'''  function mainLivePoints(code){return Number(window.__TW_LIVE_V091__?.stocks?.[String(code)]?.seriesPoints||0)}
@@ -120,7 +120,7 @@ charts_new=r'''  function mainLivePoints(code){return Number(window.__TW_LIVE_V0
 
 '''
 pat_charts=re.compile(r"  function paintHistoryCanvas\(code,h\)\{.*?(?=  function limitDividendCards\(\))",re.S)
-s,n=pat_charts.subn(charts_new,s)
+s,n=pat_charts.subn(lambda m: charts_new,s)
 if n!=1: raise SystemExit(f'chart block replace count={n}')
 
 s=s.replace("    if(!installDetailHistory())setTimeout(installDetailHistory,0);\n    startHistoryCharts();", "    if(!installDetailChartTabs())setTimeout(installDetailChartTabs,0);\n    startTodayOnlyMainCharts();")

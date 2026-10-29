@@ -1,0 +1,114 @@
+name: Verify v0.9.3 final complete acceptance
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-v093-final.yml'
+      - 'live-v091.js'
+      - 'index.html'
+      - 'sw.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Static final checks
+        run: |
+          node --check live-v091.js
+          node --check extras-v090.js
+          node --check sw.js
+          grep -F "APP_VERSION='0.9.3'" index.html
+          grep -F "const VERSION='0.9.3'" live-v091.js
+          grep -F "const IKEY='tw_live091_index_'" live-v091.js
+          grep -F 'live-v091.js?v=093' index.html
+          grep -F 'tw-ai-monitor-v093' sw.js
+          ! grep -F 'c.navigate(c.url)' sw.js
+          ! grep -E 'fix\.js\?v=|hotfix-v06[5-9]\.js\?v=|live-v081\.js\?v=|live-v090\.js\?v=' index.html
+          ! grep -E '100dvh|-webkit-fill-available' index.html
+      - name: Wait for public v0.9.3
+        run: |
+          for i in $(seq 1 60); do
+            H=$(curl -fsSL --max-time 10 "https://under855.github.io/twstock-ai-monitor/?verify093=$RANDOM" || true)
+            J=$(curl -fsSL --max-time 10 "https://under855.github.io/twstock-ai-monitor/live-v091.js?v=093&verify=$RANDOM" || true)
+            W=$(curl -fsSL --max-time 10 "https://under855.github.io/twstock-ai-monitor/sw.js?verify=$RANDOM" || true)
+            if echo "$H" | grep -q 'v0.9.3' && echo "$J" | grep -q "const VERSION='0.9.3'" && echo "$W" | grep -q 'tw-ai-monitor-v093' && ! echo "$W" | grep -q 'c.navigate(c.url)'; then echo PUBLIC_V093_READY; exit 0; fi
+            sleep 4
+          done
+          echo 'public v0.9.3 not ready' >&2; exit 1
+      - name: Verify official current-day source
+        run: |
+          python - <<'PY'
+          import json,urllib.parse,urllib.request,time
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+          today=datetime.now(ZoneInfo('Asia/Taipei')).strftime('%Y%m%d')
+          chans=['tse_t00.tw','tse_0050.tw','tse_3711.tw','tse_2002.tw','otc_3293.tw','tse_00878.tw','tse_00919.tw']
+          u='https://mis.twse.com.tw/stock/api/getStockInfo.jsp?'+urllib.parse.urlencode({'ex_ch':'|'.join(chans),'json':'1','delay':'0','_':int(time.time()*1000)})
+          req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'})
+          with urllib.request.urlopen(req,timeout=25) as r:j=json.loads(r.read().decode())
+          arr=j.get('msgArray') or []
+          def n(v):
+              try:return float(str(v).replace(',',''))
+              except:return None
+          idx=[m for m in arr if str(m.get('c',''))=='t00']
+          assert idx and str(idx[0].get('d',''))==today and n(idx[0].get('z')) is not None
+          print('TAIEX',idx[0].get('z'),idx[0].get('t'),today)
+          for code in ['0050','3711','2002','3293','00878','00919']:
+              m=next((x for x in arr if str(x.get('c',''))==code and str(x.get('d',''))==today),None)
+              assert m, f'{code}: today row missing'
+              tr=m.get('trade') or {}; px=n(tr.get('z'))
+              if px is None:px=n(m.get('z'))
+              assert px is not None, f'{code}: current trade missing'
+              print(code,px,tr.get('t'),m.get('y'))
+          print('OFFICIAL_SOURCE_PASS')
+          PY
+      - name: Install browser harness
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          test -n "$CHROME"
+          echo "CHROME=$CHROME" >> "$GITHUB_ENV"
+          npm install --no-save playwright-core@latest
+      - name: Full mobile PWA acceptance
+        env:
+          URL: https://under855.github.io/twstock-ai-monitor/
+        run: |
+          cat > qa093.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const codes=['0050','3711','3293','2002','00878','00919'];
+          const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const ctx=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:3,isMobile:true,hasTouch:true,locale:'zh-TW',timezoneId:'Asia/Taipei',serviceWorkers:'allow'});
+          const page=await ctx.newPage();page.setDefaultTimeout(30000);const pageErrors=[];page.on('pageerror',e=>pageErrors.push(e.message));
+          await page.goto(process.env.URL+'?final093='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await page.waitForFunction(()=>document.title.includes('v0.9.3'),null,{timeout:30000});
+          await page.waitForFunction(cs=>cs.every(c=>window.__TW_LIVE_V091__?.stocks?.[c]?.date),codes,{timeout:60000});
+          await page.waitForFunction(cs=>cs.every(c=>(window.__TW_LIVE_V091__?.stocks?.[c]?.seriesPoints||0)>=2),codes,{timeout:60000});
+          await page.waitForFunction(()=>window.__TW_LIVE_V091__?.taiex?.date,null,{timeout:60000});
+          const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replaceAll('-','');
+          async function snap(label){return page.evaluate(({label,codes})=>{const s=structuredClone(window.__TW_LIVE_V091__);const rows={};for(const c of codes){const r=[...document.querySelectorAll('#watch article.row')].find(x=>x.querySelector('.sym')?.textContent?.trim()===c);rows[c]=r?{state:r.dataset.liveState,date:r.dataset.liveDate,stamp:Number(r.dataset.liveStamp||0),priceText:r.querySelector('.price')?.textContent||'',meta:r.querySelector('.meta')?.textContent||'',day:r.querySelector('.dayline')?.textContent||'',canvas:!!r.querySelector('canvas.spark')}:null}return{label,s,rows,title:document.title,taiexText:document.getElementById('taiexChg')?.textContent||'',scrollWidth:document.documentElement.scrollWidth,innerWidth,scrollHeight:document.documentElement.scrollHeight,innerHeight}}, {label,codes})}
+          function check(x){
+            if(!x.title.includes('v0.9.3'))throw Error(`${x.label}: wrong version`);
+            if(x.s.taiex?.date!==today||!x.taiexText.includes('盤中即時'))throw Error(`${x.label}: TAIEX not current ${JSON.stringify(x.s.taiex)} ${x.taiexText}`);
+            if(x.scrollWidth>x.innerWidth+2)throw Error(`${x.label}: horizontal overflow`);
+            if(x.scrollHeight<=x.innerHeight)throw Error(`${x.label}: not scrollable`);
+            for(const c of codes){const q=x.s.stocks[c],r=x.rows[c];if(!q||q.date!==today||!String(q.source||'').includes('MIS'))throw Error(`${x.label} ${c}: quote stale ${JSON.stringify(q)}`);if((q.seriesPoints||0)<2)throw Error(`${x.label} ${c}: line missing`);if(Number(q.seriesLastStamp)!==Number(q.stamp))throw Error(`${x.label} ${c}: chart tail mismatch`);if(!r||r.state!=='live'||r.date!==today||!r.canvas)throw Error(`${x.label} ${c}: DOM not live ${JSON.stringify(r)}`);if(!r.meta.includes('MIS'))throw Error(`${x.label} ${c}: source not MIS`);if(/昨日|最近交易日|官方快照|最近完成交易日/.test(r.meta+r.day))throw Error(`${x.label} ${c}: stale text leaked`);if(r.priceText==='—'||!r.priceText)throw Error(`${x.label} ${c}: price blank`)}
+          }
+          const a=await snap('A');check(a);
+          await page.waitForTimeout(16500);const b=await snap('B');check(b);if(b.s.cycle<=a.s.cycle||b.s.lastPollAt<=a.s.lastPollAt||b.s.lastSuccessAt<=a.s.lastSuccessAt)throw Error('15-second refresh #1 did not run/succeed');for(const c of codes)if(Number(b.s.stocks[c].stamp)<Number(a.s.stocks[c].stamp))throw Error(`${c}: reverted after 15s`);if(Number(b.s.taiex.stamp)<Number(a.s.taiex.stamp))throw Error('TAIEX reverted after 15s');
+          await page.waitForTimeout(16500);const c=await snap('C');check(c);if(c.s.cycle<=b.s.cycle||c.s.lastPollAt<=b.s.lastPollAt||c.s.lastSuccessAt<=b.s.lastSuccessAt)throw Error('15-second refresh #2 did not run/succeed');for(const code of codes)if(Number(c.s.stocks[code].stamp)<Number(b.s.stocks[code].stamp))throw Error(`${code}: reverted after 30s`);if(Number(c.s.taiex.stamp)<Number(b.s.taiex.stamp))throw Error('TAIEX reverted after 30s');
+          await page.evaluate(()=>scrollTo(0,document.documentElement.scrollHeight));await page.waitForTimeout(350);const bottom=await page.evaluate(()=>{const rows=[...document.querySelectorAll('#watch article.row')],last=rows.at(-1),r=last?.getBoundingClientRect();return{code:last?.querySelector('.sym')?.textContent?.trim(),top:r?.top,bottom:r?.bottom,ih:innerHeight,scrollY,doc:document.documentElement.scrollHeight}});if(!bottom.code||bottom.top<0||bottom.bottom>bottom.ih+2)throw Error('bottom row unreachable '+JSON.stringify(bottom));
+          await page.evaluate(()=>scrollTo(0,0));await page.locator('#watch article.row').filter({hasText:'0050'}).click();await page.waitForSelector('#sheet.show',{timeout:10000});const detail=await page.evaluate(()=>({h:document.querySelector('#bigChart')?.closest('.card')?.querySelector('h3')?.textContent||'',time:document.getElementById('dTime')?.textContent||'',price:document.getElementById('dPrice')?.textContent||'',msg:document.getElementById('chartMsg')?.textContent||'',panel:document.querySelector('.panel')?.getBoundingClientRect().toJSON()}));if(detail.h!=='今日盤中即時走勢'||!detail.time.includes('MIS')||detail.price==='—'||!detail.msg.includes('今日盤中即時走勢'))throw Error('detail not live '+JSON.stringify(detail));if(detail.panel.bottom>846||detail.panel.top<0)throw Error('detail panel viewport failure '+JSON.stringify(detail.panel));await page.locator('#closeBtn').click();
+          const sw=await page.evaluate(async()=>{const r=await navigator.serviceWorker.ready;return{active:!!r.active,url:r.active?.scriptURL||''}});if(!sw.active)throw Error('SW inactive');
+          await page.reload({waitUntil:'domcontentloaded',timeout:60000});await page.waitForFunction(()=>document.title.includes('v0.9.3')&&window.__TW_LIVE_V091__,null,{timeout:60000});
+          // Immediately after reload, current-day saved values must exist before the next network result.
+          const immediate=await snap('reload-immediate');check(immediate);
+          await page.waitForFunction(()=>window.__TW_LIVE_V091__?.cycle>=1&&window.__TW_LIVE_V091__?.lastSuccessAt>0,null,{timeout:60000});const after=await snap('reload-after-poll');check(after);
+          if(pageErrors.length)throw Error('page errors '+JSON.stringify(pageErrors));
+          console.log('V093_FINAL_ACCEPTANCE_PASS',JSON.stringify({cycles:[a.s.cycle,b.s.cycle,c.s.cycle],polls:[a.s.lastPollAt,b.s.lastPollAt,c.s.lastPollAt],taiex:[a.s.taiex.time,b.s.taiex.time,c.s.taiex.time],stocks:Object.fromEntries(codes.map(code=>[code,{price:c.s.stocks[code].price,time:c.s.stocks[code].tradeTime,points:c.s.stocks[code].seriesPoints}])),bottom,detail,sw,reloadIndex:immediate.s.taiex}));await browser.close();
+          JS
+          timeout 200s node qa093.mjs

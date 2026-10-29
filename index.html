@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="台股監控台">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>台股 AI 監控台 v0.9.1 Web</title>
+<title>台股 AI 監控台 v0.9.2 Web</title>
 <style>
 :root{--bg:#060d18;--panel:#0d1929;--panel2:#11233a;--line:#213954;--text:#edf5ff;--muted:#93a9c2;--accent:#78adff;--up:#ff6b6b;--down:#63d49a;--warn:#ffd166;--neutral:#d2dceb;--shadow:0 12px 28px rgba(0,0,0,.22)}
 *{box-sizing:border-box}html{background:var(--bg)}body{margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;background:radial-gradient(circle at 50% -10%,#13325a 0,#07111f 35%,#050b13 72%);min-height:100vh}
@@ -39,7 +39,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
 <body>
 <div class="app">
   <header class="top">
-    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.1｜盤中即時行情・即時線圖｜15 秒更新</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
+    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.2｜盤中即時行情・即時線圖｜15 秒更新</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
     <div class="search"><input id="code" inputmode="text" autocomplete="off" placeholder="搜尋代號或名稱，例如 2610、華航"><button id="searchBtn" class="primary">搜尋</button></div>
     <div id="searchResults" class="searchResults"></div>
     <div class="toolbar"><span class="pill" id="clock">—</span><span class="pill">評分 100 分制</span><span class="pill" id="universePill">台股名冊：載入中…</span><span class="pill">行情：TWSE／TPEx</span><span class="pill" id="refreshPill">自動更新：15 秒</span></div>
@@ -83,7 +83,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
   </section>
 </div>
 <script>
-const APP_VERSION='0.9.1';
+const APP_VERSION='0.9.2';
 const IS_WEB = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 window.addEventListener('DOMContentLoaded',()=>{
   if(!IS_WEB){
@@ -276,6 +276,6 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 
 <script src="./dividend-enhance.js?v=090"></script>
 <script src="./extras-v090.js?v=090"></script>
-<script src="./live-v091.js?v=091"></script>
+<script src="./live-v091.js?v=092"></script>
 </body>
 </html>

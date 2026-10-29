@@ -1,0 +1,36 @@
+name: Build trusted news cache v0.9.4r5
+on:
+  push:
+    branches: ['server-news-cache-v094r5']
+    paths:
+      - 'scripts/update_news.py'
+      - '.github/workflows/build-news-cache-v094r5.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Generate trusted news cache
+        run: python scripts/update_news.py
+      - name: Validate cache
+        run: |
+          python - <<'PY'
+          import json
+          j=json.load(open('data/news.json',encoding='utf-8'))
+          for c in ['3711','3293']:
+            xs=j['stocks'].get(c,[])
+            assert xs, (c,'empty')
+            print(c,len(xs),xs[0]['publisher'],xs[0]['title'])
+          PY
+      - name: Commit cache
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/news.json
+          git commit -m 'Generate trusted stock news cache'
+          git push origin HEAD:server-news-cache-v094r5

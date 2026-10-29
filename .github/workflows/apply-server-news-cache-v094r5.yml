@@ -1,0 +1,57 @@
+name: Apply same-origin news cache v0.9.4r5
+on:
+  push:
+    branches: ['server-news-cache-v094r5']
+    paths:
+      - '.github/workflows/apply-server-news-cache-v094r5.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Preserve market core
+        run: sha256sum live-v091.js scripts/update_latest.py > /tmp/core.before
+      - name: Integrate same-origin news cache
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('extras-v090.js'); s=p.read_text(encoding='utf-8')
+          marker="  function installNews(){\n"
+          assert marker in s
+          add="""  async function cachedSiteNews(code){\n    try{\n      const j=await fetchJson(`./data/news.json?_=\\${Date.now()}`,5000);\n      const xs=j?.stocks?.[String(code)];\n      return Array.isArray(xs)?xs.filter(x=>x&&x.title&&x.link):[];\n    }catch{return []}\n  }\n\n""".replace('\\${','${')
+          s=s.replace(marker,add+marker,1)
+          old="""      box.innerHTML='';state.textContent='載入可信來源近期新聞…';\n      const settled=await Promise.allSettled(NEWS_FEEDS.map(fetchPublisherFeed)),seen=new Set(),items=[];\n"""
+          assert old in s
+          new="""      box.innerHTML='';state.textContent='載入可信來源近期新聞…';\n      const cached=await cachedSiteNews(code);\n      if(cached.length){cached.sort((a,b)=>(b.time||0)-(a.time||0));renderNewsItems(cached,state,box);return}\n      const settled=await Promise.allSettled(NEWS_FEEDS.map(fetchPublisherFeed)),seen=new Set(),items=[];\n"""
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          p=Path('index.html'); s=p.read_text(encoding='utf-8').replace('./extras-v090.js?v=094r4','./extras-v090.js?v=094r5'); p.write_text(s,encoding='utf-8')
+          p=Path('sw.js'); s=p.read_text(encoding='utf-8').replace("const CACHE='tw-ai-monitor-v094r4';","const CACHE='tw-ai-monitor-v094r5';"); p.write_text(s,encoding='utf-8')
+          PY
+      - name: Verify integration
+        run: |
+          node --check extras-v090.js
+          grep -F 'cachedSiteNews' extras-v090.js
+          grep -F './extras-v090.js?v=094r5' index.html
+          grep -F "const CACHE='tw-ai-monitor-v094r5';" sw.js
+          python - <<'PY'
+          import json
+          j=json.load(open('data/news.json',encoding='utf-8'))
+          assert len(j['stocks']['3711']) >= 1
+          assert len(j['stocks']['3293']) >= 1
+          print('NEWS_CACHE_OK',len(j['stocks']['3711']),len(j['stocks']['3293']))
+          PY
+          sha256sum live-v091.js scripts/update_latest.py > /tmp/core.after
+          diff -u /tmp/core.before /tmp/core.after
+      - name: Commit app integration
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js index.html sw.js
+          git commit -m 'Use same-origin trusted news cache in app'
+          git push origin HEAD:server-news-cache-v094r5

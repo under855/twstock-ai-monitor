@@ -21,7 +21,7 @@ jobs:
           URL: https://under855.github.io/twstock-ai-monitor/
         run: |
           CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); export CHROME
-          cat > /tmp/chartdiag.mjs <<'JS'
+          cat > chartdiag.mjs <<'JS'
           import { chromium } from 'playwright-core';
           const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
           const ctx=await b.newContext({viewport:{width:390,height:844},deviceScaleFactor:3,isMobile:true,hasTouch:true,timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'allow'});
@@ -41,4 +41,4 @@ jobs:
           console.log(JSON.stringify(out,null,2));
           await b.close();
           JS
-          node /tmp/chartdiag.mjs
+          node chartdiag.mjs

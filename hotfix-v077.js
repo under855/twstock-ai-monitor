@@ -1,6 +1,6 @@
 (() => {
   const INTERVAL = 10000;
-  const MAX_STALE_MS = 90 * 1000;
+  const MAX_STALE_MS = 120 * 1000;
   let timer = null;
   let lastLive = null;
   let repainting = false;
@@ -25,7 +25,7 @@
     info.textContent = `${ch == null ? '—' : `${ch > 0 ? '+' : ''}${F(ch)}`}｜${rec.label}${rec.time ? ` ${rec.time}` : ''}`;
     info.className = 's ' + (ch == null ? 'muted' : ch > 0 ? 'up' : ch < 0 ? 'down' : 'flat');
     requestAnimationFrame(() => { repainting = false; });
-    window.__TW_TAIEX_FINAL__ = { ...rec, renderedAt: Date.now(), version:'077' };
+    window.__TW_TAIEX_FINAL__ = { ...rec, renderedAt: Date.now(), version:'078' };
     return true;
   }
 
@@ -55,13 +55,14 @@
       `https://proxy.cors.dev/${upstream}`,
       `https://api.allorigins.win/raw?url=${encodeURIComponent(upstream)}`
     ];
+    let newest = null;
     for (const u of urls) {
       try {
         const rec = parseTwse(await fetchJson(u, 6500));
-        if (rec) return rec;
+        if (rec && (!newest || rec.sourceTime > newest.sourceTime)) newest = rec;
       } catch (_) {}
     }
-    return null;
+    return newest;
   }
 
   async function fromRawGithub() {
@@ -77,13 +78,13 @@
 
   async function refresh() {
     const live = await fromTwseProxy();
-    if (live) {
+    if (live && (!lastLive || live.sourceTime >= lastLive.sourceTime)) {
       lastLive = live;
       paint(live);
       return;
     }
     if (lastLive) {
-      paint({ ...lastLive, label:'TWSE 盤中即時（暫時沿用最近一筆）' });
+      paint({ ...lastLive, label:'TWSE 盤中即時' });
       return;
     }
     const backup = await fromRawGithub();
@@ -108,7 +109,7 @@
     refresh();
     if (timer) clearInterval(timer);
     timer = setInterval(refresh, INTERVAL);
-    window.__TW_TAIEX_CONTROLLER__ = { enabled:true, interval:INTERVAL, version:'077', primary:'TWSE MIS via CORS proxy', fallback:'GitHub live snapshot' };
+    window.__TW_TAIEX_CONTROLLER__ = { enabled:true, interval:INTERVAL, version:'078', primary:'TWSE MIS via CORS proxy', fallback:'GitHub live snapshot', monotonic:true };
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once:true });

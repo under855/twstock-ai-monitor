@@ -253,6 +253,15 @@
     show=async function(code,opts={}){
       const key=String(code),out=await baseShow(key,opts);ensureDetailChartTabs(key);
       loadHistoryFor(key).then(()=>{try{if(String(active||'')===key&&document.getElementById('sheet')?.classList.contains('show'))ensureDetailChartTabs(key)}catch{}}).catch(()=>{});
+      ensureTodayChartFor(key).then(points=>{
+        try{
+          if(String(active||'')!==key||!document.getElementById('sheet')?.classList.contains('show')||points.length<2)return;
+          const live=document.getElementById('bigChart');if(!live||typeof draw!=='function')return;
+          if((detailModeByCode.get(key)||'today')!=='today')return;
+          draw(live,points.map(x=>({date:x.time,close:x.close})),false,priceFor(key));
+          const msg=document.getElementById('chartMsg');if(msg)msg.textContent=`今日 ${points.length} 個 5 分鐘資料點｜分時備援走勢`;
+        }catch{}
+      }).catch(()=>{});
       return out;
     };
     return true;

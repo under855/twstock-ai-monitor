@@ -1,0 +1,76 @@
+name: Production verification v0.9.4r1
+on:
+  push:
+    branches: ['prod-verify-v094r1']
+    paths:
+      - '.github/workflows/prod-verify-v094r1.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify deployed assets are current
+        run: |
+          SITE='https://under855.github.io/twstock-ai-monitor'
+          curl -fsSL --max-time 20 "$SITE/?verify=$RANDOM" -o /tmp/index.html
+          curl -fsSL --max-time 20 "$SITE/extras-v090.js?verify=$RANDOM" -o /tmp/extras.js
+          curl -fsSL --max-time 20 "$SITE/live-v091.js?verify=$RANDOM" -o /tmp/live.js
+          grep -F './extras-v090.js?v=094r1' /tmp/index.html
+          grep -F './live-v091.js?v=094r1' /tmp/index.html
+          test "$(sha256sum extras-v090.js | cut -d' ' -f1)" = "$(sha256sum /tmp/extras.js | cut -d' ' -f1)"
+          test "$(sha256sum live-v091.js | cut -d' ' -f1)" = "$(sha256sum /tmp/live.js | cut -d' ' -f1)"
+          echo ASSET_MATCH_PASS
+      - name: Install browser harness
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          test -n "$CHROME"
+          echo "CHROME=$CHROME" >> "$GITHUB_ENV"
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+      - name: Verify scores news details and charts on production
+        run: |
+          cat > /tmp/verify.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const context=await browser.newContext({viewport:{width:390,height:844},locale:'zh-TW',timezoneId:'Asia/Taipei',serviceWorkers:'block'});
+          const page=await context.newPage();
+          const errors=[]; page.on('pageerror',e=>errors.push('pageerror:'+e.message)); page.on('console',m=>{if(m.type()==='error')errors.push('console:'+m.text())});
+          await page.goto('https://under855.github.io/twstock-ai-monitor/?verify='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await page.waitForFunction(()=>window.__TW_LIVE_V091__?.version==='0.9.4',{timeout:60000});
+          await page.waitForTimeout(18000);
+          const main=await page.evaluate(()=>{
+            const rows=[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent?.trim()||'',score:r.querySelector('.scoreNum')?.textContent?.trim()||'',label:r.querySelector('.scoreLabel')?.textContent?.trim()||'',canvas:!!r.querySelector('canvas.spark'),fallback:r.querySelector('.sparkFallback')?.textContent?.trim()||'',price:r.querySelector('.price')?.textContent?.trim()||''}));
+            return {rows,extra:window.__TW_EXTRAS_V090__||null,live:window.__TW_LIVE_V091__||null};
+          });
+          console.log('MAIN',JSON.stringify(main));
+          if(!main.rows.length) throw Error('no watch rows');
+          if(main.rows.every(r=>r.score==='—'||r.label==='資料不足')) throw Error('all scores are insufficient');
+          if(main.rows.some(r=>!r.price||r.price==='—')) throw Error('one or more monitored prices missing');
+          const row=page.locator('#watch article.row').filter({hasText:'0050'}).first();
+          await row.click();
+          await page.waitForSelector('#sheet.show',{timeout:15000});
+          await page.waitForTimeout(12000);
+          const detail=await page.evaluate(()=>({
+            tabs:[...document.querySelectorAll('#detailChartTabs button')].map(b=>b.textContent.trim()),
+            newsCount:document.querySelectorAll('#news .event').length,
+            newsState:document.getElementById('newsState')?.textContent?.trim()||'',
+            newsLinks:[...document.querySelectorAll('#news a')].map(a=>a.textContent.trim()),
+            price:document.getElementById('dPrice')?.textContent?.trim()||'',
+            scoreText:document.getElementById('scoreParts')?.textContent?.trim()||'',
+            chartTitle:document.getElementById('detailChartDisplayTitle')?.textContent?.trim()||''
+          }));
+          console.log('DETAIL',JSON.stringify(detail));
+          if(!detail.price||detail.price==='—') throw Error('detail price missing');
+          if(!['今日','5日','20日','60日'].every(x=>detail.tabs.includes(x))) throw Error('detail chart tabs missing');
+          if(detail.newsCount<1) throw Error('no rendered stock news; state='+detail.newsState+' links='+detail.newsLinks.join(','));
+          if(errors.length) throw Error('browser errors: '+errors.join(' | '));
+          console.log('PROD_VERIFY_PASS');
+          await browser.close();
+          JS
+          node /tmp/verify.mjs

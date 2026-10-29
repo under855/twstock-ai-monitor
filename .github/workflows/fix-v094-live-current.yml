@@ -1,0 +1,180 @@
+name: Fix v0.9.4 current market data
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-v094-live-current.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Consolidate MIS current-data runtime without version bump
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('live-v091.js')
+          s=p.read_text(encoding='utf-8')
+
+          old="""  async function viaProxy(upstream,timeout=7000){
+    const primary=`https://proxy.cors.dev/${upstream}`;
+    try{return await getJson(primary,timeout)}catch(first){
+      const backup=`https://api.allorigins.win/raw?url=${encodeURIComponent(upstream)}`;
+      try{return await getJson(backup,timeout+2500)}catch{throw first}
+    }
+  }"""
+          new="""  async function viaProxy(upstream,timeout=7000){
+    const primary=`https://proxy.cors.dev/${upstream}`;
+    return await getJson(primary,timeout);
+  }"""
+          if old not in s: raise SystemExit('viaProxy marker not found')
+          s=s.replace(old,new,1)
+
+          # Yahoo is removed from the critical 15-second/current-price path.
+          start=s.find('  async function yahooSeed(code,q){')
+          end=s.find('\n\n  function drawLine(canvas,a){',start)
+          if start<0 or end<0: raise SystemExit('yahoo seed block not found')
+          s=s[:start]+"  function seedCurrent(){}\n"+s[end:]
+
+          old="""  function drawLine(canvas,a){
+    if(!canvas)return false;const ctx=canvas.getContext('2d');if(!ctx)return false;
+    const r=canvas.getBoundingClientRect(),dpr=Math.max(1,devicePixelRatio||1),w=Math.max(30,Math.round((r.width||320)*dpr)),h=Math.max(24,Math.round((r.height||50)*dpr));if(canvas.width!==w)canvas.width=w;if(canvas.height!==h)canvas.height=h;ctx.clearRect(0,0,w,h);
+    const data=(a||[]).filter(p=>sameDay(Number(p.stamp))&&num(p.close)!=null).sort((x,y)=>x.stamp-y.stamp);
+    if(data.length<2){ctx.fillStyle='#91a8c2';ctx.font=`${Math.round(11*dpr)}px sans-serif`;ctx.textAlign='center';ctx.fillText('今日盤中線累積中',w/2,h/2);return false}"""
+          new="""  function drawLine(canvas,a){
+    if(!canvas)return false;const ctx=canvas.getContext('2d');if(!ctx)return false;
+    const data=(a||[]).filter(p=>sameDay(Number(p.stamp))&&num(p.close)!=null).sort((x,y)=>x.stamp-y.stamp);
+    if(data.length<2&&canvas.dataset.history==='1')return false;
+    const r=canvas.getBoundingClientRect(),dpr=Math.max(1,devicePixelRatio||1),w=Math.max(30,Math.round((r.width||320)*dpr)),h=Math.max(24,Math.round((r.height||50)*dpr));if(canvas.width!==w)canvas.width=w;if(canvas.height!==h)canvas.height=h;ctx.clearRect(0,0,w,h);
+    if(data.length<2){ctx.fillStyle='#91a8c2';ctx.font=`${Math.round(11*dpr)}px sans-serif`;ctx.textAlign='center';ctx.fillText('今日盤中線累積中',w/2,h/2);return false}
+    canvas.dataset.history='0';"""
+          if old not in s: raise SystemExit('drawLine marker not found')
+          s=s.replace(old,new,1)
+
+          old="""  function paintStatus(){
+    if(!marketOpen())return;const b=document.getElementById('liveBadge'),s=document.getElementById('marketStatus'),t=document.getElementById('marketTime'),p=document.getElementById('refreshPill'),ok=lastSuccessAt>0;if(p)p.textContent=`盤中即時：15 秒｜v${VERSION}`;if(b){b.textContent=ok?`盤中即時 v${VERSION}`:`即時來源重試中 v${VERSION}`;b.className=ok?'liveBadge ok':'liveBadge warn'}if(s)s.textContent=ok?'盤中即時':'即時來源重試';if(t)t.textContent=`最近輪詢 ${hhmmss(lastPollAt||Date.now())}`;
+  }
+  function paintAll(){if(!marketOpen())return;paintIndex();for(const code of watchCodes()){const q=quotes.get(code);q?paintRow(code,q):maskRow(code)}paintDetail();paintStatus();debug()}
+
+  function placeholder(code){return {code:String(code),price:'',change:'',prev:'',open:'',high:'',low:'',volume:'',date:today(),stamp:null,tradeTime:'',source:'盤中即時資料載入中',live:false}}
+  if(originalQuote)quote=async function(code,allowNetwork=true){if(marketOpen())return quotes.get(String(code))||placeholder(code);return originalQuote(code,allowNetwork)};
+  if(originalRender)render=async function(allowNetwork=false){const x=await originalRender(marketOpen()?false:allowNetwork);if(marketOpen())paintAll();return x};
+  if(originalShow)show=async function(code,opts={}){code=String(code);if(marketOpen())quoteCache[code]=quotes.get(code)||placeholder(code);const x=await originalShow(code,opts);if(marketOpen()){paintDetail();poll()}return x};"""
+          new="""  function hasTodayData(){if(taiex?.date===today())return true;for(const q of quotes.values())if(q?.date===today()&&num(q.price)!=null)return true;return false}
+  function paintStatus(){
+    const b=document.getElementById('liveBadge'),s=document.getElementById('marketStatus'),t=document.getElementById('marketTime'),p=document.getElementById('refreshPill'),ok=lastSuccessAt>0||hasTodayData();
+    if(marketOpen()){
+      if(p)p.textContent=`盤中即時：15 秒｜v${VERSION}`;if(b){b.textContent=ok?`盤中即時 v${VERSION}`:`即時來源重試中 v${VERSION}`;b.className=ok?'liveBadge ok':'liveBadge warn'}if(s)s.textContent=ok?'盤中即時':'即時來源重試';if(t)t.textContent=`最近輪詢 ${hhmmss(lastPollAt||Date.now())}`;
+    }else if(hasTodayData()){
+      if(p)p.textContent=`今日收盤／最後成交｜v${VERSION}`;if(b){b.textContent=`今日資料 v${VERSION}`;b.className='liveBadge ok'}if(s)s.textContent='今日收盤';if(t)t.textContent=`MIS 最後成交／指數 ${taiex?.time||''}`;
+    }
+  }
+  function paintAll(){if(!marketOpen()&&!hasTodayData()){debug();return}paintIndex();for(const code of watchCodes()){const q=quotes.get(code);if(q?.date===today())paintRow(code,q);else if(marketOpen())maskRow(code)}paintDetail();paintStatus();debug()}
+
+  function placeholder(code){return {code:String(code),price:'',change:'',prev:'',open:'',high:'',low:'',volume:'',date:today(),stamp:null,tradeTime:'',source:'今日資料載入中',live:false}}
+  if(originalQuote)quote=async function(code,allowNetwork=true){const q=quotes.get(String(code));if(q?.date===today())return q;if(marketOpen())return placeholder(code);return originalQuote(code,allowNetwork)};
+  if(originalRender)render=async function(allowNetwork=false){const x=await originalRender(marketOpen()?false:allowNetwork);if(marketOpen()||hasTodayData())paintAll();return x};
+  if(originalShow)show=async function(code,opts={}){code=String(code);const q=quotes.get(code);if(q?.date===today()||marketOpen())quoteCache[code]=q||placeholder(code);const x=await originalShow(code,opts);if(q?.date===today()||marketOpen()){paintDetail();poll(true)}return x};"""
+          if old not in s: raise SystemExit('paint/wrapper block not found')
+          s=s.replace(old,new,1)
+
+          old="""  async function poll(){
+    if(!marketOpen()||busy)return;busy=true;cycle++;lastPollAt=Date.now();
+    try{
+      const codes=requestedCodes(),{map,idx}=parse(await fetchMis(codes));let accepted=0;if(idx&&(!taiex||idx.stamp>=taiex.stamp)){taiex=idx;accepted++}for(const q of map.values()){if(acceptQuote(q))accepted++}if(accepted)lastSuccessAt=Date.now();saveToday();paintAll();seedCurrent();
+    }catch(e){paintAll();debug();window.__TW_LIVE_V091__.error=String(e?.message||e)}finally{busy=false}
+  }
+  function start(){
+    loadToday();if(marketOpen()){paintAll();poll();setInterval(poll,INTERVAL);setTimeout(seedCurrent,2500)}else{const p=document.getElementById('refreshPill');if(p)p.textContent=`休市｜v${VERSION}`;debug()}
+    addEventListener('focus',()=>{if(marketOpen())poll()});document.addEventListener('visibilitychange',()=>{if(!document.hidden&&marketOpen())poll()});
+  }"""
+          new="""  async function poll(force=false){
+    if((!marketOpen()&&!force)||busy)return;busy=true;cycle++;lastPollAt=Date.now();
+    try{
+      const codes=requestedCodes(),{map,idx}=parse(await fetchMis(codes));let accepted=0;if(idx&&(!taiex||idx.stamp>=taiex.stamp)){taiex=idx;accepted++}for(const q of map.values()){if(acceptQuote(q))accepted++}if(accepted)lastSuccessAt=Date.now();saveToday();paintAll();
+    }catch(e){paintAll();debug();window.__TW_LIVE_V091__.error=String(e?.message||e)}finally{busy=false}
+  }
+  function start(){
+    loadToday();paintAll();poll(true);if(marketOpen())setInterval(()=>poll(false),INTERVAL);else{const p=document.getElementById('refreshPill');if(p&&!hasTodayData())p.textContent=`休市／檢查今日最終資料｜v${VERSION}`;debug()}
+    addEventListener('focus',()=>poll(true));document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll(true)});
+  }"""
+          if old not in s: raise SystemExit('poll/start block not found')
+          s=s.replace(old,new,1)
+
+          p.write_text(s,encoding='utf-8')
+          PY
+
+      - name: Static correctness checks
+        run: |
+          node --check live-v091.js
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('live-v091.js').read_text(encoding='utf-8')
+          checks={
+            'still v0.9.4':"const VERSION='0.9.4';" in s,
+            '15 sec':"const INTERVAL=15000;" in s,
+            'forced post-close MIS':'poll(true)' in s,
+            'market interval':'setInterval(()=>poll(false),INTERVAL)' in s,
+            'today repaint':'marketOpen()||hasTodayData()' in s,
+            'Yahoo removed from live path':'query1.finance.yahoo.com' not in s,
+            'AllOrigins removed from live path':'allorigins.win' not in s,
+            'history canvas protected':"canvas.dataset.history==='1'" in s,
+          }
+          print(checks)
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit('FAILED '+', '.join(bad))
+          PY
+
+      - name: Browser acceptance - simulated 15-second live updates
+        run: |
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
+          PID=$!; trap 'kill $PID || true' EXIT
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); export CHROME
+          cat > /tmp/liveqa.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const ctx=await b.newContext({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true,timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'block'});
+          const realBase=Date.parse('2026-10-29T10:00:00+08:00');
+          await ctx.addInitScript(({base})=>{const R=Date,start=R.now();class M extends R{constructor(...a){super(...(a.length?a:[base+(R.now()-start)]))}static now(){return base+(R.now()-start)}};window.Date=M;},{base:realBase});
+          let n=0;
+          await ctx.route('https://proxy.cors.dev/**',async route=>{
+            const url=route.request().url();
+            if(!url.includes('mis.twse.com.tw')) return route.continue();
+            n++; const sec=(n-1)*15, hh='10', mm=String(Math.floor(sec/60)).padStart(2,'0'), ss=String(sec%60).padStart(2,'0'), t=`${hh}:${mm}:${ss}`;
+            const p=107.00+n*.10, idx=46300+n*10;
+            const mk=(c,z,y,o,h,l,v,ex='tse')=>({c,d:'20261029',t,ex,z:String(z),y:String(y),o:String(o),h:String(h),l:String(l),v:String(v),trade:{t,z:String(z),v:10}});
+            const body={msgArray:[{c:'t00',ch:'t00.tw',d:'20261029',t,z:String(idx),y:'46290'},mk('0050',p,108.65,106.8,p+.2,p-.2,70000),mk('3711',683+n,695,680,690,675,12000),mk('3293',808+n,800,805,815,790,1300,'otc'),mk('2002',19.45+n*.01,19.75,19.5,19.6,19.4,18000),mk('00878',35.3+n*.01,35.65,35.2,35.4,35.1,35000),mk('00919',32.87+n*.01,32.9,32.8,33,32.7,25000)]};
+            await route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify(body)});
+          });
+          const p=await ctx.newPage(); const errs=[];p.on('pageerror',e=>errs.push(e.message));
+          await p.goto('http://127.0.0.1:8000/?liveaccept=1',{waitUntil:'domcontentloaded'});
+          await p.waitForTimeout(2500);
+          const a=await p.evaluate(()=>({cycle:window.__TW_LIVE_V091__?.cycle,idx:document.getElementById('taiex')?.textContent,price:[...document.querySelectorAll('#watch article.row')].find(r=>r.querySelector('.sym')?.textContent.trim()==='0050')?.querySelector('.price')?.textContent,points:window.__TW_LIVE_V091__?.stocks?.['0050']?.seriesPoints||0}));
+          await p.waitForTimeout(32000);
+          const z=await p.evaluate(()=>{const r=[...document.querySelectorAll('#watch article.row')].find(r=>r.querySelector('.sym')?.textContent.trim()==='0050'),c=r?.querySelector('canvas.spark');let ink=0;if(c){const d=c.getContext('2d').getImageData(0,0,c.width,c.height).data;for(let i=3;i<d.length;i+=4)if(d[i]>0)ink++}return {cycle:window.__TW_LIVE_V091__?.cycle,idx:document.getElementById('taiex')?.textContent,price:r?.querySelector('.price')?.textContent,day:r?.querySelector('.dayline')?.textContent,meta:r?.querySelector('.meta')?.textContent,points:window.__TW_LIVE_V091__?.stocks?.['0050']?.seriesPoints||0,ink}});
+          console.log('FIRST',a,'AFTER',z,'ERRORS',errs);
+          if(!(z.cycle>=3&&z.price!==a.price&&z.idx!==a.idx&&z.points>=3&&z.ink>0&&/開/.test(z.day||'')&&/成交/.test(z.meta||'')&&!errs.length))throw new Error('15-second live propagation failed');
+          await p.locator('#watch article.row').filter({hasText:'0050'}).first().click();await p.waitForTimeout(500);
+          const d=await p.evaluate(()=>({price:document.getElementById('dPrice')?.textContent,change:document.getElementById('dChange')?.textContent,range:document.getElementById('dRange')?.textContent,volume:document.getElementById('dVolume')?.textContent,time:document.getElementById('dTime')?.textContent}));
+          console.log('DETAIL',d);if(!d.price||d.price==='—'||!d.range||d.range.includes('—')||!d.volume||d.volume==='—'||!d.time.includes('TWSE MIS'))throw new Error('detail live fields failed');
+          await b.close();
+          JS
+          node /tmp/liveqa.mjs
+
+      - name: Commit repaired runtime only after acceptance passes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add live-v091.js
+          git diff --cached --quiet && exit 0
+          git commit -m 'Fix v0.9.4 current market data refresh'
+          git push

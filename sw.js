@@ -1,5 +1,5 @@
-const CACHE='tw-ai-monitor-v078';
-const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./fix.js','./dividend-enhance.js','./hotfix-v065.js','./hotfix-v066.js','./hotfix-v067.js','./hotfix-v069.js','./hotfix-v075.js','./hotfix-v077.js','./data/latest.json','./data/dividends.json'];
+const CACHE='tw-ai-monitor-v079';
+const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./fix.js','./dividend-enhance.js','./hotfix-v065.js','./hotfix-v066.js','./hotfix-v067.js','./hotfix-v069.js','./hotfix-v075.js','./hotfix-v077.js','./hotfix-v079.js','./data/latest.json','./data/dividends.json'];
 
 self.addEventListener('install',e=>e.waitUntil(
   caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())
@@ -40,6 +40,7 @@ function injectScripts(html){
   if(!out.includes('hotfix-v069.js?v=074')) out=out.replace('</body>','<script src="./hotfix-v069.js?v=074"></script></body>');
   if(!out.includes('hotfix-v075.js?v=076')) out=out.replace('</body>','<script src="./hotfix-v075.js?v=076"></script></body>');
   if(!out.includes('hotfix-v077.js?v=078')) out=out.replace('</body>','<script src="./hotfix-v077.js?v=078"></script></body>');
+  if(!out.includes('hotfix-v079.js?v=079')) out=out.replace('</body>','<script src="./hotfix-v079.js?v=079"></script></body>');
   return out;
 }
 

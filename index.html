@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07111f">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="台股監控台">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>台股 AI 監控台 v0.8.2 Web</title>
+<title>台股 AI 監控台 v0.9.0 Web</title>
 <style>
 :root{--bg:#060d18;--panel:#0d1929;--panel2:#11233a;--line:#213954;--text:#edf5ff;--muted:#93a9c2;--accent:#78adff;--up:#ff6b6b;--down:#63d49a;--warn:#ffd166;--neutral:#d2dceb;--shadow:0 12px 28px rgba(0,0,0,.22)}
 *{box-sizing:border-box}html{background:var(--bg)}body{margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;background:radial-gradient(circle at 50% -10%,#13325a 0,#07111f 35%,#050b13 72%);min-height:100vh}
@@ -23,20 +23,23 @@ button,input{font:inherit}.app{max-width:1200px;margin:auto;padding:max(14px,env
 .sheet{position:fixed;z-index:50;inset:0;background:rgba(0,0,0,.56);display:none;align-items:flex-end}.sheet.show{display:flex}.panel{width:100%;max-height:94vh;overflow:auto;background:#081424;border:1px solid #24415f;border-radius:22px 22px 0 0;padding:10px 14px calc(25px + env(safe-area-inset-bottom));box-shadow:0 -24px 60px rgba(0,0,0,.45)}.grab{width:42px;height:4px;border-radius:99px;background:#45617d;margin:2px auto 11px}.detailHead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;position:sticky;top:-10px;background:rgba(8,20,36,.96);backdrop-filter:blur(13px);z-index:3;padding:8px 0 10px}.detailHead h2{margin:0;font-size:22px}.muted{color:var(--muted)}.small{font-size:11px}.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.kpi{background:#102138;border:1px solid var(--line);border-radius:12px;padding:10px}.kpi .l{font-size:10px;color:var(--muted)}.kpi .v{font-size:17px;font-weight:850;margin-top:4px}.cards{display:grid;grid-template-columns:1.6fr 1fr;gap:9px;margin-top:9px}.card{background:#0e1e33;border:1px solid var(--line);border-radius:13px;padding:12px}.card h3{font-size:13px;margin:0 0 9px}.big{width:100%;height:220px;background:#071321;border-radius:9px}.scoreParts{display:grid;gap:9px}.scoreItem{display:grid;grid-template-columns:68px 1fr 34px;gap:7px;align-items:center;font-size:11px}.bar{height:7px;background:#071320;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:#72a9ef;border-radius:99px}.analysis{line-height:1.7;font-size:13px}.event{padding:10px;background:#09182a;border:1px solid #1d3552;border-radius:10px;margin:7px 0}.event .tag{font-size:10px;color:var(--accent);margin-bottom:4px}.event .date{font-size:10px;color:var(--muted);margin-top:4px}.event a{color:#a9cbff;text-decoration:none}.tabs{display:flex;gap:6px;margin:9px 0;overflow:auto}.tab{font-size:12px;padding:8px 10px;border-radius:999px;background:#0a1829;border:1px solid var(--line);white-space:nowrap}.tab.active{background:#214e83;border-color:#4d82bb}.notice{font-size:11px;line-height:1.55;color:#bbcadb;background:#0b2036;border-left:3px solid var(--accent);padding:9px 10px;border-radius:8px;margin-top:9px}.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
 @media(max-width:720px){.market{grid-template-columns:1.25fr 1fr}.marketCard:first-child{grid-column:1/-1}.row{grid-template-columns:88px 75px 1fr 58px 24px}.cards{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:721px){.sheet{align-items:center;justify-content:center}.panel{max-width:960px;border-radius:20px;max-height:92vh;padding:14px}}
-@media (display-mode: standalone){
-  html,body{height:auto!important;min-height:100%!important;overflow-y:auto!important}
-  body{-webkit-overflow-scrolling:touch;min-height:-webkit-fill-available!important}
-  .app{height:auto!important;min-height:0!important;padding-bottom:calc(120px + env(safe-area-inset-bottom))!important}
-  .sheet{top:0!important;right:0!important;bottom:0!important;left:0!important;height:auto!important;min-height:0!important}
-  .panel{max-height:calc(100% - env(safe-area-inset-top))!important;padding-bottom:calc(42px + env(safe-area-inset-bottom))!important;-webkit-overflow-scrolling:touch}
-}
 
+html{min-height:100%;background:radial-gradient(circle at 50% -10%,#13325a 0,#07111f 35%,#050b13 72%);overflow-x:hidden}
+body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.app{min-height:100vh;min-height:100svh;padding-bottom:calc(120px + env(safe-area-inset-bottom))}
+@media (display-mode: standalone){
+  html,body{width:100%;min-height:100%;height:auto;overflow-x:hidden;overflow-y:auto}
+  body{min-height:100vh;min-height:100svh}
+  .app{width:100%;height:auto;min-height:100vh;min-height:100svh}
+  .sheet{inset:0;height:auto;min-height:0}
+  .panel{max-height:94vh;max-height:calc(100svh - env(safe-area-inset-top));padding-bottom:calc(42px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="top">
-    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.8.2｜手機優先｜盤中即時行情與即時線圖、評分、新聞、近月除權息</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
+    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.0｜盤中即時行情・即時線圖｜15 秒更新</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
     <div class="search"><input id="code" inputmode="text" autocomplete="off" placeholder="搜尋代號或名稱，例如 2610、華航"><button id="searchBtn" class="primary">搜尋</button></div>
     <div id="searchResults" class="searchResults"></div>
     <div class="toolbar"><span class="pill" id="clock">—</span><span class="pill">評分 100 分制</span><span class="pill" id="universePill">台股名冊：載入中…</span><span class="pill">行情：TWSE／TPEx</span><span class="pill" id="refreshPill">自動更新：15 秒</span></div>
@@ -67,7 +70,7 @@ button,input{font:inherit}.app{max-width:1200px;margin:auto;padding:max(14px,env
       <div class="kpi"><div class="l">殖利率</div><div id="dYield" class="v">—</div></div>
     </div>
     <div class="cards">
-      <div class="card"><h3>近 3 個月走勢</h3><canvas id="bigChart" class="big" width="820" height="260"></canvas><div id="chartMsg" class="muted small"></div></div>
+      <div class="card"><h3>今日盤中即時走勢</h3><canvas id="bigChart" class="big" width="820" height="260"></canvas><div id="chartMsg" class="muted small"></div></div>
       <div class="card"><h3>AI 判定分數</h3><div id="scoreParts" class="scoreParts"></div></div>
     </div>
     <div class="cards">
@@ -80,7 +83,7 @@ button,input{font:inherit}.app{max-width:1200px;margin:auto;padding:max(14px,env
   </section>
 </div>
 <script>
-const APP_VERSION='0.8.2';
+const APP_VERSION='0.9.0';
 const IS_WEB = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 window.addEventListener('DOMContentLoaded',()=>{
   if(!IS_WEB){
@@ -201,7 +204,13 @@ function scoreDate(q,row){const d=q?.time||dateObj(row?.TradeDate)||null;return 
 async function yahooQuote(symbol){const url=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1m&range=1d&includePrePost=false`;const j=await json(url,3200);const r=j?.chart?.result?.[0];if(!r)throw Error('no quote');const m=r.meta||{},q=r.indicators?.quote?.[0]||{},cs=q.close||[];let price=[...cs].reverse().find(v=>v!=null)??m.regularMarketPrice;const prev=N(m.chartPreviousClose??m.previousClose),change=price!=null&&prev!=null?price-prev:null;if(m.shortName)nameCache[String(symbol).replace(/\.(TW|TWO)$/,'')]=m.shortName;return{price:N(price),change,prev,open:N(m.regularMarketOpen),high:N(m.regularMarketDayHigh),low:N(m.regularMarketDayLow),volume:N(m.regularMarketVolume),time:m.regularMarketTime?new Date(m.regularMarketTime*1000):new Date(),source:'盤中行情'}}
 async function yahooDaily(symbol){const url=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=10d&includePrePost=false`;const j=await json(url,3200);const r=j?.chart?.result?.[0];if(!r)throw Error('no daily quote');const ts=r.timestamp||[],q=r.indicators?.quote?.[0]||{},cs=q.close||[];let i=cs.length-1;while(i>=0&&cs[i]==null)i--;if(i<0)throw Error('no daily close');let pi=i-1;while(pi>=0&&cs[pi]==null)pi--;const price=N(cs[i]),prev=pi>=0?N(cs[pi]):N(r.meta?.chartPreviousClose);if(r.meta?.shortName)nameCache[String(symbol).replace(/\.(TW|TWO)$/,'')]=r.meta.shortName;return{price,change:price!=null&&prev!=null?price-prev:null,prev,open:N(q.open?.[i]),high:N(q.high?.[i]),low:N(q.low?.[i]),volume:N(q.volume?.[i]),time:ts[i]?new Date(ts[i]*1000):new Date(),source:'最近交易日'}}
 function snapshotQuote(code){const x=SNAPSHOT[code];if(!x)return null;const dt=dateObj(SNAPSHOT_DATE);return{price:x.price,change:x.change,prev:x.price-x.change,open:x.open??null,high:x.high,low:x.low,volume:x.volume,time:dt,source:`最近交易日 ${SNAPSHOT_DATE}`}}
-async function quote(code,allowNetwork=true){if(!allowNetwork){return universeQuote(code)||snapshotQuote(code)||{price:null,change:null,prev:null,high:null,low:null,volume:null,time:null,source:'等待行情更新'}}
+function marketWindowTaipeiNow(){
+ const p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
+ const g=t=>p.find(x=>x.type===t)?.value||'',wd=g('weekday'),mins=Number(g('hour'))*60+Number(g('minute'));
+ return !['Sat','Sun'].includes(wd)&&mins>=8*60+55&&mins<=13*60+35;
+}
+function liveLoadingQuote(code){return{code:String(code),price:'',change:'',prev:'',open:'',high:'',low:'',volume:'',time:new Date(),source:'盤中即時資料載入中'}}
+async function quote(code,allowNetwork=true){if(!allowNetwork){if(marketWindowTaipeiNow())return quoteCache[code]||liveLoadingQuote(code);return universeQuote(code)||snapshotQuote(code)||{price:null,change:null,prev:null,high:null,low:null,volume:null,time:null,source:'等待行情更新'}}
  if(quoteCache[code])return quoteCache[code];
  for(const suffix of ['.TW','.TWO']){try{const q=await yahooQuote(code+suffix);quoteCache[code]=q;return q}catch{} try{const q=await yahooDaily(code+suffix);quoteCache[code]=q;return q}catch{}}
  const otc=await tpexLatest(code);if(otc?.price!=null){quoteCache[code]=otc;return otc}
@@ -222,7 +231,9 @@ window.addEventListener('error',e=>{showError('畫面發生錯誤，但其他功
 window.addEventListener('unhandledrejection',e=>{showError('資料來源暫時失敗，已改用可用資料顯示；不影響搜尋與查看。')});
 async function show(code,opts={}){try{active=code;const row=rowForCode(code)||{Code:code,Name:stockName(code,{})},val=allVals.find(x=>String(x.Code).trim()===code)||{},h=historyCache[code]||[],q=quoteCache[code]||universeQuote(code)||snapshotQuote(code)||await quote(code,false)||{price:null,change:null,prev:null,open:null,high:null,low:null,volume:null,time:null,source:'等待行情更新'},s=scoreStock(row,val,h,q),ch=q.change??N(row.Change)??0,name=stockName(code,row);$('dTitle').textContent=`${name}（${code}）`;$('dTime').textContent=`${q.source||'可用資料'}｜${q.time?.toLocaleString?.('zh-TW')||'—'}`;$('dPrice').textContent=F(q.price);$('dOpen').textContent=F(q.open??row.OpeningPrice);$('dChange').textContent=`${ch>0?'+':''}${F(ch)}`;$('dChange').className='v '+cls(ch);$('dRange').textContent=`${F(q.high??row.HighestPrice)} / ${F(q.low??row.LowestPrice)}`;$('dVolume').textContent=F(q.volume??row.TradeVolume,0);$('dPE').textContent=val.PEratio||SNAPSHOT[code]?.pe||'—';$('dYield').textContent=val.DividendYield?val.DividendYield+'%':'—';draw($('bigChart'),h,false,q.price);$('chartMsg').textContent=h.length?`共 ${h.length} 個交易日。`:`最近交易日收盤 ${F(q.price)} 已載入；歷史走勢若可連線會在背景補上。`;const parts=[['趨勢',s.trend],['短期動能',s.momentum],['估值',s.valuation],['殖利率',s.income]];$('scoreParts').innerHTML=parts.map(([n,v])=>`<div class="scoreItem"><span>${n}</span><div class="bar"><i style="width:${v??0}%"></i></div><b>${scoreValue(v)}</b></div>`).join('')+(s.total==null?`<div style="font-size:22px;font-weight:900;margin-top:6px">資料不足，暫不評分</div><div class="small muted">已顯示最近交易日收盤；待歷史／估值資料補齊後自動計算，不再以 50 分代替。</div>`:`<div class="${scoreCls(s.total)}" style="font-size:29px;font-weight:950;margin-top:4px">${s.mode} ${s.total}</div><div class="small muted">資料截至 ${scoreDate(q,row)} 收盤｜可信度 ${s.confidence}${s.delta==null?'':`｜下一交易日推動值：${s.delta>0?'+':''}${s.delta}`}</div>`);$('analysis').innerHTML=buildAnalysis(code,row,val,h,q,s);const ev=exEvents(code),eb=$('dividendEvents');eb.innerHTML=ev.length?'':'<div class="muted small">前後一個月內暫無已載入的除權息資料。</div>';ev.forEach(({x,d})=>{const z=exText(x),e=document.createElement('div');e.className='event';e.innerHTML=`<div class="tag">除權息／股利</div><b>${d.toLocaleDateString('zh-TW')}</b>${z.cash?`<div>現金：${z.cash}</div>`:''}${z.stock?`<div>股票：${z.stock}</div>`:''}${z.note?`<div class="date">${z.note}</div>`:''}`;eb.appendChild(e)});$('addWatchBtn').textContent=watchlist().includes(code)?'已在監控':'加入監控';$('addWatchBtn').disabled=watchlist().includes(code);$('sheet').classList.add('show');document.body.style.overflow='hidden';clearError();if(opts.news!==false)news(code,name)}catch(e){showError('個股頁顯示失敗，已保留搜尋結果。請再點一次查看；錯誤：'+(e?.message||e));throw e}}
 function closeSheet(){$('sheet').classList.remove('show');document.body.style.overflow='';active=null}
-function showSnapshotMarket(){const ch=TAIEX_SNAPSHOT.change;$('taiex').textContent=F(TAIEX_SNAPSHOT.price,2);$('taiexChg').textContent=`${ch>0?'+':''}${F(ch,2)}｜最近交易日 ${TAIEX_SNAPSHOT.date}`;$('taiexChg').className='s '+cls(ch);$('liveBadge').textContent=`休市／最近交易日 ${SNAPSHOT_DATE}`;$('liveBadge').className='liveBadge ok';$('marketStatus').textContent='休市';$('marketTime').textContent=`最近交易日 ${SNAPSHOT_DATE}`}
+function showSnapshotMarket(){
+ if(marketWindowTaipeiNow()){$('taiex').textContent='—';$('taiexChg').textContent='盤中即時指數載入中';$('taiexChg').className='s muted';$('liveBadge').textContent='盤中資料初始化';$('liveBadge').className='liveBadge warn';$('marketStatus').textContent='盤中載入中';$('marketTime').textContent='15 秒即時更新';return}
+ const ch=TAIEX_SNAPSHOT.change;$('taiex').textContent=F(TAIEX_SNAPSHOT.price,2);$('taiexChg').textContent=`${ch>0?'+':''}${F(ch,2)}｜最近交易日 ${TAIEX_SNAPSHOT.date}`;$('taiexChg').className='s '+cls(ch);$('liveBadge').textContent=`休市／最近交易日 ${SNAPSHOT_DATE}`;$('liveBadge').className='liveBadge ok';$('marketStatus').textContent='休市';$('marketTime').textContent=`最近交易日 ${SNAPSHOT_DATE}`}
 async function refreshRemote(){const results=await Promise.allSettled([jsonPublic(API.daily,4500),jsonPublic(API.val,4500),jsonPublic(API.ex,4500),jsonPublic(API.otc,4500)]);const r0=results[0].status==='fulfilled'&&Array.isArray(results[0].value)?results[0].value:[],r1=results[1].status==='fulfilled'&&Array.isArray(results[1].value)?results[1].value:[],r2=results[2].status==='fulfilled'&&Array.isArray(results[2].value)?results[2].value:[],r3=normalizeTpexRows(results[3].status==='fulfilled'?results[3].value:[]);if(r0.length||r3.length){allRows=[...r0,...r3.filter(o=>!r0.some(t=>String(t.Code).trim()===o.Code))];for(const r of r0){if(r.Code&&r.Name)nameCache[String(r.Code).trim()]=String(r.Name).trim()}lastRemoteOk=new Date()}if(r1.length)allVals=r1;if(r2.length)allEx=r2;quoteCache={};await render(true);if(lastRemoteOk){$('liveBadge').textContent='資料已連線';$('liveBadge').className='liveBadge ok';$('marketStatus').textContent='正常';$('marketTime').textContent=`更新 ${lastRemoteOk.toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})}`}}
 async function boot(){allRows=seedRows();allVals=seedVals();showSnapshotMarket();await render(false);try{await loadFullUniverse()}catch{};await render(false)}
 async function refresh(){quoteCache={};await refreshRemote().catch(()=>{})}
@@ -263,12 +274,8 @@ function tick(){const d=new Date();$('clock').textContent=d.toLocaleString('zh-T
 if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js?v='+APP_VERSION,{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{});
 </script>
 
-<script src="./fix.js?v=067"></script>
-<script src="./dividend-enhance.js?v=070"></script>
-<script src="./hotfix-v065.js?v=067"></script>
-<script src="./hotfix-v066.js?v=067"></script>
-<script src="./hotfix-v067.js?v=067"></script>
-<script src="./hotfix-v069.js?v=074"></script>
-<script src="./live-v081.js?v=082"></script>
+<script src="./dividend-enhance.js?v=090"></script>
+<script src="./extras-v090.js?v=090"></script>
+<script src="./live-v090.js?v=090"></script>
 </body>
 </html>

@@ -1,0 +1,65 @@
+name: Repair history and score v0.9.4r2
+on:
+  push:
+    branches: ['repair-history-score-v094r2']
+    paths:
+      - '.github/workflows/repair-history-score-v094r2.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Preserve market core
+        run: sha256sum live-v091.js scripts/update_latest.py > /tmp/core.before
+      - name: Patch display history bootstrap only
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('extras-v090.js')
+          s=p.read_text(encoding='utf-8')
+          needle="  function boot(){\n"
+          assert needle in s
+          add=r'''  async function refreshWatchHistoryAndScores(){
+    if(typeof watchlist!=='function'||typeof render!=='function')return false;
+    const codes=[...new Set(watchlist().map(String))];
+    await Promise.allSettled(codes.map(loadHistoryFor));
+    try{await render(false)}catch{}
+    return codes.some(code=>Array.isArray(historyCache?.[code])&&historyCache[code].length>=2);
+  }
+
+'''
+          s=s.replace(needle,add+needle,1)
+          old="    startTodayOnlyMainCharts();\n"
+          assert old in s
+          s=s.replace(old,"    refreshWatchHistoryAndScores().catch(()=>{});\n",1)
+          p.write_text(s,encoding='utf-8')
+
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          s=s.replace('./extras-v090.js?v=094r1','./extras-v090.js?v=094r2')
+          p.write_text(s,encoding='utf-8')
+
+          p=Path('sw.js'); s=p.read_text(encoding='utf-8')
+          s=s.replace("const CACHE='tw-ai-monitor-v094r1';","const CACHE='tw-ai-monitor-v094r2';")
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Static verification
+        run: |
+          node --check extras-v090.js
+          grep -F 'refreshWatchHistoryAndScores().catch(()=>{});' extras-v090.js
+          ! grep -F '    startTodayOnlyMainCharts();' extras-v090.js
+          grep -F './extras-v090.js?v=094r2' index.html
+          grep -F "const CACHE='tw-ai-monitor-v094r2';" sw.js
+          sha256sum live-v091.js scripts/update_latest.py > /tmp/core.after
+          diff -u /tmp/core.before /tmp/core.after
+      - name: Commit repair
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js index.html sw.js
+          git commit -m 'Repair history bootstrap and score rendering in v0.9.4'
+          git push origin HEAD:repair-history-score-v094r2

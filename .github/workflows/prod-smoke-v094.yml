@@ -1,0 +1,74 @@
+name: Production smoke v0.9.4
+on:
+  push:
+    branches: ['restore-pre-today-ui-v094']
+    paths:
+      - '.github/workflows/prod-smoke-v094.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Wait for restored production asset
+        run: |
+          WANT=$(git show origin/stable-v094-before-today-chart-fix-20261029:extras-v090.js | sha256sum | cut -d' ' -f1)
+          for i in $(seq 1 45); do
+            curl -fsSL --max-time 15 "https://under855.github.io/twstock-ai-monitor/extras-v090.js?smoke=$RANDOM" -o /tmp/extras.js || true
+            GOT=$(sha256sum /tmp/extras.js 2>/dev/null | cut -d' ' -f1 || true)
+            echo "try=$i want=$WANT got=$GOT"
+            if [ "$GOT" = "$WANT" ]; then exit 0; fi
+            sleep 4
+          done
+          exit 1
+      - name: Install browser harness
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)
+          test -n "$CHROME"
+          echo "CHROME=$CHROME" >> "$GITHUB_ENV"
+          npm install --no-save playwright-core@latest
+      - name: Test scores, news, and detail chart controls
+        run: |
+          cat > /tmp/smoke.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const context=await browser.newContext({viewport:{width:390,height:844},locale:'zh-TW',timezoneId:'Asia/Taipei',serviceWorkers:'block'});
+          const page=await context.newPage();
+          const errors=[]; page.on('pageerror',e=>errors.push(e.message)); page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+          await page.goto('https://under855.github.io/twstock-ai-monitor/?smoke='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await page.waitForFunction(()=>window.__TW_LIVE_V091__?.version==='0.9.4',{timeout:60000});
+          await page.waitForTimeout(10000);
+          const main=await page.evaluate(()=>{
+            const rows=[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent?.trim(),score:r.querySelector('.scoreNum')?.textContent?.trim(),label:r.querySelector('.scoreLabel')?.textContent?.trim(),hasCanvas:!!r.querySelector('canvas.spark'),fallback:r.querySelector('.sparkFallback')?.textContent?.trim()||''}));
+            return {rows,live:window.__TW_LIVE_V091__,extra:window.__TW_EXTRAS_V090__};
+          });
+          console.log('MAIN',JSON.stringify(main));
+          if(!main.extra?.ok) throw Error('extras not booted');
+          if(!main.rows.length) throw Error('no watch rows');
+          if(main.rows.every(r=>!r.score||r.score==='—'||r.label==='資料不足')) throw Error('all scores are insufficient');
+          const row=page.locator('#watch article.row').filter({hasText:'0050'}).first();
+          await row.click();
+          await page.waitForSelector('#sheet.show',{timeout:15000});
+          await page.waitForTimeout(9000);
+          const detail=await page.evaluate(()=>({
+            tabs:[...document.querySelectorAll('#detailChartTabs button')].map(b=>b.textContent.trim()),
+            newsCount:document.querySelectorAll('#news .event').length,
+            newsState:document.getElementById('newsState')?.textContent?.trim()||'',
+            newsText:document.getElementById('news')?.textContent?.trim()||'',
+            title:document.getElementById('detailChartDisplayTitle')?.textContent?.trim()||'',
+            errors:[]
+          }));
+          console.log('DETAIL',JSON.stringify(detail));
+          if(!['今日','5日','20日','60日'].every(x=>detail.tabs.includes(x))) throw Error('detail chart tabs missing');
+          if(detail.newsCount<1) throw Error('no rendered stock news: '+detail.newsState);
+          if(errors.length) console.log('CONSOLE_ERRORS',JSON.stringify(errors.slice(0,20)));
+          console.log('PROD_SMOKE_PASS');
+          await browser.close();
+          JS
+          node /tmp/smoke.mjs

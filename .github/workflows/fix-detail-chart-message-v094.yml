@@ -1,0 +1,49 @@
+name: Fix detail chart message v0.9.4
+on:
+  push:
+    branches: ['feature-today-chart-news-v094-work']
+    paths:
+      - 'scripts/fix_detail_chart_message_v094.py'
+      - '.github/workflows/fix-detail-chart-message-v094.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preserve core
+        run: sha256sum live-v091.js index.html scripts/update_latest.py > /tmp/core.before
+      - name: Apply message isolation
+        run: python scripts/fix_detail_chart_message_v094.py
+      - name: Validate display layer
+        run: |
+          node --check extras-v090.js
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('extras-v090.js').read_text(encoding='utf-8')
+          for x in ["histMsg.id='historyChartMsg'","if(msg)msg.style.display='none'","histMsg.style.display='none'","近 ${Math.min(count,h.length)} 個交易日｜歷史分析圖"]:
+              assert x in s, x
+          assert "const VERSION='0.9.4';" in s
+          print('display message isolation ok')
+          PY
+      - name: Confirm core unchanged
+        run: |
+          sha256sum live-v091.js index.html scripts/update_latest.py > /tmp/core.after
+          diff -u /tmp/core.before /tmp/core.after
+      - name: Commit only extras
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js
+          git commit -m 'Keep historical chart labels isolated from live updates'
+          git push origin HEAD:feature-today-chart-news-v094-work

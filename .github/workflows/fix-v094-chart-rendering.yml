@@ -1,0 +1,133 @@
+name: Fix v0.9.4 chart rendering
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-v094-chart-rendering.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Repair persistent line charts without changing app version
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+
+          old="""async function twseHistory(code){const a=[];for(const date of monthKeys(3)){try{const j=await json(`https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=${date}&stockNo=${encodeURIComponent(code)}&response=json`,3500);if(j?.title){const m=String(j.title).match(new RegExp(code+'\\\\s+([^\\\\d]+?)\\\\s+(?:各日|每日|個股|$)'));if(m?.[1])nameCache[code]=m[1].trim()}(j?.data||[]).forEach(x=>{const c=N(x[6]);if(c!=null)a.push({date:roc(x[0]),open:N(x[3]),high:N(x[4]),low:N(x[5]),close:c,change:N(x[7]),volume:N(x[1])})})}catch{}}
+ return a}
+async function tpexLatest"""
+          new="""async function twseHistory(code){
+ const chunks=await Promise.all(monthKeys(3).map(async date=>{const a=[];try{const j=await json(`https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=${date}&stockNo=${encodeURIComponent(code)}&response=json`,4500);if(j?.title){const m=String(j.title).match(new RegExp(code+'\\\\s+([^\\\\d]+?)\\\\s+(?:各日|每日|個股|$)'));if(m?.[1])nameCache[code]=m[1].trim()}(j?.data||[]).forEach(x=>{const c=N(x[6]);if(c!=null)a.push({date:roc(x[0]),open:N(x[3]),high:N(x[4]),low:N(x[5]),close:c,change:N(x[7]),volume:N(x[1])})})}catch{}return a}));
+ return chunks.flat()
+}
+async function yahooHistory(code){
+ const market=universeMap.get(String(code))?.market||'',symbols=market==='TPEx'?[`${code}.TWO`]:market==='TWSE'?[`${code}.TW`]:[`${code}.TW`,`${code}.TWO`];
+ for(const symbol of symbols){try{const j=await jsonPublic(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=3mo&interval=1d&includePrePost=false`,6500),r=j?.chart?.result?.[0],ts=r?.timestamp||[],q=r?.indicators?.quote?.[0]||{},a=[];for(let i=0;i<ts.length;i++){const close=N(q.close?.[i]);if(close==null)continue;const d=new Date(Number(ts[i])*1000),date=d.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}).replaceAll('-','/');a.push({date,open:N(q.open?.[i]),high:N(q.high?.[i]),low:N(q.low?.[i]),close,change:null,volume:N(q.volume?.[i])})}if(a.length>=2)return a}catch{}}return []
+}
+async function tpexLatest"""
+          if old not in s: raise SystemExit('twseHistory marker not found')
+          s=s.replace(old,new,1)
+
+          oldh="async function history(code){if(historyCache[code])return historyCache[code];let a=await twseHistory(code);const out=[...new Map(a.map(x=>[x.date,x])).values()].sort((x,y)=>x.date.localeCompare(y.date));historyCache[code]=out;return out}"
+          newh="async function history(code){if(historyCache[code]?.length)return historyCache[code];let a=await twseHistory(code);if(a.length<2)a=await yahooHistory(code);const out=[...new Map(a.map(x=>[x.date,x])).values()].sort((x,y)=>x.date.localeCompare(y.date));historyCache[code]=out;return out}"
+          if oldh not in s: raise SystemExit('history marker not found')
+          s=s.replace(oldh,newh,1)
+
+          oldrender="if(h.length)draw(div.querySelector('canvas'),h,true,q.price)}}"
+          newrender="if(h.length){const c=div.querySelector('canvas');draw(c,h,true,q.price);if(c)c.dataset.history='1'}}}"
+          if oldrender not in s: raise SystemExit('render chart marker not found')
+          s=s.replace(oldrender,newrender,1)
+
+          oldshow="async function show(code,opts={}){try{active=code;const row=rowForCode(code)||{Code:code,Name:stockName(code,{})},val=allVals.find(x=>String(x.Code).trim()===code)||{},h=historyCache[code]||[],q="
+          newshow="async function show(code,opts={}){try{active=code;const row=rowForCode(code)||{Code:code,Name:stockName(code,{})},val=allVals.find(x=>String(x.Code).trim()===code)||{},h=(historyCache[code]?.length?historyCache[code]:await history(code)),q="
+          if oldshow not in s: raise SystemExit('show history marker not found')
+          s=s.replace(oldshow,newshow,1)
+
+          oldbig="draw($('bigChart'),h,false,q.price);$('chartMsg').textContent="
+          newbig="draw($('bigChart'),h,false,q.price);$('bigChart').dataset.history=h.length?'1':'0';$('chartMsg').textContent="
+          if oldbig not in s: raise SystemExit('big chart marker not found')
+          s=s.replace(oldbig,newbig,1)
+
+          oldboot="async function boot(){allRows=seedRows();allVals=seedVals();showSnapshotMarket();await render(false);try{await loadFullUniverse()}catch{};await render(false)}"
+          newboot="async function boot(){allRows=seedRows();allVals=seedVals();showSnapshotMarket();await render(false);try{await loadFullUniverse()}catch{};await render(false);Promise.allSettled(watchlist().map(c=>history(String(c)))).then(()=>render(false)).catch(()=>{})}"
+          if oldboot not in s: raise SystemExit('boot marker not found')
+          s=s.replace(oldboot,newboot,1)
+
+          p.write_text(s,encoding='utf-8')
+          Path('404.html').write_text(s,encoding='utf-8')
+
+          lp=Path('live-v091.js')
+          live=lp.read_text(encoding='utf-8')
+          old="const r=canvas.getBoundingClientRect(),dpr=Math.max(1,devicePixelRatio||1),w=Math.max(30,Math.round((r.width||320)*dpr)),h=Math.max(24,Math.round((r.height||50)*dpr));if(canvas.width!==w)canvas.width=w;if(canvas.height!==h)canvas.height=h;ctx.clearRect(0,0,w,h);\n    const data=(a||[]).filter(p=>sameDay(Number(p.stamp))&&num(p.close)!=null).sort((x,y)=>x.stamp-y.stamp);\n    if(data.length<2){ctx.fillStyle='#91a8c2';ctx.font=`${Math.round(11*dpr)}px sans-serif`;ctx.textAlign='center';ctx.fillText('今日盤中線累積中',w/2,h/2);return false}"
+          new="const data=(a||[]).filter(p=>sameDay(Number(p.stamp))&&num(p.close)!=null).sort((x,y)=>x.stamp-y.stamp);\n    if(data.length<2&&canvas.dataset.history==='1')return false;\n    const r=canvas.getBoundingClientRect(),dpr=Math.max(1,devicePixelRatio||1),w=Math.max(30,Math.round((r.width||320)*dpr)),h=Math.max(24,Math.round((r.height||50)*dpr));if(canvas.width!==w)canvas.width=w;if(canvas.height!==h)canvas.height=h;ctx.clearRect(0,0,w,h);\n    if(data.length<2){ctx.fillStyle='#91a8c2';ctx.font=`${Math.round(11*dpr)}px sans-serif`;ctx.textAlign='center';ctx.fillText('今日盤中線累積中',w/2,h/2);return false}\n    canvas.dataset.history='0';"
+          if old not in live: raise SystemExit('drawLine marker not found')
+          live=live.replace(old,new,1)
+          lp.write_text(live,encoding='utf-8')
+          PY
+      - name: Static checks
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('index.html').read_text(encoding='utf-8'); f=Path('404.html').read_text(encoding='utf-8'); live=Path('live-v091.js').read_text(encoding='utf-8')
+          checks={
+            'same version':"const APP_VERSION='0.9.4';" in s,
+            'yahoo fallback':'async function yahooHistory(code)' in s,
+            'history preload':'Promise.allSettled(watchlist().map(c=>history(String(c))))' in s,
+            'detail awaits history':'await history(code)' in s,
+            'row marks history':"c.dataset.history='1'" in s,
+            'live preserves history':"data.length<2&&canvas.dataset.history==='1'" in live,
+            '404 mirror':s==f,
+          }
+          print(checks)
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit('FAILED: '+', '.join(bad))
+          blocks=re.findall(r'<script(?:\\s[^>]*)?>(.*?)</script>',s,flags=re.S)
+          Path('/tmp/inline.js').write_text('\n'.join(x for x in blocks if x.strip()),encoding='utf-8')
+          PY
+          node --check /tmp/inline.js
+          node --check live-v091.js
+      - name: Local browser chart acceptance
+        run: |
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
+          PID=$!; trap 'kill $PID || true' EXIT
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); export CHROME
+          cat > chartqa.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:390,height:844}});
+          await p.goto('http://127.0.0.1:8000/?qa=1',{waitUntil:'domcontentloaded'});
+          await p.waitForTimeout(1500);
+          const ok=await p.evaluate(async()=>{
+            const mk=(base)=>Array.from({length:25},(_,i)=>({date:`2026/09/${String(i+1).padStart(2,'0')}`,close:base+i*.1,open:base,high:base+i*.12,low:base-i*.03,volume:1000+i}));
+            for(const code of watchlist())historyCache[String(code)]=mk(20+Number(String(code).slice(-2))/10);
+            await render(false);
+            const rows=[...document.querySelectorAll('#watch article.row')];
+            return rows.length>0&&rows.every(r=>{const c=r.querySelector('canvas.spark');if(!c||c.dataset.history!=='1')return false;const x=c.getContext('2d').getImageData(0,0,c.width,c.height).data;for(let i=3;i<x.length;i+=4)if(x[i]>0)return true;return false});
+          });
+          console.log('ROW_CHARTS',ok);
+          if(!ok)throw new Error('row charts not rendered');
+          await b.close();
+          JS
+          node chartqa.mjs
+      - name: Commit only after checks pass
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html 404.html live-v091.js
+          git diff --cached --quiet && exit 0
+          git commit -m 'Fix persistent line chart rendering in v0.9.4'
+          git push

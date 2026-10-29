@@ -1,5 +1,16 @@
 from pathlib import Path
 
+# Fix live controller syntax first so the promotion workflow cannot ship a broken script.
+live=Path('live-v091.js')
+l=live.read_text(encoding='utf-8')
+bad="ctx.strokeStyle='rgba(120,173,255,.98)';ctx.lineWidth=Math.max(1.5,1.8*dpr);ctx.beginPath();data.forEach((p,i)=>i?ctx.lineTo(X(p),Y(num(p.close))):ctx.moveTo(X(p),Y(num(p.close)));ctx.stroke();"
+good="ctx.strokeStyle='rgba(120,173,255,.98)';ctx.lineWidth=Math.max(1.5,1.8*dpr);ctx.beginPath();data.forEach((p,i)=>{if(i)ctx.lineTo(X(p),Y(num(p.close)));else ctx.moveTo(X(p),Y(num(p.close)));});ctx.stroke();"
+if bad in l:
+    l=l.replace(bad,good,1)
+elif good not in l:
+    raise SystemExit('live-v091 draw syntax target missing')
+live.write_text(l,encoding='utf-8')
+
 p=Path('index.html')
 s=p.read_text(encoding='utf-8')
 repls={

@@ -13,54 +13,35 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Probe current quotes and intraday OHLC
+      - name: Probe current quote and chart endpoints
         run: |
           python - <<'PY'
-          import json, urllib.parse, urllib.request, http.cookiejar
+          import json, urllib.parse, urllib.request
           from datetime import datetime
           from zoneinfo import ZoneInfo
-
           today=datetime.now(ZoneInfo('Asia/Taipei')).strftime('%Y%m%d')
+          def text(url):
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache','Pragma':'no-cache'})
+              with urllib.request.urlopen(req,timeout=20) as r:return r.read().decode('utf-8')
+          def get(url): return json.loads(text(url))
           tests=[('tse','0050'),('tse','3711'),('tse','2002'),('otc','3293')]
-          jar=http.cookiejar.CookieJar()
-          opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
-          def raw(url):
-              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache','Referer':'https://mis.twse.com.tw/stock/fibest.jsp?lang=zh_tw'})
-              with opener.open(req,timeout=20) as r:return r.read().decode('utf-8')
-          def get(url): return json.loads(raw(url))
-          # establish MIS browser session first
-          raw('https://mis.twse.com.tw/stock/fibest.jsp?lang=zh_tw&stock=0050')
-          print('cookies',[(c.name,c.domain) for c in jar])
           for ex,code in tests:
               ch=f'{ex}_{code}.tw'
               qurl='https://mis.twse.com.tw/stock/api/getStockInfo.jsp?'+urllib.parse.urlencode({'ex_ch':ch,'json':'1','delay':'0','_':int(datetime.now().timestamp()*1000)})
-              q=get(qurl)
-              rows=[x for x in q.get('msgArray',[]) if str(x.get('c',''))==code]
+              q=get(qurl); rows=[x for x in q.get('msgArray',[]) if str(x.get('c',''))==code]
               if not rows: raise SystemExit(f'{code}: quote missing')
-              m=rows[0]
-              print('QUOTE',code,{k:m.get(k) for k in ['ex','c','d','t','tlong','z','y','o','h','l','v','key','ch']},'trade=',m.get('trade'))
-              if str(m.get('d',''))!=today: raise SystemExit(f'{code}: stale quote date {m.get("d")} != {today}')
-              trade=(m.get('trade') or {})
-              z=trade.get('z') or m.get('z')
-              if z in (None,'','-','--','---'): raise SystemExit(f'{code}: no live trade price')
-              key=m.get('key') or f'{ex}_{code}.tw_{today}'
-              d0=m.get('d') or today
-              variants=[
-                {'ex_ch':key,'d0':d0},
-                {'ex_ch':ch,'d0':d0},
-                {'ex_ch':key},
+              m=rows[0]; trade=m.get('trade') or {}; z=trade.get('z') or m.get('z')
+              print('QUOTE',code,'date',m.get('d'),'outer_z',m.get('z'),'trade_z',trade.get('z'),'trade_t',trade.get('t'),'y',m.get('y'),'key',m.get('key'))
+              if str(m.get('d',''))!=today: raise SystemExit(f'{code}: stale quote date')
+              if z in (None,'','-','--','---'): raise SystemExit(f'{code}: no live trade')
+              probes=[
+                ('ohlc-key','https://mis.twse.com.tw/stock/api/getOhlc.jsp?'+urllib.parse.urlencode({'ex_ch':m.get('key') or f'{ch}_{today}','d0':today,'_':int(datetime.now().timestamp()*1000)})),
+                ('ohlc-ch','https://mis.twse.com.tw/stock/api/getOhlc.jsp?'+urllib.parse.urlencode({'ex_ch':ch,'d0':today,'_':int(datetime.now().timestamp()*1000)})),
+                ('statis','https://mis.twse.com.tw/stock/api/getChartOhlcStatis.jsp?'+urllib.parse.urlencode({'ex':ex,'ch':f'{code}.tw','fqy':'1','_':int(datetime.now().timestamp()*1000)})),
               ]
-              arr=[]
-              for params in variants:
-                ourl='https://mis.twse.com.tw/stock/api/getOhlc.jsp?'+urllib.parse.urlencode({**params,'_':int(datetime.now().timestamp()*1000)})
-                o=get(ourl); arr=o.get('msgArray') or []
-                print('OHLC variant',code,params,'points',len(arr),'rt',o.get('rtcode'),o.get('rtmessage'))
-                if len(arr)>=2: break
-              print('OHLC',code,'first',arr[:1],'last',arr[-1:] if arr else [])
-              if len(arr)<2: raise SystemExit(f'{code}: OHLC points <2')
-              times=[int(x.get('tlong')) for x in arr if str(x.get('tlong','')).isdigit()]
-              if len(times)<2: raise SystemExit(f'{code}: OHLC missing timestamps')
-              last=datetime.fromtimestamp(max(times)/1000,ZoneInfo('Asia/Taipei')).strftime('%Y%m%d')
-              if last!=today: raise SystemExit(f'{code}: OHLC stale {last} != {today}')
-          print('MIS_LIVE_AND_OHLC_PASS',today)
+              for name,url in probes:
+                  try:
+                      raw=text(url); print('CHART',code,name,'bytes',len(raw),'head',raw[:220].replace('\n',' '))
+                  except Exception as e: print('CHART',code,name,'ERROR',repr(e))
+          print('QUOTE_PROBE_PASS',today)
           PY

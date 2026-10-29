@@ -1,0 +1,31 @@
+name: Apply v0.9.0 runtime safety
+on:
+  push:
+    paths:
+      - 'scripts/patch_v090_runtime.py'
+      - '.github/workflows/apply-v090-runtime.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/patch_v090_runtime.py
+      - run: node --check live-v090.js
+      - name: Verify observer is non-recursive
+        run: |
+          grep -F "observer.observe(watch,{childList:true,subtree:false});" live-v090.js
+          ! grep -F "observer.observe(watch,{childList:true,subtree:true});" live-v090.js
+      - name: Commit runtime safety patch
+        run: |
+          if git diff --quiet -- live-v090.js; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add live-v090.js
+          git commit -m 'Prevent recursive live DOM repaint loop'
+          git push

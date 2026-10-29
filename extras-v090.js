@@ -64,48 +64,63 @@
     const ac=new AbortController(),t=setTimeout(()=>ac.abort(),timeout);
     try{const r=await fetch(url,{cache:'no-store',signal:ac.signal});if(!r.ok)throw Error('HTTP '+r.status);return await r.json()}finally{clearTimeout(t)}
   }
-  async function yahooStockNews(code,name){
-    const queries=[String(name||'').trim(),String(code||'').trim()].filter(Boolean),seen=new Set(),out=[];
-    for(const q of queries){
-      const upstream=`https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(q)}&quotesCount=0&newsCount=10&enableFuzzyQuery=false&_=${Date.now()}`;
-      for(const url of [`https://proxy.cors.dev/${upstream}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(upstream)}`]){
-        try{
-          const j=await fetchJson(url);
-          for(const x of (j?.news||[])){
-            const title=String(x?.title||'').trim(),link=String(x?.link||'').trim(),ts=Number(x?.providerPublishTime||0)*1000;
-            if(!title||!link||!Number.isFinite(ts)||ts<=0||Date.now()-ts>30*86400000)continue;
-            const key=title.toLowerCase();if(seen.has(key))continue;seen.add(key);out.push({title,link,publisher:String(x?.publisher||''),time:ts});
-          }
-          if(out.length>=4)break;
-        }catch{}
-      }
-      if(out.length>=4)break;
-    }
-    return out.sort((a,b)=>b.time-a.time).slice(0,4);
+  const NEWS_FEEDS=[
+    {publisher:'鉅亨網',url:'https://news.cnyes.com/rss/v1/news/category/tw_stock'},
+    {publisher:'MoneyDJ',url:'https://www.moneydj.com/KMDJ/RssCenter.aspx?svc=NR&fno=1&arg=MB06'},
+    {publisher:'中央社',url:'https://feeds.feedburner.com/rsscna/finance'}
+  ];
+  const TRUSTED_GOOGLE_PUBLISHERS=['鉅亨網','MoneyDJ','中央社','經濟日報','工商時報','自由財經','聯合新聞網'];
+  const normNews=s=>String(s||'').toLowerCase().replace(/[\s　()（）\-—_·,，.。:：/／]/g,'');
+  function relevantHeadline(title,code,name){
+    const t=normNews(title),c=normNews(code),n=normNews(name);
+    return (!!c&&t.includes(c))||((n&&n.length>=2)&&t.includes(n));
   }
-  async function googleRssNews(code,name){
-    const query=encodeURIComponent(`${name||code} ${code} 股票 when:30d`),rss=`https://news.google.com/rss/search?q=${query}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant`;
-    for(const url of [`https://api.allorigins.win/raw?url=${encodeURIComponent(rss)}`,`https://proxy.cors.dev/${rss}`]){
-      try{
-        const r=await fetch(url,{cache:'no-store'});if(!r.ok)continue;const text=await r.text();
-        const xml=new DOMParser().parseFromString(text,'text/xml'),cutoff=Date.now()-30*86400000,out=[];
-        for(const it of [...xml.querySelectorAll('item')]){
-          const title=it.querySelector('title')?.textContent?.trim()||'',link=it.querySelector('link')?.textContent?.trim()||'',ts=Date.parse(it.querySelector('pubDate')?.textContent||'');
-          if(!title||!link||!Number.isFinite(ts)||ts<cutoff)continue;out.push({title,link,publisher:'Google News',time:ts});if(out.length>=4)break;
-        }
-        if(out.length)return out;
-      }catch{}
+  function parseXmlFeed(text,publisher){
+    const xml=new DOMParser().parseFromString(text,'text/xml'),cutoff=Date.now()-30*86400000,out=[];
+    for(const it of [...xml.querySelectorAll('item')]){
+      const title=it.querySelector('title')?.textContent?.trim()||'',link=it.querySelector('link')?.textContent?.trim()||'',raw=it.querySelector('pubDate')?.textContent||it.querySelector('date')?.textContent||'',ts=Date.parse(raw);
+      if(!title||!link)continue;if(Number.isFinite(ts)&&ts<cutoff)continue;
+      out.push({title,link,publisher,time:Number.isFinite(ts)?ts:null});
     }
+    return out;
+  }
+  async function fetchPublisherFeed(feed){
+    const proxied=`https://proxy.cors.dev/${feed.url}`;
+    try{
+      const ac=new AbortController(),t=setTimeout(()=>ac.abort(),7000);
+      try{const r=await fetch(proxied,{cache:'no-store',signal:ac.signal});if(r.ok){const text=await r.text(),items=parseXmlFeed(text,feed.publisher);if(items.length)return items}}finally{clearTimeout(t)}
+    }catch{}
+    try{
+      const j=await fetchJson(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`,7000);
+      if(j?.status==='ok')return (j.items||[]).map(x=>({title:String(x?.title||'').trim(),link:String(x?.link||'').trim(),publisher:feed.publisher,time:Date.parse(x?.pubDate||'')})).filter(x=>x.title&&x.link);
+    }catch{}
     return [];
+  }
+  async function trustedGoogleFallback(code,name){
+    const query=encodeURIComponent(`${name||code} ${code} 股票 when:30d`),rss=`https://news.google.com/rss/search?q=${query}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant`;
+    try{
+      const j=await fetchJson(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rss)}`,8000);if(j?.status!=='ok')return [];
+      const out=[];
+      for(const x of (j.items||[])){
+        let title=String(x?.title||'').trim(),publisher='';const m=title.match(/\s+-\s+([^\-]+)$/);if(m){publisher=m[1].trim();title=title.slice(0,m.index).trim()}
+        if(!TRUSTED_GOOGLE_PUBLISHERS.some(n=>publisher.includes(n)))continue;
+        const ts=Date.parse(x?.pubDate||'');if(Number.isFinite(ts)&&Date.now()-ts>30*86400000)continue;
+        if(!title||!x?.link)continue;out.push({title,link:String(x.link),publisher,time:Number.isFinite(ts)?ts:null});
+      }
+      return out;
+    }catch{return []}
   }
   function installNews(){
     if(typeof news!=='function')return false;
     news=async function(code,name){
       const box=document.getElementById('news'),state=document.getElementById('newsState');if(!box||!state)return;
-      box.innerHTML='';state.textContent='載入最近一個月新聞…';let items=[];
-      try{items=await yahooStockNews(code,name)}catch{}if(!items.length){try{items=await googleRssNews(code,name)}catch{}}
+      box.innerHTML='';state.textContent='載入可信來源近期新聞…';
+      const settled=await Promise.allSettled(NEWS_FEEDS.map(fetchPublisherFeed)),seen=new Set(),items=[];
+      for(const r of settled){if(r.status!=='fulfilled')continue;for(const it of r.value){if(!relevantHeadline(it.title,code,name))continue;const k=normNews(it.title);if(!k||seen.has(k))continue;seen.add(k);items.push(it)}}
+      if(items.length<4){for(const it of await trustedGoogleFallback(code,name)){const k=normNews(it.title);if(!k||seen.has(k))continue;seen.add(k);items.push(it)}}
+      items.sort((a,b)=>(b.time||0)-(a.time||0));
       if(renderNewsItems(items,state,box))return;
-      const q=encodeURIComponent(`${name||code} ${code} 股票`);state.innerHTML=`新聞來源暫時無法直接讀取。<br><a style="color:#a9cbff" target="_blank" rel="noopener" href="https://news.google.com/search?q=${q}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant">開啟 Google 新聞搜尋</a>`;
+      const q=encodeURIComponent(`${name||code} ${code} 股票`);state.innerHTML=`鉅亨網、MoneyDJ、中央社目前沒有讀到近一個月直接相關標題。<br><a style="color:#a9cbff" target="_blank" rel="noopener" href="https://news.google.com/search?q=${q}&hl=zh-TW&gl=TW&ceid=TW%3Azh-Hant">開啟可信來源新聞搜尋</a>`;
     };
     return true;
   }
@@ -147,46 +162,51 @@
   function priceFor(code){
     try{return quoteCache?.[String(code)]?.price??rowForCode?.(String(code))?.ClosingPrice??null}catch{return null}
   }
-  function paintHistoryCanvas(code,h){
-    if(!Array.isArray(h)||h.length<2||typeof draw!=='function')return false;
-    const livePoints=window.__TW_LIVE_V091__?.stocks?.[String(code)]?.seriesPoints||0;
-    if(livePoints>=2)return false;
-    const r=rowFor(code);if(!r)return false;
-    let c=r.querySelector('canvas.spark');
-    if(!c){const f=r.querySelector('.sparkFallback');if(!f)return false;c=document.createElement('canvas');c.className='spark';c.width=420;c.height=50;f.replaceWith(c)}
-    try{draw(c,h,true,priceFor(code));c.dataset.history='1';return true}catch{return false}
-  }
-  async function refreshHistoryCharts(){
+  function mainLivePoints(code){return Number(window.__TW_LIVE_V091__?.stocks?.[String(code)]?.seriesPoints||0)}
+  function enforceTodayOnlyMainCharts(){
     if(typeof watchlist!=='function')return false;
-    const codes=[...new Set(watchlist().map(String))];
-    const hs=await Promise.all(codes.map(loadHistoryFor));
-    let painted=0;codes.forEach((code,i)=>{if(paintHistoryCanvas(code,hs[i]))painted++});
-    return painted>0;
+    for(const code of [...new Set(watchlist().map(String))]){
+      const r=rowFor(code);if(!r)continue;if(mainLivePoints(code)>=2)continue;
+      const c=r.querySelector('canvas.spark');if(!c)continue;
+      const f=document.createElement('div');f.className='sparkFallback';f.innerHTML='今日走勢<br>等待即時資料';c.replaceWith(f);
+    }
+    return true;
   }
-  function installDetailHistory(){
+  function startTodayOnlyMainCharts(){
+    let timer=null;const run=()=>enforceTodayOnlyMainCharts(),watch=document.getElementById('watch');
+    if(watch)new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(run,80)}).observe(watch,{childList:true,subtree:true});
+    setTimeout(run,150);setTimeout(run,900);setTimeout(run,2500);setInterval(run,5000);return true;
+  }
+
+  const detailModeByCode=new Map();
+  function ensureDetailChartTabs(code){
+    const key=String(code),live=document.getElementById('bigChart');if(!live||typeof draw!=='function')return false;
+    const card=live.closest('.card');if(!card)return false;
+    const oldTitle=card.querySelector('h3');if(oldTitle)oldTitle.style.display='none';
+    let displayTitle=card.querySelector('#detailChartDisplayTitle');if(!displayTitle){displayTitle=document.createElement('div');displayTitle.id='detailChartDisplayTitle';displayTitle.style.cssText='font-size:13px;font-weight:800;margin:0 0 8px';card.insertBefore(displayTitle,card.firstChild)}
+    let tabs=card.querySelector('#detailChartTabs');if(!tabs){tabs=document.createElement('div');tabs.id='detailChartTabs';tabs.className='tabs';displayTitle.insertAdjacentElement('afterend',tabs)}
+    let hist=card.querySelector('#historyChart');if(!hist){hist=document.createElement('canvas');hist.id='historyChart';hist.className='big';hist.width=820;hist.height=260;hist.style.display='none';live.insertAdjacentElement('afterend',hist)}
+    const modes=[['today','今日'],['5','5日'],['20','20日'],['60','60日']];
+    tabs.innerHTML=modes.map(([m,l])=>`<button type="button" class="tab" data-chart-mode="${m}">${l}</button>`).join('');
+    const apply=mode=>{
+      detailModeByCode.set(key,mode);for(const b of tabs.querySelectorAll('.tab'))b.classList.toggle('active',b.dataset.chartMode===mode);
+      const msg=document.getElementById('chartMsg');
+      if(mode==='today'){live.style.display='block';hist.style.display='none';displayTitle.textContent='今日盤中即時走勢';return}
+      const count=Number(mode),h=(historyCache?.[key]||[]).slice(-count);live.style.display='none';hist.style.display='block';displayTitle.textContent=`近 ${count} 個交易日走勢`;
+      if(h.length>=2){draw(hist,h,false,priceFor(key));if(msg)msg.textContent=`近 ${Math.min(count,h.length)} 個交易日｜歷史分析圖`}
+      else if(msg)msg.textContent='歷史資料不足，暫時無法繪製這個區間。';
+    };
+    for(const b of tabs.querySelectorAll('.tab'))b.addEventListener('click',()=>apply(b.dataset.chartMode));
+    apply(detailModeByCode.get(key)||'today');return true;
+  }
+  function installDetailChartTabs(){
     if(typeof show!=='function')return false;
     const baseShow=show;
     show=async function(code,opts={}){
-      const key=String(code);await loadHistoryFor(key);
-      const out=await baseShow(key,opts);
-      try{
-        const h=historyCache?.[key]||[],c=document.getElementById('bigChart');
-        if(h.length>=2&&c&&typeof draw==='function'){
-          draw(c,h,false,priceFor(key));c.dataset.history='1';
-          const msg=document.getElementById('chartMsg');if(msg)msg.textContent=`近 3 個月走勢｜共 ${h.length} 個交易日`;
-          const title=c.closest('.card')?.querySelector('h3');if(title&&!(window.__TW_LIVE_V091__?.marketWindow))title.textContent='近 3 個月走勢';
-        }
-      }catch{}
+      const key=String(code),out=await baseShow(key,opts);ensureDetailChartTabs(key);
+      loadHistoryFor(key).then(()=>{try{if(String(active||'')===key&&document.getElementById('sheet')?.classList.contains('show'))ensureDetailChartTabs(key)}catch{}}).catch(()=>{});
       return out;
     };
-    return true;
-  }
-  function startHistoryCharts(){
-    let timer=null,busy=false;
-    const run=()=>{if(busy)return;busy=true;refreshHistoryCharts().finally(()=>{busy=false})};
-    const watch=document.getElementById('watch');
-    if(watch){new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(run,250)}).observe(watch,{childList:true,subtree:true})}
-    setTimeout(run,600);setTimeout(run,2500);setTimeout(run,7000);setTimeout(run,18000);
     return true;
   }
 
@@ -200,8 +220,8 @@
   function boot(){
     if(!installFuzzySearch())setTimeout(installFuzzySearch,0);
     if(!installNews())setTimeout(installNews,0);
-    if(!installDetailHistory())setTimeout(installDetailHistory,0);
-    startHistoryCharts();
+    if(!installDetailChartTabs())setTimeout(installDetailChartTabs,0);
+    startTodayOnlyMainCharts();
     if(!startDividendLimit()){const t=setInterval(()=>{if(startDividendLimit())clearInterval(t)},250);setTimeout(()=>clearInterval(t),10000)}
     window.__TW_EXTRAS_V090__={ok:true,version:VERSION};
   }

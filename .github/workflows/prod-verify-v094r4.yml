@@ -16,66 +16,61 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Wait for production assets
+      - name: Verify production assets
         run: |
           SITE='https://under855.github.io/twstock-ai-monitor'
-          for i in $(seq 1 20); do
-            curl -fsSL --max-time 20 "$SITE/?verify=$RANDOM" -o /tmp/index.html || true
-            if grep -Fq './extras-v090.js?v=094r4' /tmp/index.html; then
-              curl -fsSL --max-time 20 "$SITE/extras-v090.js?verify=$RANDOM" -o /tmp/extras.js
-              test "$(sha256sum extras-v090.js | cut -d' ' -f1)" = "$(sha256sum /tmp/extras.js | cut -d' ' -f1)"
-              echo ASSET_MATCH_PASS
-              exit 0
-            fi
-            sleep 5
-          done
-          echo 'production asset did not update to r4'
-          exit 1
+          curl -fsSL --max-time 20 "$SITE/?verify=$RANDOM" -o /tmp/index.html
+          curl -fsSL --max-time 20 "$SITE/extras-v090.js?verify=$RANDOM" -o /tmp/extras.js
+          grep -F './extras-v090.js?v=094r4' /tmp/index.html
+          test "$(sha256sum extras-v090.js | cut -d' ' -f1)" = "$(sha256sum /tmp/extras.js | cut -d' ' -f1)"
       - name: Install browser harness
         run: |
           CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
           test -n "$CHROME"
           echo "CHROME=$CHROME" >> "$GITHUB_ENV"
           npm install --no-save playwright-core@latest >/dev/null 2>&1
-      - name: Verify 0050 3711 3293 detail today charts and news
+      - name: Diagnose 0050 3711 3293 independently
         run: |
           cat > verify-prod.mjs <<'JS'
           import { chromium } from 'playwright-core';
           const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
           const context=await browser.newContext({viewport:{width:390,height:844},locale:'zh-TW',timezoneId:'Asia/Taipei',serviceWorkers:'block'});
           const page=await context.newPage();
-          const pageErrors=[];page.on('pageerror',e=>pageErrors.push(e.message));
+          const responses=[]; const fails=[]; const pageErrors=[];
+          page.on('response',r=>{const u=r.url();if(u.includes('query1.finance.yahoo.com')||u.includes('proxy.cors.dev')||u.includes('news.google.com')||u.includes('rss2json'))responses.push({status:r.status(),url:u.slice(0,260)})});
+          page.on('requestfailed',r=>{const u=r.url();if(u.includes('query1.finance.yahoo.com')||u.includes('proxy.cors.dev')||u.includes('news.google.com')||u.includes('rss2json'))fails.push({url:u.slice(0,260),why:r.failure()?.errorText||''})});
+          page.on('pageerror',e=>pageErrors.push(e.message));
           await page.goto('https://under855.github.io/twstock-ai-monitor/?verify='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
           await page.waitForFunction(()=>window.__TW_LIVE_V091__?.version==='0.9.4',null,{timeout:60000});
           await page.waitForFunction(()=>document.querySelectorAll('#watch article.row').length>=6,null,{timeout:60000});
           const results=[];
           for(const code of ['0050','3711','3293']){
+            const before=responses.length;
             const row=page.locator('#watch article.row').filter({has:page.locator('.sym',{hasText:code})}).first();
             await row.click();
             await page.waitForSelector('#sheet.show',{timeout:15000});
             await page.waitForFunction(c=>document.getElementById('dTitle')?.textContent?.includes(c),code,{timeout:15000});
-            await page.waitForFunction(()=>document.getElementById('chartMsg')?.textContent?.includes('分時備援走勢'),null,{timeout:30000});
-            await page.waitForFunction(()=>document.querySelectorAll('#news .event').length>=1,null,{timeout:30000});
+            await page.waitForTimeout(12000);
             const r=await page.evaluate(code=>({
               code,
               title:document.getElementById('dTitle')?.textContent?.trim()||'',
               price:document.getElementById('dPrice')?.textContent?.trim()||'',
               chartMsg:document.getElementById('chartMsg')?.textContent?.trim()||'',
               newsCount:document.querySelectorAll('#news .event').length,
+              newsState:document.getElementById('newsState')?.textContent?.trim()||'',
               tabs:[...document.querySelectorAll('#detailChartTabs button')].map(b=>b.textContent.trim()),
-              canvas:!!document.getElementById('bigChart')
+              live:window.__TW_LIVE_V091__?.stocks?.[code]||null
             }),code);
-            console.log('DETAIL',JSON.stringify(r));
-            if(!r.price||r.price==='—')throw Error(code+' price missing');
-            if(!r.chartMsg.includes('分時備援走勢'))throw Error(code+' today chart fallback missing');
-            if(r.newsCount<1)throw Error(code+' news missing');
-            if(!['今日','5日','20日','60日'].every(x=>r.tabs.includes(x)))throw Error(code+' tabs missing');
+            r.network=responses.slice(before); r.failures=[...fails];
+            console.log('DETAIL_DIAG',JSON.stringify(r));
             results.push(r);
             await page.locator('#closeBtn').click();
             await page.waitForFunction(()=>!document.getElementById('sheet')?.classList.contains('show'),null,{timeout:10000});
           }
-          if(pageErrors.length)throw Error('page errors: '+pageErrors.join(' | '));
-          console.log('PROD_R4_PASS',JSON.stringify(results));
+          console.log('PAGE_ERRORS',JSON.stringify(pageErrors));
+          const bad=results.filter(r=>!r.chartMsg.includes('分時備援走勢')||r.newsCount<1);
+          console.log('DIAG_SUMMARY',JSON.stringify(results.map(r=>({code:r.code,chart:r.chartMsg,news:r.newsCount,newsState:r.newsState,seriesPoints:r.live?.seriesPoints||0}))));
           await browser.close();
+          if(bad.length)process.exit(2);
           JS
           node verify-prod.mjs

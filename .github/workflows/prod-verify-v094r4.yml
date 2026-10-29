@@ -1,0 +1,81 @@
+name: Production verification v0.9.4r4
+on:
+  push:
+    branches: ['prod-verify-v094r4']
+    paths:
+      - '.github/workflows/prod-verify-v094r4.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Wait for production assets
+        run: |
+          SITE='https://under855.github.io/twstock-ai-monitor'
+          for i in $(seq 1 20); do
+            curl -fsSL --max-time 20 "$SITE/?verify=$RANDOM" -o /tmp/index.html || true
+            if grep -Fq './extras-v090.js?v=094r4' /tmp/index.html; then
+              curl -fsSL --max-time 20 "$SITE/extras-v090.js?verify=$RANDOM" -o /tmp/extras.js
+              test "$(sha256sum extras-v090.js | cut -d' ' -f1)" = "$(sha256sum /tmp/extras.js | cut -d' ' -f1)"
+              echo ASSET_MATCH_PASS
+              exit 0
+            fi
+            sleep 5
+          done
+          echo 'production asset did not update to r4'
+          exit 1
+      - name: Install browser harness
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          test -n "$CHROME"
+          echo "CHROME=$CHROME" >> "$GITHUB_ENV"
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+      - name: Verify 0050 3711 3293 detail today charts and news
+        run: |
+          cat > verify-prod.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const context=await browser.newContext({viewport:{width:390,height:844},locale:'zh-TW',timezoneId:'Asia/Taipei',serviceWorkers:'block'});
+          const page=await context.newPage();
+          const pageErrors=[];page.on('pageerror',e=>pageErrors.push(e.message));
+          await page.goto('https://under855.github.io/twstock-ai-monitor/?verify='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await page.waitForFunction(()=>window.__TW_LIVE_V091__?.version==='0.9.4',null,{timeout:60000});
+          await page.waitForFunction(()=>document.querySelectorAll('#watch article.row').length>=6,null,{timeout:60000});
+          const results=[];
+          for(const code of ['0050','3711','3293']){
+            const row=page.locator('#watch article.row').filter({has:page.locator('.sym',{hasText:code})}).first();
+            await row.click();
+            await page.waitForSelector('#sheet.show',{timeout:15000});
+            await page.waitForFunction(c=>document.getElementById('dTitle')?.textContent?.includes(c),code,{timeout:15000});
+            await page.waitForFunction(()=>document.getElementById('chartMsg')?.textContent?.includes('分時備援走勢'),null,{timeout:30000});
+            await page.waitForFunction(()=>document.querySelectorAll('#news .event').length>=1,null,{timeout:30000});
+            const r=await page.evaluate(code=>({
+              code,
+              title:document.getElementById('dTitle')?.textContent?.trim()||'',
+              price:document.getElementById('dPrice')?.textContent?.trim()||'',
+              chartMsg:document.getElementById('chartMsg')?.textContent?.trim()||'',
+              newsCount:document.querySelectorAll('#news .event').length,
+              tabs:[...document.querySelectorAll('#detailChartTabs button')].map(b=>b.textContent.trim()),
+              canvas:!!document.getElementById('bigChart')
+            }),code);
+            console.log('DETAIL',JSON.stringify(r));
+            if(!r.price||r.price==='—')throw Error(code+' price missing');
+            if(!r.chartMsg.includes('分時備援走勢'))throw Error(code+' today chart fallback missing');
+            if(r.newsCount<1)throw Error(code+' news missing');
+            if(!['今日','5日','20日','60日'].every(x=>r.tabs.includes(x)))throw Error(code+' tabs missing');
+            results.push(r);
+            await page.locator('#closeBtn').click();
+            await page.waitForFunction(()=>!document.getElementById('sheet')?.classList.contains('show'),null,{timeout:10000});
+          }
+          if(pageErrors.length)throw Error('page errors: '+pageErrors.join(' | '));
+          console.log('PROD_R4_PASS',JSON.stringify(results));
+          await browser.close();
+          JS
+          node verify-prod.mjs

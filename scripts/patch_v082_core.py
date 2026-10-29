@@ -11,4 +11,10 @@ for a,b in repls.items():
     if a not in s: raise SystemExit('missing target '+a[:80])
     s=s.replace(a,b,1)
 p.write_text(s,encoding='utf-8')
+
+sw=Path('sw.js')
+w=sw.read_text(encoding='utf-8')
+if "const CACHE='tw-ai-monitor-v081';" not in w: raise SystemExit('missing sw v081 cache marker')
+w=w.replace("const CACHE='tw-ai-monitor-v081';","const CACHE='tw-ai-monitor-v082';",1)
+sw.write_text(w,encoding='utf-8')
 print('PATCH_V082_OK')

@@ -1,0 +1,53 @@
+name: Probe MIS live sources v083
+on:
+  push:
+    paths:
+      - '.github/workflows/probe-mis-live-v083.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Probe current quotes and intraday OHLC
+        run: |
+          python - <<'PY'
+          import json, urllib.parse, urllib.request
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          today=datetime.now(ZoneInfo('Asia/Taipei')).strftime('%Y%m%d')
+          tests=[('tse','0050'),('tse','3711'),('tse','2002'),('otc','3293')]
+          def get(url):
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'})
+              with urllib.request.urlopen(req,timeout=20) as r:
+                  return json.loads(r.read().decode('utf-8'))
+          for ex,code in tests:
+              ch=f'{ex}_{code}.tw'
+              qurl='https://mis.twse.com.tw/stock/api/getStockInfo.jsp?'+urllib.parse.urlencode({'ex_ch':ch,'json':'1','delay':'0','_':int(datetime.now().timestamp()*1000)})
+              q=get(qurl)
+              rows=[x for x in q.get('msgArray',[]) if str(x.get('c',''))==code]
+              if not rows: raise SystemExit(f'{code}: quote missing')
+              m=rows[0]
+              print('QUOTE',code,{k:m.get(k) for k in ['ex','c','d','t','tlong','z','y','o','h','l','v','key','ch']},'trade=',m.get('trade'))
+              if str(m.get('d',''))!=today: raise SystemExit(f'{code}: stale quote date {m.get("d")} != {today}')
+              trade=(m.get('trade') or {})
+              z=trade.get('z') or m.get('z')
+              if z in (None,'','-','--','---'): raise SystemExit(f'{code}: no live trade price')
+              key=m.get('key') or f'{ex}_{code}.tw_{today}'
+              d0=m.get('d') or today
+              ourl='https://mis.twse.com.tw/stock/api/getOhlc.jsp?'+urllib.parse.urlencode({'ex_ch':key,'d0':d0,'_':int(datetime.now().timestamp()*1000)})
+              o=get(ourl)
+              arr=o.get('msgArray') or []
+              print('OHLC',code,'points',len(arr),'first',arr[:1],'last',arr[-1:] if arr else [])
+              if len(arr)<2: raise SystemExit(f'{code}: OHLC points <2')
+              times=[int(x.get('tlong')) for x in arr if str(x.get('tlong','')).isdigit()]
+              if len(times)<2: raise SystemExit(f'{code}: OHLC missing timestamps')
+              last=datetime.fromtimestamp(max(times)/1000,ZoneInfo('Asia/Taipei')).strftime('%Y%m%d')
+              if last!=today: raise SystemExit(f'{code}: OHLC stale {last} != {today}')
+          print('MIS_LIVE_AND_OHLC_PASS',today)
+          PY

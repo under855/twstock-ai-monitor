@@ -1,0 +1,47 @@
+name: Verify live TAIEX final
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'hotfix-v077.js'
+      - 'sw.js'
+      - '.github/workflows/verify-live-taiex.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check final controller
+        run: node --check hotfix-v077.js
+      - name: Verify TWSE MIS through browser CORS proxy
+        run: |
+          python - <<'PY'
+          import json, urllib.request, urllib.parse, datetime, time
+          def fetch():
+              upstream='https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_t00.tw&json=1&delay=0'
+              url='https://proxy.cors.dev/'+upstream
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/json','Origin':'https://under855.github.io'})
+              with urllib.request.urlopen(req,timeout=15) as r:
+                  body=json.loads(r.read().decode('utf-8-sig'))
+                  cors=r.headers.get('Access-Control-Allow-Origin')
+              m=(body.get('msgArray') or [None])[0]
+              if not m: raise SystemExit('No msgArray')
+              price=float(m['z']); prev=float(m['y']); d=str(m.get('d','')); t=str(m.get('t','')); tl=int(float(m.get('tlong') or 0))
+              now=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
+              today=now.strftime('%Y%m%d')
+              age=abs(int(time.time()*1000)-tl) if tl else 999999999
+              print(json.dumps({'price':price,'change':price-prev,'date':d,'time':t,'tlong':tl,'age_ms':age,'cors':cors},ensure_ascii=False))
+              if d!=today: raise SystemExit(f'Stale date {d}, expected {today}')
+              if age>120000: raise SystemExit(f'Stale tlong age {age}ms')
+              if cors not in ('*','https://under855.github.io'): raise SystemExit(f'CORS header unexpected: {cors!r}')
+              return tl,price,t
+          a=fetch(); time.sleep(12); b=fetch()
+          if b[0] < a[0]: raise SystemExit('TWSE timestamp went backwards')
+          print('LIVE_TAIEX_SOURCE_PASS',a,b)
+          PY

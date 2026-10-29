@@ -1,0 +1,153 @@
+name: Verify v0.9.0 live acceptance
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-v090-live.yml'
+      - 'live-v090.js'
+      - 'extras-v090.js'
+      - 'index.html'
+      - 'sw.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Static runtime checks
+        run: |
+          node --check live-v090.js
+          node --check extras-v090.js
+          grep -F "APP_VERSION='0.9.0'" index.html
+          grep -F 'live-v090.js?v=090' index.html
+          grep -F "tw-ai-monitor-v090" sw.js
+          ! grep -E 'fix\.js\?v=|hotfix-v06[5-9]\.js\?v=|live-v081\.js\?v=' index.html
+          ! grep -E '100dvh|-webkit-fill-available' index.html
+      - name: Verify official TWSE MIS is current today
+        run: |
+          python - <<'PY'
+          import json,urllib.parse,urllib.request
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+          today=datetime.now(ZoneInfo('Asia/Taipei')).strftime('%Y%m%d')
+          channels=['tse_t00.tw','tse_0050.tw','tse_3711.tw','tse_2002.tw','otc_3293.tw','tse_00878.tw','tse_00919.tw']
+          u='https://mis.twse.com.tw/stock/api/getStockInfo.jsp?'+urllib.parse.urlencode({'ex_ch':'|'.join(channels),'json':'1','delay':'0','_':int(datetime.now().timestamp()*1000)})
+          req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'})
+          with urllib.request.urlopen(req,timeout=25) as r:j=json.loads(r.read().decode())
+          arr=j.get('msgArray') or []
+          print('MIS rows',len(arr))
+          def n(v):
+              try:return float(str(v).replace(',',''))
+              except:return None
+          index=[m for m in arr if str(m.get('c',''))=='t00' or str(m.get('ch',''))=='t00.tw']
+          assert index and str(index[0].get('d',''))==today, 'TAIEX not today'
+          assert n(index[0].get('z')) is not None or n((index[0].get('trade') or {}).get('z')) is not None, 'TAIEX no live value'
+          for code in ['0050','3711','2002','3293','00878','00919']:
+              rows=[m for m in arr if str(m.get('c',''))==code and str(m.get('d',''))==today]
+              assert rows, f'{code}: no today row'
+              m=rows[0]; trade=m.get('trade') or {}; live=n(trade.get('z'))
+              if live is None: live=n(m.get('z'))
+              assert live is not None, f'{code}: no current trade price; y={m.get("y")}'
+              assert n(m.get('y')) is not None, f'{code}: no prior close'
+              print(code,'live',live,'trade_t',trade.get('t'),'outer_z',m.get('z'),'y',m.get('y'))
+          print('OFFICIAL_MIS_CURRENT_PASS',today)
+          PY
+      - name: Wait for public v0.9.0 deployment
+        run: |
+          for i in $(seq 1 45); do
+            HTML=$(curl -fsSL --max-time 10 "https://under855.github.io/twstock-ai-monitor/?accept090=$RANDOM" || true)
+            if echo "$HTML" | grep -q 'v0.9.0'; then echo 'PUBLIC_V090_READY'; exit 0; fi
+            sleep 4
+          done
+          echo 'Public Pages never reached v0.9.0' >&2
+          exit 1
+      - name: Install browser harness
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)
+          test -n "$CHROME"
+          echo "CHROME=$CHROME" >> "$GITHUB_ENV"
+          "$CHROME" --version
+          npm install --no-save playwright-core@latest
+      - name: Mobile live test across multiple 15-second cycles
+        env:
+          URL: https://under855.github.io/twstock-ai-monitor/
+        run: |
+          cat > /tmp/qa-v090.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const context=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:3,isMobile:true,hasTouch:true,locale:'zh-TW',timezoneId:'Asia/Taipei',serviceWorkers:'allow'});
+          const page=await context.newPage();
+          const errors=[];page.on('pageerror',e=>errors.push('pageerror '+e.message));page.on('console',m=>{if(m.type()==='error')errors.push('console '+m.text())});
+          const url=process.env.URL+'?accept090='+Date.now();
+          await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
+          await page.waitForFunction(()=>document.title.includes('v0.9.0'),null,{timeout:30000});
+          await page.waitForFunction(()=>window.__TW_LIVE_V090__?.cycle>=1 && window.__TW_LIVE_V090__?.taiex?.date,{timeout:60000});
+          await page.waitForFunction(()=>['0050','3711','2002','3293','00878','00919'].every(c=>window.__TW_LIVE_V090__?.stocks?.[c]?.date),null,{timeout:60000});
+          await page.waitForFunction(()=>['0050','3711','2002','3293','00878','00919'].every(c=>(window.__TW_LIVE_V090__?.stocks?.[c]?.seriesPoints||0)>=2),null,{timeout:60000});
+          const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replaceAll('-','');
+          const codes=['0050','3711','2002','3293','00878','00919'];
+          async function snapshot(label){
+            return await page.evaluate(({label,today,codes})=>{
+              const s=structuredClone(window.__TW_LIVE_V090__);
+              const rows={};
+              for(const code of codes){
+                const row=[...document.querySelectorAll('#watch article.row')].find(r=>r.querySelector('.sym')?.textContent?.trim()===code);
+                rows[code]=row?{state:row.dataset.liveState,date:row.dataset.liveDate,stamp:Number(row.dataset.liveStamp||0),price:row.dataset.livePrice,priceText:row.querySelector('.price')?.textContent||'',meta:row.querySelector('.meta')?.textContent||'',day:row.querySelector('.dayline')?.textContent||'',canvas:!!row.querySelector('canvas.spark')}:null;
+              }
+              return {label,s,rows,title:document.title,badge:document.getElementById('liveBadge')?.textContent,taiex:document.getElementById('taiex')?.textContent,taiexText:document.getElementById('taiexChg')?.textContent,scrollHeight:document.documentElement.scrollHeight,innerHeight:innerHeight,scrollWidth:document.documentElement.scrollWidth,innerWidth:innerWidth};
+            },{label,today,codes});
+          }
+          function assertState(x){
+            if(!x.title.includes('v0.9.0'))throw Error(`${x.label}: wrong title ${x.title}`);
+            if(!x.s?.marketWindow)throw Error(`${x.label}: runtime does not think market is open`);
+            if(x.s.taiex?.date!==today)throw Error(`${x.label}: TAIEX stale ${JSON.stringify(x.s.taiex)}`);
+            if(!x.taiexText.includes('盤中即時'))throw Error(`${x.label}: TAIEX not labeled live: ${x.taiexText}`);
+            for(const code of codes){
+              const q=x.s.stocks?.[code],r=x.rows?.[code];
+              if(!q||q.date!==today)throw Error(`${x.label} ${code}: debug quote not today ${JSON.stringify(q)}`);
+              if(!String(q.source||'').includes('MIS'))throw Error(`${x.label} ${code}: non-MIS source ${q.source}`);
+              if((q.seriesPoints||0)<2)throw Error(`${x.label} ${code}: intraday series too short ${q.seriesPoints}`);
+              if(Number(q.seriesLastStamp||0)<Number(q.stamp||0))throw Error(`${x.label} ${code}: chart tail behind live quote`);
+              if(!r||r.state!=='live'||r.date!==today)throw Error(`${x.label} ${code}: DOM not live ${JSON.stringify(r)}`);
+              if(/最近交易日|昨日|官方快照|最近完成交易日/.test(r.meta+r.day))throw Error(`${x.label} ${code}: stale text leaked ${r.meta} ${r.day}`);
+              if(!r.meta.includes('MIS'))throw Error(`${x.label} ${code}: DOM source not MIS ${r.meta}`);
+              if(!r.canvas)throw Error(`${x.label} ${code}: small chart canvas missing`);
+            }
+            if(x.scrollWidth>x.innerWidth+2)throw Error(`${x.label}: horizontal overflow ${x.scrollWidth}>${x.innerWidth}`);
+            if(x.scrollHeight<=x.innerHeight)throw Error(`${x.label}: page unexpectedly does not scroll ${x.scrollHeight}/${x.innerHeight}`);
+          }
+          const a=await snapshot('cycleA');assertState(a);
+          await page.waitForTimeout(17000);
+          const b=await snapshot('cycleB');assertState(b);
+          if(b.s.cycle<=a.s.cycle||b.s.lastPollAt<=a.s.lastPollAt)throw Error(`15s cycle did not advance A=${a.s.cycle}/${a.s.lastPollAt} B=${b.s.cycle}/${b.s.lastPollAt}`);
+          await page.waitForTimeout(17000);
+          const c=await snapshot('cycleC');assertState(c);
+          if(c.s.cycle<=b.s.cycle||c.s.lastPollAt<=b.s.lastPollAt)throw Error(`second 15s cycle did not advance`);
+          const activeCodes=codes.filter(code=>Number(c.s.stocks[code].stamp)>Number(a.s.stocks[code].stamp));
+          const taiexAdvanced=Number(c.s.taiex?.stamp||0)>Number(a.s.taiex?.stamp||0);
+          if(!taiexAdvanced)throw Error(`TAIEX timestamp did not advance across 34s: ${a.s.taiex?.time} -> ${c.s.taiex?.time}`);
+          if(!activeCodes.length)throw Error('No monitored stock received a newer official trade across 34s');
+          await page.evaluate(()=>scrollTo(0,document.documentElement.scrollHeight));await page.waitForTimeout(500);
+          const bottom=await page.evaluate(()=>{const rows=[...document.querySelectorAll('#watch article.row')],last=rows.at(-1),r=last?.getBoundingClientRect();return {code:last?.querySelector('.sym')?.textContent?.trim(),top:r?.top,bottom:r?.bottom,ih:innerHeight,scrollY,doc:document.documentElement.scrollHeight,bodyBg:getComputedStyle(document.body).backgroundColor,htmlBg:getComputedStyle(document.documentElement).backgroundColor};});
+          if(!bottom.code||bottom.bottom>bottom.ih+2||bottom.top<0)throw Error('Last watch row not reachable at page bottom '+JSON.stringify(bottom));
+          // Open a detail page and verify it also uses today's live quote/chart.
+          await page.locator('#watch article.row').filter({hasText:'0050'}).click();
+          await page.waitForSelector('#sheet.show',{timeout:10000});
+          const detail=await page.evaluate(()=>({title:document.querySelector('#bigChart')?.closest('.card')?.querySelector('h3')?.textContent||'',price:document.getElementById('dPrice')?.textContent,time:document.getElementById('dTime')?.textContent,msg:document.getElementById('chartMsg')?.textContent}));
+          if(detail.title!=='今日盤中即時走勢'||!detail.time.includes('MIS')||!/今日盤中即時走勢/.test(detail.msg||''))throw Error('Detail is not live intraday '+JSON.stringify(detail));
+          await page.locator('#closeBtn').click();
+          // Verify SW is active, then reload: it must not serve an old app shell.
+          await page.evaluate(()=>navigator.serviceWorker?.ready.then(()=>true));
+          await page.reload({waitUntil:'domcontentloaded',timeout:60000});
+          await page.waitForFunction(()=>document.title.includes('v0.9.0')&&window.__TW_LIVE_V090__?.cycle>=1,null,{timeout:60000});
+          const afterReload=await snapshot('afterReload');assertState(afterReload);
+          console.log('LIVE_ACCEPTANCE_PASS',JSON.stringify({cycles:[a.s.cycle,b.s.cycle,c.s.cycle],activeCodes,taiex:[a.s.taiex?.time,c.s.taiex?.time],bottom,detail,errors}));
+          if(errors.length)console.log('NON_FATAL_CONSOLE_ERRORS',errors.slice(0,20));
+          await browser.close();
+          JS
+          node /tmp/qa-v090.mjs

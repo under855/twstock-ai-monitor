@@ -63,6 +63,32 @@ def fetch_taiex(trade_date, rows=None):
         'source':'TWSE FMTQIK'
     }
 
+def fetch_live_taiex(fallback):
+    try:
+        ts=int(datetime.datetime.now(datetime.timezone.utc).timestamp()*1000)
+        url=f'https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_t00.tw&json=1&delay=0&_={ts}'
+        j=get(url, timeout=20)
+        arr=j.get('msgArray') or []
+        m=next((x for x in arr if str(x.get('c',''))=='t00' or str(x.get('ch',''))=='t00.tw'), arr[0] if arr else None)
+        if not m: return fallback
+        z=n(m.get('z')); y=n(m.get('y'))
+        d=str(m.get('d') or '').strip()
+        if z is None or len(d)!=8: return fallback
+        iso=f'{d[:4]}-{d[4:6]}-{d[6:8]}'
+        today=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).date().isoformat()
+        if iso!=today: return fallback
+        return {
+            'date':iso,
+            'close':z,
+            'change':(z-y) if y is not None else None,
+            'previousClose':y,
+            'time':str(m.get('t') or m.get('%') or ''),
+            'source':'TWSE MIS live'
+        }
+    except Exception as e:
+        print(f'WARN live TAIEX failed: {e}', file=sys.stderr)
+        return fallback
+
 def fetch_twse(trade_date):
     rows=get('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL')
     out={}
@@ -144,7 +170,7 @@ def write_json(path,payload):
 def main():
     market_rows=fmtqik_rows()
     trade_date=latest_trade_date(market_rows)
-    taiex=fetch_taiex(trade_date,market_rows)
+    taiex=fetch_live_taiex(fetch_taiex(trade_date,market_rows))
     twse=fetch_twse(trade_date)
     tpex=fetch_tpex(trade_date)
     symbols={**twse,**tpex}

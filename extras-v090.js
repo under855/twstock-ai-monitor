@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.9.0';
+  const VERSION='0.9.4';
 
   function editDistance(a,b,max=2){
     a=String(a||'');b=String(b||'');
@@ -110,6 +110,59 @@
     return true;
   }
 
+  function clamp(v){return Math.max(0,Math.min(100,v));}
+  function retPct(now,base){return now!=null&&base?((now/base)-1)*100:null;}
+  function installScoring(){
+    if(typeof scoreStock!=='function'||typeof N!=='function')return false;
+    scoreStock=function(row,val,h,quote){
+      const code=String(row?.Code||''),close=N(quote?.price)??N(row?.ClosingPrice),pe=N(val?.PEratio)??N(SNAPSHOT?.[code]?.pe),y=N(val?.DividendYield),ch=N(quote?.change)??N(row?.Change);
+      const hist=Array.isArray(h)?h.filter(x=>N(x?.close)!=null):[];
+      const parts=[];const reasons=[];let trend=null,momentum=null,valuation=null,income=null;
+
+      if(close!=null&&hist.length>=20){
+        const base20=N(hist.at(-21)?.close??hist[0]?.close),r20=retPct(close,base20);
+        if(r20!=null){trend=Math.round(clamp(50+r20*3.2));parts.push(['trend',trend,.36]);reasons.push(`20日價格變化 ${r20>=0?'+':''}${r20.toFixed(1)}%`);}
+      }
+
+      if(close!=null&&hist.length>=5){
+        const base5=N(hist.at(-6)?.close??hist[0]?.close),r5=retPct(close,base5),dayPct=ch!=null&&close-ch?ch/(close-ch)*100:null;
+        if(r5!=null){const raw=50+r5*5.0+(dayPct==null?0:dayPct*2.0);momentum=Math.round(clamp(raw));parts.push(['momentum',momentum,.34]);reasons.push(`5日動能 ${r5>=0?'+':''}${r5.toFixed(1)}%${dayPct==null?'':`、當日 ${dayPct>=0?'+':''}${dayPct.toFixed(1)}%`}`);}
+      }else if(close!=null&&ch!=null){
+        const prev=close-ch,dayPct=prev?ch/prev*100:null;
+        if(dayPct!=null){momentum=Math.round(clamp(50+dayPct*5.0));parts.push(['momentum',momentum,.20]);reasons.push(`僅有當日漲跌 ${dayPct>=0?'+':''}${dayPct.toFixed(1)}%，動能權重已降低`);}
+      }
+
+      if(pe!=null&&pe>0){
+        valuation=pe<10?84:pe<15?74:pe<20?64:pe<25?55:pe<35?43:32;
+        parts.push(['valuation',valuation,.18]);reasons.push(`本益比 ${pe.toFixed(1)} 倍`);
+      }
+      if(y!=null&&y>=0){
+        income=y>=6?86:y>=4?76:y>=3?68:y>=2?60:y>=1?52:y>0?46:40;
+        parts.push(['income',income,.12]);reasons.push(`殖利率 ${y.toFixed(2)}%`);
+      }
+
+      const coverage=parts.reduce((a,x)=>a+x[2],0);
+      const usable=coverage>=.45;
+      const total=usable?Math.round(parts.reduce((a,x)=>a+x[1]*x[2],0)/coverage):null;
+      const source=String(quote?.source||'');
+      const live=/盤中|MIS|即時/.test(source);
+      const confidence=coverage>=.82&&hist.length>=20?'高':coverage>=.60?'中':'低';
+      return{total,delta:null,trend,momentum,valuation,income,mode:live?'盤中評分':'基準評分',available:parts.length,confidence,coverage:Math.round(coverage*100),reasons};
+    };
+
+    if(typeof buildAnalysis==='function'){
+      buildAnalysis=function(code,row,val,h,q,s){
+        if(s.total==null){
+          return `<b class="flat">資料不足，暫不評分。</b><br>目前可用資料覆蓋率約 ${s.coverage??0}%。至少需要 45% 的評分權重才會產生總分。<br><span class="muted">這樣可避免只靠單日漲跌或單一估值數字硬湊出看似精確的分數。</span>`;
+        }
+        const tone=s.total>=65?'整體偏強':s.total<=42?'整體偏弱':'整體中性';
+        const items=(s.reasons||[]).map(x=>`<li>${esc(x)}</li>`).join('');
+        return `<b class="${scoreCls(s.total)}">${tone}，目前 ${s.total}/100。</b><br>資料覆蓋率 ${s.coverage}%｜可信度 ${s.confidence}。<ul style="margin:8px 0 8px 18px;padding:0">${items}</ul><span class="muted">權重：趨勢 36%、短期動能 34%、估值 18%、殖利率 12%；缺少的項目不會用 50 分補值，而是降低覆蓋率。分數代表目前資料下的相對強弱，不代表明日上漲機率。</span>`;
+      };
+    }
+    return true;
+  }
+
   function limitDividendCards(){
     const box=document.getElementById('dividendEvents');if(!box)return;
     [...box.querySelectorAll(':scope > .event')].slice(3).forEach(x=>x.remove());
@@ -120,6 +173,7 @@
   function boot(){
     if(!installFuzzySearch())setTimeout(installFuzzySearch,0);
     if(!installNews())setTimeout(installNews,0);
+    if(!installScoring())setTimeout(installScoring,0);
     if(!startDividendLimit()){const t=setInterval(()=>{if(startDividendLimit())clearInterval(t)},250);setTimeout(()=>clearInterval(t),10000)}
     window.__TW_EXTRAS_V090__={ok:true,version:VERSION};
   }

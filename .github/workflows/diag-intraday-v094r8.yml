@@ -1,0 +1,35 @@
+name: Diagnose intraday raw data v0.9.4r8
+on:
+  push:
+    branches: ['fix-intraday-final-point-v094r8']
+    paths: ['.github/workflows/diag-intraday-v094r8.yml']
+  workflow_dispatch:
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print raw 5-minute closes
+        run: |
+          python - <<'PY'
+          import json, urllib.request, datetime, zoneinfo
+          tz=zoneinfo.ZoneInfo('Asia/Taipei')
+          for sym in ['0050.TW','3711.TW','3293.TWO']:
+              u=f'https://query1.finance.yahoo.com/v8/finance/chart/{sym}?range=1d&interval=5m&includePrePost=false'
+              req=urllib.request.Request('https://proxy.cors.dev/'+u,headers={'User-Agent':'Mozilla/5.0'})
+              with urllib.request.urlopen(req,timeout=20) as r: j=json.load(r)
+              x=j['chart']['result'][0]
+              ts=x.get('timestamp') or []
+              q=(x.get('indicators',{}).get('quote') or [{}])[0]
+              rows=[]
+              for i,t in enumerate(ts):
+                  c=(q.get('close') or [])[i] if i < len(q.get('close') or []) else None
+                  if c is None: continue
+                  d=datetime.datetime.fromtimestamp(int(t),tz)
+                  hm=d.strftime('%H:%M')
+                  if '09:00' <= hm <= '13:30': rows.append((hm,float(c)))
+              print('\n',sym,'count',len(rows),'first',rows[:8],'last',rows[-12:])
+              vals=[v for _,v in rows]
+              if vals:
+                  lo=min(vals); hi=max(vals)
+                  print('min',lo,'at',[t for t,v in rows if v==lo][:3],'max',hi,'at',[t for t,v in rows if v==hi][:3])
+          PY

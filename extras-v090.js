@@ -192,10 +192,19 @@
       return {time:new Date(ms),close:Number(x.price)};
     }catch{return null}
   }
+  function misSeriesFor(code){
+    try{
+      const day=twIsoDay().replaceAll('-',''),obj=JSON.parse(localStorage.getItem(`tw_live091_series_${day}`)||'{}'),raw=Array.isArray(obj?.[String(code)])?obj[String(code)]:[],byStamp=new Map();
+      for(const x of raw){const stamp=Number(x?.stamp),close=Number(x?.close);if(!Number.isFinite(stamp)||!Number.isFinite(close))continue;const d=new Date(stamp),hm=hmTw(d);if(hm<'09:00'||hm>'13:30')continue;byStamp.set(stamp,{time:d,close,official:true,source:String(x?.source||'TWSE MIS')})}
+      return [...byStamp.values()].sort((a,b)=>a.time-b.time);
+    }catch{return []}
+  }
   function mergedTodayPoints(code,points){
-    const out=chronologicalPoints(points).map(x=>({time:new Date(x.time),close:Number(x.close)})).filter(x=>Number.isFinite(x.close)&&hmTw(x.time)>='09:00'&&hmTw(x.time)<='13:30');
-    const lp=livePointFor(code);if(lp){const h=hmTw(lp.time),i=out.findIndex(x=>hmTw(x.time)===h);if(i>=0)out[i]=lp;else out.push(lp)}
-    return chronologicalPoints(out);
+    const base=chronologicalPoints(points).map(x=>({time:new Date(x.time),close:Number(x.close),official:false,source:'Yahoo 5 分鐘補洞'})).filter(x=>Number.isFinite(x.close)&&hmTw(x.time)>='09:00'&&hmTw(x.time)<='13:30');
+    const official=misSeriesFor(code);
+    if(official.length){const first=official[0].time.getTime(),out=base.filter(x=>x.time.getTime()<first);out.push(...official);return chronologicalPoints(out)}
+    const lp=livePointFor(code);if(lp){base.push({...lp,official:true,source:'TWSE MIS 最新成交'})}
+    return chronologicalPoints(base);
   }
   function drawFixedIntraday(canvas,points,compact=false,change=null){
     if(!canvas||!Array.isArray(points)||points.length<2)return false;const ctx=canvas.getContext('2d');if(!ctx)return false;
@@ -212,7 +221,7 @@
     if(!canvas||!Array.isArray(points)||points.length<2)return false;const merged=mergedTodayPoints(code,points),change=Number(window.__TW_LIVE_V091__?.stocks?.[String(code)]?.change);
     if(!drawFixedIntraday(canvas,merged,compact,change))return false;
     const vals=merged.map(x=>Number(x.close)),min=Math.min(...vals),max=Math.max(...vals),minI=vals.indexOf(min),maxI=vals.indexOf(max);
-    canvas.dataset.todayFull='1';canvas.dataset.todayPoints=String(merged.length);canvas.dataset.todayStart=hmTw(merged[0].time);canvas.dataset.todayEnd=hmTw(merged.at(-1).time);canvas.dataset.todayMinTime=hmTw(merged[minI].time);canvas.dataset.todayMaxTime=hmTw(merged[maxI].time);return true;
+    const official=merged.filter(x=>x.official);canvas.dataset.todayFull='1';canvas.dataset.todayPoints=String(merged.length);canvas.dataset.todayOfficialPoints=String(official.length);canvas.dataset.todayOfficialFirst=official.length?String(official[0].time.getTime()):'';canvas.dataset.todayOfficialLast=official.length?String(official.at(-1).time.getTime()):'';canvas.dataset.todayStart=hmTw(merged[0].time);canvas.dataset.todayEnd=hmTw(merged.at(-1).time);canvas.dataset.todayMinTime=hmTw(merged[minI].time);canvas.dataset.todayMaxTime=hmTw(merged[maxI].time);return true;
   }
 
   async function yahooTodayIntraday(code){
@@ -262,15 +271,28 @@
   window.__TW_DRAW_MAIN_TODAY__=(code,canvas)=>drawResolvedMainToday(code,canvas);
 
   let taiexTodayCache=null,taiexTodayFetchedAt=0;
+  const TAIEX_MIS_KEY=()=>`tw_taiex_mis_series_${twIsoDay().replaceAll('-','')}`;
+  let taiexMisSeries=[];
+  function loadTaiexMisSeries(){
+    try{const a=JSON.parse(localStorage.getItem(TAIEX_MIS_KEY())||'[]');taiexMisSeries=(Array.isArray(a)?a:[]).filter(x=>Number.isFinite(Number(x?.stamp))&&Number.isFinite(Number(x?.close))&&hmTw(Number(x.stamp))>='09:00'&&hmTw(Number(x.stamp))<='13:30').map(x=>({stamp:Number(x.stamp),close:Number(x.close)})).sort((a,b)=>a.stamp-b.stamp)}catch{taiexMisSeries=[]}
+  }
+  function captureTaiexMis(){
+    try{const x=window.__TW_LIVE_V091__?.taiex,stamp=Number(x?.stamp),close=Number(x?.price);if(!Number.isFinite(stamp)||!Number.isFinite(close))return false;const hm=hmTw(stamp);if(hm<'09:00'||hm>'13:30')return false;const last=taiexMisSeries.at(-1);if(last&&stamp<=last.stamp)return false;taiexMisSeries.push({stamp,close});if(taiexMisSeries.length>1200)taiexMisSeries.splice(0,taiexMisSeries.length-1200);localStorage.setItem(TAIEX_MIS_KEY(),JSON.stringify(taiexMisSeries));return true}catch{return false}
+  }
+  function mergedTaiexPoints(points){
+    const base=chronologicalPoints(points).map(x=>({time:new Date(x.time),close:Number(x.close),official:false})).filter(x=>Number.isFinite(x.close)&&hmTw(x.time)>='09:00'&&hmTw(x.time)<='13:30');
+    if(!taiexMisSeries.length)return base;const first=taiexMisSeries[0].stamp,out=base.filter(x=>x.time.getTime()<first);out.push(...taiexMisSeries.map(x=>({time:new Date(x.stamp),close:x.close,official:true})));return chronologicalPoints(out)
+  }
+  loadTaiexMisSeries();
   async function yahooTaiexIntraday(){
     const upstream=`https://query1.finance.yahoo.com/v8/finance/chart/%5ETWII?range=1d&interval=5m&includePrePost=false&_=${Date.now()}`,today=twIsoDay();
     for(const url of [`https://proxy.cors.dev/${upstream}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(upstream)}`]){
       try{const j=await fetchJson(url,7000),r=j?.chart?.result?.[0],ts=r?.timestamp||[],q=r?.indicators?.quote?.[0]||{},out=[];for(let i=0;i<ts.length;i++){const close=Number(q.close?.[i]);if(!Number.isFinite(close))continue;const d=new Date(Number(ts[i])*1000),day=d.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}),hm=hmTw(d);if(day===today&&hm>='09:00'&&hm<='13:30'&&hm!=='13:25')out.push({time:d,close})}out.sort((a,b)=>a.time-b.time);if(out.length>=2)return out}catch{}
     }return [];
   }
-  function drawTaiexTop(points){const c=document.getElementById('taiexChart');if(!c||points.length<2)return false;const txt=document.getElementById('taiexChg')?.textContent||'',m=txt.replaceAll(',','').match(/[+-]?\d+(?:\.\d+)?/),chg=m?Number(m[0]):null;if(!drawFixedIntraday(c,points,true,chg))return false;c.dataset.todayFull='1';c.dataset.todayPoints=String(points.length);c.dataset.todayStart=hmTw(points[0].time);c.dataset.todayEnd=hmTw(points.at(-1).time);const msg=document.getElementById('taiexChartMsg');if(msg)msg.textContent=`${points.length} 個 5 分鐘點`;return true}
+  function drawTaiexTop(points){const c=document.getElementById('taiexChart'),merged=mergedTaiexPoints(points);if(!c||merged.length<2)return false;const txt=document.getElementById('taiexChg')?.textContent||'',m=txt.replaceAll(',','').match(/[+-]?\d+(?:\.\d+)?/),chg=m?Number(m[0]):null;if(!drawFixedIntraday(c,merged,true,chg))return false;const official=merged.filter(x=>x.official);c.dataset.todayFull='1';c.dataset.todayPoints=String(merged.length);c.dataset.todayOfficialPoints=String(official.length);c.dataset.todayOfficialFirst=official.length?String(official[0].time.getTime()):'';c.dataset.todayOfficialLast=official.length?String(official.at(-1).time.getTime()):'';c.dataset.todayStart=hmTw(merged[0].time);c.dataset.todayEnd=hmTw(merged.at(-1).time);const msg=document.getElementById('taiexChartMsg');if(msg)msg.textContent=official.length?`MIS 即時 ${official.length} 點｜較早走勢補齊`:`${merged.length} 個 5 分鐘補齊點`;return true}
   async function ensureTaiexTop(force=false){if(!force&&taiexTodayCache?.length>=2&&Date.now()-taiexTodayFetchedAt<300000)return drawTaiexTop(taiexTodayCache);const p=await yahooTaiexIntraday();if(p.length>=2){taiexTodayCache=p;taiexTodayFetchedAt=Date.now();return drawTaiexTop(p)}const msg=document.getElementById('taiexChartMsg');if(msg)msg.textContent='今日分時暫時無法讀取';return false}
-  function startTaiexTop(){setTimeout(()=>ensureTaiexTop(false),250);setTimeout(()=>ensureTaiexTop(false),1400);setInterval(()=>ensureTaiexTop(true),300000);addEventListener('resize',()=>{if(taiexTodayCache?.length>=2)drawTaiexTop(taiexTodayCache)});return true}
+  function startTaiexTop(){setTimeout(()=>ensureTaiexTop(false),250);setTimeout(()=>ensureTaiexTop(false),1400);setInterval(()=>{captureTaiexMis();if(taiexTodayCache?.length>=2)drawTaiexTop(taiexTodayCache)},15000);setInterval(()=>ensureTaiexTop(true),300000);addEventListener('resize',()=>{if(taiexTodayCache?.length>=2)drawTaiexTop(taiexTodayCache)});return true}
 
 
   async function yahooDailyHistory(code){

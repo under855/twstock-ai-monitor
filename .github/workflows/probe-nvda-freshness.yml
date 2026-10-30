@@ -1,0 +1,29 @@
+name: Probe NVDA freshness through Jina
+on:
+  push:
+    branches: ['source-migration-no-yahoo-20261030']
+    paths: ['.github/workflows/probe-nvda-freshness.yml']
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Poll three times
+        shell: bash
+        run: |
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); export CHROME
+          cat > probe.mjs <<'JS'
+          import {chromium} from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage();
+          await p.goto('https://under855.github.io/twstock-ai-monitor/',{waitUntil:'domcontentloaded',timeout:60000});
+          for(let i=0;i<3;i++){
+            const x=await p.evaluate(async()=>{const u='https://r.jina.ai/https://api.nasdaq.com/api/quote/NVDA/info?assetclass=stocks&_='+Date.now();const r=await fetch(u,{cache:'no-store'}),t=await r.text();const j=JSON.parse(t.slice(t.indexOf('{')));return {price:j.data.primaryData.lastSalePrice,ts:j.data.primaryData.lastTradeTimestamp,rt:j.data.primaryData.isRealTime,status:j.data.marketStatus};});
+            console.log('POLL',i,JSON.stringify(x));if(i<2)await p.waitForTimeout(16000);
+          }
+          await b.close();
+          JS
+          node probe.mjs

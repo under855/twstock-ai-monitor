@@ -30,7 +30,7 @@ jobs:
           grep -F 'www.twse.com.tw/exchangeReport/STOCK_DAY' extras-v090.js
           grep -F 'www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock' extras-v090.js
           grep -F 'api.nasdaq.com/api/quote/NVDA/info' foreign-live-test.js
-          grep -F 's.kabutan.jp/stocks/5253' foreign-live-test.js
+          grep -F 'kabutan.jp/stock/?code=5253' foreign-live-test.js
           grep -F "tw-ai-monitor-v095official1" sw.js
       - name: Verify official daily source payloads
         shell: bash

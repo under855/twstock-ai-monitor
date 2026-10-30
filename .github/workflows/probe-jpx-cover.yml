@@ -16,9 +16,5 @@ jobs:
           u='https://quote.jpx.co.jp/jpxhp/common/js/qc/pages/stock_search.js?20261015'
           curl -L -A "$ua" -sS "$u" -o /tmp/stock_search.js
           echo '=== size ==='; wc -c /tmp/stock_search.js
-          echo '=== url/path strings ==='
-          grep -oE 'https?://[^"'"' ]+|[A-Za-z0-9_./-]+\.(json|aspx|php)(\?[^"'"' ]*)?' /tmp/stock_search.js | sort -u | head -100 || true
-          echo '=== ajax/get/post lines ==='
-          grep -nEi '\$\.ajax|\$\.get|\$\.post|fetch\(|url[[:space:]]*:|stock[_-]?search|code_search' /tmp/stock_search.js | head -120 || true
-          echo '=== first 24000 chars ==='
-          head -c 24000 /tmp/stock_search.js
+          echo '=== content ==='
+          cat /tmp/stock_search.js

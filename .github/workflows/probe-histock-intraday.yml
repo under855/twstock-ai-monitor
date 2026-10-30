@@ -12,24 +12,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: {ref: 'prod-verify-no-yahoo-20261030'}
-      - name: Inspect page and JS references
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Capture browser network endpoints
         shell: bash
         run: |
-          python - <<'PY'
-          import urllib.request,re,pathlib
-          u='https://histock.tw/stock/2330'
-          req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
-          with urllib.request.urlopen(req,timeout=25) as r: html=r.read().decode('utf-8','replace')
-          out=[f'len={len(html)}']
-          for pat in [r'<script[^>]+src=["\']([^"\']+)',r'https?://[^"\']+',r'[^"\']*(?:chart|trend|stock|kline)[^"\']*']:
-            vals=re.findall(pat,html,re.I)
-            out.extend([str(x)[:500] for x in vals[:120]])
-          for m in re.finditer(r'2330|走勢圖|StockChart|chartData|Highcharts|Ajax|ajax',html,re.I):
-            out.append(html[max(0,m.start()-300):m.start()+700])
-          pathlib.Path('probe-histock.txt').write_text('\n---\n'.join(out[:400]),encoding='utf-8')
-          PY
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); export CHROME
+          cat > /tmp/probe.mjs <<'JS'
+          import {chromium} from 'playwright-core';
+          import fs from 'fs';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:1280,height:900},locale:'zh-TW'});
+          const out=[];
+          p.on('request',req=>{const u=req.url();if(/histock|stock|chart|kline|trend|ajax|api|json/i.test(u))out.push('REQ '+req.method()+' '+u)});
+          p.on('response',async res=>{const u=res.url();if(/histock|stock|chart|kline|trend|ajax|api|json/i.test(u)){const ct=res.headers()['content-type']||'';out.push('RES '+res.status()+' '+ct+' '+u);if(/json|text|javascript/.test(ct)){try{const t=await res.text();if(/2330|2370|2360|2380/.test(t))out.push('BODY '+u+' '+t.slice(0,2500).replace(/\s+/g,' '))}catch{}}}});
+          await p.goto('https://histock.tw/stock/2330',{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForTimeout(12000);
+          fs.writeFileSync('probe-histock.txt',out.join('\n\n'));
+          await b.close();
+          JS
+          node /tmp/probe.mjs
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add probe-histock.txt
-          git commit -m 'Record HiStock intraday probe' || true
+          git commit -m 'Record HiStock browser network probe' || true
           git push origin HEAD:prod-verify-no-yahoo-20261030

@@ -1,0 +1,94 @@
+name: Apply latest-session chart repair
+on:
+  push:
+    branches: ['fix-latest-session-charts-20261030']
+    paths: ['.github/workflows/apply-latest-session-charts.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-latest-session-charts-20261030
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Apply isolated repair
+        shell: bash
+        run: |
+          curl -fsSL 'https://raw.githubusercontent.com/under855/twstock-ai-monitor/prod-verify-no-yahoo-20261030/scripts/patch_last_session_charts.py' -o /tmp/patch.py
+          python /tmp/patch.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('extras-v090.js');s=p.read_text(encoding='utf-8')
+          old="""  function mergedTaiexPoints(points){
+            const base=chronologicalPoints(points).map(x=>({time:new Date(x.time),close:Number(x.close),official:false})).filter(x=>Number.isFinite(x.close)&&hmTw(x.time)>='09:00'&&hmTw(x.time)<='13:30');
+            if(!taiexMisSeries.length)return base;const first=taiexMisSeries[0].stamp,out=base.filter(x=>x.time.getTime()<first);out.push(...taiexMisSeries.map(x=>({time:new Date(x.stamp),close:x.close,official:true})));return chronologicalPoints(out)
+          }
+          """
+          new="""  function mergedTaiexPoints(points){
+            const base=chronologicalPoints(points).map(x=>({time:new Date(x.time),close:Number(x.close),official:x.official!==false,source:x.source||''})).filter(x=>Number.isFinite(x.close)&&hmTw(x.time)>='09:00'&&hmTw(x.time)<='13:30');
+            const baseDay=base.length?base[0].time.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}):'';
+            if(baseDay&&baseDay!==twIsoDay())return base;
+            if(!taiexMisSeries.length)return base;
+            const first=taiexMisSeries[0].stamp,out=base.filter(x=>x.time.getTime()<first);out.push(...taiexMisSeries.map(x=>({time:new Date(x.stamp),close:x.close,official:true,source:'TWSE MIS 指數'})));return chronologicalPoints(out)
+          }
+          """
+          if old not in s: raise SystemExit('mergedTaiexPoints block not found')
+          p.write_text(s.replace(old,new),encoding='utf-8')
+          PY
+      - name: Static checks
+        shell: bash
+        run: |
+          node --check extras-v090.js
+          node --check live-v091.js
+          grep -F 'MI_5MINS_INDEX' extras-v090.js
+          grep -F 'officialLatestIntraday' extras-v090.js
+          grep -F '最近交易日' index.html
+          ! grep -Eqi 'query1\.finance\.yahoo|finance\.yahoo|0700\.HK|騰訊' extras-v090.js live-v091.js index.html
+          grep -F "tw-ai-monitor-v095session1" sw.js
+      - name: Browser acceptance with retained prior session
+        shell: bash
+        run: |
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); test -n "$CHROME"; export CHROME
+          python -m http.server 8000 >/tmp/http.log 2>&1 &
+          cat > /tmp/verify.mjs <<'JS'
+          import {chromium} from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:1280,height:1000},timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'block'});
+          const codes=['2330','009817','0050','3711','3293','2002','00878','00919'];
+          await p.route('**/market-data/data/intraday/latest.json*',async route=>{
+            const date='2026-10-29';
+            const mk=(base)=>Array.from({length:55},(_,i)=>{const mins=i*5,h=9+Math.floor(mins/60),m=mins%60;return {stamp:Date.parse(`${date}T${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:00+08:00`),close:base+(i%7-3)*0.5,time:`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:00`,source:'TWSE MIS'}});
+            const stocks={2330:mk(2415),'009817':mk(8.59),'0050':mk(107.25),3711:mk(683),3293:mk(808),2002:mk(19.45),'00878':mk(35.3),'00919':mk(32.87)};
+            await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({date,generatedAt:'2026-10-29T13:30:00+08:00',source:'TWSE MIS official snapshots',stocks,taiex:mk(46368)})});
+          });
+          await p.addInitScript(c=>localStorage.setItem('twAiWatchV3',JSON.stringify(c)),codes);
+          await p.goto('http://127.0.0.1:8000/?qa='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForFunction(()=>document.querySelectorAll('#watch article.row').length>=8,null,{timeout:30000});
+          await p.waitForTimeout(6000);
+          const state=await p.evaluate(()=>({rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent.trim(),canvas:!!r.querySelector('canvas.spark'),points:r.querySelector('canvas.spark')?.dataset?.todayPoints||null,session:r.querySelector('canvas.spark')?.dataset?.sessionDate||null,width:r.querySelector('canvas.spark')?.getBoundingClientRect().width||0})),taiex:{points:taiexChart.dataset.todayPoints||null,session:taiexChart.dataset.sessionDate||null,msg:taiexChartMsg.textContent.trim()}}));
+          console.log('BEFORE',JSON.stringify(state));
+          if(state.rows.some(x=>!x.canvas||Number(x.points)<2||x.session!=='2026-10-29'))throw Error('retained stock session failed');
+          if(Number(state.taiex.points)<2||state.taiex.session!=='2026-10-29')throw Error('retained TAIEX session failed '+JSON.stringify(state.taiex));
+          if(state.rows.some(x=>x.width>530||x.width<200))throw Error('desktop chart width regressed');
+          await p.waitForTimeout(18000);
+          const after=await p.evaluate(()=>[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent.trim(),points:r.querySelector('canvas.spark')?.dataset?.todayPoints||null,session:r.querySelector('canvas.spark')?.dataset?.sessionDate||null})));
+          console.log('AFTER',JSON.stringify(after));
+          if(after.some(x=>Number(x.points)<2||x.session!=='2026-10-29'))throw Error('15s repaint erased retained session');
+          await b.close();
+          JS
+          node /tmp/verify.mjs
+      - name: Commit patched runtime
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js live-v091.js index.html sw.js
+          git diff --cached --quiet && exit 0
+          git commit -m 'Show latest trading session charts after close and holidays'
+          git push origin HEAD:fix-latest-session-charts-20261030

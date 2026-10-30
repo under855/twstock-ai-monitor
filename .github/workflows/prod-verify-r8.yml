@@ -1,0 +1,68 @@
+name: Production r8 verification
+on:
+  push:
+    branches: ['prod-verify-chart-v094r6']
+    paths: ['.github/workflows/prod-verify-r8.yml']
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Wait for r8 deployment
+        run: |
+          SITE='https://under855.github.io/twstock-ai-monitor'
+          for i in $(seq 1 30); do
+            if curl -fsSL "$SITE/?_=$RANDOM" | grep -q 'extras-v090.js?v=094r8'; then
+              echo 'r8 deployed'; exit 0
+            fi
+            sleep 5
+          done
+          echo 'r8 deployment not visible'; exit 1
+      - name: Browser verify production
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          test -n "$CHROME"; export CHROME
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          cat > verify.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:1280,height:900},timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'block'});
+          const codes=['2330','009817','0050','3711','3293','2002','00878','00919'];
+          await p.addInitScript(c=>localStorage.setItem('twAiWatchV3',JSON.stringify(c)),codes);
+          const errors=[];p.on('pageerror',e=>errors.push(e.message));
+          await p.goto('https://under855.github.io/twstock-ai-monitor/?r8verify='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForFunction(()=>document.querySelectorAll('#watch article.row').length>=8,null,{timeout:60000});
+          await p.waitForFunction(()=>document.querySelectorAll('#watch canvas.spark[data-today-full="1"]').length>=8,null,{timeout:45000});
+          await p.waitForFunction(()=>document.querySelector('#taiexChart[data-today-full="1"]'),null,{timeout:30000});
+          const read=()=>p.evaluate(()=>({
+            watch:[...document.querySelectorAll('#watch article.row')].map(r=>{const c=r.querySelector('canvas.spark');return {code:r.querySelector('.sym')?.textContent?.trim(),start:c?.dataset.todayStart,end:c?.dataset.todayEnd,min:c?.dataset.todayMinTime,max:c?.dataset.todayMaxTime,pts:Number(c?.dataset.todayPoints||0),score:r.querySelector('.scoreNum')?.textContent?.trim()}}),
+            taiex:{start:taiexChart.dataset.todayStart,end:taiexChart.dataset.todayEnd,pts:Number(taiexChart.dataset.todayPoints||0)},
+            watchCount:!!document.getElementById('watchCount'),
+            topText:[...document.querySelectorAll('.marketCard')].map(x=>x.textContent).join(' | ')
+          }));
+          const first=await read();console.log('FIRST',JSON.stringify(first));
+          if(first.watchCount)throw Error('watch count card still present');
+          if(!first.topText.includes('台灣加權指數｜今日走勢'))throw Error('TAIEX chart card missing');
+          if(first.watch.some(x=>x.start!=='09:00'||x.end!=='13:30'||x.pts<54))throw Error('stock intraday axis invalid');
+          if(first.taiex.start!=='09:00'||first.taiex.end!=='13:30'||first.taiex.pts<54)throw Error('TAIEX intraday axis invalid');
+          const by=Object.fromEntries(first.watch.map(x=>[x.code,x]));
+          if(by['0050']?.min!=='09:15'||by['3711']?.min!=='09:00'||by['3293']?.min!=='09:10')throw Error('known minima timing mismatch');
+          if(first.watch.filter(x=>/^\d+$/.test(x.score||'')).length<6)throw Error('scores not preserved');
+          await p.waitForTimeout(18000);
+          const second=await read();console.log('AFTER18',JSON.stringify(second));
+          if(second.watch.some(x=>x.start!=='09:00'||x.end!=='13:30'||x.pts<54))throw Error('charts overwritten after live repaint');
+          const row=p.locator('#watch article.row').filter({has:p.locator('.sym',{hasText:'3711'})}).first();
+          await row.click();await p.waitForSelector('#sheet.show',{timeout:15000});
+          await p.waitForTimeout(3000);
+          const detail=await p.evaluate(()=>({news:document.querySelectorAll('#news .event').length,tabs:[...document.querySelectorAll('#detailChartTabs button')].map(x=>x.textContent.trim()),price:document.getElementById('dPrice')?.textContent?.trim()}));
+          console.log('DETAIL',JSON.stringify(detail));
+          if(detail.news<1)throw Error('news not preserved');
+          if(!['今日','5日','20日','60日'].every(x=>detail.tabs.includes(x)))throw Error('detail tabs missing');
+          if(errors.length)throw Error(errors.join(' | '));
+          await b.close();
+          JS
+          node verify.mjs

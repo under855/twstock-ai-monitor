@@ -200,11 +200,15 @@
     }catch{return []}
   }
   function mergedTodayPoints(code,points){
-    const base=chronologicalPoints(points).map(x=>({time:new Date(x.time),close:Number(x.close),official:false,source:'Yahoo 5 分鐘補洞'})).filter(x=>Number.isFinite(x.close)&&hmTw(x.time)>='09:00'&&hmTw(x.time)<='13:30');
-    const official=misSeriesFor(code);
-    if(official.length){const first=official[0].time.getTime(),out=base.filter(x=>x.time.getTime()<first);out.push(...official);return chronologicalPoints(out)}
-    const lp=livePointFor(code);if(lp){base.push({...lp,official:true,source:'TWSE MIS 最新成交'})}
-    return chronologicalPoints(base);
+    const byStamp=new Map();
+    for(const x of chronologicalPoints(points)){
+      const d=new Date(x?.time??x?.stamp),stamp=d.getTime(),close=Number(x?.close);if(!Number.isFinite(stamp)||!Number.isFinite(close))continue;
+      const hm=hmTw(d);if(hm<'09:00'||hm>'13:30')continue;
+      byStamp.set(stamp,{time:d,close,official:true,source:String(x?.source||'TWSE MIS 官方留存')});
+    }
+    for(const x of misSeriesFor(code))byStamp.set(x.time.getTime(),x);
+    const lp=livePointFor(code);if(lp)byStamp.set(lp.time.getTime(),{...lp,official:true,source:'TWSE MIS 最新成交'});
+    return [...byStamp.values()].sort((a,b)=>a.time-b.time);
   }
   function drawFixedIntraday(canvas,points,compact=false,change=null){
     if(!canvas||!Array.isArray(points)||points.length<2)return false;const ctx=canvas.getContext('2d');if(!ctx)return false;
@@ -218,45 +222,36 @@
     const fallback=d.at(-1).close-d[0].close,delta=Number.isFinite(Number(change))?Number(change):fallback;ctx.strokeStyle=delta>=0?'#ff7272':'#64d69a';ctx.lineWidth=Math.max(1.5*dpr,compact?1.8*dpr:2.2*dpr);ctx.beginPath();d.forEach((x,i)=>{const xx=X(x),yy=Y(x.close);if(i)ctx.lineTo(xx,yy);else ctx.moveTo(xx,yy)});ctx.stroke();return true;
   }
   function drawTodayPoints(code,points,canvas,compact){
-    if(!canvas||!Array.isArray(points)||points.length<2)return false;const merged=mergedTodayPoints(code,points),change=Number(window.__TW_LIVE_V091__?.stocks?.[String(code)]?.change);
-    if(!drawFixedIntraday(canvas,merged,compact,change))return false;
-    const vals=merged.map(x=>Number(x.close)),min=Math.min(...vals),max=Math.max(...vals),minI=vals.indexOf(min),maxI=vals.indexOf(max);
-    const official=merged.filter(x=>x.official);canvas.dataset.todayFull='1';canvas.dataset.todayPoints=String(merged.length);canvas.dataset.todayOfficialPoints=String(official.length);canvas.dataset.todayOfficialFirst=official.length?String(official[0].time.getTime()):'';canvas.dataset.todayOfficialLast=official.length?String(official.at(-1).time.getTime()):'';canvas.dataset.todayStart=hmTw(merged[0].time);canvas.dataset.todayEnd=hmTw(merged.at(-1).time);canvas.dataset.todayMinTime=hmTw(merged[minI].time);canvas.dataset.todayMaxTime=hmTw(merged[maxI].time);return true;
+    if(!canvas)return false;const merged=mergedTodayPoints(code,Array.isArray(points)?points:[]),change=Number(window.__TW_LIVE_V091__?.stocks?.[String(code)]?.change);
+    if(merged.length<2||!drawFixedIntraday(canvas,merged,compact,change))return false;
+    const vals=merged.map(x=>Number(x.close)),min=Math.min(...vals),max=Math.max(...vals),minI=vals.indexOf(min),maxI=vals.indexOf(max),firstHm=hmTw(merged[0].time),lastHm=hmTw(merged.at(-1).time);
+    const fullStart=firstHm<='09:05';
+    canvas.dataset.todayFull=fullStart?'1':'0';canvas.dataset.todayPoints=String(merged.length);canvas.dataset.todayOfficialPoints=String(merged.length);canvas.dataset.todayOfficialFirst=String(merged[0].time.getTime());canvas.dataset.todayOfficialLast=String(merged.at(-1).time.getTime());canvas.dataset.todayStart=firstHm;canvas.dataset.todayEnd=lastHm;canvas.dataset.todayMinTime=hmTw(merged[minI].time);canvas.dataset.todayMaxTime=hmTw(merged[maxI].time);return true;
   }
 
-  async function yahooTodayIntraday(code){
-    let market='';try{market=String(universeMap?.get?.(String(code))?.market||'')}catch{}
-    const symbols=market==='TPEx'?[`${code}.TWO`]:market==='TWSE'?[`${code}.TW`]:[`${code}.TW`,`${code}.TWO`];
-    const today=new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});
-    for(const symbol of symbols){
-      const upstream=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=1d&interval=5m&includePrePost=false&_=${Date.now()}`;
-      for(const url of [`https://proxy.cors.dev/${upstream}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(upstream)}`]){
-        try{
-          const j=await fetchJson(url,7000),r=j?.chart?.result?.[0],ts=r?.timestamp||[],q=r?.indicators?.quote?.[0]||{},byTime=new Map();
-          for(let i=0;i<ts.length;i++){
-            const close=Number(q.close?.[i]);if(!Number.isFinite(close))continue;
-            const d=new Date(Number(ts[i])*1000),day=d.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});if(day!==today)continue;
-            const hm=d.toLocaleTimeString('en-GB',{timeZone:'Asia/Taipei',hour:'2-digit',minute:'2-digit',hour12:false});
-            if(hm<'09:00'||hm>'13:30'||hm==='13:25')continue;
-            byTime.set(d.getTime(),{time:d,close});
-          }
-          const out=[...byTime.values()].sort((a,b)=>a.time-b.time);if(out.length>=2)return out;
-        }catch{}
-      }
-    }
-    return [];
+  const OFFICIAL_INTRADAY_URL='https://raw.githubusercontent.com/under855/twstock-ai-monitor/market-data/data/intraday/latest.json';
+  let officialIntradayPayload=null,officialIntradayFetchedAt=0,officialIntradayPending=null;
+  async function officialIntradayPayloadNow(force=false){
+    if(!force&&officialIntradayPayload&&Date.now()-officialIntradayFetchedAt<60000)return officialIntradayPayload;
+    if(officialIntradayPending)return await officialIntradayPending;
+    officialIntradayPending=fetchJson(`${OFFICIAL_INTRADAY_URL}?_=${Date.now()}`,7000).then(j=>{officialIntradayPending=null;officialIntradayFetchedAt=Date.now();officialIntradayPayload=j;return j}).catch(()=>{officialIntradayPending=null;return null});
+    return await officialIntradayPending;
+  }
+  async function officialTodayIntraday(code,force=false){
+    const out=[],today=twIsoDay(),j=await officialIntradayPayloadNow(force),raw=j?.date===today&&Array.isArray(j?.stocks?.[String(code)])?j.stocks[String(code)]:[];
+    for(const x of raw){const stamp=Number(x?.stamp),close=Number(x?.close);if(!Number.isFinite(stamp)||!Number.isFinite(close))continue;const d=new Date(stamp),hm=hmTw(d);if(hm<'09:00'||hm>'13:30')continue;out.push({time:d,close,official:true,source:'TWSE MIS 官方留存'})}
+    if(!out.length)return misSeriesFor(code);
+    return chronologicalPoints(out);
   }
 
   const todayFallbackCache=new Map(),todayFallbackResolved=new Map();
   async function ensureTodayChartFor(code,force=false){
     const key=String(code),cached=todayFallbackResolved.get(key),now=Date.now();
-    if(!force&&cached?.points?.length>=2&&now-cached.fetchedAt<300000){drawTodayPoints(key,cached.points,mainCanvasFor(key),true);return cached.points}
+    if(!force&&cached?.points&&now-cached.fetchedAt<60000){drawTodayPoints(key,cached.points,mainCanvasFor(key),true);return cached.points}
     if(todayFallbackCache.has(key))return await todayFallbackCache.get(key);
-    const p=yahooTodayIntraday(key).then(points=>{
-      todayFallbackCache.delete(key);
-      if(points.length>=2){todayFallbackResolved.set(key,{points,fetchedAt:Date.now()});drawTodayPoints(key,points,mainCanvasFor(key),true)}
-      return points;
-    }).catch(()=>{todayFallbackCache.delete(key);return []});
+    const p=officialTodayIntraday(key,force).then(points=>{
+      todayFallbackCache.delete(key);todayFallbackResolved.set(key,{points,fetchedAt:Date.now()});drawTodayPoints(key,points,mainCanvasFor(key),true);return points;
+    }).catch(()=>{todayFallbackCache.delete(key);const points=misSeriesFor(key);todayFallbackResolved.set(key,{points,fetchedAt:Date.now()});drawTodayPoints(key,points,mainCanvasFor(key),true);return points});
     todayFallbackCache.set(key,p);return await p;
   }
   async function refreshTodayFallbackCharts(force=false){
@@ -264,9 +259,8 @@
   }
 
   function drawResolvedMainToday(code,canvas=null){
-    const key=String(code),cached=todayFallbackResolved.get(key);
-    if(!cached?.points||cached.points.length<2)return false;
-    return drawTodayPoints(key,cached.points,canvas||mainCanvasFor(key),true);
+    const key=String(code),cached=todayFallbackResolved.get(key),points=cached?.points||misSeriesFor(key);
+    return drawTodayPoints(key,points,canvas||mainCanvasFor(key),true);
   }
   window.__TW_DRAW_MAIN_TODAY__=(code,canvas)=>drawResolvedMainToday(code,canvas);
 
@@ -284,47 +278,45 @@
     if(!taiexMisSeries.length)return base;const first=taiexMisSeries[0].stamp,out=base.filter(x=>x.time.getTime()<first);out.push(...taiexMisSeries.map(x=>({time:new Date(x.stamp),close:x.close,official:true})));return chronologicalPoints(out)
   }
   loadTaiexMisSeries();
-  async function yahooTaiexIntraday(){
-    const upstream=`https://query1.finance.yahoo.com/v8/finance/chart/%5ETWII?range=1d&interval=5m&includePrePost=false&_=${Date.now()}`,today=twIsoDay();
-    for(const url of [`https://proxy.cors.dev/${upstream}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(upstream)}`]){
-      try{const j=await fetchJson(url,7000),r=j?.chart?.result?.[0],ts=r?.timestamp||[],q=r?.indicators?.quote?.[0]||{},out=[];for(let i=0;i<ts.length;i++){const close=Number(q.close?.[i]);if(!Number.isFinite(close))continue;const d=new Date(Number(ts[i])*1000),day=d.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}),hm=hmTw(d);if(day===today&&hm>='09:00'&&hm<='13:30'&&hm!=='13:25')out.push({time:d,close})}out.sort((a,b)=>a.time-b.time);if(out.length>=2)return out}catch{}
-    }return [];
+  async function officialTaiexIntraday(force=false){
+    const today=twIsoDay(),j=await officialIntradayPayloadNow(force),raw=j?.date===today&&Array.isArray(j?.taiex)?j.taiex:[],byStamp=new Map();
+    for(const x of raw){const stamp=Number(x?.stamp),close=Number(x?.close);if(!Number.isFinite(stamp)||!Number.isFinite(close))continue;const d=new Date(stamp),hm=hmTw(d);if(hm<'09:00'||hm>'13:30')continue;byStamp.set(stamp,{time:d,close,official:true,source:'TWSE MIS 指數官方留存'})}
+    for(const x of taiexMisSeries)byStamp.set(Number(x.stamp),{time:new Date(Number(x.stamp)),close:Number(x.close),official:true,source:'TWSE MIS 指數'});
+    return [...byStamp.values()].sort((a,b)=>a.time-b.time);
   }
-  function drawTaiexTop(points){const c=document.getElementById('taiexChart'),merged=mergedTaiexPoints(points);if(!c||merged.length<2)return false;const txt=document.getElementById('taiexChg')?.textContent||'',m=txt.replaceAll(',','').match(/[+-]?\d+(?:\.\d+)?/),chg=m?Number(m[0]):null;if(!drawFixedIntraday(c,merged,true,chg))return false;const official=merged.filter(x=>x.official);c.dataset.todayFull='1';c.dataset.todayPoints=String(merged.length);c.dataset.todayOfficialPoints=String(official.length);c.dataset.todayOfficialFirst=official.length?String(official[0].time.getTime()):'';c.dataset.todayOfficialLast=official.length?String(official.at(-1).time.getTime()):'';c.dataset.todayStart=hmTw(merged[0].time);c.dataset.todayEnd=hmTw(merged.at(-1).time);const msg=document.getElementById('taiexChartMsg');if(msg)msg.textContent=official.length?`MIS 即時 ${official.length} 點｜較早走勢補齊`:`${merged.length} 個 5 分鐘補齊點`;return true}
-  async function ensureTaiexTop(force=false){if(!force&&taiexTodayCache?.length>=2&&Date.now()-taiexTodayFetchedAt<300000)return drawTaiexTop(taiexTodayCache);const p=await yahooTaiexIntraday();if(p.length>=2){taiexTodayCache=p;taiexTodayFetchedAt=Date.now();return drawTaiexTop(p)}const msg=document.getElementById('taiexChartMsg');if(msg)msg.textContent='今日分時暫時無法讀取';return false}
+  function drawTaiexTop(points){const c=document.getElementById('taiexChart'),merged=mergedTaiexPoints(points);if(!c||merged.length<2)return false;const txt=document.getElementById('taiexChg')?.textContent||'',m=txt.replaceAll(',','').match(/[+-]?\d+(?:\.\d+)?/),chg=m?Number(m[0]):null;if(!drawFixedIntraday(c,merged,true,chg))return false;const official=merged.filter(x=>x.official);c.dataset.todayFull='1';c.dataset.todayPoints=String(merged.length);c.dataset.todayOfficialPoints=String(official.length);c.dataset.todayOfficialFirst=official.length?String(official[0].time.getTime()):'';c.dataset.todayOfficialLast=official.length?String(official.at(-1).time.getTime()):'';c.dataset.todayStart=hmTw(merged[0].time);c.dataset.todayEnd=hmTw(merged.at(-1).time);const msg=document.getElementById('taiexChartMsg');if(msg)msg.textContent=official.length?`TWSE MIS 官方 ${official.length} 點`:`官方分時資料累積中`;return true}
+  async function ensureTaiexTop(force=false){if(!force&&taiexTodayCache?.length>=2&&Date.now()-taiexTodayFetchedAt<300000)return drawTaiexTop(taiexTodayCache);const p=await officialTaiexIntraday(force);if(p.length>=2){taiexTodayCache=p;taiexTodayFetchedAt=Date.now();return drawTaiexTop(p)}const msg=document.getElementById('taiexChartMsg');if(msg)msg.textContent='官方分時資料不足／從開啟後累積';return false}
   function startTaiexTop(){setTimeout(()=>ensureTaiexTop(false),250);setTimeout(()=>ensureTaiexTop(false),1400);setInterval(()=>{captureTaiexMis();if(taiexTodayCache?.length>=2)drawTaiexTop(taiexTodayCache)},15000);setInterval(()=>ensureTaiexTop(true),300000);addEventListener('resize',()=>{if(taiexTodayCache?.length>=2)drawTaiexTop(taiexTodayCache)});return true}
 
 
-  async function yahooDailyHistory(code){
-    let market='';try{market=String(universeMap?.get?.(String(code))?.market||'')}catch{}
-    const symbols=market==='TPEx'?[`${code}.TWO`]:market==='TWSE'?[`${code}.TW`]:[`${code}.TW`,`${code}.TWO`];
-    for(const symbol of symbols){
-      const upstream=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=3mo&interval=1d&includePrePost=false&_=${Date.now()}`;
-      for(const url of [`https://proxy.cors.dev/${upstream}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(upstream)}`]){
-        try{
-          const j=await fetchJson(url,7000),r=j?.chart?.result?.[0],ts=r?.timestamp||[],q=r?.indicators?.quote?.[0]||{},out=[];
-          for(let i=0;i<ts.length;i++){
-            const close=Number(q.close?.[i]);if(!Number.isFinite(close))continue;
-            const d=new Date(Number(ts[i])*1000),date=d.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}).replaceAll('-','/');
-            const n=v=>Number.isFinite(Number(v))?Number(v):null;
-            out.push({date,open:n(q.open?.[i]),high:n(q.high?.[i]),low:n(q.low?.[i]),close,change:null,volume:n(q.volume?.[i])});
-          }
-          if(out.length>=2)return out;
-        }catch{}
-      }
+  const offNum=v=>{if(v==null)return null;const n=Number(String(v).replaceAll(',','').replace('+','').trim());return Number.isFinite(n)?n:null};
+  function rocYmd(v){const p=String(v||'').trim().replaceAll('-','/').split('/');if(p.length!==3)return '';const y=Number(p[0]);if(!Number.isFinite(y))return '';return `${y<1911?y+1911:y}/${String(Number(p[1])).padStart(2,'0')}/${String(Number(p[2])).padStart(2,'0')}`}
+  function recentMonths(n=4){const [y0,m0]=twIsoDay().split('-').map(Number),out=[];let y=y0,m=m0;for(let i=0;i<n;i++){out.push([y,m]);m--;if(m<1){m=12;y--}}return out}
+  async function officialJson(upstream,timeout=7000){
+    try{return await fetchJson(upstream,timeout)}catch{}
+    return await fetchJson(`https://proxy.cors.dev/${upstream}`,timeout);
+  }
+  async function officialDailyHistory(code){
+    let market='';try{market=String(universeMap?.get?.(String(code))?.market||'')}catch{}const out=[];
+    for(const [y,m] of recentMonths(4)){
+      try{
+        if(market==='TPEx'){
+          const date=`${y}/${String(m).padStart(2,'0')}/01`,u=`https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=${encodeURIComponent(code)}&date=${encodeURIComponent(date)}&response=json`,j=await officialJson(u),rows=j?.tables?.[0]?.data||[];
+          for(const x of rows){const close=offNum(x?.[6]);if(close==null)continue;out.push({date:rocYmd(x[0]),open:offNum(x[3]),high:offNum(x[4]),low:offNum(x[5]),close,change:offNum(x[7]),volume:offNum(x[1])});}
+        }else{
+          const ym=`${y}${String(m).padStart(2,'0')}01`,u=`https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=${ym}&stockNo=${encodeURIComponent(code)}`,j=await officialJson(u),rows=j?.data||[];
+          for(const x of rows){const close=offNum(x?.[6]);if(close==null)continue;out.push({date:rocYmd(x[0]),open:offNum(x[3]),high:offNum(x[4]),low:offNum(x[5]),close,change:offNum(x[7]),volume:offNum(x[1])});}
+        }
+      }catch{}
     }
-    return [];
+    return [...new Map(out.filter(x=>x.date).map(x=>[x.date,x])).values()].sort((a,b)=>a.date.localeCompare(b.date));
   }
   async function loadHistoryFor(code){
     try{
       const key=String(code),cached=typeof historyCache!=='undefined'?historyCache[key]:null;
       if(Array.isArray(cached)&&cached.length>=2)return cached;
-      if(typeof history==='function'){
-        const h=await history(key);
-        if(Array.isArray(h)&&h.length>=2)return h;
-      }
-      const yh=await yahooDailyHistory(key);
-      if(yh.length>=2){try{historyCache[key]=yh}catch{}return yh}
+      const oh=await officialDailyHistory(key);
+      if(oh.length>=2){try{historyCache[key]=oh}catch{}return oh}
     }catch{}
     return [];
   }
@@ -345,7 +337,7 @@
   function startTodayOnlyMainCharts(){
     let timer=null;const run=()=>enforceTodayOnlyMainCharts(),watch=document.getElementById('watch');
     if(watch)new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(run,80)}).observe(watch,{childList:true,subtree:true});
-    setTimeout(run,150);setTimeout(run,900);setTimeout(run,2500);setInterval(run,15000);setInterval(()=>refreshTodayFallbackCharts(true).catch(()=>{}),300000);return true;
+    setTimeout(run,150);setTimeout(run,900);setTimeout(run,2500);setInterval(run,15000);setInterval(()=>refreshTodayFallbackCharts(true).catch(()=>{}),60000);return true;
   }
 
   const detailModeByCode=new Map();
@@ -382,7 +374,7 @@
           const live=document.getElementById('bigChart');if(!live||typeof draw!=='function')return;
           if((detailModeByCode.get(key)||'today')!=='today')return;
           drawTodayPoints(key,points,live,false);
-          const msg=document.getElementById('chartMsg');if(msg)msg.textContent=`今日 ${points.length} 個 5 分鐘資料點｜分時備援走勢`;
+          const msg=document.getElementById('chartMsg');if(msg)msg.textContent=`今日官方分時 ${mergedTodayPoints(key,points).length} 點｜TWSE MIS`;
         }catch{}
       }).catch(()=>{});
       return out;

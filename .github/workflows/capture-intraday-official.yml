@@ -1,0 +1,37 @@
+name: Capture official TWSE MIS intraday
+on:
+  schedule:
+    - cron: '*/5 1-4 * * 1-5'
+    - cron: '0-35/5 5 * * 1-5'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: official-intraday-capture
+  cancel-in-progress: false
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Capture TWSE MIS and store on market-data branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin market-data main
+          git checkout market-data
+          mkdir -p scripts data/intraday
+          git show origin/main:scripts/capture_intraday.py > scripts/capture_intraday.py
+          python scripts/capture_intraday.py
+          rm -f scripts/capture_intraday.py
+          git add data/intraday/latest.json
+          if git diff --cached --quiet; then
+            echo 'No new official MIS timestamp.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Capture official TWSE MIS intraday snapshot'
+          git push origin HEAD:market-data

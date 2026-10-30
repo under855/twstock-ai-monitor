@@ -1,48 +1,29 @@
-(()=>{
+(() => {
   'use strict';
-  const SYMBOL='0700.HK', NAME='騰訊控股', INTERVAL=15000;
-  const points=[]; let lastSourceTs=0,lastPrice=null,accepted=0,polls=0;
-  function fmtTime(ms,zone='Asia/Hong_Kong'){return new Date(ms).toLocaleTimeString('zh-TW',{timeZone:zone,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})}
-  function ensureUI(){
-    if(document.getElementById('foreignLiveTest'))return;
-    const host=document.querySelector('.market'); if(!host)return;
-    const wrap=document.createElement('section');
-    wrap.id='foreignLiveTest';
-    wrap.style.cssText='grid-column:1/-1;background:linear-gradient(145deg,#10223a,#0b1828);border:1px solid #315075;border-radius:15px;padding:13px;box-shadow:0 12px 28px rgba(0,0,0,.22)';
-    wrap.innerHTML=`<div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap"><div><div style="font-size:11px;color:#93a9c2">海外即時管線驗證｜暫時測試標的</div><div style="font-size:18px;font-weight:900;margin-top:4px">${NAME} <span style="font-size:12px;color:#93a9c2">${SYMBOL}</span></div></div><div id="foreignLiveState" style="font-size:12px;color:#ffd166">等待第一筆資料</div></div><div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:10px"><div><div class="small muted">最新價</div><b id="foreignLivePrice">—</b></div><div><div class="small muted">上一筆</div><b id="foreignLivePrev">—</b></div><div><div class="small muted">來源成交時間</div><b id="foreignLiveSourceTime">—</b></div><div><div class="small muted">本機收到時間</div><b id="foreignLiveRecvTime">—</b></div><div><div class="small muted">有效新資料</div><b id="foreignLiveCount">0</b></div></div><canvas id="foreignLiveChart" width="1100" height="110" style="display:block;width:100%;height:84px;background:#071321;border-radius:9px;margin-top:10px"></canvas><div id="foreignLiveNote" class="small muted" style="margin-top:6px">每 15 秒輪詢；只有來源時間戳前進才新增一點。Yahoo 港股頁面標示 delayed quote，因此此卡用來驗證更新管線，不宣稱交易所零延遲。</div>`;
-    host.appendChild(wrap);
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const num=s=>{const n=Number(String(s??'').replace(/[^0-9.+-]/g,''));return Number.isFinite(n)?n:null};
+  const states={NVDA:{lastTs:'',accepted:0,points:[]},COVER:{lastTs:'',accepted:0,points:[]}};
+  function style(){if(document.getElementById('officialValidationStyle'))return;const s=document.createElement('style');s.id='officialValidationStyle';s.textContent=`.foreignValidation{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:9px 0 13px}.foreignCard{background:linear-gradient(145deg,#10223a,#0b1828);border:1px solid #213954;border-radius:15px;padding:13px}.foreignCard h3{font-size:16px;margin:3px 0 9px}.foreignTop{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.foreignStatus{font-size:11px;font-weight:800}.foreignGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.foreignMetric small{display:block;color:#93a9c2;font-size:10px}.foreignMetric b{display:block;margin-top:2px}.foreignChart{width:100%;height:52px;background:#071321;border-radius:8px;margin-top:9px}.sourceNote{font-size:10px;color:#93a9c2;line-height:1.5;margin-top:7px}.state-ok{color:#63d49a}.state-delay{color:#ffd166}.state-warn{color:#ff8b8b}@media(max-width:720px){.foreignValidation{grid-template-columns:1fr}.foreignGrid{grid-template-columns:1fr 1fr}}`;document.head.appendChild(s)}
+  function draw(c,a){if(!c||a.length<2)return;const ctx=c.getContext('2d'),r=c.getBoundingClientRect(),dpr=Math.max(1,devicePixelRatio||1),w=Math.max(100,Math.round((r.width||500)*dpr)),h=Math.max(35,Math.round((r.height||52)*dpr));c.width=w;c.height=h;ctx.clearRect(0,0,w,h);const vals=a.map(x=>x.p),lo=Math.min(...vals),hi=Math.max(...vals),span=hi===lo?1:hi-lo;ctx.strokeStyle=a.at(-1).p>=a[0].p?'#ff7272':'#64d69a';ctx.lineWidth=Math.max(1.5,1.8*dpr);ctx.beginPath();a.forEach((x,i)=>{const xx=3*dpr+(w-6*dpr)*(i/Math.max(1,a.length-1)),yy=3*dpr+(h-6*dpr)*(hi-x.p)/span;i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)});ctx.stroke()}
+  function mount(){style();if(document.getElementById('officialValidation'))return;const anchor=document.querySelector('.sectionTitle');if(!anchor)return;const box=document.createElement('section');box.id='officialValidation';box.className='foreignValidation';box.innerHTML=`
+    <article class="foreignCard" id="nvdaValidation"><div class="foreignTop"><div><small>美股即時驗證｜Nasdaq 官方資料</small><h3>NVIDIA <span style="color:#93a9c2">NVDA</span></h3></div><span class="foreignStatus" id="nvdaStatus">讀取中</span></div><div class="foreignGrid"><div class="foreignMetric"><small>最新價</small><b id="nvdaPrice">—</b></div><div class="foreignMetric"><small>Nasdaq 原始時間</small><b id="nvdaSourceTime">—</b></div><div class="foreignMetric"><small>市場狀態</small><b id="nvdaMarket">—</b></div><div class="foreignMetric"><small>有效新資料</small><b id="nvdaCount">0</b></div></div><canvas id="nvdaChart" class="foreignChart"></canvas><div class="sourceNote">來源：Nasdaq 官方 Quote API；瀏覽器透過 r.jina.ai 讀取官方回應。只有 Nasdaq 原始成交時間改變才計為新資料，並顯示 Nasdaq 的 isRealTime 標記。</div></article>
+    <article class="foreignCard" id="coverValidation"><div class="foreignTop"><div><small>日股來源驗證｜不宣稱即時</small><h3>COVER <span style="color:#93a9c2">5253・東證</span></h3></div><span class="foreignStatus state-delay" id="coverStatus">JPX 至少延遲 15 分鐘</span></div><div class="foreignGrid"><div class="foreignMetric"><small>參考價</small><b id="coverPrice">—</b></div><div class="foreignMetric"><small>資料時間</small><b id="coverSourceTime">—</b></div><div class="foreignMetric"><small>漲跌</small><b id="coverChange">—</b></div><div class="foreignMetric"><small>有效新資料</small><b id="coverCount">0</b></div></div><canvas id="coverChart" class="foreignChart"></canvas><div class="sourceNote">JPX 官方說明：免費個股行情至少延遲 15 分鐘；本卡以日本株探（Kabutan）公開延遲行情作交叉顯示，僅驗證 COVER 資料流與延遲標示，不作即時行情依據。台股與評分不使用本來源。</div></article>`;anchor.parentNode.insertBefore(box,anchor)}
+  async function nvda(){
+    const u='https://r.jina.ai/https://api.nasdaq.com/api/quote/NVDA/info?assetclass=stocks&_='+Date.now(),r=await fetch(u,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const t=await r.text(),i=t.indexOf('{');if(i<0)throw Error('Nasdaq JSON missing');const j=JSON.parse(t.slice(i)),d=j?.data,p=d?.primaryData;if(!p)throw Error('Nasdaq payload missing');const price=num(p.lastSalePrice),ts=String(p.lastTradeTimestamp||'');if(price==null||!ts)throw Error('Nasdaq quote missing');const s=states.NVDA,key=ts+"|"+price;if(key!==s.lastTs){s.lastTs=key;s.accepted++;s.points.push({p:price,t:Date.now()});if(s.points.length>80)s.points.shift()}document.getElementById('nvdaPrice').textContent=price.toFixed(2);document.getElementById('nvdaSourceTime').textContent=ts.replace(/, 2026 /,', ');document.getElementById('nvdaMarket').textContent=String(d.marketStatus||'—');document.getElementById('nvdaCount').textContent=String(s.accepted);const st=document.getElementById('nvdaStatus');st.textContent=p.isRealTime===true?'Nasdaq 標示即時':'Nasdaq 未標示即時';st.className='foreignStatus '+(p.isRealTime===true?'state-ok':'state-delay');const card=document.getElementById('nvdaValidation');card.dataset.accepted=String(s.accepted);card.dataset.sourceTime=ts;card.dataset.price=String(price);card.dataset.realTime=String(p.isRealTime===true);draw(document.getElementById('nvdaChart'),s.points)
   }
-  function draw(){
-    const c=document.getElementById('foreignLiveChart'); if(!c||points.length<2)return;
-    const ctx=c.getContext('2d'),r=c.getBoundingClientRect(),dpr=Math.max(1,devicePixelRatio||1),W=Math.max(300,Math.round(r.width*dpr)),H=Math.max(80,Math.round(r.height*dpr));
-    if(c.width!==W)c.width=W;if(c.height!==H)c.height=H;ctx.clearRect(0,0,W,H);
-    const vals=points.map(x=>x.p),lo0=Math.min(...vals),hi0=Math.max(...vals),span=hi0-lo0||1,lo=lo0-span*.08,hi=hi0+span*.08,pad=8*dpr;
-    const X=i=>pad+(W-pad*2)*(i/(points.length-1)),Y=v=>pad+(H-pad*2)*(1-(v-lo)/(hi-lo));
-    ctx.strokeStyle=points.at(-1).p>=points[0].p?'#ff7272':'#64d69a';ctx.lineWidth=2*dpr;ctx.beginPath();points.forEach((x,i)=>i?ctx.lineTo(X(i),Y(x.p)):ctx.moveTo(X(i),Y(x.p)));ctx.stroke();
-    c.dataset.points=String(points.length);c.dataset.lastSource=String(points.at(-1).t);c.dataset.lastPrice=String(points.at(-1).p);
+  async function cover(){
+    const card=document.getElementById('coverValidation');if(card)card.dataset.realTime='false';
+    const upstream='https://kabutan.jp/stock/?code=5253&_='+Date.now(),u='https://proxy.cors.dev/'+upstream,r=await fetch(u,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const t=await r.text();
+    const pm=t.match(/<span class="kabuka">\s*([0-9][0-9,]*(?:\.[0-9]+)?)円<\/span>/i),price=pm?num(pm[1]):null;
+    const block=t.match(/<h2[^>]*>[\s\S]*?5253[\s\S]*?カバー[\s\S]*?<\/h2>[\s\S]{0,1800}/i)?.[0]||t;
+    const tm=block.match(/<time[^>]*datetime="[^"]*T(\d{2}:\d{2})\+09:00"[^>]*>\s*([^<]+)\s*<\/time>/i),ts=tm?(tm[2]||tm[1]).trim():'—';
+    const cm=block.match(/class="si_i1_dl1"[\s\S]{0,800}?([+-][0-9][0-9,]*(?:\.[0-9]+)?)/i),chg=cm?num(cm[1]):null;
+    if(price==null)throw Error('COVER delayed quote missing');
+    const key=ts+'|'+price,s=states.COVER;if(key!==s.lastTs){s.lastTs=key;s.accepted++;s.points.push({p:price,t:Date.now()});if(s.points.length>80)s.points.shift()}
+    document.getElementById('coverPrice').textContent='¥'+price.toLocaleString('zh-TW');document.getElementById('coverSourceTime').textContent=ts+' JST';document.getElementById('coverCount').textContent=String(s.accepted);document.getElementById('coverChange').textContent=chg==null?'—':(chg>=0?'+':'')+chg.toLocaleString('zh-TW');
+    if(card){card.dataset.accepted=String(s.accepted);card.dataset.sourceTime=ts;card.dataset.price=String(price);card.dataset.realTime='false'}draw(document.getElementById('coverChart'),s.points)
   }
-  async function getJson(url,timeout=9000){const ac=new AbortController(),to=setTimeout(()=>ac.abort(),timeout);try{const r=await fetch(url,{cache:'no-store',signal:ac.signal});if(!r.ok)throw Error(String(r.status));return await r.json()}finally{clearTimeout(to)}}
-  async function fetchTick(){
-    const up=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(SYMBOL)}?range=1d&interval=1m&includePrePost=false&_=${Date.now()}`;
-    let j; try{j=await getJson(`https://proxy.cors.dev/${up}`)}catch{j=await getJson(`https://api.allorigins.win/raw?url=${encodeURIComponent(up)}`)}
-    const x=j?.chart?.result?.[0],m=x?.meta||{},ts=Number(m.regularMarketTime||0),price=Number(m.regularMarketPrice);
-    if(!ts||!Number.isFinite(price))throw Error('來源沒有有效成交時間或價格');
-    return {ts:ts*1000,price};
-  }
-  async function poll(){
-    ensureUI();polls++;
-    const state=document.getElementById('foreignLiveState');
-    try{
-      const x=await fetchTick(),recv=Date.now(),isNew=x.ts>lastSourceTs;
-      document.getElementById('foreignLivePrice').textContent=x.price.toFixed(2);
-      document.getElementById('foreignLivePrev').textContent=lastPrice==null?'—':lastPrice.toFixed(2);
-      document.getElementById('foreignLiveSourceTime').textContent=fmtTime(x.ts);
-      document.getElementById('foreignLiveRecvTime').textContent=fmtTime(recv,'Asia/Taipei');
-      if(isNew){accepted++;lastPrice=x.price;lastSourceTs=x.ts;points.push({t:x.ts,p:x.price});if(points.length>120)points.shift();draw();state.textContent=`收到新資料｜第 ${accepted} 筆`;state.style.color='#aef3ce';}
-      else{state.textContent=`來源尚未更新｜輪詢 ${polls} 次`;state.style.color='#ffd166';}
-      document.getElementById('foreignLiveCount').textContent=String(accepted);
-      const card=document.getElementById('foreignLiveTest');card.dataset.accepted=String(accepted);card.dataset.sourceTs=String(lastSourceTs);card.dataset.price=String(lastPrice??'');
-    }catch(e){state.textContent='驗證來源讀取失敗';state.style.color='#ff9aa8';document.getElementById('foreignLiveNote').textContent='錯誤：'+(e?.message||e)+'。台股正式行情核心未受影響。';}
-  }
-  addEventListener('resize',draw);setTimeout(poll,300);setInterval(poll,INTERVAL);
+  function safeRun(fn,statusId){fn().catch(e=>{const x=document.getElementById(statusId);if(x){x.textContent='來源暫時無法讀取';x.className='foreignStatus state-warn'}console.warn(e)})}
+  function start(){mount();safeRun(nvda,'nvdaStatus');safeRun(cover,'coverStatus');setInterval(()=>safeRun(nvda,'nvdaStatus'),15000);setInterval(()=>safeRun(cover,'coverStatus'),60000);addEventListener('resize',()=>{draw(document.getElementById('nvdaChart'),states.NVDA.points);draw(document.getElementById('coverChart'),states.COVER.points)})}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();

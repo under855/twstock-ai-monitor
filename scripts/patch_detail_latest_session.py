@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# trigger detail latest-session acceptance
 from pathlib import Path
 import re
 ROOT=Path(__file__).resolve().parents[1]
@@ -11,13 +10,26 @@ new="""window.__TW_DRAW_MAIN_TODAY__=(code,canvas)=>drawResolvedMainToday(code,c
     const key=String(code),cached=todayFallbackResolved.get(key),points=cached?.points||misSeriesFor(key);
     return drawTodayPoints(key,points,canvas||document.getElementById('bigChart'),false);
   }
+  function syncDetailFromMainRow(code){
+    try{
+      const r=rowFor(String(code));if(!r)return false;
+      const set=(id,v)=>{const e=document.getElementById(id);if(e&&v!=null&&String(v).trim()!=='')e.textContent=String(v).trim()};
+      const price=r.querySelector('.price')?.textContent?.trim(),chg=r.querySelector('.chg')?.textContent?.trim(),day=r.querySelector('.dayline')?.textContent?.trim()||'',meta=r.querySelector('.meta')?.textContent?.trim()||'';
+      if(price&&price!=='—')set('dPrice',price);if(chg&&chg!=='行情載入中'){const e=document.getElementById('dChange');if(e){e.textContent=chg;e.className='v '+(chg.startsWith('+')?'up':chg.startsWith('-')?'down':'flat')}}
+      const m=day.match(/開\s*([^\s]+)\s*高\s*([^\s]+)\s*低\s*([^\s]+)\s*(?:最新|收盤)\s*([^\s]+)\s*量\s*([^\s]+)/);
+      if(m){set('dOpen',m[1]);set('dRange',`${m[2]} / ${m[3]}`);set('dPrice',m[4]);set('dVolume',m[5])}
+      if(meta)set('dTime',meta.replace(/\s+/g,' '));
+      return !!price;
+    }catch{return false}
+  }
   window.__TW_DRAW_DETAIL_TODAY__=(code,canvas)=>drawResolvedDetailToday(code,canvas);
-  window.__TW_DETAIL_SESSION_DATE__=(code)=>todayFallbackResolved.get(String(code))?.points?.length?new Date(todayFallbackResolved.get(String(code)).points[0].time).toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}):null;"""
+  window.__TW_DETAIL_SESSION_DATE__=(code)=>todayFallbackResolved.get(String(code))?.points?.length?new Date(todayFallbackResolved.get(String(code)).points[0].time).toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}):null;
+  window.__TW_SYNC_DETAIL_FROM_MAIN__=(code)=>syncDetailFromMainRow(code);"""
 if old not in s: raise SystemExit('extras export anchor missing')
 s=s.replace(old,new,1)
 s=s.replace("displayTitle.textContent='今日盤中即時走勢';return","displayTitle.textContent='盤中／最近交易日走勢';return",1)
 oldmsg="const msg=document.getElementById('chartMsg');if(msg)msg.textContent=`今日官方分時 ${mergedTodayPoints(key,points).length} 點｜TWSE MIS`;"
-newmsg="const msg=document.getElementById('chartMsg'),sd=window.__TW_DETAIL_SESSION_DATE__?.(key)||'';if(msg)msg.textContent=sd===twIsoDay()?`今日官方分時 ${mergedTodayPoints(key,points).length} 點｜TWSE MIS`:`${sd.replaceAll('-','/')} 最近交易日｜${mergedTodayPoints(key,points).length} 點`;"
+newmsg="const msg=document.getElementById('chartMsg'),sd=window.__TW_DETAIL_SESSION_DATE__?.(key)||'';window.__TW_SYNC_DETAIL_FROM_MAIN__?.(key);if(msg)msg.textContent=sd===twIsoDay()?`今日官方分時 ${mergedTodayPoints(key,points).length} 點｜TWSE MIS`:`${sd.replaceAll('-','/')} 最近交易日｜${mergedTodayPoints(key,points).length} 點`;"
 if oldmsg not in s: raise SystemExit('detail message anchor missing')
 s=s.replace(oldmsg,newmsg,1)
 p.write_text(s,encoding='utf-8')
@@ -30,6 +42,7 @@ newfn=r'''  function paintDetail(){
       const code=String(active||'');if(!code||!document.getElementById('sheet')?.classList.contains('show'))return;
       const q=quotes.get(code),set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v},big=document.getElementById('bigChart'),title=big?.closest('.card')?.querySelector('h3');
       const drawRetained=()=>typeof window.__TW_DRAW_DETAIL_TODAY__==='function'&&window.__TW_DRAW_DETAIL_TODAY__(code,big);
+      window.__TW_SYNC_DETAIL_FROM_MAIN__?.(code);
       if(!q?.live||q.date!==today()){
         if(title)title.textContent='盤中／最近交易日走勢';
         if(drawRetained()){
@@ -56,4 +69,4 @@ p.write_text(s,encoding='utf-8')
 p=ROOT/'sw.js'; s=p.read_text(encoding='utf-8')
 s=re.sub(r"const CACHE='[^']+'","const CACHE='tw-ai-monitor-v095session2'",s,1)
 p.write_text(s,encoding='utf-8')
-print('patched detail latest-session ownership')
+print('patched detail latest-session ownership and row-synced detail values')

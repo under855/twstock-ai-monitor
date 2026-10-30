@@ -19,8 +19,10 @@ jobs:
       - name: Apply isolated repair
         shell: bash
         run: |
-          curl -fsSL 'https://raw.githubusercontent.com/under855/twstock-ai-monitor/prod-verify-no-yahoo-20261030/scripts/patch_last_session_charts.py' -o /tmp/patch.py
-          python /tmp/patch.py
+          mkdir -p scripts
+          curl -fsSL 'https://raw.githubusercontent.com/under855/twstock-ai-monitor/prod-verify-no-yahoo-20261030/scripts/patch_last_session_charts.py' -o scripts/.patch_last_session_charts.py
+          python scripts/.patch_last_session_charts.py
+          rm -f scripts/.patch_last_session_charts.py
           python - <<'PY'
           from pathlib import Path
           p=Path('extras-v090.js');s=p.read_text(encoding='utf-8')

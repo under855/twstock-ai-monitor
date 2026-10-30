@@ -1,0 +1,55 @@
+name: Apply foreign live test
+on:
+  push:
+    branches: ['feature-live-validation-20261030']
+    paths: ['.github/workflows/apply-foreign-live-test.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature-live-validation-20261030
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Apply patch
+        run: python .github/scripts/patch_foreign_live_test.py
+      - name: Static checks
+        run: |
+          node --check foreign-live-test.js
+          grep -F 'foreign-live-test.js?v=1' index.html
+      - name: Browser live validation
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          test -n "$CHROME"; export CHROME
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          python -m http.server 8000 >/tmp/http.log 2>&1 &
+          cat > /tmp/verify-foreign.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:1280,height:900},timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'block'});
+          await p.goto('http://127.0.0.1:8000',{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForSelector('#foreignLiveTest',{timeout:30000});
+          await p.waitForFunction(()=>Number(document.querySelector('#foreignLiveTest')?.dataset.accepted||0)>=1,null,{timeout:30000});
+          const first=await p.evaluate(()=>({n:Number(foreignLiveTest.dataset.accepted||0),t:Number(foreignLiveTest.dataset.sourceTs||0),p:Number(foreignLiveTest.dataset.price||0),scoreCount:[...document.querySelectorAll('.scoreNum')].filter(x=>/^\d+$/.test(x.textContent.trim())).length,newsCore:typeof window.news==='function'}));
+          await p.waitForTimeout(18000);
+          const second=await p.evaluate(()=>({n:Number(foreignLiveTest.dataset.accepted||0),t:Number(foreignLiveTest.dataset.sourceTs||0),p:Number(foreignLiveTest.dataset.price||0)}));
+          console.log('FIRST',JSON.stringify(first));console.log('SECOND',JSON.stringify(second));
+          if(second.t<first.t)throw Error('source timestamp went backwards');
+          if(second.n<first.n)throw Error('accepted counter went backwards');
+          if(first.scoreCount<4)throw Error('existing stock scores missing');
+          await b.close();
+          JS
+          node /tmp/verify-foreign.mjs
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Attach foreign real-time validation card'
+          git push origin HEAD:feature-live-validation-20261030

@@ -167,9 +167,24 @@
     const v=document.getElementById('taiex'),c=document.getElementById('taiexChg');if(!taiex||taiex.date!==today()){if(marketOpen()){if(v)v.textContent='—';if(c){c.textContent='盤中即時指數載入中';c.className='s muted'}}return}if(v)v.textContent=fmt(taiex.price,2);if(c){c.textContent=`${taiex.change>0?'+':''}${fmt(taiex.change,2)}｜TWSE 盤中即時 ${taiex.time}`;c.className=`s ${cls(taiex.change)}`}
   }
   function paintDetail(){
-    try{const code=String(active||'');if(!code||!document.getElementById('sheet')?.classList.contains('show'))return;const q=quotes.get(code),set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v},title=document.querySelector('#bigChart')?.closest('.card')?.querySelector('h3');if(title)title.textContent='今日盤中即時走勢';
-      if(!q?.live||q.date!==today()){set('dPrice','—');set('dOpen','—');set('dChange','—');set('dRange','— / —');set('dVolume','—');set('dTime','盤中即時資料載入中｜不顯示昨日收盤');drawLine(document.getElementById('bigChart'),series.get(code)||[]);set('chartMsg','今日盤中即時線載入中');return}
-      set('dPrice',fmt(q.price));set('dOpen',fmt(q.open));set('dRange',`${fmt(q.high)} / ${fmt(q.low)}`);set('dVolume',fmt(q.volume,0));set('dTime',`${q.source}｜${q.tradeTime}`);const ch=document.getElementById('dChange');if(ch){ch.textContent=`${q.change>0?'+':''}${fmt(q.change)}`;ch.className=`v ${cls(q.change)}`};const a=series.get(code)||[];drawLine(document.getElementById('bigChart'),a);if(a.length>=2)set('chartMsg',`今日盤中即時走勢｜${hhmm(a[0].stamp)}～${hhmm(a.at(-1).stamp)}｜最新端為 TWSE MIS 成交`)
+    try{
+      const code=String(active||'');if(!code||!document.getElementById('sheet')?.classList.contains('show'))return;
+      const q=quotes.get(code),set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v},big=document.getElementById('bigChart'),title=big?.closest('.card')?.querySelector('h3');
+      const drawRetained=()=>typeof window.__TW_DRAW_DETAIL_TODAY__==='function'&&window.__TW_DRAW_DETAIL_TODAY__(code,big);
+      window.__TW_SYNC_DETAIL_FROM_MAIN__?.(code);
+      if(!q?.live||q.date!==today()){
+        if(title)title.textContent='盤中／最近交易日走勢';
+        if(drawRetained()){
+          const sd=window.__TW_DETAIL_SESSION_DATE__?.(code)||'';set('chartMsg',sd?`${sd.replaceAll('-','/')} 最近交易日走勢`:'最近交易日走勢');
+        }else set('chartMsg','最近交易日走勢載入中');
+        return;
+      }
+      set('dPrice',fmt(q.price));set('dOpen',fmt(q.open));set('dRange',`${fmt(q.high)} / ${fmt(q.low)}`);set('dVolume',fmt(q.volume,0));set('dTime',`${q.source}｜${q.tradeTime}`);
+      const ch=document.getElementById('dChange');if(ch){ch.textContent=`${q.change>0?'+':''}${fmt(q.change)}`;ch.className=`v ${cls(q.change)}`}
+      if(title)title.textContent='今日盤中即時走勢';
+      const a=series.get(code)||[];
+      if(!drawRetained())drawLine(big,a);
+      if(a.length>=2)set('chartMsg',`今日盤中即時走勢｜${hhmm(a[0].stamp)}～${hhmm(a.at(-1).stamp)}｜最新端為 TWSE MIS 成交`);
     }catch{}
   }
   function hasTodayData(){if(taiex?.date===today())return true;for(const q of quotes.values())if(q?.date===today()&&num(q.price)!=null)return true;return false}

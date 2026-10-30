@@ -260,6 +260,25 @@
     return drawTodayPoints(key,points,canvas||mainCanvasFor(key),true);
   }
   window.__TW_DRAW_MAIN_TODAY__=(code,canvas)=>drawResolvedMainToday(code,canvas);window.__TW_MAIN_SESSION_DATE__=(code)=>todayFallbackResolved.get(String(code))?.points?.length?new Date(todayFallbackResolved.get(String(code)).points[0].time).toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}):null;
+  function drawResolvedDetailToday(code,canvas=null){
+    const key=String(code),cached=todayFallbackResolved.get(key),points=cached?.points||misSeriesFor(key);
+    return drawTodayPoints(key,points,canvas||document.getElementById('bigChart'),false);
+  }
+  function syncDetailFromMainRow(code){
+    try{
+      const r=rowFor(String(code));if(!r)return false;
+      const set=(id,v)=>{const e=document.getElementById(id);if(e&&v!=null&&String(v).trim()!=='')e.textContent=String(v).trim()};
+      const price=r.querySelector('.price')?.textContent?.trim(),chg=r.querySelector('.chg')?.textContent?.trim(),day=r.querySelector('.dayline')?.textContent?.trim()||'',meta=r.querySelector('.meta')?.textContent?.trim()||'';
+      if(price&&price!=='—')set('dPrice',price);if(chg&&chg!=='行情載入中'){const e=document.getElementById('dChange');if(e){e.textContent=chg;e.className='v '+(chg.startsWith('+')?'up':chg.startsWith('-')?'down':'flat')}}
+      const m=day.match(/開\s*([^\s]+)\s*高\s*([^\s]+)\s*低\s*([^\s]+)\s*(?:最新|收盤)\s*([^\s]+)\s*量\s*([^\s]+)/);
+      if(m){set('dOpen',m[1]);set('dRange',`${m[2]} / ${m[3]}`);set('dPrice',m[4]);set('dVolume',m[5])}
+      if(meta)set('dTime',meta.replace(/\s+/g,' '));
+      return !!price;
+    }catch{return false}
+  }
+  window.__TW_DRAW_DETAIL_TODAY__=(code,canvas)=>drawResolvedDetailToday(code,canvas);
+  window.__TW_DETAIL_SESSION_DATE__=(code)=>todayFallbackResolved.get(String(code))?.points?.length?new Date(todayFallbackResolved.get(String(code)).points[0].time).toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}):null;
+  window.__TW_SYNC_DETAIL_FROM_MAIN__=(code)=>syncDetailFromMainRow(code);
 
   let taiexTodayCache=null,taiexTodayFetchedAt=0;
   const TAIEX_MIS_KEY=()=>`tw_taiex_mis_series_${twIsoDay().replaceAll('-','')}`;
@@ -359,7 +378,7 @@
     const apply=mode=>{
       detailModeByCode.set(key,mode);for(const b of tabs.querySelectorAll('.tab'))b.classList.toggle('active',b.dataset.chartMode===mode);
       const msg=document.getElementById('chartMsg');
-      if(mode==='today'){live.style.display='block';hist.style.display='none';if(msg)msg.style.display='';histMsg.style.display='none';displayTitle.textContent='今日盤中即時走勢';return}
+      if(mode==='today'){live.style.display='block';hist.style.display='none';if(msg)msg.style.display='';histMsg.style.display='none';displayTitle.textContent='盤中／最近交易日走勢';return}
       const count=Number(mode),h=(historyCache?.[key]||[]).slice(-count);live.style.display='none';hist.style.display='block';if(msg)msg.style.display='none';histMsg.style.display='';displayTitle.textContent=`近 ${count} 個交易日走勢`;
       if(h.length>=2){draw(hist,h,false,priceFor(key));histMsg.textContent=`近 ${Math.min(count,h.length)} 個交易日｜歷史分析圖`}
       else histMsg.textContent='歷史資料不足，暫時無法繪製這個區間。';
@@ -379,7 +398,7 @@
           const live=document.getElementById('bigChart');if(!live||typeof draw!=='function')return;
           if((detailModeByCode.get(key)||'today')!=='today')return;
           drawTodayPoints(key,points,live,false);
-          const msg=document.getElementById('chartMsg');if(msg)msg.textContent=`今日官方分時 ${mergedTodayPoints(key,points).length} 點｜TWSE MIS`;
+          const msg=document.getElementById('chartMsg'),sd=window.__TW_DETAIL_SESSION_DATE__?.(key)||'';window.__TW_SYNC_DETAIL_FROM_MAIN__?.(key);if(msg)msg.textContent=sd===twIsoDay()?`今日官方分時 ${mergedTodayPoints(key,points).length} 點｜TWSE MIS`:`${sd.replaceAll('-','/')} 最近交易日｜${mergedTodayPoints(key,points).length} 點`;
         }catch{}
       }).catch(()=>{});
       return out;

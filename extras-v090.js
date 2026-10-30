@@ -200,14 +200,9 @@
     }catch{return []}
   }
   function mergedTodayPoints(code,points){
-    const byStamp=new Map();
-    for(const x of chronologicalPoints(points)){
-      const d=new Date(x?.time??x?.stamp),stamp=d.getTime(),close=Number(x?.close);if(!Number.isFinite(stamp)||!Number.isFinite(close))continue;
-      const hm=hmTw(d);if(hm<'09:00'||hm>'13:30')continue;
-      byStamp.set(stamp,{time:d,close,official:true,source:String(x?.source||'TWSE MIS 官方留存')});
-    }
-    for(const x of misSeriesFor(code))byStamp.set(x.time.getTime(),x);
-    const lp=livePointFor(code);if(lp)byStamp.set(lp.time.getTime(),{...lp,official:true,source:'TWSE MIS 最新成交'});
+    const base=chronologicalPoints(points),baseDay=base.length?new Date(base[0]?.time??base[0]?.stamp).toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}):'',today=twIsoDay(),byStamp=new Map();
+    for(const x of base){const d=new Date(x?.time??x?.stamp),stamp=d.getTime(),close=Number(x?.close);if(!Number.isFinite(stamp)||!Number.isFinite(close))continue;const hm=hmTw(d);if(hm<'09:00'||hm>'13:30')continue;byStamp.set(stamp,{time:d,close,official:true,source:String(x?.source||'TWSE MIS 官方留存')})}
+    if(!baseDay||baseDay===today){for(const x of misSeriesFor(code))byStamp.set(x.time.getTime(),x);const lp=livePointFor(code);if(lp)byStamp.set(lp.time.getTime(),{...lp,official:true,source:'TWSE MIS 最新成交'})}
     return [...byStamp.values()].sort((a,b)=>a.time-b.time);
   }
   function drawFixedIntraday(canvas,points,compact=false,change=null){
@@ -216,7 +211,7 @@
     const d=chronologicalPoints(points).filter(x=>Number.isFinite(Number(x.close)));if(d.length<2)return false;
     let lo=Math.min(...d.map(x=>Number(x.close))),hi=Math.max(...d.map(x=>Number(x.close)));if(hi===lo){hi+=1;lo-=1}const pad=(hi-lo)*.08;hi+=pad;lo-=pad;
     const p={l:compact?4*dpr:44*dpr,r:compact?4*dpr:12*dpr,t:6*dpr,b:compact?4*dpr:24*dpr};
-    const day=twIsoDay(),t0=Date.parse(`${day}T09:00:00+08:00`),t1=Date.parse(`${day}T13:30:00+08:00`),span=t1-t0;
+    const firstDate=d[0]?.time instanceof Date?d[0].time:new Date(d[0]?.time);const day=Number.isFinite(firstDate?.getTime?.())?firstDate.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}):twIsoDay(),t0=Date.parse(`${day}T09:00:00+08:00`),t1=Date.parse(`${day}T13:30:00+08:00`),span=t1-t0;
     const X=x=>p.l+Math.max(0,Math.min(1,(new Date(x.time).getTime()-t0)/span))*(W-p.l-p.r),Y=v=>p.t+(H-p.t-p.b)*(hi-Number(v))/(hi-lo);
     if(!compact){ctx.strokeStyle='#1e3550';ctx.fillStyle='#91a8c2';ctx.font=`${11*dpr}px sans-serif`;ctx.lineWidth=Math.max(1,dpr);for(let k=0;k<4;k++){const y=p.t+(H-p.t-p.b)*k/3;ctx.beginPath();ctx.moveTo(p.l,y);ctx.lineTo(W-p.r,y);ctx.stroke();ctx.fillText((hi-(hi-lo)*k/3).toFixed(2),3*dpr,y+4*dpr)}for(const [label,ratio] of [['09:00',0],['11:15',.5],['13:30',1]]){const x=p.l+(W-p.l-p.r)*ratio;ctx.fillText(label,Math.max(2*dpr,Math.min(W-42*dpr,x-14*dpr)),H-6*dpr)}}
     const fallback=d.at(-1).close-d[0].close,delta=Number.isFinite(Number(change))?Number(change):fallback;ctx.strokeStyle=delta>=0?'#ff7272':'#64d69a';ctx.lineWidth=Math.max(1.5*dpr,compact?1.8*dpr:2.2*dpr);ctx.beginPath();d.forEach((x,i)=>{const xx=X(x),yy=Y(x.close);if(i)ctx.lineTo(xx,yy);else ctx.moveTo(xx,yy)});ctx.stroke();return true;
@@ -226,7 +221,7 @@
     if(merged.length<2||!drawFixedIntraday(canvas,merged,compact,change))return false;
     const vals=merged.map(x=>Number(x.close)),min=Math.min(...vals),max=Math.max(...vals),minI=vals.indexOf(min),maxI=vals.indexOf(max),firstHm=hmTw(merged[0].time),lastHm=hmTw(merged.at(-1).time);
     const fullStart=firstHm<='09:05';
-    canvas.dataset.todayFull=fullStart?'1':'0';canvas.dataset.todayPoints=String(merged.length);canvas.dataset.todayOfficialPoints=String(merged.length);canvas.dataset.todayOfficialFirst=String(merged[0].time.getTime());canvas.dataset.todayOfficialLast=String(merged.at(-1).time.getTime());canvas.dataset.todayStart=firstHm;canvas.dataset.todayEnd=lastHm;canvas.dataset.todayMinTime=hmTw(merged[minI].time);canvas.dataset.todayMaxTime=hmTw(merged[maxI].time);return true;
+    const sessionDate=new Date(merged[0].time).toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});canvas.dataset.sessionDate=sessionDate;canvas.dataset.todayFull=fullStart?'1':'0';canvas.dataset.todayPoints=String(merged.length);canvas.dataset.todayOfficialPoints=String(merged.length);canvas.dataset.todayOfficialFirst=String(merged[0].time.getTime());canvas.dataset.todayOfficialLast=String(merged.at(-1).time.getTime());canvas.dataset.todayStart=firstHm;canvas.dataset.todayEnd=lastHm;canvas.dataset.todayMinTime=hmTw(merged[minI].time);canvas.dataset.todayMaxTime=hmTw(merged[maxI].time);return true;
   }
 
   const OFFICIAL_INTRADAY_URL='https://raw.githubusercontent.com/under855/twstock-ai-monitor/market-data/data/intraday/latest.json';
@@ -237,11 +232,13 @@
     officialIntradayPending=fetchJson(`${OFFICIAL_INTRADAY_URL}?_=${Date.now()}`,7000).then(j=>{officialIntradayPending=null;officialIntradayFetchedAt=Date.now();officialIntradayPayload=j;return j}).catch(()=>{officialIntradayPending=null;return null});
     return await officialIntradayPending;
   }
-  async function officialTodayIntraday(code,force=false){
-    const out=[],today=twIsoDay(),j=await officialIntradayPayloadNow(force),raw=j?.date===today&&Array.isArray(j?.stocks?.[String(code)])?j.stocks[String(code)]:[];
-    for(const x of raw){const stamp=Number(x?.stamp),close=Number(x?.close);if(!Number.isFinite(stamp)||!Number.isFinite(close))continue;const d=new Date(stamp),hm=hmTw(d);if(hm<'09:00'||hm>'13:30')continue;out.push({time:d,close,official:true,source:'TWSE MIS 官方留存'})}
-    if(!out.length)return misSeriesFor(code);
-    return chronologicalPoints(out);
+  async function officialLatestIntraday(code,force=false){
+    const out=[],today=twIsoDay(),j=await officialIntradayPayloadNow(force),session=String(j?.date||''),raw=Array.isArray(j?.stocks?.[String(code)])?j.stocks[String(code)]:[];
+    for(const x of raw){const stamp=Number(x?.stamp),close=Number(x?.close);if(!Number.isFinite(stamp)||!Number.isFinite(close))continue;const d=new Date(stamp),hm=hmTw(d);if(hm<'09:00'||hm>'13:30')continue;out.push({time:d,close,official:true,source:'TWSE MIS 官方留存',sessionDate:session})}
+    const local=misSeriesFor(code);
+    if(session===today&&local.length){const by=new Map(out.map(x=>[x.time.getTime(),x]));for(const x of local)by.set(x.time.getTime(),x);return [...by.values()].sort((a,b)=>a.time-b.time)}
+    if(out.length)return chronologicalPoints(out);
+    return local;
   }
 
   const todayFallbackCache=new Map(),todayFallbackResolved=new Map();
@@ -249,8 +246,8 @@
     const key=String(code),cached=todayFallbackResolved.get(key),now=Date.now();
     if(!force&&cached?.points&&now-cached.fetchedAt<60000){drawTodayPoints(key,cached.points,mainCanvasFor(key),true);return cached.points}
     if(todayFallbackCache.has(key))return await todayFallbackCache.get(key);
-    const p=officialTodayIntraday(key,force).then(points=>{
-      todayFallbackCache.delete(key);todayFallbackResolved.set(key,{points,fetchedAt:Date.now()});drawTodayPoints(key,points,mainCanvasFor(key),true);return points;
+    const p=officialLatestIntraday(key,force).then(points=>{
+      todayFallbackCache.delete(key);todayFallbackResolved.set(key,{points,fetchedAt:Date.now()});const c=mainCanvasFor(key);drawTodayPoints(key,points,c,true);const r=rowFor(key),f=r?.querySelector('.sparkFallback');if(f&&c)f.replaceWith(c);return points;
     }).catch(()=>{todayFallbackCache.delete(key);const points=misSeriesFor(key);todayFallbackResolved.set(key,{points,fetchedAt:Date.now()});drawTodayPoints(key,points,mainCanvasFor(key),true);return points});
     todayFallbackCache.set(key,p);return await p;
   }
@@ -262,7 +259,7 @@
     const key=String(code),cached=todayFallbackResolved.get(key),points=cached?.points||misSeriesFor(key);
     return drawTodayPoints(key,points,canvas||mainCanvasFor(key),true);
   }
-  window.__TW_DRAW_MAIN_TODAY__=(code,canvas)=>drawResolvedMainToday(code,canvas);
+  window.__TW_DRAW_MAIN_TODAY__=(code,canvas)=>drawResolvedMainToday(code,canvas);window.__TW_MAIN_SESSION_DATE__=(code)=>todayFallbackResolved.get(String(code))?.points?.length?new Date(todayFallbackResolved.get(String(code)).points[0].time).toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}):null;
 
   let taiexTodayCache=null,taiexTodayFetchedAt=0;
   const TAIEX_MIS_KEY=()=>`tw_taiex_mis_series_${twIsoDay().replaceAll('-','')}`;
@@ -278,14 +275,22 @@
     if(!taiexMisSeries.length)return base;const first=taiexMisSeries[0].stamp,out=base.filter(x=>x.time.getTime()<first);out.push(...taiexMisSeries.map(x=>({time:new Date(x.stamp),close:x.close,official:true})));return chronologicalPoints(out)
   }
   loadTaiexMisSeries();
-  async function officialTaiexIntraday(force=false){
-    const today=twIsoDay(),j=await officialIntradayPayloadNow(force),raw=j?.date===today&&Array.isArray(j?.taiex)?j.taiex:[],byStamp=new Map();
-    for(const x of raw){const stamp=Number(x?.stamp),close=Number(x?.close);if(!Number.isFinite(stamp)||!Number.isFinite(close))continue;const d=new Date(stamp),hm=hmTw(d);if(hm<'09:00'||hm>'13:30')continue;byStamp.set(stamp,{time:d,close,official:true,source:'TWSE MIS 指數官方留存'})}
-    for(const x of taiexMisSeries)byStamp.set(Number(x.stamp),{time:new Date(Number(x.stamp)),close:Number(x.close),official:true,source:'TWSE MIS 指數'});
-    return [...byStamp.values()].sort((a,b)=>a.time-b.time);
+  async function latestOfficialTradeDate(){
+    try{const j=await fetchJson(`./data/latest.json?_=${Date.now()}`,5000),d=String(j?.taiex?.date||'').replaceAll('/','-');if(/^\d{4}-\d{2}-\d{2}$/.test(d))return d}catch{}return twIsoDay();
   }
-  function drawTaiexTop(points){const c=document.getElementById('taiexChart'),merged=mergedTaiexPoints(points);if(!c||merged.length<2)return false;const txt=document.getElementById('taiexChg')?.textContent||'',m=txt.replaceAll(',','').match(/[+-]?\d+(?:\.\d+)?/),chg=m?Number(m[0]):null;if(!drawFixedIntraday(c,merged,true,chg))return false;const official=merged.filter(x=>x.official);c.dataset.todayFull='1';c.dataset.todayPoints=String(merged.length);c.dataset.todayOfficialPoints=String(official.length);c.dataset.todayOfficialFirst=official.length?String(official[0].time.getTime()):'';c.dataset.todayOfficialLast=official.length?String(official.at(-1).time.getTime()):'';c.dataset.todayStart=hmTw(merged[0].time);c.dataset.todayEnd=hmTw(merged.at(-1).time);const msg=document.getElementById('taiexChartMsg');if(msg)msg.textContent=official.length?`TWSE MIS 官方 ${official.length} 點`:`官方分時資料累積中`;return true}
-  async function ensureTaiexTop(force=false){if(!force&&taiexTodayCache?.length>=2&&Date.now()-taiexTodayFetchedAt<300000)return drawTaiexTop(taiexTodayCache);const p=await officialTaiexIntraday(force);if(p.length>=2){taiexTodayCache=p;taiexTodayFetchedAt=Date.now();return drawTaiexTop(p)}const msg=document.getElementById('taiexChartMsg');if(msg)msg.textContent='官方分時資料不足／從開啟後累積';return false}
+  async function twseIndexFullSession(dateIso){
+    try{const compact=String(dateIso||'').replaceAll('-',''),j=await officialJson(`https://www.twse.com.tw/exchangeReport/MI_5MINS_INDEX?response=json&date=${compact}`,12000),date=String(j?.date||compact),rows=Array.isArray(j?.data)?j.data:[],day=`${date.slice(0,4)}-${date.slice(4,6)}-${date.slice(6,8)}`,out=[];for(const r of rows){const hm=String(r?.[0]||'');const close=offNum(r?.[1]);if(!/^\d{2}:\d{2}:\d{2}$/.test(hm)||close==null||hm<'09:00:00'||hm>'13:30:00')continue;const ms=Date.parse(`${day}T${hm}+08:00`);if(Number.isFinite(ms))out.push({time:new Date(ms),close,official:true,source:'TWSE 每5秒指數官方資料'})}return out}catch{return []}
+  }
+  async function officialTaiexIntraday(force=false){
+    const today=twIsoDay(),j=await officialIntradayPayloadNow(force),session=String(j?.date||''),raw=Array.isArray(j?.taiex)?j.taiex:[],byStamp=new Map();
+    for(const x of raw){const stamp=Number(x?.stamp),close=Number(x?.close);if(!Number.isFinite(stamp)||!Number.isFinite(close))continue;const d=new Date(stamp),hm=hmTw(d);if(hm<'09:00'||hm>'13:30')continue;byStamp.set(stamp,{time:d,close,official:true,source:'TWSE MIS 指數官方留存'})}
+    if(session===today){for(const x of taiexMisSeries)byStamp.set(Number(x.stamp),{time:new Date(Number(x.stamp)),close:Number(x.close),official:true,source:'TWSE MIS 指數'})}
+    let out=[...byStamp.values()].sort((a,b)=>a.time-b.time);
+    if(out.length>=2)return out;
+    const tradeDate=await latestOfficialTradeDate(),full=await twseIndexFullSession(tradeDate);return full.length>=2?full:out;
+  }
+  function drawTaiexTop(points){const c=document.getElementById('taiexChart'),merged=mergedTaiexPoints(points);if(!c||merged.length<2)return false;const txt=document.getElementById('taiexChg')?.textContent||'',m=txt.replaceAll(',','').match(/[+-]?\d+(?:\.\d+)?/),chg=m?Number(m[0]):null;if(!drawFixedIntraday(c,merged,true,chg))return false;const official=merged.filter(x=>x.official);c.dataset.todayFull='1';c.dataset.todayPoints=String(merged.length);c.dataset.todayOfficialPoints=String(official.length);c.dataset.todayOfficialFirst=official.length?String(official[0].time.getTime()):'';c.dataset.todayOfficialLast=official.length?String(official.at(-1).time.getTime()):'';c.dataset.todayStart=hmTw(merged[0].time);c.dataset.todayEnd=hmTw(merged.at(-1).time);const msg=document.getElementById('taiexChartMsg'),sessionDate=new Date(merged[0].time).toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});c.dataset.sessionDate=sessionDate;if(msg)msg.textContent=sessionDate===twIsoDay()?`今日｜TWSE 官方 ${official.length||merged.length} 點`:`${sessionDate.replaceAll('-','/')} 最近交易日｜TWSE 官方`;return true}
+  async function ensureTaiexTop(force=false){if(!force&&taiexTodayCache?.length>=2&&Date.now()-taiexTodayFetchedAt<300000)return drawTaiexTop(taiexTodayCache);const p=await officialTaiexIntraday(force);if(p.length>=2){taiexTodayCache=p;taiexTodayFetchedAt=Date.now();return drawTaiexTop(p)}const msg=document.getElementById('taiexChartMsg');if(msg)msg.textContent='最近交易日分時資料暫時無法取得';return false}
   function startTaiexTop(){setTimeout(()=>ensureTaiexTop(false),250);setTimeout(()=>ensureTaiexTop(false),1400);setInterval(()=>{captureTaiexMis();if(taiexTodayCache?.length>=2)drawTaiexTop(taiexTodayCache)},15000);setInterval(()=>ensureTaiexTop(true),300000);addEventListener('resize',()=>{if(taiexTodayCache?.length>=2)drawTaiexTop(taiexTodayCache)});return true}
 
 

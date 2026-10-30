@@ -228,7 +228,7 @@
             const close=Number(q.close?.[i]);if(!Number.isFinite(close))continue;
             const d=new Date(Number(ts[i])*1000),day=d.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});if(day!==today)continue;
             const hm=d.toLocaleTimeString('en-GB',{timeZone:'Asia/Taipei',hour:'2-digit',minute:'2-digit',hour12:false});
-            if(hm<'09:00'||hm>'13:30')continue;
+            if(hm<'09:00'||hm>'13:30'||hm==='13:25')continue;
             byTime.set(d.getTime(),{time:d,close});
           }
           const out=[...byTime.values()].sort((a,b)=>a.time-b.time);if(out.length>=2)return out;
@@ -265,7 +265,7 @@
   async function yahooTaiexIntraday(){
     const upstream=`https://query1.finance.yahoo.com/v8/finance/chart/%5ETWII?range=1d&interval=5m&includePrePost=false&_=${Date.now()}`,today=twIsoDay();
     for(const url of [`https://proxy.cors.dev/${upstream}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(upstream)}`]){
-      try{const j=await fetchJson(url,7000),r=j?.chart?.result?.[0],ts=r?.timestamp||[],q=r?.indicators?.quote?.[0]||{},out=[];for(let i=0;i<ts.length;i++){const close=Number(q.close?.[i]);if(!Number.isFinite(close))continue;const d=new Date(Number(ts[i])*1000),day=d.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}),hm=hmTw(d);if(day===today&&hm>='09:00'&&hm<='13:30')out.push({time:d,close})}out.sort((a,b)=>a.time-b.time);if(out.length>=2)return out}catch{}
+      try{const j=await fetchJson(url,7000),r=j?.chart?.result?.[0],ts=r?.timestamp||[],q=r?.indicators?.quote?.[0]||{},out=[];for(let i=0;i<ts.length;i++){const close=Number(q.close?.[i]);if(!Number.isFinite(close))continue;const d=new Date(Number(ts[i])*1000),day=d.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}),hm=hmTw(d);if(day===today&&hm>='09:00'&&hm<='13:30'&&hm!=='13:25')out.push({time:d,close})}out.sort((a,b)=>a.time-b.time);if(out.length>=2)return out}catch{}
     }return [];
   }
   function drawTaiexTop(points){const c=document.getElementById('taiexChart');if(!c||points.length<2)return false;const txt=document.getElementById('taiexChg')?.textContent||'',m=txt.replaceAll(',','').match(/[+-]?\d+(?:\.\d+)?/),chg=m?Number(m[0]):null;if(!drawFixedIntraday(c,points,true,chg))return false;c.dataset.todayFull='1';c.dataset.todayPoints=String(points.length);c.dataset.todayStart=hmTw(points[0].time);c.dataset.todayEnd=hmTw(points.at(-1).time);const msg=document.getElementById('taiexChartMsg');if(msg)msg.textContent=`${points.length} 個 5 分鐘點`;return true}

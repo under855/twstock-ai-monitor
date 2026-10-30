@@ -1,0 +1,18 @@
+name: Probe browser-facing official sources
+on:
+  push:
+    branches: ['source-migration-no-yahoo-20261030']
+    paths: ['.github/workflows/probe-browser-sources.yml']
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe proxy CORS endpoints
+        shell: bash
+        run: |
+          set +e
+          for u in \
+            'https://proxy.cors.dev/https://api.nasdaq.com/api/quote/NVDA/info?assetclass=stocks' \
+            'https://proxy.cors.dev/https://www.google.com/finance/quote/5253:TYO?hl=en'; do
+            echo "=== $u ==="; curl -L --max-time 20 -sS -D - "$u" | head -c 5000; echo; done

@@ -54,7 +54,7 @@ jobs:
           npm install --no-save playwright-core@latest >/dev/null 2>&1
           python -m http.server 8000 >/tmp/http.log 2>&1 &
           sleep 2
-          cat > /tmp/verify.mjs <<'JS'
+          cat > verify-prod.mjs <<'JS'
           import { chromium } from 'playwright-core';
           const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
           const p=await b.newPage({viewport:{width:390,height:844},locale:'zh-TW',timezoneId:'Asia/Taipei',serviceWorkers:'block'});
@@ -69,7 +69,7 @@ jobs:
           if(errors.length)throw Error(errors.join(' | '));
           await b.close();
           JS
-          node /tmp/verify.mjs
+          node verify-prod.mjs
       - name: Commit repair
         run: |
           git config user.name 'github-actions[bot]'

@@ -1,0 +1,35 @@
+name: Probe HiStock intraday public data
+on:
+  push:
+    branches: ['prod-verify-no-yahoo-20261030']
+    paths: ['.github/workflows/probe-histock-intraday.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: 'prod-verify-no-yahoo-20261030'}
+      - name: Inspect page and JS references
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request,re,pathlib
+          u='https://histock.tw/stock/2330'
+          req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
+          with urllib.request.urlopen(req,timeout=25) as r: html=r.read().decode('utf-8','replace')
+          out=[f'len={len(html)}']
+          for pat in [r'<script[^>]+src=["\']([^"\']+)',r'https?://[^"\']+',r'[^"\']*(?:chart|trend|stock|kline)[^"\']*']:
+            vals=re.findall(pat,html,re.I)
+            out.extend([str(x)[:500] for x in vals[:120]])
+          for m in re.finditer(r'2330|走勢圖|StockChart|chartData|Highcharts|Ajax|ajax',html,re.I):
+            out.append(html[max(0,m.start()-300):m.start()+700])
+          pathlib.Path('probe-histock.txt').write_text('\n---\n'.join(out[:400]),encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add probe-histock.txt
+          git commit -m 'Record HiStock intraday probe' || true
+          git push origin HEAD:prod-verify-no-yahoo-20261030

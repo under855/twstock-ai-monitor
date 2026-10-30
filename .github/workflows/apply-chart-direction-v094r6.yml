@@ -50,7 +50,7 @@ jobs:
         run: |
           CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
           test -n "$CHROME"
-          echo "CHROME=$CHROME" >> "$GITHUB_ENV"
+          export CHROME
           npm install --no-save playwright-core@latest >/dev/null 2>&1
           python -m http.server 8000 >/tmp/http.log 2>&1 &
           sleep 2

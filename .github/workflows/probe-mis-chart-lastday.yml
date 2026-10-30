@@ -4,23 +4,52 @@ on:
     branches: ['prod-verify-no-yahoo-20261030']
     paths: ['.github/workflows/probe-mis-chart-lastday.yml']
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Probe listed OTC and index historical intraday endpoints
+      - uses: actions/checkout@v4
+        with: {ref: 'prod-verify-no-yahoo-20261030'}
+      - name: Probe and persist summary
         shell: bash
         run: |
-          set +e
-          ua='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/130 Safari/537.36'
-          for u in \
-            'https://mis.twse.com.tw/stock/api/getChartOhlcStatis.jsp?ex=tse&ch=tse_2330.tw&fqy=1&delay=0' \
-            'https://mis.twse.com.tw/stock/api/getChartOhlcStatis.jsp?ex=otc&ch=otc_3293.tw&fqy=1&delay=0' \
-            'https://www.twse.com.tw/exchangeReport/MI_5MINS_INDEX?response=json&date=20261030'; do
-            echo "=== $u ==="
-            curl -L --max-time 25 -A "$ua" -sS -D /tmp/h "$u" -o /tmp/b
-            head -20 /tmp/h
-            echo '--- body head ---'
-            head -c 12000 /tmp/b
-            echo
-          done
+          python - <<'PY'
+          import json, urllib.request, pathlib
+          ua={'User-Agent':'Mozilla/5.0'}
+          urls={
+            '2330':'https://mis.twse.com.tw/stock/api/getChartOhlcStatis.jsp?ex=tse&ch=tse_2330.tw&fqy=1&delay=0',
+            '3293':'https://mis.twse.com.tw/stock/api/getChartOhlcStatis.jsp?ex=otc&ch=otc_3293.tw&fqy=1&delay=0',
+            'taiex':'https://www.twse.com.tw/exchangeReport/MI_5MINS_INDEX?response=json&date=20261030'
+          }
+          out=[]
+          for k,u in urls.items():
+            try:
+              req=urllib.request.Request(u,headers=ua)
+              with urllib.request.urlopen(req,timeout=25) as r:
+                body=r.read().decode('utf-8-sig','replace')
+                out.append(f'[{k}] HTTP {r.status} len={len(body)}')
+                try:
+                  j=json.loads(body)
+                  out.append('keys='+','.join(j.keys()))
+                  if k=='taiex':
+                    data=j.get('data') or []
+                    out.append(f'data_count={len(data)} first={data[:2]} last={data[-2:] if data else []}')
+                  else:
+                    for key in ['ohlcArray','rtmessage','msgArray','data','infoArray']:
+                      v=j.get(key)
+                      if isinstance(v,list): out.append(f'{key}_count={len(v)} first={v[:2]} last={v[-2:] if v else []}')
+                    out.append('json_head='+body[:1200])
+                except Exception:
+                  out.append('body_head='+body[:1200])
+            except Exception as e:
+              out.append(f'ERR {e!r}')
+          pathlib.Path('probe-result.txt').write_text('\n'.join(out),encoding='utf-8')
+          print('\n'.join(out))
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add probe-result.txt
+          git commit -m 'Record official intraday endpoint probe' || true
+          git push origin HEAD:prod-verify-no-yahoo-20261030

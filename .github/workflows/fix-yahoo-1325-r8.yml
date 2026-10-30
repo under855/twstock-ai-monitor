@@ -1,0 +1,48 @@
+name: Fix Yahoo 13:25 anomaly r8
+on:
+  push:
+    branches: ['feature-chart-layout-v094r8-active']
+    paths: ['.github/workflows/fix-yahoo-1325-r8.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature-chart-layout-v094r8-active
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Apply anomaly filter
+        run: python .github/scripts/fix_yahoo_1325_r8.py
+      - name: Browser verify corrected minima
+        run: |
+          node --check extras-v090.js
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          test -n "$CHROME"; export CHROME
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          python -m http.server 8000 >/tmp/http.log 2>&1 &
+          node .github/scripts/verify_chart_layout_r8.mjs
+          cat > verify-min.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:1280,height:900},timezoneId:'Asia/Taipei',serviceWorkers:'block'});
+          await p.addInitScript(()=>localStorage.setItem('twAiWatchV3',JSON.stringify(['0050','3711','3293'])));
+          await p.goto('http://127.0.0.1:8000',{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForFunction(()=>document.querySelectorAll('#watch canvas.spark[data-today-full="1"]').length>=3,null,{timeout:45000});
+          const m=await p.evaluate(()=>Object.fromEntries([...document.querySelectorAll('#watch article.row')].map(r=>[r.querySelector('.sym')?.textContent?.trim(),r.querySelector('canvas.spark')?.dataset.todayMinTime])));
+          console.log('MIN_TIMES',JSON.stringify(m));
+          if(m['0050']!=='09:15'||m['3711']!=='09:00'||m['3293']!=='09:10')throw Error('unexpected minima after 13:25 filter');
+          await b.close();
+          JS
+          node verify-min.mjs
+      - name: Commit filter
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js
+          git commit -m 'Filter anomalous Yahoo 13:25 intraday bar'
+          git push origin HEAD:feature-chart-layout-v094r8-active

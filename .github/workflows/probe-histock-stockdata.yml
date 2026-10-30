@@ -1,0 +1,41 @@
+name: Probe HiStock stockdata endpoint
+on:
+  push:
+    branches: ['prod-verify-no-yahoo-20261030']
+    paths: ['.github/workflows/probe-histock-stockdata.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: 'prod-verify-no-yahoo-20261030'}
+      - name: Probe current-session stockdata for 3 cross-check stocks
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request,re,pathlib,json,http.cookiejar
+          ua='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/130 Safari/537.36'
+          out=[]
+          for code in ['2330','3711','3293']:
+            cj=http.cookiejar.CookieJar();op=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+            page=f'https://histock.tw/stock/{code}'
+            req=urllib.request.Request(page,headers={'User-Agent':ua})
+            html=op.open(req,timeout=25).read().decode('utf-8','replace')
+            m=re.search(r'window\.HiChartToken\s*=\s*\{\s*no:\s*"'+code+r'",\s*p:\s*"([^"]+)"',html)
+            token=m.group(1) if m else ''
+            for u in [f'https://histock.tw/stock/module/stockdata.aspx?no={code}',f'https://histock.tw/stock/module/stockdata.aspx?no={code}&p={token}']:
+              try:
+                r=op.open(urllib.request.Request(u,headers={'User-Agent':ua,'Referer':page,'Accept':'application/json,text/javascript,*/*;q=0.01','X-Requested-With':'XMLHttpRequest'}),timeout=25)
+                b=r.read().decode('utf-8','replace')
+                out.append(f'[{code}] token={bool(token)} URL={u}\nHTTP={r.status} len={len(b)}\n{b[:12000]}')
+              except Exception as e: out.append(f'[{code}] ERR {u} {e!r}')
+          pathlib.Path('probe-histock-stockdata.txt').write_text('\n\n---\n\n'.join(out),encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add probe-histock-stockdata.txt
+          git commit -m 'Record HiStock stockdata endpoint probe' || true
+          git push origin HEAD:prod-verify-no-yahoo-20261030

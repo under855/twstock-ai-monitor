@@ -1,0 +1,64 @@
+name: Apply chart color consistency
+on:
+  push:
+    branches: ['fix-chart-color-consistency-20261030']
+    paths: ['.github/workflows/apply-chart-color-consistency.yml','scripts/patch_chart_color_consistency.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-chart-color-consistency-20261030
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Apply patch
+        run: python scripts/patch_chart_color_consistency.py
+      - name: Static validation
+        shell: bash
+        run: |
+          node --check extras-v090.js
+          grep -F "canvas.dataset.trendColor=trend" extras-v090.js
+          grep -F "return 0;" extras-v090.js
+          grep -F 'extras-v090.js?v=095color1' index.html
+          grep -F "tw-ai-monitor-v095color1" sw.js
+          ! grep -F "fallback=d.at(-1).close-d[0].close" extras-v090.js
+      - name: Browser color acceptance
+        shell: bash
+        run: |
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); export CHROME
+          python -m http.server 8000 >/tmp/http.log 2>&1 &
+          cat > verify-color.mjs <<'JS'
+          import {chromium} from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:1280,height:1000},timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'block'});
+          const codes=['2330','009817','0050','3711','3293','2002','00878','00919'];
+          await p.addInitScript(c=>localStorage.setItem('twAiWatchV3',JSON.stringify(c)),codes);
+          await p.goto('http://127.0.0.1:8000/?colorqa='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForFunction(()=>[...document.querySelectorAll('#watch article.row canvas.spark')].filter(c=>c.dataset.trendColor).length>=8,null,{timeout:60000});
+          const got=await p.evaluate(()=>Object.fromEntries([...document.querySelectorAll('#watch article.row')].map(r=>[r.querySelector('.sym')?.textContent.trim(),{chg:r.querySelector('.chg')?.textContent.trim(),trend:r.querySelector('canvas.spark')?.dataset.trendColor,delta:r.querySelector('canvas.spark')?.dataset.trendChange}])));
+          console.log('COLORS',JSON.stringify(got));
+          const exp={'2330':'down','009817':'up','0050':'down','3711':'down','3293':'up','2002':'down','00878':'down','00919':'down'};
+          for(const [code,trend] of Object.entries(exp))if(got[code]?.trend!==trend)throw Error(`${code} expected ${trend}, got ${JSON.stringify(got[code])}`);
+          const row=p.locator('#watch article.row').filter({has:p.locator('.sym',{hasText:'3711'})}).first();await row.click();await p.waitForSelector('#sheet.show',{timeout:15000});
+          await p.waitForFunction(()=>document.getElementById('bigChart')?.dataset?.trendColor==='down',null,{timeout:30000});
+          let d=await p.evaluate(()=>({trend:bigChart.dataset.trendColor,delta:bigChart.dataset.trendChange,price:dPrice.textContent.trim(),points:bigChart.dataset.todayPoints}));console.log('DETAIL_BEFORE',JSON.stringify(d));
+          await p.waitForTimeout(18000);d=await p.evaluate(()=>({trend:bigChart.dataset.trendColor,delta:bigChart.dataset.trendChange,price:dPrice.textContent.trim(),points:bigChart.dataset.todayPoints}));console.log('DETAIL_AFTER',JSON.stringify(d));
+          if(d.trend!=='down'||d.price!=='668'||Number(d.points)<50)throw Error('detail color/persistence regression');
+          await b.close();
+          JS
+          node verify-color.mjs
+      - name: Commit runtime
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js index.html sw.js
+          git diff --cached --quiet && exit 0
+          git commit -m 'Use closing change consistently for chart colors'
+          git push origin HEAD:fix-chart-color-consistency-20261030

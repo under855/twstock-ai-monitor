@@ -8,13 +8,24 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Inspect JPX stock search JS
+      - name: Inspect JPX COVER result page
         shell: bash
         run: |
           set -e
           ua='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/130 Safari/537.36'
-          u='https://quote.jpx.co.jp/jpxhp/common/js/qc/pages/stock_search.js?20261015'
-          curl -L -A "$ua" -sS "$u" -o /tmp/stock_search.js
-          echo '=== size ==='; wc -c /tmp/stock_search.js
-          echo '=== content ==='
-          cat /tmp/stock_search.js
+          u='https://quote.jpx.co.jp/jpxhp/main/index.aspx?f=stock_list&key4=5253'
+          curl -L -A "$ua" -sS "$u" -o /tmp/cover.html
+          echo '=== size ==='; wc -c /tmp/cover.html
+          echo '=== matching lines ==='
+          grep -n -E '5253|COVER|カバー|現在値|株価|時刻|前日比|終値|1,5[0-9][0-9]|1,6[0-9][0-9]' /tmp/cover.html | head -120 || true
+          echo '=== title and nearby result table ==='
+          python - <<'PY'
+          from bs4 import BeautifulSoup
+          html=open('/tmp/cover.html',encoding='utf-8',errors='ignore').read()
+          s=BeautifulSoup(html,'html.parser')
+          print('TITLE',s.title.get_text(' ',strip=True) if s.title else '')
+          for tag in s.find_all(['tr','div','li','a']):
+              txt=' '.join(tag.stripped_strings)
+              if '5253' in txt or 'カバー' in txt or 'COVER' in txt:
+                  print('MATCH',txt[:1600])
+          PY

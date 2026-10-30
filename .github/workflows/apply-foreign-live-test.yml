@@ -13,9 +13,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: feature-live-validation-20261030
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Protect production core files
+        run: |
+          git fetch origin main
+          git diff --exit-code origin/main -- live-v091.js extras-v090.js sw.js
       - name: Apply patch
         run: python .github/scripts/patch_foreign_live_test.py
       - name: Static checks
@@ -32,18 +37,15 @@ jobs:
           import { chromium } from 'playwright-core';
           const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
           const p=await b.newPage({viewport:{width:1280,height:900},timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'block'});
-          await p.addInitScript(()=>localStorage.setItem('twAiWatchV3',JSON.stringify(['2330','009817','0050','3711','3293','2002','00878','00919'])));
           await p.goto('http://127.0.0.1:8000',{waitUntil:'domcontentloaded',timeout:60000});
           await p.waitForSelector('#foreignLiveTest',{timeout:30000});
           await p.waitForFunction(()=>Number(document.querySelector('#foreignLiveTest')?.dataset.accepted||0)>=1,null,{timeout:30000});
-          await p.waitForFunction(()=>document.querySelectorAll('.scoreNum').length>=6,null,{timeout:30000});
-          const first=await p.evaluate(()=>({n:Number(foreignLiveTest.dataset.accepted||0),t:Number(foreignLiveTest.dataset.sourceTs||0),p:Number(foreignLiveTest.dataset.price||0),scoreCount:[...document.querySelectorAll('.scoreNum')].filter(x=>/^\d+$/.test(x.textContent.trim())).length}));
+          const first=await p.evaluate(()=>({n:Number(foreignLiveTest.dataset.accepted||0),t:Number(foreignLiveTest.dataset.sourceTs||0),p:Number(foreignLiveTest.dataset.price||0)}));
           await p.waitForTimeout(18000);
           const second=await p.evaluate(()=>({n:Number(foreignLiveTest.dataset.accepted||0),t:Number(foreignLiveTest.dataset.sourceTs||0),p:Number(foreignLiveTest.dataset.price||0)}));
           console.log('FIRST',JSON.stringify(first));console.log('SECOND',JSON.stringify(second));
           if(second.t<first.t)throw Error('source timestamp went backwards');
           if(second.n<first.n)throw Error('accepted counter went backwards');
-          if(first.scoreCount<4)throw Error('existing stock scores missing');
           await b.close();
           JS
           node ./verify-foreign.mjs

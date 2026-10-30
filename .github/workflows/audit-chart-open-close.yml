@@ -1,0 +1,31 @@
+name: Audit chart open-close direction
+on:
+  push:
+    branches: ['audit-chart-direction-20261030']
+    paths: ['.github/workflows/audit-chart-open-close.yml']
+  workflow_dispatch:
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Audit retained chart against official daily OHLC
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, urllib.request
+          codes=['2330','009817','0050','3711','3293','2002','00878','00919']
+          def get(u):
+            req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
+            with urllib.request.urlopen(req,timeout=30) as r:return json.load(r)
+          intr=get('https://raw.githubusercontent.com/under855/twstock-ai-monitor/market-data/data/intraday/latest.json')
+          latest=get('https://raw.githubusercontent.com/under855/twstock-ai-monitor/main/data/latest.json')
+          print('session',intr.get('date'),'source',intr.get('source'))
+          for c in codes:
+            a=intr.get('stocks',{}).get(c,[])
+            if not a:
+              print(c,'NO_CHART');continue
+            first=a[0];last=a[-1]
+            sym=latest.get('symbols',{}).get(c,{})
+            oo=sym.get('open'); cc=sym.get('close'); ch=sym.get('change'); td=sym.get('tradeDate')
+            print(c,'chart_first',first.get('time'),first.get('close'),'chart_last',last.get('time'),last.get('close'),'official_date',td,'official_open',oo,'official_close',cc,'official_change',ch,'chart_open_to_close',round(float(last.get('close'))-float(first.get('close')),4),'daily_vs_prev',ch)
+          PY

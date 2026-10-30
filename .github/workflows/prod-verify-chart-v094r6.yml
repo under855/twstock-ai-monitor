@@ -1,4 +1,4 @@
-name: Production chart verification v0.9.4r6
+name: Production chart verification v0.9.4r7
 on:
   push:
     branches: ['prod-verify-chart-v094r6']
@@ -12,44 +12,45 @@ jobs:
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify deployed assets
+      - name: Verify deployed r7 assets
         run: |
           SITE='https://under855.github.io/twstock-ai-monitor'
           curl -fsSL "$SITE/?v=$RANDOM" -o /tmp/index.html
           curl -fsSL "$SITE/extras-v090.js?v=$RANDOM" -o /tmp/extras.js
+          curl -fsSL "$SITE/live-v091.js?v=$RANDOM" -o /tmp/live.js
           curl -fsSL "$SITE/sw.js?v=$RANDOM" -o /tmp/sw.js
-          grep -F './extras-v090.js?v=094r6' /tmp/index.html
-          grep -F "const CACHE='tw-ai-monitor-v094r6';" /tmp/sw.js
-          test "$(sha256sum extras-v090.js|cut -d' ' -f1)" = "$(sha256sum /tmp/extras.js|cut -d' ' -f1)"
-      - name: Browser verify production
+          grep -F './extras-v090.js?v=094r7' /tmp/index.html
+          grep -F './live-v091.js?v=094r7' /tmp/index.html
+          grep -F "const CACHE='tw-ai-monitor-v094r7';" /tmp/sw.js
+          grep -F '__TW_DRAW_MAIN_TODAY__' /tmp/extras.js
+          grep -F '__TW_DRAW_MAIN_TODAY__' /tmp/live.js
+      - name: Browser verify production before and after live repaint
         run: |
           CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
-          test -n "$CHROME"
-          export CHROME
+          test -n "$CHROME"; export CHROME
           npm install --no-save playwright-core@latest >/dev/null 2>&1
-          cat > verify-prod-chart.mjs <<'JS'
+          cat > verify-prod-r7.mjs <<'JS'
           import { chromium } from 'playwright-core';
           const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
-          const p=await b.newPage({viewport:{width:390,height:844},locale:'zh-TW',timezoneId:'Asia/Taipei',serviceWorkers:'block'});
+          const p=await b.newPage({viewport:{width:1280,height:900},locale:'zh-TW',timezoneId:'Asia/Taipei',serviceWorkers:'block'});
+          const codes=['2330','009817','0050','3711','3293','2002','00878','00919'];
+          await p.addInitScript(codes=>localStorage.setItem('twAiWatchV3',JSON.stringify(codes)),codes);
           const errors=[];p.on('pageerror',e=>errors.push(e.message));
-          await p.goto('https://under855.github.io/twstock-ai-monitor/?verify='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
-          await p.waitForFunction(()=>window.__TW_EXTRAS_V090__?.ok===true,null,{timeout:30000});
-          await p.waitForFunction(()=>document.querySelectorAll('#watch article.row').length>=6,null,{timeout:60000});
-          await p.waitForTimeout(15000);
-          const rows=await p.evaluate(()=>[...document.querySelectorAll('#watch article.row')].map(x=>({code:x.querySelector('.sym')?.textContent?.trim(),canvas:!!x.querySelector('canvas.spark'),fallback:!!x.querySelector('.sparkFallback'),price:x.querySelector('.price')?.textContent?.trim()})));
-          console.log('ROWS',JSON.stringify(rows));
-          if(rows.some(x=>!x.canvas||x.fallback))throw Error('missing main today canvas');
-          const row=p.locator('#watch article.row').filter({has:p.locator('.sym',{hasText:'2002'})}).first();
-          await row.click();
-          await p.waitForSelector('#sheet.show',{timeout:15000});
-          await p.waitForFunction(()=>document.getElementById('chartMsg')?.textContent?.includes('5 分鐘資料點'),null,{timeout:30000});
-          const detail=await p.evaluate(()=>({title:document.getElementById('dTitle')?.textContent?.trim(),msg:document.getElementById('chartMsg')?.textContent?.trim(),tabs:[...document.querySelectorAll('#detailChartTabs button')].map(x=>x.textContent.trim())}));
-          console.log('DETAIL_2002',JSON.stringify(detail));
-          if(!['今日','5日','20日','60日'].every(x=>detail.tabs.includes(x)))throw Error('detail chart tabs missing');
+          await p.goto('https://under855.github.io/twstock-ai-monitor/?r7prod='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForFunction(()=>document.querySelectorAll('#watch article.row').length>=8,null,{timeout:60000});
+          await p.waitForFunction(()=>[...document.querySelectorAll('#watch canvas.spark')].filter(c=>c.dataset.todayFull==='1').length>=8,null,{timeout:45000});
+          const read=()=>p.evaluate(()=>[...document.querySelectorAll('#watch article.row')].map(r=>{const c=r.querySelector('canvas.spark');return {code:r.querySelector('.sym')?.textContent?.trim(),full:c?.dataset.todayFull,points:Number(c?.dataset.todayPoints||0),start:c?.dataset.todayStart,end:c?.dataset.todayEnd,text:c?.getAttribute('data-live-state')||'',price:r.querySelector('.price')?.textContent?.trim()}}));
+          const first=await read();console.log('PROD_FIRST',JSON.stringify(first));
+          if(first.some(x=>x.full!=='1'||x.points<2||x.start!=='09:00'||x.end>'13:30'))throw Error('production full-day chart invalid before live repaint');
+          await p.waitForTimeout(18000);
+          const second=await read();console.log('PROD_AFTER_18S',JSON.stringify(second));
+          if(second.some(x=>x.full!=='1'||x.points<2||x.start!=='09:00'||x.end>'13:30'))throw Error('production full-day chart overwritten by live repaint');
           if(errors.length)throw Error(errors.join(' | '));
           await b.close();
           JS
-          node verify-prod-chart.mjs
+          node verify-prod-r7.mjs

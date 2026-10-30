@@ -56,7 +56,7 @@ jobs:
           await p.waitForTimeout(3000);
           const snap=()=>p.evaluate(()=>({
             rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent.trim(),price:r.querySelector('.price')?.textContent.trim(),score:r.querySelector('.scoreNum')?.textContent.trim(),points:Number(r.querySelector('canvas.spark')?.dataset?.todayPoints||0),session:r.querySelector('canvas.spark')?.dataset?.sessionDate||'',width:r.querySelector('canvas.spark')?.getBoundingClientRect().width||0})),
-            taiex:{value:document.getElementById('taiex')?.textContent.trim(),points:Number(taiexChart.dataset.todayPoints||0),session:taiexChart.dataset.sessionDate||'',msg:taiexChartMsg.textContent.trim()},errors
+            taiex:{value:document.getElementById('taiex')?.textContent.trim(),points:Number(document.getElementById('taiexChart')?.dataset?.todayPoints||0),session:document.getElementById('taiexChart')?.dataset?.sessionDate||'',msg:document.getElementById('taiexChartMsg')?.textContent.trim()}
           }));
           let s=await snap();console.log('BEFORE',JSON.stringify(s));
           if(s.rows.length!==8||s.rows.some(x=>x.points<50||x.session!=='2026-10-30'||x.width<200||x.width>530))throw Error('stock chart/session/width regression');
@@ -66,8 +66,9 @@ jobs:
           if(s.rows.some(x=>x.points<50||x.session!=='2026-10-30'))throw Error('15s repaint erased latest session');
           const r3711=s.rows.find(x=>x.code==='3711');if(!r3711||r3711.price!=='668')throw Error('3711 quote regression');
           const row=p.locator('#watch article.row').filter({has:p.locator('.sym',{hasText:'3711'})}).first();await row.click();await p.waitForSelector('#sheet.show',{timeout:15000});await p.waitForTimeout(3500);
-          const d=await p.evaluate(()=>({price:dPrice.textContent.trim(),news:document.querySelectorAll('#news .event').length,tabs:[...document.querySelectorAll('#detailChartTabs button')].map(x=>x.textContent.trim())}));console.log('DETAIL',JSON.stringify(d));
+          const d=await p.evaluate(()=>({price:document.getElementById('dPrice')?.textContent.trim(),news:document.querySelectorAll('#news .event').length,tabs:[...document.querySelectorAll('#detailChartTabs button')].map(x=>x.textContent.trim())}));console.log('DETAIL',JSON.stringify(d));
           if(d.price!=='668'||d.news<1||!['今日','5日','20日','60日'].every(x=>d.tabs.includes(x)))throw Error('detail regression');
+          if(errors.length)throw Error(errors.join(' | '));
           await b.close();
           JS
           node verify-latest-session.mjs

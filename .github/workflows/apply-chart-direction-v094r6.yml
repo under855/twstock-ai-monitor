@@ -2,7 +2,8 @@ name: Apply chart direction repair v0.9.4r6
 on:
   push:
     branches: ['fix-chart-direction-v094r6']
-    paths: ['.github/workflows/apply-chart-direction-v094r6.yml']
+    paths:
+      - '.github/workflows/apply-chart-direction-v094r6.yml'
   workflow_dispatch:
 permissions:
   contents: write
@@ -15,180 +16,32 @@ jobs:
         with:
           fetch-depth: 0
       - name: Preserve market core
-        run: |
-          sha256sum live-v091.js scripts/update_latest.py data/latest.json > /tmp/core.before
-      - name: Patch chart display only
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-          p=Path('extras-v090.js')
-          s=p.read_text(encoding='utf-8')
-
-          old="""  async function yahooTodayIntraday(code){
-    let market='';try{market=String(universeMap?.get?.(String(code))?.market||'')}catch{}
-    const symbols=market==='TPEx'?[`${code}.TWO`]:market==='TWSE'?[`${code}.TW`]:[`${code}.TW`,`${code}.TWO`];
-    const today=new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});
-    for(const symbol of symbols){
-      const upstream=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=1d&interval=5m&includePrePost=false&_=${Date.now()}`;
-      for(const url of [`https://proxy.cors.dev/${upstream}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(upstream)}`]){
-        try{const j=await fetchJson(url,7000),r=j?.chart?.result?.[0],ts=r?.timestamp||[],q=r?.indicators?.quote?.[0]||{},out=[];for(let i=0;i<ts.length;i++){const close=Number(q.close?.[i]);if(!Number.isFinite(close))continue;const d=new Date(Number(ts[i])*1000),day=d.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});if(day!==today)continue;out.push({time:d,close});}if(out.length>=2)return out;}catch{}
-      }
-    }
-    return [];
-  }
-
-  const todayFallbackCache=new Map();
-  async function ensureTodayChartFor(code){
-    const key=String(code);if(mainLivePoints(key)>=2)return [];
-    if(todayFallbackCache.has(key))return await todayFallbackCache.get(key);
-    const p=yahooTodayIntraday(key).then(points=>{const r=rowFor(key),c=r?.querySelector('canvas.spark');if(c&&points.length>=2&&typeof draw==='function')draw(c,points.map(x=>({date:x.time,close:x.close})),true,priceFor(key));return points}).catch(()=>[]);
-    todayFallbackCache.set(key,p);return await p;
-  }
-  async function refreshTodayFallbackCharts(){
-    if(typeof watchlist!=='function')return false;const codes=[...new Set(watchlist().map(String))];await Promise.allSettled(codes.map(ensureTodayChartFor));return true;
-  }
-"""
-          assert old in s, 'today fallback block changed unexpectedly'
-          new="""  function chartStamp(v){
-    if(v instanceof Date)return v.getTime();
-    if(typeof v==='number'&&Number.isFinite(v))return v;
-    const raw=String(v||'').trim();if(!raw)return null;
-    const ms=Date.parse(raw.replaceAll('/','-'));return Number.isFinite(ms)?ms:null;
-  }
-  function chronologicalPoints(data){
-    return (Array.isArray(data)?data:[]).map((x,i)=>({x,i,t:chartStamp(x?.date??x?.time??x?.stamp)})).sort((a,b)=>{
-      if(a.t==null&&b.t==null)return a.i-b.i;if(a.t==null)return 1;if(b.t==null)return -1;return a.t-b.t||a.i-b.i;
-    }).map(o=>o.x);
-  }
-  function installChronologicalDraw(){
-    if(typeof draw!=='function')return false;if(draw.__chronologicalV094r6)return true;
-    const base=draw,wrapped=function(canvas,data,compact=false,currentPrice=null){return base(canvas,chronologicalPoints(data),compact,currentPrice)};
-    wrapped.__chronologicalV094r6=true;draw=wrapped;return true;
-  }
-  function mainCanvasFor(code){
-    const r=rowFor(code);if(!r)return null;let c=r.querySelector('canvas.spark');if(c)return c;
-    const f=r.querySelector('.sparkFallback');if(!f)return null;c=document.createElement('canvas');c.className='spark';f.replaceWith(c);return c;
-  }
-  function liveTodayPrice(code){
-    try{const x=window.__TW_LIVE_V091__?.stocks?.[String(code)];return x?.date===new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}).replaceAll('-','')&&Number.isFinite(Number(x?.price))?Number(x.price):null}catch{return null}
-  }
-  function drawTodayPoints(code,points,canvas,compact){
-    if(!canvas||!Array.isArray(points)||points.length<2||typeof draw!=='function')return false;
-    draw(canvas,chronologicalPoints(points).map(x=>({date:x.time,close:x.close})),compact,liveTodayPrice(code));return true;
-  }
-
-  async function yahooTodayIntraday(code){
-    let market='';try{market=String(universeMap?.get?.(String(code))?.market||'')}catch{}
-    const symbols=market==='TPEx'?[`${code}.TWO`]:market==='TWSE'?[`${code}.TW`]:[`${code}.TW`,`${code}.TWO`];
-    const today=new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});
-    for(const symbol of symbols){
-      const upstream=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=1d&interval=5m&includePrePost=false&_=${Date.now()}`;
-      for(const url of [`https://proxy.cors.dev/${upstream}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(upstream)}`]){
-        try{
-          const j=await fetchJson(url,7000),r=j?.chart?.result?.[0],ts=r?.timestamp||[],q=r?.indicators?.quote?.[0]||{},byTime=new Map();
-          for(let i=0;i<ts.length;i++){const close=Number(q.close?.[i]);if(!Number.isFinite(close))continue;const d=new Date(Number(ts[i])*1000),day=d.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});if(day!==today)continue;byTime.set(d.getTime(),{time:d,close})}
-          const out=[...byTime.values()].sort((a,b)=>a.time-b.time);if(out.length>=2)return out;
-        }catch{}
-      }
-    }
-    return [];
-  }
-
-  const todayFallbackCache=new Map(),todayFallbackResolved=new Map();
-  async function ensureTodayChartFor(code,force=false){
-    const key=String(code),cached=todayFallbackResolved.get(key),now=Date.now();
-    if(!force&&cached?.points?.length>=2&&now-cached.fetchedAt<300000){drawTodayPoints(key,cached.points,mainCanvasFor(key),true);return cached.points}
-    if(todayFallbackCache.has(key))return await todayFallbackCache.get(key);
-    const p=yahooTodayIntraday(key).then(points=>{
-      todayFallbackCache.delete(key);
-      if(points.length>=2){todayFallbackResolved.set(key,{points,fetchedAt:Date.now()});drawTodayPoints(key,points,mainCanvasFor(key),true)}
-      return points;
-    }).catch(()=>{todayFallbackCache.delete(key);return []});
-    todayFallbackCache.set(key,p);return await p;
-  }
-  async function refreshTodayFallbackCharts(force=false){
-    if(typeof watchlist!=='function')return false;const codes=[...new Set(watchlist().map(String))];await Promise.allSettled(codes.map(code=>ensureTodayChartFor(code,force)));return true;
-  }
-"""
-          s=s.replace(old,new,1)
-
-          old2="""  function enforceTodayOnlyMainCharts(){
-    if(typeof watchlist!=='function')return false;
-    for(const code of [...new Set(watchlist().map(String))]){
-      const r=rowFor(code);if(!r)continue;if(mainLivePoints(code)>=2)continue;
-      const c=r.querySelector('canvas.spark');if(!c)continue;
-      const f=document.createElement('div');f.className='sparkFallback';f.innerHTML='今日走勢<br>等待即時資料';c.replaceWith(f);
-    }
-    return true;
-  }
-  function startTodayOnlyMainCharts(){
-    let timer=null;const run=()=>enforceTodayOnlyMainCharts(),watch=document.getElementById('watch');
-    if(watch)new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(run,80)}).observe(watch,{childList:true,subtree:true});
-    setTimeout(run,150);setTimeout(run,900);setTimeout(run,2500);setInterval(run,5000);return true;
-  }
-"""
-          assert old2 in s, 'main chart enforcement block changed unexpectedly'
-          new2="""  function enforceTodayOnlyMainCharts(){
-    if(typeof watchlist!=='function')return false;
-    for(const code of [...new Set(watchlist().map(String))]){
-      const cached=todayFallbackResolved.get(String(code));
-      if(cached?.points?.length>=2)drawTodayPoints(String(code),cached.points,mainCanvasFor(String(code)),true);
-      else ensureTodayChartFor(String(code)).catch(()=>{});
-    }
-    return true;
-  }
-  function startTodayOnlyMainCharts(){
-    let timer=null;const run=()=>enforceTodayOnlyMainCharts(),watch=document.getElementById('watch');
-    if(watch)new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(run,80)}).observe(watch,{childList:true,subtree:true});
-    setTimeout(run,150);setTimeout(run,900);setTimeout(run,2500);setInterval(run,15000);setInterval(()=>refreshTodayFallbackCharts(true).catch(()=>{}),300000);return true;
-  }
-"""
-          s=s.replace(old2,new2,1)
-
-          oldboot="""  function boot(){
-    if(!installFuzzySearch())setTimeout(installFuzzySearch,0);
-    if(!installNews())setTimeout(installNews,0);
-    if(!installDetailChartTabs())setTimeout(installDetailChartTabs,0);
-    refreshWatchHistoryAndScores().then(()=>refreshTodayFallbackCharts()).catch(()=>{});
-"""
-          assert oldboot in s, 'boot block changed unexpectedly'
-          newboot="""  function boot(){
-    if(!installChronologicalDraw())setTimeout(installChronologicalDraw,0);
-    if(!installFuzzySearch())setTimeout(installFuzzySearch,0);
-    if(!installNews())setTimeout(installNews,0);
-    if(!installDetailChartTabs())setTimeout(installDetailChartTabs,0);
-    refreshWatchHistoryAndScores().then(()=>refreshTodayFallbackCharts(true)).catch(()=>{});
-"""
-          s=s.replace(oldboot,newboot,1)
-          p.write_text(s,encoding='utf-8')
-
-          p=Path('index.html'); s=p.read_text(encoding='utf-8'); s=re.sub(r'./extras-v090\.js\?v=[^\"\']+', './extras-v090.js?v=094r6', s); p.write_text(s,encoding='utf-8')
-          p=Path('sw.js'); s=p.read_text(encoding='utf-8'); s=re.sub(r"const CACHE='[^']+';", "const CACHE='tw-ai-monitor-v094r6';", s, count=1); p.write_text(s,encoding='utf-8')
-          PY
+        run: sha256sum live-v091.js scripts/update_latest.py data/latest.json > /tmp/core.before
+      - name: Apply isolated chart patch
+        run: python scripts/patch_chart_direction_v094r6.py
       - name: Static verification
         run: |
           node --check extras-v090.js
           grep -F 'installChronologicalDraw' extras-v090.js
           grep -F 'todayFallbackResolved' extras-v090.js
-          grep -F 'setInterval(()=>refreshTodayFallbackCharts(true).catch(()=>{}),300000)' extras-v090.js
+          grep -F 'refreshTodayFallbackCharts(true)' extras-v090.js
           grep -F './extras-v090.js?v=094r6' index.html
           grep -F "const CACHE='tw-ai-monitor-v094r6';" sw.js
           sha256sum live-v091.js scripts/update_latest.py data/latest.json > /tmp/core.after
           diff -u /tmp/core.before /tmp/core.after
-      - name: Verify current intraday payload ordering
+      - name: Verify current intraday payloads
         run: |
           python - <<'PY'
-          import json, urllib.request, urllib.parse, datetime
+          import json, urllib.request
           syms=['0050.TW','3711.TW','3293.TWO','2002.TW','00878.TW','00919.TW']
           for sym in syms:
               upstream=f'https://query1.finance.yahoo.com/v8/finance/chart/{sym}?range=1d&interval=5m&includePrePost=false'
-              url='https://proxy.cors.dev/'+upstream
-              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+              req=urllib.request.Request('https://proxy.cors.dev/'+upstream,headers={'User-Agent':'Mozilla/5.0'})
               with urllib.request.urlopen(req,timeout=20) as r: j=json.load(r)
-              x=j['chart']['result'][0]; ts=x.get('timestamp') or []; close=(x.get('indicators',{}).get('quote') or [{}])[0].get('close') or []
-              pts=[(int(t),float(c)) for t,c in zip(ts,close) if c is not None]
-              pts=sorted(dict(pts).items())
+              x=j['chart']['result'][0]
+              ts=x.get('timestamp') or []
+              close=(x.get('indicators',{}).get('quote') or [{}])[0].get('close') or []
+              pts=sorted(dict((int(t),float(c)) for t,c in zip(ts,close) if c is not None).items())
               assert len(pts)>=2,(sym,len(pts))
               assert all(pts[i][0]<pts[i+1][0] for i in range(len(pts)-1))
               print(sym,'points',len(pts),'first',pts[0][1],'last',pts[-1][1],'net',round(pts[-1][1]-pts[0][1],2))
@@ -200,21 +53,20 @@ jobs:
           echo "CHROME=$CHROME" >> "$GITHUB_ENV"
           npm install --no-save playwright-core@latest >/dev/null 2>&1
           python -m http.server 8000 >/tmp/http.log 2>&1 &
-          echo $! > /tmp/http.pid
           sleep 2
           cat > /tmp/verify.mjs <<'JS'
           import { chromium } from 'playwright-core';
           const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
           const p=await b.newPage({viewport:{width:390,height:844},locale:'zh-TW',timezoneId:'Asia/Taipei',serviceWorkers:'block'});
-          const errs=[];p.on('pageerror',e=>errs.push(e.message));
+          const errors=[];p.on('pageerror',e=>errors.push(e.message));
           await p.goto('http://127.0.0.1:8000/?v='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
           await p.waitForFunction(()=>window.__TW_EXTRAS_V090__?.ok===true,null,{timeout:30000});
           await p.waitForFunction(()=>document.querySelectorAll('#watch article.row').length>=6,null,{timeout:60000});
           await p.waitForTimeout(12000);
-          const r=await p.evaluate(()=>[...document.querySelectorAll('#watch article.row')].map(x=>({code:x.querySelector('.sym')?.textContent?.trim(),canvas:!!x.querySelector('canvas.spark'),fallback:!!x.querySelector('.sparkFallback')})));
-          console.log('MAIN_CHART_DOM',JSON.stringify(r));
-          if(r.some(x=>!x.canvas||x.fallback))throw Error('main chart canvas missing');
-          if(errs.length)throw Error(errs.join(' | '));
+          const rows=await p.evaluate(()=>[...document.querySelectorAll('#watch article.row')].map(x=>({code:x.querySelector('.sym')?.textContent?.trim(),canvas:!!x.querySelector('canvas.spark'),fallback:!!x.querySelector('.sparkFallback')})));
+          console.log('MAIN_CHART_DOM',JSON.stringify(rows));
+          if(rows.some(x=>!x.canvas||x.fallback))throw Error('main chart canvas missing');
+          if(errors.length)throw Error(errors.join(' | '));
           await b.close();
           JS
           node /tmp/verify.mjs

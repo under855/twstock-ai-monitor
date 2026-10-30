@@ -1,0 +1,80 @@
+name: Production no-Yahoo verification
+on:
+  push:
+    branches: ['prod-verify-no-yahoo-20261030']
+    paths: ['.github/workflows/prod-verify-no-yahoo.yml']
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Wait for production assets
+        shell: bash
+        run: |
+          SITE='https://under855.github.io/twstock-ai-monitor'
+          for i in $(seq 1 60); do
+            html=$(curl -fsSL "$SITE/?_=$RANDOM" || true)
+            extras=$(curl -fsSL "$SITE/extras-v090.js?_=$RANDOM" || true)
+            foreign=$(curl -fsSL "$SITE/foreign-live-test.js?_=$RANDOM" || true)
+            sw=$(curl -fsSL "$SITE/sw.js?_=$RANDOM" || true)
+            if echo "$html" | grep -q 'extras-v090.js?v=095official1' && echo "$foreign" | grep -q 'api.nasdaq.com/api/quote/NVDA/info' && echo "$foreign" | grep -q 'kabutan.jp/stock/?code=5253' && echo "$sw" | grep -q 'tw-ai-monitor-v095official1'; then
+              printf '%s' "$extras" > /tmp/extras.js
+              printf '%s' "$foreign" > /tmp/foreign.js
+              printf '%s' "$html" > /tmp/index.html
+              printf '%s' "$sw" > /tmp/sw.js
+              echo 'new production assets visible'; exit 0
+            fi
+            sleep 5
+          done
+          echo 'production assets did not update'; exit 1
+      - name: Production source audit
+        shell: bash
+        run: |
+          ! grep -Eqi 'query1\.finance\.yahoo|finance\.yahoo|0700\.HK|騰訊' /tmp/extras.js /tmp/foreign.js /tmp/index.html
+          grep -F 'www.twse.com.tw/exchangeReport/STOCK_DAY' /tmp/extras.js
+          grep -F 'www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock' /tmp/extras.js
+          grep -F 'api.nasdaq.com/api/quote/NVDA/info' /tmp/foreign.js
+          grep -F 'kabutan.jp/stock/?code=5253' /tmp/foreign.js
+      - name: Browser production acceptance
+        shell: bash
+        run: |
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); test -n "$CHROME"; export CHROME
+          cat > verify.mjs <<'JS'
+          import {chromium} from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:1280,height:1000},timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'block'});
+          const codes=['2330','009817','0050','3711','3293','2002','00878','00919'];
+          const errors=[];p.on('pageerror',e=>errors.push(e.message));
+          await p.addInitScript(c=>localStorage.setItem('twAiWatchV3',JSON.stringify(c)),codes);
+          await p.goto('https://under855.github.io/twstock-ai-monitor/?officialqa='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForFunction(()=>document.querySelectorAll('#watch article.row').length>=8,null,{timeout:60000});
+          await p.waitForSelector('#nvdaValidation',{timeout:30000});await p.waitForSelector('#coverValidation',{timeout:30000});
+          await p.waitForFunction(()=>document.querySelector('#nvdaValidation')?.dataset?.price,null,{timeout:30000});
+          await p.waitForFunction(()=>document.querySelector('#coverValidation')?.dataset?.price,null,{timeout:30000});
+          await p.waitForTimeout(7000);
+          const state=await p.evaluate(()=>({
+            nvda:{price:nvdaValidation.dataset.price,rt:nvdaValidation.dataset.realTime,time:nvdaValidation.dataset.sourceTime,status:document.getElementById('nvdaStatus')?.textContent},
+            cover:{price:coverValidation.dataset.price,rt:coverValidation.dataset.realTime,time:coverValidation.dataset.sourceTime,status:document.getElementById('coverStatus')?.textContent},
+            rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent.trim(),price:r.querySelector('.price')?.textContent.trim(),score:r.querySelector('.scoreNum')?.textContent.trim(),chart:r.querySelector('canvas.spark')?.dataset?.todayPoints||null})),
+            taiex:document.getElementById('taiex')?.textContent.trim(),
+            taiexChartMsg:document.getElementById('taiexChartMsg')?.textContent.trim(),
+            errors:[]
+          }));
+          console.log('STATE',JSON.stringify(state));
+          if(state.nvda.rt!=='true'||!state.nvda.price)throw Error('NVDA validation failed');
+          if(state.cover.rt!=='false'||!/15/.test(state.cover.status||'')||!state.cover.price)throw Error('COVER delayed validation failed');
+          const r3711=state.rows.find(x=>x.code==='3711');if(!r3711||r3711.price!=='668')throw Error('3711 quote regressed '+JSON.stringify(r3711));
+          if(state.rows.filter(x=>/^\d+$/.test(x.score||'')).length<5)throw Error('scores regressed');
+          const row=p.locator('#watch article.row').filter({has:p.locator('.sym',{hasText:'3711'})}).first();await row.click();await p.waitForSelector('#sheet.show',{timeout:15000});await p.waitForTimeout(3500);
+          const detail=await p.evaluate(()=>({price:document.getElementById('dPrice')?.textContent.trim(),news:document.querySelectorAll('#news .event').length,tabs:[...document.querySelectorAll('#detailChartTabs button')].map(x=>x.textContent.trim()),chartMsg:document.getElementById('chartMsg')?.textContent.trim()}));
+          console.log('DETAIL',JSON.stringify(detail));
+          if(detail.price!=='668')throw Error('detail quote regressed');
+          if(detail.news<1)throw Error('news regressed');
+          if(!['今日','5日','20日','60日'].every(x=>detail.tabs.includes(x)))throw Error('detail tabs regressed');
+          if(errors.length)throw Error(errors.join(' | '));
+          await b.close();
+          JS
+          node verify.mjs

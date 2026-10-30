@@ -1,0 +1,80 @@
+name: Apply latest-session chart repair v4
+on:
+  push:
+    branches: ['fix-latest-session-charts-20261030']
+    paths: ['.github/workflows/apply-latest-session-charts-v4.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: 'fix-latest-session-charts-20261030', fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Apply repair and remove Yahoo quote fallback
+        shell: bash
+        run: |
+          mkdir -p scripts
+          curl -fsSL 'https://raw.githubusercontent.com/under855/twstock-ai-monitor/prod-verify-no-yahoo-20261030/scripts/patch_last_session_charts.py' -o scripts/.patch.py
+          python scripts/.patch.py
+          rm scripts/.patch.py
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index.html');s=p.read_text(encoding='utf-8')
+          s,n1=re.subn(r'async function yahooQuote\(symbol\)\{[^\n]*\}\n','',s,count=1)
+          s,n2=re.subn(r'async function yahooDaily\(symbol\)\{[^\n]*\}\n','',s,count=1)
+          old=" for(const suffix of ['.TW','.TWO']){try{const q=await yahooQuote(code+suffix);quoteCache[code]=q;return q}catch{} try{const q=await yahooDaily(code+suffix);quoteCache[code]=q;return q}catch{}}\n"
+          if old in s:s=s.replace(old,'',1)
+          else: raise SystemExit('Yahoo quote call loop not found')
+          if n1!=1 or n2!=1: raise SystemExit(f'Yahoo function removal mismatch {n1=} {n2=}')
+          p.write_text(s,encoding='utf-8')
+          PY
+          node --check extras-v090.js
+          node --check live-v091.js
+          grep -F 'MI_5MINS_INDEX' extras-v090.js >/dev/null
+          grep -F 'officialLatestIntraday' extras-v090.js >/dev/null
+          grep -F '最近交易日' index.html >/dev/null
+          if grep -Eqi 'query1\.finance\.yahoo|finance\.yahoo|0700\.HK|騰訊|yahooQuote|yahooDaily' extras-v090.js live-v091.js index.html foreign-live-test.js; then echo 'Forbidden source remains'; grep -Ein 'query1\.finance\.yahoo|finance\.yahoo|0700\.HK|騰訊|yahooQuote|yahooDaily' extras-v090.js live-v091.js index.html foreign-live-test.js; exit 1; fi
+          grep -F "tw-ai-monitor-v095session1" sw.js >/dev/null
+      - name: Browser acceptance
+        shell: bash
+        run: |
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); export CHROME
+          python -m http.server 8000 >/tmp/http.log 2>&1 &
+          cat > test-session.mjs <<'JS'
+          import {chromium} from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:1280,height:1000},timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'block'});
+          const codes=['2330','009817','0050','3711','3293','2002','00878','00919'],date='2026-10-29';
+          const mk=(base)=>Array.from({length:55},(_,i)=>{const n=i*5,h=9+Math.floor(n/60),m=n%60;return {stamp:Date.parse(`${date}T${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:00+08:00`),close:base+(i%7-3)*0.5,source:'TWSE MIS'}});
+          await p.route('**/market-data/data/intraday/latest.json*',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify({date,stocks:{2330:mk(2415),'009817':mk(8.59),'0050':mk(107.25),3711:mk(683),3293:mk(808),2002:mk(19.45),'00878':mk(35.3),'00919':mk(32.87)},taiex:mk(46368)})}));
+          await p.addInitScript(c=>localStorage.setItem('twAiWatchV3',JSON.stringify(c)),codes);
+          const errs=[];p.on('pageerror',e=>errs.push(e.message));
+          await p.goto('http://127.0.0.1:8000/?qa='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForFunction(()=>document.querySelectorAll('#watch article.row').length>=8,null,{timeout:30000});
+          await p.waitForTimeout(6500);
+          const get=()=>p.evaluate(()=>({rows:[...document.querySelectorAll('#watch article.row')].map(r=>({c:r.querySelector('.sym')?.textContent.trim(),p:Number(r.querySelector('canvas.spark')?.dataset?.todayPoints||0),d:r.querySelector('canvas.spark')?.dataset?.sessionDate||'',w:r.querySelector('canvas.spark')?.getBoundingClientRect().width||0})),idx:{p:Number(taiexChart.dataset.todayPoints||0),d:taiexChart.dataset.sessionDate||'',m:taiexChartMsg.textContent.trim()}}));
+          let s=await get();console.log('BEFORE',JSON.stringify(s));
+          if(errs.length)throw Error('page errors: '+errs.join(' | '));
+          if(s.rows.some(x=>x.p<2||x.d!==date||x.w>530||x.w<200))throw Error('stock latest-session chart failed');
+          if(s.idx.p<2||s.idx.d!==date)throw Error('TAIEX latest-session chart failed '+JSON.stringify(s.idx));
+          await p.waitForTimeout(18000);s=await get();console.log('AFTER',JSON.stringify(s));
+          if(s.rows.some(x=>x.p<2||x.d!==date))throw Error('15s repaint erased chart');
+          await b.close();
+          JS
+          node test-session.mjs
+          rm test-session.mjs
+      - name: Commit runtime
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js live-v091.js index.html sw.js
+          git diff --cached --quiet && exit 0
+          git commit -m 'Show latest trading session charts and remove Yahoo quote fallback'
+          git push origin HEAD:fix-latest-session-charts-20261030

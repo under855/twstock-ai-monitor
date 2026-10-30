@@ -1,0 +1,85 @@
+name: Apply no-Yahoo official-source runtime
+on:
+  push:
+    branches: ['source-migration-no-yahoo-20261030']
+    paths: ['.github/workflows/apply-no-yahoo-runtime.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: source-migration-no-yahoo-20261030
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Apply migration
+        run: python scripts/patch_no_yahoo_runtime.py
+      - name: Static source audit
+        shell: bash
+        run: |
+          node --check extras-v090.js
+          node --check foreign-live-test.js
+          python -m py_compile scripts/capture_intraday.py scripts/update_latest.py
+          ! grep -Eqi 'query1\.finance\.yahoo|finance\.yahoo|0700\.HK|騰訊' extras-v090.js foreign-live-test.js live-v091.js index.html scripts/update_latest.py
+          grep -F 'www.twse.com.tw/exchangeReport/STOCK_DAY' extras-v090.js
+          grep -F 'www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock' extras-v090.js
+          grep -F 'api.nasdaq.com/api/quote/NVDA/info' foreign-live-test.js
+          grep -F '5253:TYO' foreign-live-test.js
+          grep -F "tw-ai-monitor-v095official1" sw.js
+      - name: Verify official daily source payloads
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,urllib.request,urllib.parse
+          ua={'User-Agent':'Mozilla/5.0'}
+          def get(u):
+            with urllib.request.urlopen(urllib.request.Request(u,headers=ua),timeout=20) as r:return json.load(r)
+          t=get('https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=20261001&stockNo=2330')
+          assert any(str(x[0]).endswith('/10/30') and str(x[6]).replace(',','')=='2370.00' for x in t['data'])
+          o=get('https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3293&date='+urllib.parse.quote('2026/10/01')+'&response=json')
+          rows=o['tables'][0]['data'];assert any(str(x[0]).endswith('/10/30') and str(x[6]).replace(',','')=='810.00' for x in rows)
+          print('official history verified')
+          PY
+      - name: Browser regression and validation cards
+        shell: bash
+        run: |
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); test -n "$CHROME"; export CHROME
+          python -m http.server 8000 >/tmp/http.log 2>&1 &
+          cat > verify.mjs <<'JS'
+          import {chromium} from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:1280,height:1000},timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'block'});
+          const errors=[];p.on('pageerror',e=>errors.push(e.message));
+          await p.addInitScript(()=>localStorage.setItem('twAiWatchV3',JSON.stringify(['2330','009817','0050','3711','3293','2002','00878','00919'])));
+          await p.goto('http://127.0.0.1:8000/?officialqa='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForSelector('#nvdaValidation',{timeout:20000});await p.waitForSelector('#coverValidation',{timeout:20000});
+          await p.waitForFunction(()=>Number(document.querySelector('#nvdaValidation')?.dataset.accepted||0)>=1,null,{timeout:30000});
+          const cards=await p.evaluate(()=>({nvda:{n:Number(nvdaValidation.dataset.accepted||0),rt:nvdaValidation.dataset.realTime,price:nvdaValidation.dataset.price,time:nvdaValidation.dataset.sourceTime},cover:{rt:coverValidation.dataset.realTime,status:document.getElementById('coverStatus')?.textContent,price:coverValidation.dataset.price||null},rows:document.querySelectorAll('#watch article.row').length,errors:[]}));
+          console.log('CARDS',JSON.stringify(cards));
+          if(cards.nvda.n<1||cards.nvda.rt!=='true')throw Error('NVDA Nasdaq realtime marker missing');
+          if(cards.cover.rt!=='false'||!/15/.test(cards.cover.status||''))throw Error('COVER delay labeling missing');
+          if(cards.rows<8)throw Error('watchlist regressed');
+          await p.waitForTimeout(5000);
+          const scoreCount=await p.evaluate(()=>[...document.querySelectorAll('.scoreNum')].filter(x=>/^\d+$/.test(x.textContent.trim())).length);
+          if(scoreCount<5)throw Error('scores regressed: '+scoreCount);
+          const row=p.locator('#watch article.row').filter({has:p.locator('.sym',{hasText:'3711'})}).first();await row.click();await p.waitForSelector('#sheet.show',{timeout:15000});await p.waitForTimeout(2500);
+          const detail=await p.evaluate(()=>({news:document.querySelectorAll('#news .event').length,tabs:[...document.querySelectorAll('#detailChartTabs button')].map(x=>x.textContent.trim())}));
+          if(detail.news<1)throw Error('news regressed');if(!['今日','5日','20日','60日'].every(x=>detail.tabs.includes(x)))throw Error('detail tabs regressed');
+          if(errors.length)throw Error(errors.join(' | '));
+          await b.close();
+          JS
+          node verify.mjs
+      - name: Commit migrated runtime
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js foreign-live-test.js index.html sw.js scripts/capture_intraday.py
+          git diff --cached --quiet && exit 0
+          git commit -m 'Remove Yahoo stock data and use official sources'
+          git push origin HEAD:source-migration-no-yahoo-20261030

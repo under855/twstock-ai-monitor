@@ -1,0 +1,15 @@
+name: Probe COVER Kabutan browser bridge
+on:
+  push:
+    branches: ['source-migration-no-yahoo-20261030']
+    paths: ['.github/workflows/probe-cover-kabutan.yml']
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read COVER delayed quote
+        shell: bash
+        run: |
+          curl -L --max-time 30 -sS 'https://r.jina.ai/https://s.kabutan.jp/stocks/5253/?_='$(date +%s) -o /tmp/cover.txt
+          head -c 6000 /tmp/cover.txt

@@ -1,0 +1,26 @@
+name: Probe TWSE MIS chart last trading day
+on:
+  push:
+    branches: ['prod-verify-no-yahoo-20261030']
+    paths: ['.github/workflows/probe-mis-chart-lastday.yml']
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe listed OTC and index historical intraday endpoints
+        shell: bash
+        run: |
+          set +e
+          ua='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/130 Safari/537.36'
+          for u in \
+            'https://mis.twse.com.tw/stock/api/getChartOhlcStatis.jsp?ex=tse&ch=tse_2330.tw&fqy=1&delay=0' \
+            'https://mis.twse.com.tw/stock/api/getChartOhlcStatis.jsp?ex=otc&ch=otc_3293.tw&fqy=1&delay=0' \
+            'https://www.twse.com.tw/exchangeReport/MI_5MINS_INDEX?response=json&date=20261030'; do
+            echo "=== $u ==="
+            curl -L --max-time 25 -A "$ua" -sS -D /tmp/h "$u" -o /tmp/b
+            head -20 /tmp/h
+            echo '--- body head ---'
+            head -c 12000 /tmp/b
+            echo
+          done

@@ -8,11 +8,8 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Find machine-readable fields
+      - name: Probe Jina text view
         shell: bash
         run: |
-          curl -L --max-time 30 -sS 'https://proxy.cors.dev/https://www.google.com/finance/quote/5253:TYO?hl=en' -o /tmp/gf.html
-          echo '=== fields ==='
-          grep -oE 'data-last-[a-z-]+="[^"]+"' /tmp/gf.html | head -30 || true
-          echo '=== price fragments ==='
-          grep -oE '.{0,100}(1,535|1535|5253:TYO).{0,180}' /tmp/gf.html | head -30 || true
+          curl -L --max-time 30 -sS 'https://r.jina.ai/https://www.google.com/finance/quote/5253:TYO?hl=en&_='$(date +%s) -o /tmp/cover.txt
+          head -c 12000 /tmp/cover.txt

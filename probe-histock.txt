@@ -1,0 +1,3146 @@
+len=337943
+---
+https://histock.tw/jscript/jqueryHeader/jquery.min.js?v20261029c
+---
+https://histock.tw/jscript/jquery.mmenu.all.min.js?v20261029c
+---
+https://histock.tw/jscript/jquery.SuperSlide.2.1.1.js?v20261029c
+---
+https://histock.tw/jscript/flipsnap.js?v20261029c
+---
+https://histock.tw/JScript/lazyload.js?v20261029c
+---
+/jscript/histock.min-0.01.js?v20261029c
+---
+/jscript/histock2017.js?v20261029c
+---
+https://histock.tw/jscript/jqueryHeader/jquery-ui.min.js?v20261029c
+---
+https://histock.tw/jscript/jqueryHeader/jquery-migrate-1.4.1.min.js?v20261029c
+---
+https://www.googletagmanager.com/gtag/js?id=DC-10233559
+---
+https://histock.tw/jscript/stock/2017/stock.js?v20180601
+---
+https://histock.tw/jscript/tabs.js?20260128
+---
+https://www.googletagservices.com/tag/js/gpt.js
+---
+https://histock.tw/jscript/AD/ad_header_768x90.js?v20260908001344
+---
+//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js
+---
+https://histock.tw/jscript/liveedm.js?v023
+---
+https://histock.tw/jscript/autocomplete/jquery.autocomplete.js
+---
+//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js
+---
+/JScript/chartToken.js?v=20261029
+---
+/jscript/stock/2017/DayK.js?v=20261029
+---
+/JScript/chartToken.js?v=20261029b
+---
+/JScript/delete-googlead.js?v1
+---
+https://histock.tw/jscript/highstock-6.0.2/highstock.js
+---
+https://histock.tw/jscript/packery.pkgd.js
+---
+https://histock.tw/jscript/draggabilly.pkgd.js
+---
+https://code.jquery.com/ui/1.12.1/jquery-ui.js
+---
+https://histock.tw/jscript/autocomplete/jquery.autocomplete.js
+---
+https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092
+---
+http://www.w3.org/1999/xhtml
+---
+https://histock.tw/jscript/jqueryHeader/jquery.min.js?v20261029c
+---
+https://histock.tw/jscript/jquery.mmenu.all.min.js?v20261029c
+---
+https://histock.tw/jscript/jquery.SuperSlide.2.1.1.js?v20261029c
+---
+https://histock.tw/jscript/flipsnap.js?v20261029c
+---
+https://histock.tw/JScript/lazyload.js?v20261029c
+---
+https://histock.tw/jscript/jqueryHeader/jquery-ui.min.js?v20261029c
+---
+https://histock.tw/jscript/jqueryHeader/jquery-migrate-1.4.1.min.js?v20261029c
+---
+https://histock.tw/jscript/jqueryHeader/jquery-ui.css?v20261029c
+---
+https://fonts.googleapis.com/css?family=Lato:300,400
+---
+https://histock.tw/styles/histock2017mobile.css?v20261029c
+---
+https://histock.tw/styles/m-menu.css?v20261029c
+---
+https://histock.tw/images/ico-927-1.png
+---
+https://www.googletagmanager.com/gtag/js?id=DC-10233559
+---
+https://histock.tw/stock/2330
+---
+https://plus.google.com/117304986276805831256
+---
+https://histock.tw/jscript/stock/2017/stock.js?v20180601
+---
+https://histock.tw/jscript/tabs.js?20260128
+---
+https://www.googletagservices.com/tag/js/gpt.js
+---
+https://histock.tw/jscript/AD/ad_header_768x90.js?v20260908001344
+---
+https://histock.tw/images/icons/logo2022.svg
+---
+http://schema.org
+---
+https://histock.tw
+---
+https://histock.tw/images/131128500.png
+---
+https://www.facebook.com/histock.fans
+---
+https://www.youtube.com/channel/UC7OFNL9vONhOqutrC5D9i9Q
+---
+https://plus.google.com/+HistockTw
+---
+https://histock.tw/images/2017e/btn-search.png
+---
+https://histock.tw/images/2017e/mystock.png
+---
+https://forex.histock.tw/
+---
+https://histock.tw/linemanual.html
+---
+https://histock.tw/images/icons/helper.png
+---
+https://line.me/ti/p/%40hsk1574p
+---
+https://histock.tw/images/icons/line.png
+---
+https://www.facebook.com/histock.fans
+---
+https://histock.tw/images/icons/facebook.png
+---
+https://histock.tw/images/2017e/register.png
+---
+https://line.me/ti/p/%40hsk1574p
+---
+https://histock.tw/images/2017e/line@.png
+---
+https://www.facebook.com/histock.fans
+---
+https://histock.tw/images/2017e/facebook.png
+---
+https://histock.tw/images/icons/logo2022.svg
+---
+http://schema.org
+---
+https://histock.tw
+---
+https://histock.tw/images/131128500.png
+---
+https://www.facebook.com/histock.fans
+---
+https://www.youtube.com/channel/UC7OFNL9vONhOqutrC5D9i9Q
+---
+https://plus.google.com/+HistockTw
+---
+https://histock.tw/images/2017e/btn-search.png
+---
+https://histock.tw/jscript/liveedm.js?v023
+---
+https://forex.histock.tw/
+---
+https://line.me/ti/p/%40hsk1574p
+---
+https://histock.tw/images/2017e/logo.png
+---
+https://histock.tw/images/2017e/btn-search.png
+---
+https://histock.tw/jscript/autocomplete/jquery.autocomplete.js
+---
+https://www.books.com.tw/products/0011016500?loc=P_0005_008
+---
+https://histock.tw/images/ad/20250327_A.jpg
+---
+https://histock.tw/images/2017e/stock/mark1.png
+---
+https://histock.tw/images/2017e/stock/mark1.png
+---
+https://histock.tw/images/2017e/stock/mark1.png
+---
+https://histock.tw/images/2017e/stock/mark1.png
+---
+https://histock.tw/images/2017e/stock/mark3.png
+---
+https://histock.tw/images/2017e/stock/mark3.png
+---
+https://histock.tw/images/2017e/stock/mark3.png
+---
+https://histock.tw/images/2017e/stock/mark3.png
+---
+https://histock.tw/images/2017e/stock/mark3.png
+---
+https://histock.tw/images/2017e/stock/mark3.png
+---
+https://histock.tw/images/2017e/stock/mark3.png
+---
+https://histock.tw/images/2017e/stock/mark1.png
+---
+https://histock.tw/images/2017e/stock/mark6.png
+---
+https://histock.tw/images/2017e/stock/mark6.png
+---
+https://histock.tw/images/2017e/stock/mark6.png
+---
+https://histock.tw/images/2017e/stock/mark6.png
+---
+https://www.tsmc.com
+---
+https://www.tsmc.com</a></td></tr>
+</table>
+</div>
+
+                        
+<div id=
+---
+https://histock.tw/images/2017e/stock/mark6.png
+---
+https://histock.tw/images/2017e/stock/mark6.png
+---
+https://histock.tw/images/2017e/stock/mark6.png
+---
+https://histock.tw/images/2017e/stock/mark6.png
+---
+https://histock.tw/images/2017e/stock/mark2.png
+---
+https://news.cnyes.com/news/id/6592719?utm_source=RzVhbjNWTDFlcVlQMXE3cA==&utm_medium=NewsApi
+---
+https://news.cnyes.com/news/id/6585367?utm_source=RzVhbjNWTDFlcVlQMXE3cA==&utm_medium=NewsApi
+---
+https://news.cnyes.com/news/id/6585236?utm_source=RzVhbjNWTDFlcVlQMXE3cA==&utm_medium=NewsApi
+---
+https://news.cnyes.com/news/id/6559595?utm_source=RzVhbjNWTDFlcVlQMXE3cA==&utm_medium=NewsApi
+---
+https://news.cnyes.com/news/id/6555691?utm_source=RzVhbjNWTDFlcVlQMXE3cA==&utm_medium=NewsApi
+---
+https://histock.tw/images/2017e/stock/mark2.png
+---
+https://histock.tw/images/2017e/stock/mark2.png
+---
+https://histock.tw/images/2017e/stock/mark4.png
+---
+https://histock.tw/images/2017e/stock/mark4.png
+---
+https://histock.tw/images/2017e/stock/mark4.png
+---
+https://histock.tw/images/2017e/stock/mark4.png
+---
+https://histock.tw/images/2017e/stock/mark5.png
+---
+https://histock.tw/blog/purplekiller
+---
+https://histock.tw/blog/purplekiller/1873
+---
+https://histock.tw/blog/histock1688
+---
+https://histock.tw/blog/histock1688/157
+---
+https://histock.tw/blog/histock1688
+---
+https://histock.tw/blog/histock1688/155
+---
+https://histock.tw/blog/histock1688
+---
+https://histock.tw/blog/histock1688/151
+---
+https://histock.tw/blog/histock1688
+---
+https://histock.tw/blog/histock1688/149
+---
+https://histock.tw/blog/histock1688
+---
+https://histock.tw/blog/histock1688/148
+---
+https://histock.tw/blog/histock1688
+---
+https://histock.tw/blog/histock1688/145
+---
+https://histock.tw/blog/histock1688
+---
+https://histock.tw/blog/histock1688/144
+---
+https://histock.tw/blog/histock1688
+---
+https://histock.tw/blog/histock1688/114
+---
+https://histock.tw/images/2017e/stock/mark5.png
+---
+https://histock.tw/school/intro_new.aspx?c=1
+---
+https://histock.tw/school/intro_new.aspx?c=1
+---
+https://histock.tw/school/intro_new.aspx?c=1
+---
+https://histock.tw/school/intro_new.aspx?c=1
+---
+https://histock.tw/school/intro_new.aspx?c=2
+---
+https://histock.tw/school/intro_new.aspx?c=2
+---
+https://histock.tw/school/intro_new.aspx?c=1
+---
+https://histock.tw/school/intro_new.aspx?c=1
+---
+https://histock.tw/school/intro_new.aspx?c=1
+---
+HiStock嗨投資理財社群
+---
+/>
+<title>台積電 (2330) - 股價走勢 - HiStock嗨投資理財社群</title>
+<script id=
+---
+https://histock.tw/jscript/jqueryHeader/jquery.min.js?v20261029c
+---
+https://histock.tw/jscript/jquery.mmenu.all.min.js?v20261029c
+---
+https://histock.tw/jscript/jquery.SuperSlide.2.1.1.js?v20261029c
+---
+https://histock.tw/jscript/flipsnap.js?v20261029c
+---
+https://histock.tw/JScript/lazyload.js?v20261029c
+---
+jsHistock
+---
+/jscript/histock.min-0.01.js?v20261029c
+---
+jsHistock2017
+---
+/jscript/histock2017.js?v20261029c
+---
+https://histock.tw/jscript/jqueryHeader/jquery-ui.min.js?v20261029c
+---
+https://histock.tw/jscript/jqueryHeader/jquery-migrate-1.4.1.min.js?v20261029c
+---
+https://histock.tw/jscript/jqueryHeader/jquery-ui.css?v20261029c
+---
+cssHistock2017e
+---
+/styles/histock2017e.css?v20261029c
+---
+https://histock.tw/styles/histock2017mobile.css?v20261029c
+---
+https://histock.tw/styles/m-menu.css?v20261029c
+---
+https://histock.tw/images/ico-927-1.png
+---
+https://histock.tw/stock/2330
+---
+/styles/stock2017.css?v20200915
+---
+https://histock.tw/jscript/stock/2017/stock.js?v20180601
+---
+></script>
+<style>
+/*div.w99p {width:98%;}*/
+div.w99p{width:395px;}
+
+@media screen and (max-width: 480px) {
+div.w99p {width:99%;}
+.main .index-main,.mainBG,.topbox-left,body,.mp-main{width:100%!important;margin-right:0px;}
+.main .index-main{margin:0 auto;width:97%!important;}
+.grid-item.w280,.grid-item.w398,.index-block.w280,.index-block.w820,.info-left.w600{width:100%!important;}
+.div-outline.w280 {width: 98%;}
+.grid-item{border:0;}
+.index-block.w280{margin-top:10px;margin-left:0!im
+---
+https://histock.tw/jscript/tabs.js?20260128
+---
+>window.histockCampaign = {
+---
+https://histock.tw/jscript/AD/ad_header_768x90.js?v20260908001344
+---
+HiStock嗨投資首頁
+---
+https://histock.tw/images/icons/logo2022.svg
+---
+嗨投資 HiStock
+---
+https://histock.tw
+---
+https://histock.tw/images/131128500.png
+---
+https://www.facebook.com/histock.fans
+---
+https://plus.google.com/+HistockTw
+---
+https://histock.tw/images/2017e/btn-search.png
+---
+/member/mystocks.aspx
+---
+mystock
+---
+https://histock.tw/images/2017e/mystock.png
+---
+HiStock嗨投資理財社群
+---
+/stock/etf.aspx
+---
+/stock/etn.aspx
+---
+/stock/taiexproportion.aspx
+---
+https://forex.histock.tw/
+---
+headTabStock
+---
+/stock/2330
+---
+/twstock
+---
+/stock/warrant.aspx
+---
+/stock/dividend.aspx
+---
+/stock/public.aspx
+---
+/stock/2330/財務報表
+---
+https://histock.tw/linemanual.html
+---
+https://histock.tw/images/icons/helper.png
+---
+></script>
+        <!-- HiStock_全站上方_728x90_181013 -->
+        <ins class=
+---
+https://histock.tw/images/icons/line.png
+---
+https://www.facebook.com/histock.fans
+---
+https://histock.tw/images/icons/facebook.png
+---
+https://histock.tw/images/2017e/register.png
+---
+https://histock.tw/images/2017e/line@.png
+---
+https://www.facebook.com/histock.fans
+---
+https://histock.tw/images/2017e/facebook.png
+---
+HiStock嗨投資首頁
+---
+https://histock.tw/images/icons/logo2022.svg
+---
+嗨投資 HiStock
+---
+https://histock.tw
+---
+https://histock.tw/images/131128500.png
+---
+https://www.facebook.com/histock.fans
+---
+https://plus.google.com/+HistockTw
+---
+https://histock.tw/images/2017e/btn-search.png
+---
+header_ad1_keywordAD1_stockyoutubeid
+---
+header_ad1_keywordAD1_stockurl
+---
+header_ad1_keywordAD1_stocktimenum
+---
+header_ad1_keywordAD1_stockteacher
+---
+https://histock.tw/jscript/liveedm.js?v023
+---
+histock.tw/index
+---
+/stock/etf.aspx
+---
+/stock/taiexproportion.aspx
+---
+https://forex.histock.tw/
+---
+/stock/2330
+---
+/twstock
+---
+/stock/warrant.aspx
+---
+/stock/dividend.aspx
+---
+/stock/public.aspx
+---
+/stock/exdividendtable.aspx
+---
+/stock/2330/財務報表
+---
+HiStock嗨投資首頁
+---
+https://histock.tw/images/2017e/logo.png
+---
+https://histock.tw/images/2017e/btn-search.png
+---
+>
+                        $(document).ready(function () {
+                            setStockTab2();
+                        });
+                    </script>
+                    
+                    <ul class=
+---
+/stock/2330
+---
+/stock/oddlot.aspx
+---
+/stock/warrantstats.aspx
+---
+/stock/dividend.aspx
+---
+/stock/public.aspx
+---
+/stock/exdividendtable.aspx
+---
+https://histock.tw/jscript/autocomplete/jquery.autocomplete.js
+---
+Price1$tbxStock
+---
+Price1_tbxStock
+---
+fdstocktxt
+---
+afindStock
+---
+fdstockbtn
+---
+searchStock($(
+---
+#Price1_tbxStock
+---
+Price1_lbStockClass
+---
+addStock2
+---
+addstock
+---
+#addStock1
+---
+).button().click(function () {
+            addMyStock();
+        });
+        $(
+---
+#addStock2
+---
+).button().click(function () {
+            addMyStock();
+        });
+    });
+    function addMyStock() {
+        var $this = $(this);
+        var horizontalPadding = 25;
+        var verticalPadding = 0;
+        var no = 
+---
+/stock/add.aspx?no=
+---
+>
+    $(document).ready(function () {
+        //setupFindStock($(
+---
+#Price1_tbxStock
+---
+);
+        setupFindStock($(
+---
+#Price1_tbxStock
+---
+#afindStock
+---
+#ad_stock_rt1_ad1
+---
+#ad_stock_rt1_ad2
+---
+ad_stock_rt1_ad1
+---
+></script>
+<!-- Histock_台股all_300x250_右上 -->
+<ins class=
+---
+ad_stock_rt1_ad2
+---
+https://histock.tw/images/ad/20250327_A.jpg
+---
+content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Language" content="zh-tw"/>
+<meta name="robots" content="index,follow" />
+<meta name="googlebot" content="index,follow" />
+<meta name="keywords" content="台積電 (2330), 即時股價, 股價走勢, 五檔價量, 三大法人, 融資融券, 營收, 歷史走勢" />
+<meta property="og:title" content="台積電 (2330) - 股價走勢" />
+<meta name="description" property="og:description" content="台積電 (2330) 上市股票, 股價 2370, 漲跌 45, 提供股價走勢, 以及台積電 (2330)近期表現, 三大法人, 資券狀況, 即時新聞, 個股期貨, 營收損益, 歷史走勢, 還有台積電的相關文章與上市半導體類股的同類個股跟分類表現" />
+<meta name="application-name" content="HiStock嗨投資理財社群"/>
+<title>台積電 (2330) - 股價走勢 - HiStock嗨投資理財社群</title>
+<script id="jsJquery" type="text/javascript" src="https://histock.tw/jscript/jqueryHeader/jquery.min.js?v20261029c"></script>
+<script id="jsMenu" type="text/javascript" src="https://histock.tw/jscript/jquery.mmenu.all.min.js?v20261029c"></script>
+<script id="jsSuperSlide" type="text/javascr
+---
+itial-scale=1.0" />
+<meta http-equiv="Content-Language" content="zh-tw"/>
+<meta name="robots" content="index,follow" />
+<meta name="googlebot" content="index,follow" />
+<meta name="keywords" content="台積電 (2330), 即時股價, 股價走勢, 五檔價量, 三大法人, 融資融券, 營收, 歷史走勢" />
+<meta property="og:title" content="台積電 (2330) - 股價走勢" />
+<meta name="description" property="og:description" content="台積電 (2330) 上市股票, 股價 2370, 漲跌 45, 提供股價走勢, 以及台積電 (2330)近期表現, 三大法人, 資券狀況, 即時新聞, 個股期貨, 營收損益, 歷史走勢, 還有台積電的相關文章與上市半導體類股的同類個股跟分類表現" />
+<meta name="application-name" content="HiStock嗨投資理財社群"/>
+<title>台積電 (2330) - 股價走勢 - HiStock嗨投資理財社群</title>
+<script id="jsJquery" type="text/javascript" src="https://histock.tw/jscript/jqueryHeader/jquery.min.js?v20261029c"></script>
+<script id="jsMenu" type="text/javascript" src="https://histock.tw/jscript/jquery.mmenu.all.min.js?v20261029c"></script>
+<script id="jsSuperSlide" type="text/javascript" src="https://histock.tw/jscript/jquery.SuperSlide.2.1.1.js?v20261029c"></script>
+<scr
+---
+ame="robots" content="index,follow" />
+<meta name="googlebot" content="index,follow" />
+<meta name="keywords" content="台積電 (2330), 即時股價, 股價走勢, 五檔價量, 三大法人, 融資融券, 營收, 歷史走勢" />
+<meta property="og:title" content="台積電 (2330) - 股價走勢" />
+<meta name="description" property="og:description" content="台積電 (2330) 上市股票, 股價 2370, 漲跌 45, 提供股價走勢, 以及台積電 (2330)近期表現, 三大法人, 資券狀況, 即時新聞, 個股期貨, 營收損益, 歷史走勢, 還有台積電的相關文章與上市半導體類股的同類個股跟分類表現" />
+<meta name="application-name" content="HiStock嗨投資理財社群"/>
+<title>台積電 (2330) - 股價走勢 - HiStock嗨投資理財社群</title>
+<script id="jsJquery" type="text/javascript" src="https://histock.tw/jscript/jqueryHeader/jquery.min.js?v20261029c"></script>
+<script id="jsMenu" type="text/javascript" src="https://histock.tw/jscript/jquery.mmenu.all.min.js?v20261029c"></script>
+<script id="jsSuperSlide" type="text/javascript" src="https://histock.tw/jscript/jquery.SuperSlide.2.1.1.js?v20261029c"></script>
+<script id="jsFlipsnap" type="text/javascript" src="https://histock.tw/jscript/flipsnap
+---
+ta name="googlebot" content="index,follow" />
+<meta name="keywords" content="台積電 (2330), 即時股價, 股價走勢, 五檔價量, 三大法人, 融資融券, 營收, 歷史走勢" />
+<meta property="og:title" content="台積電 (2330) - 股價走勢" />
+<meta name="description" property="og:description" content="台積電 (2330) 上市股票, 股價 2370, 漲跌 45, 提供股價走勢, 以及台積電 (2330)近期表現, 三大法人, 資券狀況, 即時新聞, 個股期貨, 營收損益, 歷史走勢, 還有台積電的相關文章與上市半導體類股的同類個股跟分類表現" />
+<meta name="application-name" content="HiStock嗨投資理財社群"/>
+<title>台積電 (2330) - 股價走勢 - HiStock嗨投資理財社群</title>
+<script id="jsJquery" type="text/javascript" src="https://histock.tw/jscript/jqueryHeader/jquery.min.js?v20261029c"></script>
+<script id="jsMenu" type="text/javascript" src="https://histock.tw/jscript/jquery.mmenu.all.min.js?v20261029c"></script>
+<script id="jsSuperSlide" type="text/javascript" src="https://histock.tw/jscript/jquery.SuperSlide.2.1.1.js?v20261029c"></script>
+<script id="jsFlipsnap" type="text/javascript" src="https://histock.tw/jscript/flipsnap.js?v20261029c"></script>
+<script id="jsLa
+---
+g:title" content="台積電 (2330) - 股價走勢" />
+<meta name="description" property="og:description" content="台積電 (2330) 上市股票, 股價 2370, 漲跌 45, 提供股價走勢, 以及台積電 (2330)近期表現, 三大法人, 資券狀況, 即時新聞, 個股期貨, 營收損益, 歷史走勢, 還有台積電的相關文章與上市半導體類股的同類個股跟分類表現" />
+<meta name="application-name" content="HiStock嗨投資理財社群"/>
+<title>台積電 (2330) - 股價走勢 - HiStock嗨投資理財社群</title>
+<script id="jsJquery" type="text/javascript" src="https://histock.tw/jscript/jqueryHeader/jquery.min.js?v20261029c"></script>
+<script id="jsMenu" type="text/javascript" src="https://histock.tw/jscript/jquery.mmenu.all.min.js?v20261029c"></script>
+<script id="jsSuperSlide" type="text/javascript" src="https://histock.tw/jscript/jquery.SuperSlide.2.1.1.js?v20261029c"></script>
+<script id="jsFlipsnap" type="text/javascript" src="https://histock.tw/jscript/flipsnap.js?v20261029c"></script>
+<script id="jsLazyload" type="text/javascript" src="https://histock.tw/JScript/lazyload.js?v20261029c"></script>
+<script id="jsHistock" type="text/javascript" src="/j
+---
+=DC-10233559"></script> <script>   window.dataLayer = window.dataLayer || [];   function gtag(){dataLayer.push(arguments);}   gtag('js', new Date());   gtag('config', 'DC-10233559'); </script> <!-- End of global snippet: Please do not remove -->
+<link rel="canonical" href="https://histock.tw/stock/2330" />
+<link rel="publisher" href="https://plus.google.com/117304986276805831256" />
+    <link type="text/css" media="all" href="/styles/stock2017.css?v20200915" rel="stylesheet" />
+    <script type="text/javascript" src='https://histock.tw/jscript/stock/2017/stock.js?v20180601'></script>
+<style>
+/*div.w99p {width:98%;}*/
+div.w99p{width:395px;}
+
+@media screen and (max-width: 480px) {
+div.w99p {width:99%;}
+.main .index-main,.mainBG,.topbox-left,body,.mp-main{width:100%!important;margin-right:0px;}
+.main .index-main{margin:0 auto;width:97%!important;}
+.grid-item.w280,.grid-item.w398,.index-block.w280,.index-block.w820,.info-left.w600{width:100%!important;}
+.div-outline.w280 {wid
+---
+center;line-height: 20px;margin-right: 0px; }
+a.toggle .ctzoom {display: none;}
+}
+@media screen and (max-width: 320px) {
+    .grid-hdr .ctname {max-width:160px;}
+    .cbchart .mainchart.schart {max-width: 62%;min-width: 62%;}
+}
+    </style>
+</head>
+<body>
+    <form method="post" action="./2330?no=2330" id="fm">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTY5MjM1NTAwN2QYAQUSYmxvY2syMCRjdGwwMCRnQnV5DzwrAAwBCAIBZI/TdQDQtdKXJfmf3IeGxmOj3S89XE3/T6E5Vh7NPKNp" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['fm'];
+if (!theForm) {
+    theForm = document.fm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        t
+---
+ine-height: 20px;margin-right: 0px; }
+a.toggle .ctzoom {display: none;}
+}
+@media screen and (max-width: 320px) {
+    .grid-hdr .ctname {max-width:160px;}
+    .cbchart .mainchart.schart {max-width: 62%;min-width: 62%;}
+}
+    </style>
+</head>
+<body>
+    <form method="post" action="./2330?no=2330" id="fm">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTY5MjM1NTAwN2QYAQUSYmxvY2syMCRjdGwwMCRnQnV5DzwrAAwBCAIBZI/TdQDQtdKXJfmf3IeGxmOj3S89XE3/T6E5Vh7NPKNp" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['fm'];
+if (!theForm) {
+    theForm = document.fm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm._
+---
+li"><a class="nav-link1 dpl" href="/台股大盤" title="台股大盤-加權指數"><div>台股</div></a>
+                        <ul class="sub2 w580" style="display:none;">
+                            <div class="connect">&nbsp;</div>
+							<li><a href="/台股大盤">大盤</a></li>
+                            <li><a href="/stock/2330">個股</a></li>
+                            <li><a href="/twstock">分類</a></li>
+                            <li><a href="/stock/warrant.aspx">股票(權證/期貨)</a></li>
+                            <li><a href="/futures/mainfutures.aspx">期貨選擇權</a></li>
+                            <li><a href="/stock/dividend.aspx">股東會股利</a></li>
+                            <li><a href="/stock/public.aspx">股票申購</a></li>
+                        </ul>
+                    </li>
+                    <li id="headTabBlog" class="nav-item dpli"><a class="nav-link1 dpl" href="/blog" title="部落格"><div>部落格</div></a></li>
+                    
+                    
+                    <li id="headTabSchool" class="nav-it
+---
+
+                    <li id="headTabSearch" class="nav-item dpli"><a class= "nav-link1 dpl" href="/智慧選股" title="智慧選股"><div>智慧選股</div></a></li>
+                    <li id="headTabMarket" class="nav-item dpli">
+                        
+                        <a class="nav-link1 dpl" href="/stock/2330/財務報表" title="嗨財報"><div>嗨財報</div></a>
+                    </li>
+                    <li id="headTabMall" class="nav-item dpli"><a class="nav-link1 dpl" href="/mall" title="商城購物"><div>商城</div></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <script id="jsID" type="text/javascript"> //驅動superslide
+        var ary = location.href.split("&");
+        if (ary.length >= 7) {
+            jQuery("ul#nav-main1").slide({ type: "menu", titCell: ".nav-item", targetCell: ".sub2", effect: ary[1], delayTime: 0, triggerTime: ary[3], defaultPlay: ary[4], returnDefault: ary[5], easing: ary[6] });
+        } else {
+            jQuery("ul#nav-main1").slide({ type
+---
+</ul>
+                        </li>
+                        
+                        <li><a href="https://forex.histock.tw/">外匯總經</a></li>
+                        <li><a href="/tw">台股</a>
+                            <ul>
+							    <li><a href="/tw">大盤</a></li>
+							    <li><a href="/stock/2330">個股</a></li>
+							    <li><a href="/twstock">分類</a></li>
+							    <li><a href="/stock/warrant.aspx">股票(權證/期貨)</a></li>
+							    <li><a href="/futures/mainfutures.aspx">期貨選擇權</a></li>
+							    <li><a href="/stock/dividend.aspx">股東會股利</a></li>
+							    <li><a href="/stock/public.aspx">股票申購</a></li>
+                                <li><a href="/stock/exdividendtable.aspx">除息點數預告表</a></li>
+						    </ul>
+                        </li>
+ 
+                        <li><a href="/search">選股</a>
+                            <ul>
+							    <li><a href="/智慧選股">智慧選股</a></li>
+                                <li><a href="/app/notice.aspx">進出場通知</a></li>
+                         
+---
+
+                        <li><a href="/market">聖杯</a></li>
+                        <li><a href="/blog">部落格</a></li>
+                        <li><a href="/talk/live.aspx">嗨頻道</a></li>
+                        <li><a href="/event/main.aspx">嗨訂閱</a></li>
+                        <li><a href="/stock/2330/財務報表">嗨財報</a></li>
+					    <li><a href="/school">學院</a>
+						    <ul>
+							    <li><a href="/school/index.aspx?c=1">何毅里長伯</a></li>
+							    <li><a href="/school/index.aspx?c=2">紫殺</a></li>
+							    <li><a href="/school/index.aspx?c=4">阿布波</a></li>
+                                
+                                
+                                
+                                
+                                <li><a href="/school/index.aspx?c=23">DavidLin</a></li>
+                                
+                                <li><a href="/school/index.aspx?c=25">鼓動人心</a></li>
+                                
+                                <li><a href="/school/in
+---
+                      });
+                    </script>
+                    
+                    <ul class="nav navbar-nav sectabs">
+                        <li class="nav-item"><a class="btn-s" href="/台股大盤">大盤</a></li>
+                        <li class="nav-item"><a class="btn-s" href="/stock/2330">個股</a></li>
+                        <li class="nav-item"><a class="btn-s" href="/stock/oddlot.aspx">零股</a></li>
+                        <li class="nav-item"><a class="btn-s" href="/台股分類">分類</a></li>
+                        <li class="nav-item"><a class="btn-s" href="/stock/warrantstats.aspx">股票(權證/期貨)</a></li>
+                        <li class="nav-item"><a class="btn-s" href="/futures/mainfutures.aspx">期貨選擇權</a></li>
+                        <li class="nav-item"><a class="btn-s" href="/stock/dividend.aspx">股東會股利</a></li>
+                        <li class="nav-item"><a class="btn-s" href="/stock/public.aspx">股票申購</a></li>
+                        <li class="nav-item navitem-rt"><a
+---
+jquery.autocomplete.js'></script>
+
+<div class="sbk info h88">
+    <div class="info-left w600">
+        <div>
+            <h3 style="font-size: 22px; font-weight: 200; color: #000000; display: inline-block;">
+                台積電</h3>
+            <span style="font-size: 16px; color: #757575;">(2330)</span>
+            <span style="font-size: 16px; color: #607d8b;">可現股當沖</span>
+        
+            <div class="searchblock">
+                <input name="Price1$tbxStock" type="text" value="個股查詢" id="Price1_tbxStock" class="fdstocktxt" onfocus="if (this.value == &#39;個股查詢&#39;) this.value = &#39;&#39;" onblur="if(this.value==&#39;&#39;)this.value=&#39;個股查詢&#39;" /><a id="afindStock" class="fdstockbtn" onclick="searchStock($('#Price1_tbxStock'));">&nbsp;</a>
+            </div>
+
+        </div>
+        <div>
+            <ul class="priceinfo mt10">
+                <li class="deal"><b>股價</b><br />
+                    <span class="fwbig">
+                        <span id="Price1
+---
+    addMyStock();
+        });
+        $("#addStock2").button().click(function () {
+            addMyStock();
+        });
+    });
+    function addMyStock() {
+        var $this = $(this);
+        var horizontalPadding = 25;
+        var verticalPadding = 0;
+        var no = '';
+        if ('2330' == '') { no = '0000'; }
+            else { no = '2330'; }
+
+            $('<iframe src="/stock/add.aspx?no=' + no + '"/>').dialog({
+                autoOpen: true,
+                width: 635,
+                height: 200,
+                modal: true,
+                resizable: false,
+                autoResize: false,
+                dialogClass: "dlg-no-close",
+                overlay: {
+                    opacity: 0.5,
+                    background: "black"
+                },
+                title: "我的追蹤",
+                close: function (event, ui) {
+                    window.location.href = window.location.href;
+                    window.location.reload;
+      
+---
+button().click(function () {
+            addMyStock();
+        });
+    });
+    function addMyStock() {
+        var $this = $(this);
+        var horizontalPadding = 25;
+        var verticalPadding = 0;
+        var no = '';
+        if ('2330' == '') { no = '0000'; }
+            else { no = '2330'; }
+
+            $('<iframe src="/stock/add.aspx?no=' + no + '"/>').dialog({
+                autoOpen: true,
+                width: 635,
+                height: 200,
+                modal: true,
+                resizable: false,
+                autoResize: false,
+                dialogClass: "dlg-no-close",
+                overlay: {
+                    opacity: 0.5,
+                    background: "black"
+                },
+                title: "我的追蹤",
+                close: function (event, ui) {
+                    window.location.href = window.location.href;
+                    window.location.reload;
+                }
+            }).width(635 - horizontalPaddin
+---
+er">
+                    <div class="grid">
+                        
+<div id='LBlock_0' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img id="block1_imgMark" class="ctmark" src="https://histock.tw/images/2017e/stock/mark1.png" />
+        <div class="ctname handle">台積電 (2330)走勢圖</div>
+        <div class="ctclose" title="關閉視窗" onclick='closeBlock("LBlock_0")'></div>
+        <div class="ctadd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        
+    </div>
+
+    
+    
+<div id="block1_ctl00_WithVolume">
+	
+<script type="text/javascript">
+    function initalchart_Realtime(paraurl) {
+        $.ajax({
+            url: paraurl,type: 'get',dataType: "json",
+            //complete:function(){$('#loadingIMG').hide();},
+            success:function (data) {setupchar
+---
+
+                    <div class="grid">
+                        
+<div id='LBlock_0' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img id="block1_imgMark" class="ctmark" src="https://histock.tw/images/2017e/stock/mark1.png" />
+        <div class="ctname handle">台積電 (2330)走勢圖</div>
+        <div class="ctclose" title="關閉視窗" onclick='closeBlock("LBlock_0")'></div>
+        <div class="ctadd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        
+    </div>
+
+    
+    
+<div id="block1_ctl00_WithVolume">
+	
+<script type="text/javascript">
+    function initalchart_Realtime(paraurl) {
+        $.ajax({
+            url: paraurl,type: 'get',dataType: "json",
+            //complete:function(){$('#loadingIMG').hide();},
+            success:function (data) {setupchart_Rea
+---
+ class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        
+    </div>
+
+    
+    
+<div id="block1_ctl00_WithVolume">
+	
+<script type="text/javascript">
+    function initalchart_Realtime(paraurl) {
+        $.ajax({
+            url: paraurl,type: 'get',dataType: "json",
+            //complete:function(){$('#loadingIMG').hide();},
+            success:function (data) {setupchart_Realtime(eval(data['data']),eval(data['volume']));}
+        });
+    }
+
+    function setupchart_Realtime(chartData,chartVolume){
+        var chart_Realtime = new Highcharts.StockChart({
+            chart: {
+                renderTo: 'chart_Realtime',
+                alignTicks: false,
+                plotBorderWidth: 1,
+                panning:false,
+                events: {
+                    load: function () {
+                        if (document.getElementById('stocktop')){
+                            
+---
+url) {
+        $.ajax({
+            url: paraurl,type: 'get',dataType: "json",
+            //complete:function(){$('#loadingIMG').hide();},
+            success:function (data) {setupchart_Realtime(eval(data['data']),eval(data['volume']));}
+        });
+    }
+
+    function setupchart_Realtime(chartData,chartVolume){
+        var chart_Realtime = new Highcharts.StockChart({
+            chart: {
+                renderTo: 'chart_Realtime',
+                alignTicks: false,
+                plotBorderWidth: 1,
+                panning:false,
+                events: {
+                    load: function () {
+                        if (document.getElementById('stocktop')){
+                            document.getElementById('stocktop').outerHTML = '<div id="stocktop">' + mStockTop + '</div>';
+                        }
+                    }
+                }
+            },
+            credits: {enabled: false},
+            legend: {enabled: false },
+            scrollbar:
+---
+get',dataType: "json",
+            //complete:function(){$('#loadingIMG').hide();},
+            success:function (data) {setupchart_Realtime(eval(data['data']),eval(data['volume']));}
+        });
+    }
+
+    function setupchart_Realtime(chartData,chartVolume){
+        var chart_Realtime = new Highcharts.StockChart({
+            chart: {
+                renderTo: 'chart_Realtime',
+                alignTicks: false,
+                plotBorderWidth: 1,
+                panning:false,
+                events: {
+                    load: function () {
+                        if (document.getElementById('stocktop')){
+                            document.getElementById('stocktop').outerHTML = '<div id="stocktop">' + mStockTop + '</div>';
+                        }
+                    }
+                }
+            },
+            credits: {enabled: false},
+            legend: {enabled: false },
+            scrollbar: {enabled: false},        
+            navigator: {enable
+---
+pe: "json",
+            //complete:function(){$('#loadingIMG').hide();},
+            success:function (data) {setupchart_Realtime(eval(data['data']),eval(data['volume']));}
+        });
+    }
+
+    function setupchart_Realtime(chartData,chartVolume){
+        var chart_Realtime = new Highcharts.StockChart({
+            chart: {
+                renderTo: 'chart_Realtime',
+                alignTicks: false,
+                plotBorderWidth: 1,
+                panning:false,
+                events: {
+                    load: function () {
+                        if (document.getElementById('stocktop')){
+                            document.getElementById('stocktop').outerHTML = '<div id="stocktop">' + mStockTop + '</div>';
+                        }
+                    }
+                }
+            },
+            credits: {enabled: false},
+            legend: {enabled: false },
+            scrollbar: {enabled: false},        
+            navigator: {enabled: false},
+---
+alse},
+            legend: {enabled: false },
+            scrollbar: {enabled: false},        
+            navigator: {enabled: false},
+            exporting: {enabled: false},
+            rangeSelector : {enabled: false,inputEnabled : false},
+            title: {
+                text: '台積電 (2330)',
+                floating: true,
+                x: -55,
+                y: 15
+            },
+            subtitle: {
+                text: '嗨投資 histock.tw',
+                floating: true,
+                x: 65,
+                y: 15
+            },
+            plotOptions: {
+                column: {  color : '#FF9900' },
+                line: {
+                    lineWidth: 2,
+                    marker: { states: { hover: { enabled: false }, select: { enabled: false } } }
+                }
+            },
+            yAxis: [{
+                opposite: true,
+                plotLines : [{
+                    value : 2175,
+                    color : 'green',
+
+---
+      labels: {
+                             //formatter: function() {
+                                 //var percent = (this.value - 2415)*100/2415;
+                               //if (percent > 0) {
+                                   //return this.value  +'<br /><span style="color:red;">+' + Highcharts.numberFormat(percent, 1, '.') +'%</span>'; 
+                               //} else if (percent < 0) {
+                                  //return this.value  +'<br /><span style="color:green;">' + Highcharts.numberFormat(percent, 1, '.') +'%</span>'; 
+                    //          } else if (percent = 0) {
+                    //              return this.value  +'<br />0.0%</span>'; 
+                    //          }
+                    //}
+                },
+                opposite: true,
+                title: { text: '' }
+            },{
+                top: 180,
+                height: 58,
+                title: { text: '' }
+            }],
+            xAxis: 
+---
+                               //return this.value  +'<br /><span style="color:red;">+' + Highcharts.numberFormat(percent, 1, '.') +'%</span>'; 
+                               //} else if (percent < 0) {
+                                  //return this.value  +'<br /><span style="color:green;">' + Highcharts.numberFormat(percent, 1, '.') +'%</span>'; 
+                    //          } else if (percent = 0) {
+                    //              return this.value  +'<br />0.0%</span>'; 
+                    //          }
+                    //}
+                },
+                opposite: true,
+                title: { text: '' }
+            },{
+                top: 180,
+                height: 58,
+                title: { text: '' }
+            }],
+            xAxis: {
+                gridLineWidth: 1,
+                tickPixelInterval:150,
+                type: 'datetime'
+            },
+            tooltip: {  
+                split: false,
+                shared:tr
+---
+                shared:true,
+                valueDecimals: 2,
+                crosshairs: [{
+                    width: 1,
+                    color: '#aaaaaa',
+                    dashStyle: 'LongDash'
+                }],
+            }, 
+            series: [{
+                name: '台積電 (2330)',
+                data: chartData,
+                dataGrouping: {enabled: false}
+            },{
+                type: 'column',
+                name: '成交量(張)',
+                yAxis: 1,
+                data: chartVolume,
+                dataGrouping: {enabled: false}
+            }]
+        });
+        }
+</script>
+<style>
+    #chart_Realtime {height:275px;}
+</style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            loadRealtimeInfo('stocktop2017');
+            //setInterval(function(){initalchart_Realtime('/stock/module/stockdata.aspx?no=' + '2330'); }, 30000);   
+         });
+    </script>
+
+</div>
+<script type="text/javasc
+---
+               valueDecimals: 2,
+                crosshairs: [{
+                    width: 1,
+                    color: '#aaaaaa',
+                    dashStyle: 'LongDash'
+                }],
+            }, 
+            series: [{
+                name: '台積電 (2330)',
+                data: chartData,
+                dataGrouping: {enabled: false}
+            },{
+                type: 'column',
+                name: '成交量(張)',
+                yAxis: 1,
+                data: chartVolume,
+                dataGrouping: {enabled: false}
+            }]
+        });
+        }
+</script>
+<style>
+    #chart_Realtime {height:275px;}
+</style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            loadRealtimeInfo('stocktop2017');
+            //setInterval(function(){initalchart_Realtime('/stock/module/stockdata.aspx?no=' + '2330'); }, 30000);   
+         });
+    </script>
+
+</div>
+<script type="text/javascript">
+    var mStockTop = '';
+---
+
+        }
+</script>
+<style>
+    #chart_Realtime {height:275px;}
+</style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            loadRealtimeInfo('stocktop2017');
+            //setInterval(function(){initalchart_Realtime('/stock/module/stockdata.aspx?no=' + '2330'); }, 30000);   
+         });
+    </script>
+
+</div>
+<script type="text/javascript">
+    var mStockTop = '';
+    function loadRealtimeInfo(mode){
+        $.ajax({
+            type: "POST",
+            dataType: 'text',
+            url: "/stock/module/function.aspx",
+            data: { m: mode, no: '2330' },
+            error: function (err) {console.log(err);},
+            success: function (data) {
+                var datas = data.split('~');
+                mStockTop = datas[0];
+                initalchart_Realtime('/stock/module/stockdata.aspx?no=' + '2330'); 
+                if (document.getElementById('rttime1')){
+                    document.getElementById('rtti
+---
+ loadRealtimeInfo('stocktop2017');
+            //setInterval(function(){initalchart_Realtime('/stock/module/stockdata.aspx?no=' + '2330'); }, 30000);   
+         });
+    </script>
+
+</div>
+<script type="text/javascript">
+    var mStockTop = '';
+    function loadRealtimeInfo(mode){
+        $.ajax({
+            type: "POST",
+            dataType: 'text',
+            url: "/stock/module/function.aspx",
+            data: { m: mode, no: '2330' },
+            error: function (err) {console.log(err);},
+            success: function (data) {
+                var datas = data.split('~');
+                mStockTop = datas[0];
+                initalchart_Realtime('/stock/module/stockdata.aspx?no=' + '2330'); 
+                if (document.getElementById('rttime1')){
+                    document.getElementById('rttime1').innerHTML = datas[1];
+                }
+            }
+        });
+    }
+</script>
+ 
+<div class="card-body grid-body">
+    <div class="cbchart">
+        <
+---
+;   
+         });
+    </script>
+
+</div>
+<script type="text/javascript">
+    var mStockTop = '';
+    function loadRealtimeInfo(mode){
+        $.ajax({
+            type: "POST",
+            dataType: 'text',
+            url: "/stock/module/function.aspx",
+            data: { m: mode, no: '2330' },
+            error: function (err) {console.log(err);},
+            success: function (data) {
+                var datas = data.split('~');
+                mStockTop = datas[0];
+                initalchart_Realtime('/stock/module/stockdata.aspx?no=' + '2330'); 
+                if (document.getElementById('rttime1')){
+                    document.getElementById('rttime1').innerHTML = datas[1];
+                }
+            }
+        });
+    }
+</script>
+ 
+<div class="card-body grid-body">
+    <div class="cbchart">
+        <div id="chart_Realtime" class="mainchart schart"></div>
+        <div class="chartInfo realtime">
+            <div id="stocktop"></div>
+        </d
+---
+            data: { m: mode, no: '2330' },
+            error: function (err) {console.log(err);},
+            success: function (data) {
+                var datas = data.split('~');
+                mStockTop = datas[0];
+                initalchart_Realtime('/stock/module/stockdata.aspx?no=' + '2330'); 
+                if (document.getElementById('rttime1')){
+                    document.getElementById('rttime1').innerHTML = datas[1];
+                }
+            }
+        });
+    }
+</script>
+ 
+<div class="card-body grid-body">
+    <div class="cbchart">
+        <div id="chart_Realtime" class="mainchart schart"></div>
+        <div class="chartInfo realtime">
+            <div id="stocktop"></div>
+        </div>
+    </div>
+</div>
+<div class="card-foot grid-foot">
+    <a class="cfhide">
+        <div></div>
+    </a>
+    <div class="cfdate">更新時間:<span id="rttime1">--</span></div>
+</div>
+</div>
+
+                        
+<div id='LBlock_1' class="grid-item w398">
+---
+="rttime1">--</span></div>
+</div>
+</div>
+
+                        
+<div id='LBlock_1' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img id="block2_imgMark" class="ctmark" src="https://histock.tw/images/2017e/stock/mark1.png" />
+        <div class="ctname handle">台積電 (2330)個股K線</div>
+        <div class="ctclose" title="關閉視窗" onclick='closeBlock("LBlock_1")'></div>
+        <div class="ctadd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        <a id="block2_hlLink" href="/stock/tchart.aspx?no=2330" target="_blank"><div class="ctmore" title="看詳細資訊"></div></a>
+    </div>
+
+    
+    <script>window.HiChartToken = { no: "2330", p: "1793352224.t1W1DRFiuC7l3-qrAPYLCbCXqSs3cOt6hk4BW4BU-5I" };</script>
+<script src="/JScript/chartToken.js?v=20261029"></script>
+<script t
+---
+dd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        <a id="block2_hlLink" href="/stock/tchart.aspx?no=2330" target="_blank"><div class="ctmore" title="看詳細資訊"></div></a>
+    </div>
+
+    
+    <script>window.HiChartToken = { no: "2330", p: "1793352224.t1W1DRFiuC7l3-qrAPYLCbCXqSs3cOt6hk4BW4BU-5I" };</script>
+<script src="/JScript/chartToken.js?v=20261029"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        initalchart_DayK('2330', '台積電 (2330)', '成交量(張)');
+ 
+        if (mIsrefresh == 'True') {
+            setInterval("initalchart_DayK('2330', '台積電 (2330)', '成交量(張)');", 60000);
+        }
+    });
+</script>
+ 
+<style>
+ 
+</style>
+<script type="text/javascript" src="/jscript/stock/2017/DayK.js?v=20261029"></script>
+
+<div class="grid-body">
+    <di
+---
+lass="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        <a id="block2_hlLink" href="/stock/tchart.aspx?no=2330" target="_blank"><div class="ctmore" title="看詳細資訊"></div></a>
+    </div>
+
+    
+    <script>window.HiChartToken = { no: "2330", p: "1793352224.t1W1DRFiuC7l3-qrAPYLCbCXqSs3cOt6hk4BW4BU-5I" };</script>
+<script src="/JScript/chartToken.js?v=20261029"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        initalchart_DayK('2330', '台積電 (2330)', '成交量(張)');
+ 
+        if (mIsrefresh == 'True') {
+            setInterval("initalchart_DayK('2330', '台積電 (2330)', '成交量(張)');", 60000);
+        }
+    });
+</script>
+ 
+<style>
+ 
+</style>
+<script type="text/javascript" src="/jscript/stock/2017/DayK.js?v=20261029"></script>
+
+<div class="grid-body">
+    <div class="cbchart">
+        <div id="chart_DayK" class="mainchart schart w300" style="height: 497px;"></div>
+        <div class=
+---
+a>
+    </div>
+
+    
+    <script>window.HiChartToken = { no: "2330", p: "1793352224.t1W1DRFiuC7l3-qrAPYLCbCXqSs3cOt6hk4BW4BU-5I" };</script>
+<script src="/JScript/chartToken.js?v=20261029"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        initalchart_DayK('2330', '台積電 (2330)', '成交量(張)');
+ 
+        if (mIsrefresh == 'True') {
+            setInterval("initalchart_DayK('2330', '台積電 (2330)', '成交量(張)');", 60000);
+        }
+    });
+</script>
+ 
+<style>
+ 
+</style>
+<script type="text/javascript" src="/jscript/stock/2017/DayK.js?v=20261029"></script>
+
+<div class="grid-body">
+    <div class="cbchart">
+        <div id="chart_DayK" class="mainchart schart w300" style="height: 497px;"></div>
+        <div class="chartInfo w90">
+            <div id="chartInfo_DayK"></div>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+                        
+<div id='LBlock_2' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img i
+---
+>
+
+    
+    <script>window.HiChartToken = { no: "2330", p: "1793352224.t1W1DRFiuC7l3-qrAPYLCbCXqSs3cOt6hk4BW4BU-5I" };</script>
+<script src="/JScript/chartToken.js?v=20261029"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        initalchart_DayK('2330', '台積電 (2330)', '成交量(張)');
+ 
+        if (mIsrefresh == 'True') {
+            setInterval("initalchart_DayK('2330', '台積電 (2330)', '成交量(張)');", 60000);
+        }
+    });
+</script>
+ 
+<style>
+ 
+</style>
+<script type="text/javascript" src="/jscript/stock/2017/DayK.js?v=20261029"></script>
+
+<div class="grid-body">
+    <div class="cbchart">
+        <div id="chart_DayK" class="mainchart schart w300" style="height: 497px;"></div>
+        <div class="chartInfo w90">
+            <div id="chartInfo_DayK"></div>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+                        
+<div id='LBlock_2' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img id="block3_img
+---
+Ot6hk4BW4BU-5I" };</script>
+<script src="/JScript/chartToken.js?v=20261029"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        initalchart_DayK('2330', '台積電 (2330)', '成交量(張)');
+ 
+        if (mIsrefresh == 'True') {
+            setInterval("initalchart_DayK('2330', '台積電 (2330)', '成交量(張)');", 60000);
+        }
+    });
+</script>
+ 
+<style>
+ 
+</style>
+<script type="text/javascript" src="/jscript/stock/2017/DayK.js?v=20261029"></script>
+
+<div class="grid-body">
+    <div class="cbchart">
+        <div id="chart_DayK" class="mainchart schart w300" style="height: 497px;"></div>
+        <div class="chartInfo w90">
+            <div id="chartInfo_DayK"></div>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+                        
+<div id='LBlock_2' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img id="block3_imgMark" class="ctmark" src="https://histock.tw/images/2017e/stock/mark1.png" />
+        <div class="ctna
+---
+I" };</script>
+<script src="/JScript/chartToken.js?v=20261029"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        initalchart_DayK('2330', '台積電 (2330)', '成交量(張)');
+ 
+        if (mIsrefresh == 'True') {
+            setInterval("initalchart_DayK('2330', '台積電 (2330)', '成交量(張)');", 60000);
+        }
+    });
+</script>
+ 
+<style>
+ 
+</style>
+<script type="text/javascript" src="/jscript/stock/2017/DayK.js?v=20261029"></script>
+
+<div class="grid-body">
+    <div class="cbchart">
+        <div id="chart_DayK" class="mainchart schart w300" style="height: 497px;"></div>
+        <div class="chartInfo w90">
+            <div id="chartInfo_DayK"></div>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+                        
+<div id='LBlock_2' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img id="block3_imgMark" class="ctmark" src="https://histock.tw/images/2017e/stock/mark1.png" />
+        <div class="ctname handle">台積
+---
+    </div>
+    </div>
+</div>
+
+
+</div>
+
+                        
+<div id='LBlock_2' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img id="block3_imgMark" class="ctmark" src="https://histock.tw/images/2017e/stock/mark1.png" />
+        <div class="ctname handle">台積電 (2330)布林通道</div>
+        <div class="ctclose" title="關閉視窗" onclick='closeBlock("LBlock_2")'></div>
+        <div class="ctadd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        <a id="block3_hlLink" href="/stock/tchart.aspx?no=2330&amp;m=b" target="_blank"><div class="ctmore" title="看詳細資訊"></div></a>
+    </div>
+
+    
+    
+ <div class="grid-body">
+    <div class="cbchart">
+        <div id="chart_Bollinger" class="mainchart schart w300" style="height:368px;"></div>
+        <div class="chartInf
+---
+dd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        <a id="block3_hlLink" href="/stock/tchart.aspx?no=2330&amp;m=b" target="_blank"><div class="ctmore" title="看詳細資訊"></div></a>
+    </div>
+
+    
+    
+ <div class="grid-body">
+    <div class="cbchart">
+        <div id="chart_Bollinger" class="mainchart schart w300" style="height:368px;"></div>
+        <div class="chartInfo w90">
+            <div id="chartInfo_Bollinger"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        initalChart_Bollinger();
+
+        //if (mIsrefresh == 'True') {
+        //    setInterval("initalChart_Bollinger();", 65000);
+        // }
+    });
+
+    function initalChart_Bollinger() {
+        var chart = new Highcharts.StockChart({
+            chart: {
+---
+ </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        initalChart_Bollinger();
+
+        //if (mIsrefresh == 'True') {
+        //    setInterval("initalChart_Bollinger();", 65000);
+        // }
+    });
+
+    function initalChart_Bollinger() {
+        var chart = new Highcharts.StockChart({
+            chart: {
+                renderTo: 'chart_Bollinger',
+                plotBorderWidth: 2,
+                alignTicks: false,
+                animation: false,
+                zoomType: '',
+                panning: true,
+                panKey: 'shift',
+                style: {
+                    fontFamily: 'Lato, Open Sans,Arial,Hiragino Sans GB,Pingfang TC,Lantinghei TC,Wenquanyi Micro Hei,WenQuanYi Zen Hei,ST Heiti,WenQuanYi Zen Hei Sharp,Microsoft YaHei,Microsoft Jhenghei,SimHei,sans-serif;'
+                },
+                events: {
+                    load: function () {
+                        try {
+                            var 
+---
+div>
+
+<script type="text/javascript">
+    $(function () {
+        initalChart_Bollinger();
+
+        //if (mIsrefresh == 'True') {
+        //    setInterval("initalChart_Bollinger();", 65000);
+        // }
+    });
+
+    function initalChart_Bollinger() {
+        var chart = new Highcharts.StockChart({
+            chart: {
+                renderTo: 'chart_Bollinger',
+                plotBorderWidth: 2,
+                alignTicks: false,
+                animation: false,
+                zoomType: '',
+                panning: true,
+                panKey: 'shift',
+                style: {
+                    fontFamily: 'Lato, Open Sans,Arial,Hiragino Sans GB,Pingfang TC,Lantinghei TC,Wenquanyi Micro Hei,WenQuanYi Zen Hei,ST Heiti,WenQuanYi Zen Hei Sharp,Microsoft YaHei,Microsoft Jhenghei,SimHei,sans-serif;'
+                },
+                events: {
+                    load: function () {
+                        try {
+                            var maxLength =
+---
+                       var volume = '量';
+                            if (p && p.series && p.series.name == "摩台指 (STW)") volume = '未平倉';
+                            var template = '<ul>' +
+                           '<li><div class="ci_title">日期</div><div class="ci_value"><span class="@color">' + Highcharts.dateFormat('%m/%d', day) + '</span></div></li>' +
+                           '<li><div class="ci_title">開盤</div><div class="ci_value"><span class="@color">' + p.points[maxLength].open + '</span></div></li>' +
+                           '<li><div class="ci_title">最高</div><div class="ci_value"><span class="@color">' + p.points[maxLength].high + '</span></div></li>' +
+                           '<li><div class="ci_title">最低</div><div class="ci_value"><span class="@color">' + p.points[maxLength].low + '</span></div></li>' +
+                           '<li><div class="ci_title">收盤</div><div class="ci_value"><span class="@color">' + p.points[maxLength].close + '</span></div></li>' +
+---
+low + '</span></div></li>' +
+                           '<li><div class="ci_title">收盤</div><div class="ci_value"><span class="@color">' + p.points[maxLength].close + '</span></div></li>' +
+                           '<li><div class="ci_title">上漲</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.series[0].points[maxLength].y, 1) + '</span></div></li>' +
+                           '<li><div class="ci_title">平盤</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.series[1].points[maxLength].y, 1) + '</span></div></li>' +
+                           '<li><div class="ci_title">下跌</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.series[2].points[maxLength].y, 1) + '</span></div></li>' +
+                           '<li><div class="ci_title">' + volume + '</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.series[4].points[maxLength].y, 0) + '</span></div></li>' +
+     
+---
+                    '<li><div class="ci_title">上漲</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.series[0].points[maxLength].y, 1) + '</span></div></li>' +
+                           '<li><div class="ci_title">平盤</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.series[1].points[maxLength].y, 1) + '</span></div></li>' +
+                           '<li><div class="ci_title">下跌</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.series[2].points[maxLength].y, 1) + '</span></div></li>' +
+                           '<li><div class="ci_title">' + volume + '</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.series[4].points[maxLength].y, 0) + '</span></div></li>' +
+                           '<li><div class="ci_title">K9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[7].points[maxLength].y, 2) + '</span></div></li>' +
+                    
+---
+                    '<li><div class="ci_title">平盤</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.series[1].points[maxLength].y, 1) + '</span></div></li>' +
+                           '<li><div class="ci_title">下跌</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.series[2].points[maxLength].y, 1) + '</span></div></li>' +
+                           '<li><div class="ci_title">' + volume + '</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.series[4].points[maxLength].y, 0) + '</span></div></li>' +
+                           '<li><div class="ci_title">K9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[7].points[maxLength].y, 2) + '</span></div></li>' +
+                           '<li><div class="ci_title">D9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[8].points[maxLength].y, 2) + '</span></div></li>' +
+                           '</ul>';
+---
+        '<li><div class="ci_title">下跌</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.series[2].points[maxLength].y, 1) + '</span></div></li>' +
+                           '<li><div class="ci_title">' + volume + '</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.series[4].points[maxLength].y, 0) + '</span></div></li>' +
+                           '<li><div class="ci_title">K9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[7].points[maxLength].y, 2) + '</span></div></li>' +
+                           '<li><div class="ci_title">D9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[8].points[maxLength].y, 2) + '</span></div></li>' +
+                           '</ul>';
+                            $('#chartInfo_Bollinger').html(template);
+                        }
+                        catch (e) {
+                            console.log(e);
+                        }
+ 
+---
+                       '<li><div class="ci_title">' + volume + '</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.series[4].points[maxLength].y, 0) + '</span></div></li>' +
+                           '<li><div class="ci_title">K9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[7].points[maxLength].y, 2) + '</span></div></li>' +
+                           '<li><div class="ci_title">D9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[8].points[maxLength].y, 2) + '</span></div></li>' +
+                           '</ul>';
+                            $('#chartInfo_Bollinger').html(template);
+                        }
+                        catch (e) {
+                            console.log(e);
+                        }
+                    }
+                }
+            },
+            credits: {enabled: false},
+            legend: {enabled: false},
+            scrollbar: { enabled: false, liveRe
+---
+</span></div></li>' +
+                           '<li><div class="ci_title">K9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[7].points[maxLength].y, 2) + '</span></div></li>' +
+                           '<li><div class="ci_title">D9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[8].points[maxLength].y, 2) + '</span></div></li>' +
+                           '</ul>';
+                            $('#chartInfo_Bollinger').html(template);
+                        }
+                        catch (e) {
+                            console.log(e);
+                        }
+                    }
+                }
+            },
+            credits: {enabled: false},
+            legend: {enabled: false},
+            scrollbar: { enabled: false, liveRedraw: false },
+            rangeSelector: { enabled: false },
+            navigator: { enabled: false },
+            exporting: { enabled: false },
+            title: {
+         
+---
+d: false},
+            legend: {enabled: false},
+            scrollbar: { enabled: false, liveRedraw: false },
+            rangeSelector: { enabled: false },
+            navigator: { enabled: false },
+            exporting: { enabled: false },
+            title: {
+                text: '台積電 (2330)',
+                floating: true,
+                x: -55,
+                y: 15
+            },
+            subtitle: {
+                text: '嗨投資 histock.tw',
+                floating: true,
+                x: 70,
+                y: 15
+            },
+            plotOptions: {
+                candlestick: {
+                    color: '#008f00',
+                    lineColor: '#007e00',
+                    upColor: '#ff2626',
+                    upLineColor: '#b30000'
+                },
+                column: {
+                    color: '#FF9900'
+                },
+                line: {
+                    lineWidth: 1,
+                    marker: { states: { 
+---
+: '#FF9900'
+                },
+                line: {
+                    lineWidth: 1,
+                    marker: { states: { hover: { enabled: false } } }
+                }
+            },
+            xAxis: {
+                labels: {
+                    formatter: function () { return Highcharts.dateFormat('%Y/%m', this.value); }
+                }
+            },
+            tooltip: {
+                yDecimals: 2,
+                split: false,
+                shared: true,
+                valueDecimals: 2,
+                crosshairs: [{
+                    width: 1,
+                    color: '#aaaaaa',
+                    dashStyle: 'LongDash'
+                }],
+                formatter: function () {
+                    var p = this.points[3];
+                    if (p) {
+                        var volume = '量';
+                        if (p && p.series && p.series.name == "摩台指 (STW)") volume = '未平倉';
+                        var template = '<ul>' +
+---
+ if (p) {
+                        var volume = '量';
+                        if (p && p.series && p.series.name == "摩台指 (STW)") volume = '未平倉';
+                        var template = '<ul>' +
+                       '<li><div class="ci_title">日期</div><div class="ci_value"><span class="@color">' + Highcharts.dateFormat('%m/%d', this.x) + '</span></div></li>' +
+                       '<li><div class="ci_title">開盤</div><div class="ci_value"><span class="@color">' + p.point.open + '</span></div></li>' +
+                       '<li><div class="ci_title">最高</div><div class="ci_value"><span class="@color">' + p.point.high + '</span></div></li>' +
+                       '<li><div class="ci_title">最低</div><div class="ci_value"><span class="@color">' + p.point.low + '</span></div></li>' +
+                       '<li><div class="ci_title">收盤</div><div class="ci_value"><span class="@color">' + p.point.close + '</span></div></li>' +
+                       '<li><div class="ci_title">上漲</div><
+---
+"><span class="@color">' + p.point.low + '</span></div></li>' +
+                       '<li><div class="ci_title">收盤</div><div class="ci_value"><span class="@color">' + p.point.close + '</span></div></li>' +
+                       '<li><div class="ci_title">上漲</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[0].y, 1) + '</span></div></li>' +
+                       '<li><div class="ci_title">平盤</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[1].y, 1) + '</span></div></li>' +
+                       '<li><div class="ci_title">下跌</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[2].y, 1) + '</span></div></li>' +
+                       '<li><div class="ci_title">' + volume + '</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.points[4].y, 0) + '</span></div></li>' +
+                       '<li><div class="ci_title">K9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.
+---
+lor">' + p.point.close + '</span></div></li>' +
+                       '<li><div class="ci_title">上漲</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[0].y, 1) + '</span></div></li>' +
+                       '<li><div class="ci_title">平盤</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[1].y, 1) + '</span></div></li>' +
+                       '<li><div class="ci_title">下跌</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[2].y, 1) + '</span></div></li>' +
+                       '<li><div class="ci_title">' + volume + '</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.points[4].y, 0) + '</span></div></li>' +
+                       '<li><div class="ci_title">K9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[7].y, 2) + '</span></div></li>' +
+                       '<li><div class="ci_title">D9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.
+---
+t(this.points[0].y, 1) + '</span></div></li>' +
+                       '<li><div class="ci_title">平盤</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[1].y, 1) + '</span></div></li>' +
+                       '<li><div class="ci_title">下跌</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[2].y, 1) + '</span></div></li>' +
+                       '<li><div class="ci_title">' + volume + '</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.points[4].y, 0) + '</span></div></li>' +
+                       '<li><div class="ci_title">K9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[7].y, 2) + '</span></div></li>' +
+                       '<li><div class="ci_title">D9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[8].y, 2) + '</span></div></li>' +
+                       '</ul>';
+                        $('#chartInfo_Bollinger').html(template);
+                   
+---
+/span></div></li>' +
+                       '<li><div class="ci_title">下跌</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[2].y, 1) + '</span></div></li>' +
+                       '<li><div class="ci_title">' + volume + '</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.points[4].y, 0) + '</span></div></li>' +
+                       '<li><div class="ci_title">K9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[7].y, 2) + '</span></div></li>' +
+                       '<li><div class="ci_title">D9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[8].y, 2) + '</span></div></li>' +
+                       '</ul>';
+                        $('#chartInfo_Bollinger').html(template);
+                    }
+                    return false;
+                }
+            },
+            yAxis: [{
+                height: 200,
+                opposite: true
+            }, {
+           
+---
+/span></div></li>' +
+                       '<li><div class="ci_title">' + volume + '</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.points[4].y, 0) + '</span></div></li>' +
+                       '<li><div class="ci_title">K9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[7].y, 2) + '</span></div></li>' +
+                       '<li><div class="ci_title">D9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[8].y, 2) + '</span></div></li>' +
+                       '</ul>';
+                        $('#chartInfo_Bollinger').html(template);
+                    }
+                    return false;
+                }
+            },
+            yAxis: [{
+                height: 200,
+                opposite: true
+            }, {
+                top: 210,
+                height: 60,
+                title: { margin: -65, text: '成交量(張)', rotation: 0, align: 'high', y: 15 }
+            }, {
+       
+---
+t(this.points[4].y, 0) + '</span></div></li>' +
+                       '<li><div class="ci_title">K9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[7].y, 2) + '</span></div></li>' +
+                       '<li><div class="ci_title">D9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[8].y, 2) + '</span></div></li>' +
+                       '</ul>';
+                        $('#chartInfo_Bollinger').html(template);
+                    }
+                    return false;
+                }
+            },
+            yAxis: [{
+                height: 200,
+                opposite: true
+            }, {
+                top: 210,
+                height: 60,
+                title: { margin: -65, text: '成交量(張)', rotation: 0, align: 'high', y: 15 }
+            }, {
+                top: 270,
+                height: 60,
+                plotLines:
+                [{
+                    value: 100, color: 'gray', dashStyle: 'Solid
+---
+454400000,2388.20],[1792540800000,2382.34],[1792627200000,2368.27],[1793059200000,2359.88],[1793145600000,2353.96],[1793232000000,2347.91],[1793318400000,2334.62]],
+                dataGrouping: { enabled: false }
+            }, {
+                type: 'candlestick',
+                name: '台積電 (2330)',
+                data: [[1785715200000,2390,2395,2365,2370],[1785801600000,2335,2360,2310,2320],[1785888000000,2385,2415,2370,2405],[1785974400000,2395,2395,2360,2365],[1786060800000,2390,2395,2355,2370],[1786320000000,2390,2410,2380,2380],[1786406400000,2390,2405,2375,2395],[1786492800000,2405,2415,2390,2415],[1786579200000,2440,2445,2425,2435],[1786665600000,2435,2440,2395,2395],[1786924800000,2410,2420,2390,2400],[1787011200000,2415,2415,2375,2380],[1787097600000,2340,2355,2335,2350],[1787184000000,2365,2375,2350,2375],[1787270400000,2375,2410,2365,2410],[1787529600000,2410,2410,2375,2375],[1787616000000,2355,2400,2350,2400],[1787702400000,2375,2425,2375,2415],[1787788800000,2430,
+---
+]
+        });
+    }
+</script>
+
+</div>
+
+                        
+<div id='LBlock_3' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img id="block4_imgMark" class="ctmark" src="https://histock.tw/images/2017e/stock/mark1.png" />
+        <div class="ctname handle">台積電 (2330)近期表現</div>
+        <div class="ctclose" title="關閉視窗" onclick='closeBlock("LBlock_3")'></div>
+        <div class="ctadd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        
+    </div>
+
+    
+    
+<table class="tb-stock tbPerform">
+    <tbody>
+        <tr>
+            <th class="lft w1 w33p">區間</th>
+            <th class="alt w1 w33p">
+                台積電</th>
+            <th class="alt2 w1 w33p">大盤</th>
+        </tr>
+        <tr class="alt-row">
+            <th class="lft">三日</th>
+---
+     </tr>
+    </tbody>
+</table>
+</div>
+
+                        
+<div id='LBlock_4' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img id="block5_imgMark" class="ctmark" src="https://histock.tw/images/2017e/stock/mark3.png" />
+        <div class="ctname handle">台積電 (2330)三大法人</div>
+        <div class="ctclose" title="關閉視窗" onclick='closeBlock("LBlock_4")'></div>
+        <div class="ctadd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        <a id="block5_hlLink" href="/stock/chips.aspx?no=2330" target="_blank"><div class="ctmore" title="看詳細資訊"></div></a>
+    </div>
+
+    
+    
+ 
+<div class="grid-body">
+    <div class="cbchart">
+        <div id="chart_Three" class="mainchart schart" style="height:328px;"></div>
+        <div class="chartInfo">
+           
+---
+add hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        <a id="block5_hlLink" href="/stock/chips.aspx?no=2330" target="_blank"><div class="ctmore" title="看詳細資訊"></div></a>
+    </div>
+
+    
+    
+ 
+<div class="grid-body">
+    <div class="cbchart">
+        <div id="chart_Three" class="mainchart schart" style="height:328px;"></div>
+        <div class="chartInfo">
+            <div id="chartInfo_Three" ></div>
+        </div>
+    </div>
+</div>
+<div class="card-foot grid-foot">
+    <table class="tb-stock tbChip tbHide" >
+        <tr>
+            <th class="alt w1 w90">日期</th>
+            <th class="alt w1 w56">外資</th>
+            <th class="alt2 w1 w56">投信</th>
+            <th class="alt w1 w56">自營<br />(自買)</th>
+            <th class="alt2 w1 w56">自營<br />(避險)</th>
+            <t
+---
+hree(threeTitle, data, data_BuyForeign, data_BuyING, data_BuyDealer, data_BuyDealer_Self, data_BuyDealer_Hedging, data_Total);
+    }
+
+    function initalChart_Three(threeTitle, data, data_BuyForeign, data_BuyING, data_BuyDealer, data_BuyDealer_Self, data_BuyDealer_Hedging, data_Total) {
+        Highcharts.setOptions({
+            lang: {
+                thousandsSep: ','
+            }
+        });
+        var chart = new Highcharts.StockChart({
+        chart: {
+            renderTo: 'chart_Three',
+            plotBorderWidth: 2,
+            alignTicks: false,
+            animation: false,
+            zoomType: '',
+            panning: false,
+            events: {
+                load: function () {
+                    try {
+                        var maxLength = this.series[0].points.length - 1;
+                        var day = this.series[0].points[maxLength].x;
+  
+                        var template = '<ul>' +
+               '<li><div class="ci_title">日期</di
+---
+
+
+    function initalChart_Three(threeTitle, data, data_BuyForeign, data_BuyING, data_BuyDealer, data_BuyDealer_Self, data_BuyDealer_Hedging, data_Total) {
+        Highcharts.setOptions({
+            lang: {
+                thousandsSep: ','
+            }
+        });
+        var chart = new Highcharts.StockChart({
+        chart: {
+            renderTo: 'chart_Three',
+            plotBorderWidth: 2,
+            alignTicks: false,
+            animation: false,
+            zoomType: '',
+            panning: false,
+            events: {
+                load: function () {
+                    try {
+                        var maxLength = this.series[0].points.length - 1;
+                        var day = this.series[0].points[maxLength].x;
+  
+                        var template = '<ul>' +
+               '<li><div class="ci_title">日期</div><div class="ci_value"><span>' + Highcharts.dateFormat('%m/%d', day) + '</span></div></li>';
+
+                        var pointVal
+---
+ction initalChart_Three(threeTitle, data, data_BuyForeign, data_BuyING, data_BuyDealer, data_BuyDealer_Self, data_BuyDealer_Hedging, data_Total) {
+        Highcharts.setOptions({
+            lang: {
+                thousandsSep: ','
+            }
+        });
+        var chart = new Highcharts.StockChart({
+        chart: {
+            renderTo: 'chart_Three',
+            plotBorderWidth: 2,
+            alignTicks: false,
+            animation: false,
+            zoomType: '',
+            panning: false,
+            events: {
+                load: function () {
+                    try {
+                        var maxLength = this.series[0].points.length - 1;
+                        var day = this.series[0].points[maxLength].x;
+  
+                        var template = '<ul>' +
+               '<li><div class="ci_title">日期</div><div class="ci_value"><span>' + Highcharts.dateFormat('%m/%d', day) + '</span></div></li>';
+
+                        var pointValue = this.s
+---
+            try {
+                        var maxLength = this.series[0].points.length - 1;
+                        var day = this.series[0].points[maxLength].x;
+  
+                        var template = '<ul>' +
+               '<li><div class="ci_title">日期</div><div class="ci_value"><span>' + Highcharts.dateFormat('%m/%d', day) + '</span></div></li>';
+
+                        var pointValue = this.series[1].points[maxLength].y;
+                        var color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        template += '<li><div class="ci_title">外資</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                        pointValue = this.series[2].points[maxLength].y;
+                        color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        temp
+---
+ = this.series[1].points[maxLength].y;
+                        var color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        template += '<li><div class="ci_title">外資</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                        pointValue = this.series[2].points[maxLength].y;
+                        color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        template += '<li><div class="ci_title">投信</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                        pointValue = this.series[3].points[maxLength].y;
+                        color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        template 
+---
+alue = this.series[2].points[maxLength].y;
+                        color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        template += '<li><div class="ci_title">投信</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                        pointValue = this.series[3].points[maxLength].y;
+                        color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        template += '<li><div class="ci_title">自營(總)</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                        pointValue = this.series[4].points[maxLength].y;
+                        color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        templa
+---
+e = this.series[3].points[maxLength].y;
+                        color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        template += '<li><div class="ci_title">自營(總)</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                        pointValue = this.series[4].points[maxLength].y;
+                        color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        template += '<li><div class="ci_title">自營自買</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                        pointValue = this.series[5].points[maxLength].y;
+                        color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        templat
+---
+ue = this.series[4].points[maxLength].y;
+                        color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        template += '<li><div class="ci_title">自營自買</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                        pointValue = this.series[5].points[maxLength].y;
+                        color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        template += '<li><div class="ci_title">自營避險</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                        pointValue = this.series[6].points[maxLength].y;
+                        color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        templat
+---
+ue = this.series[5].points[maxLength].y;
+                        color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        template += '<li><div class="ci_title">自營避險</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                        pointValue = this.series[6].points[maxLength].y;
+                        color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        template += '<li><div class="ci_title">合計</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+                        template += '<li><div class="ci_title">外資持股率</div><div class="ci_value"><span>' + this.series[7].points[maxLength].y + '%</span></div></li>';
+                        template += '</ul>';
+                        $('
+---
+alue = this.series[6].points[maxLength].y;
+                        color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                        if (pointValue == 0) color = '';
+                        template += '<li><div class="ci_title">合計</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+                        template += '<li><div class="ci_title">外資持股率</div><div class="ci_value"><span>' + this.series[7].points[maxLength].y + '%</span></div></li>';
+                        template += '</ul>';
+                        $('#chartInfo_Three').html(template);
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                }
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        credits: {
+            enabled: false
+        },
+        scrollbar: {
+            enabled: false
+        },
+        range
+---
+  },
+        scrollbar: {
+            enabled: false
+        },
+        rangeSelector: {
+            enabled: false
+        },
+        navigator: {
+            enabled: false
+        },
+        exporting: {
+            enabled: false
+        },
+        title: {
+            text: '台積電 (2330)',
+            floating: true,
+            x: -55,
+            y: 15
+        },
+        subtitle: {
+            text: '嗨投資 histock.tw',
+            floating: true,
+            x: 70,
+            y: 15
+        },
+        plotOptions: {
+            candlestick: {
+                upColor: 'red',
+                color: 'green'
+            },
+            line: {
+                animation: false,
+                lineWidth: 2,
+                marker: { states: { hover: { enabled: false }, select: { enabled: false } } }
+            },
+            column: {
+                stacking: 'normal',
+                gapSize: 1
+            }
+        },
+        xAxis: {
+        
+---
+ marker: { states: { hover: { enabled: false }, select: { enabled: false } } }
+            },
+            column: {
+                stacking: 'normal',
+                gapSize: 1
+            }
+        },
+        xAxis: {
+            labels: {
+                formatter: function () { return Highcharts.dateFormat('%Y/%m', this.value); }
+            }
+        },
+        yAxis: [{
+            //0,
+            top: 30,
+            height: 130,
+            labels: { enabled: false },
+            title: { margin: 0, text: '', rotation: 0, align: 'high', y: 15 }
+        }, {//1,
+            top: 350,
+            height: 0,
+            labels: { enabled: false },
+            title: { margin: 0, text: '', rotation: 0, align: 'high', y: 15 }
+        }, {//2,
+            top: 160,
+            height: 130,
+            title: { margin: 0, text: '', rotation: 0, align: 'high', y: 15 }
+        }],
+        tooltip: {
+            crosshairs: [{
+                width: 1,
+  
+---
+: [{
+                width: 1,
+                color: '#aaaaaa',
+                dashStyle: 'LongDash'
+            }],
+            formatter: function () {
+                var template = '<ul>' +
+               '<li><div class="ci_title">日期</div><div class="ci_value"><span class="@color">' + Highcharts.dateFormat('%m/%d', this.x) + '</span></div></li>';
+                var pointValue = this.points[1].y;
+                var color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">外資</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+                 
+                pointValue = this.points[2].y;
+                color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">投信</div><div class="ci_value"><span class="' + 
+---
+iv></li>';
+                var pointValue = this.points[1].y;
+                var color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">外資</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+                 
+                pointValue = this.points[2].y;
+                color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">投信</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                pointValue = this.points[3].y;
+                color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">自營(總)</div><div class="ci_value"><span class="' + col
+---
+
+                 
+                pointValue = this.points[2].y;
+                color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">投信</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                pointValue = this.points[3].y;
+                color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">自營(總)</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                pointValue = this.points[4].y;
+                color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">自營自買</div><div class="ci_value"><span class="' + color + '">' + Hig
+---
+</div></li>';
+
+                pointValue = this.points[3].y;
+                color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">自營(總)</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                pointValue = this.points[4].y;
+                color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">自營自買</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                pointValue = this.points[5].y;
+                color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">自營避險</div><div class="ci_value"><span class="' + color + '">' + High
+---
+></div></li>';
+
+                pointValue = this.points[4].y;
+                color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">自營自買</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                pointValue = this.points[5].y;
+                color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">自營避險</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                pointValue = this.points[6].y;
+                color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">合計</div><div class="ci_value"><span class="' + color + '">' + Highch
+---
+></div></li>';
+
+                pointValue = this.points[5].y;
+                color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">自營避險</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+
+                pointValue = this.points[6].y;
+                color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">合計</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+                template += '<li><div class="ci_title">外資持股率</div><div class="ci_value"><span>' + this.points[7].y + '%</span></div></li>';
+                template += '</ul>';
+                $('#chartInfo_Three').html(template);
+                return false;
+            }
+        },
+---
+an></div></li>';
+
+                pointValue = this.points[6].y;
+                color = (pointValue > 0) ? "clr-rd" : "clr-gr";
+                if (pointValue == 0) color = '';
+                template += '<li><div class="ci_title">合計</div><div class="ci_value"><span class="' + color + '">' + Highcharts.numberFormat(pointValue, 0) + '</span></div></li>';
+                template += '<li><div class="ci_title">外資持股率</div><div class="ci_value"><span>' + this.points[7].y + '%</span></div></li>';
+                template += '</ul>';
+                $('#chartInfo_Three').html(template);
+                return false;
+            }
+        },
+        series: [{
+            type: 'column',
+            name: threeTitle + '(張)',
+            data: eval(data),
+            color: '#E41B17', negativeColor: '#41A317',
+            turboThreshold: 0,
+            yAxis: 0,
+            animation: true,
+            dataGrouping: { enabled: false }
+        }, {
+            type: 'colu
+---
+      }
+    }
+</script>
+
+
+
+ 
+</div>
+
+                        
+<div id='LBlock_8' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img id="block6_imgMark" class="ctmark" src="https://histock.tw/images/2017e/stock/mark3.png" />
+        <div class="ctname handle">台積電 (2330)融資融券與借券</div>
+        <div class="ctclose" title="關閉視窗" onclick='closeBlock("LBlock_8")'></div>
+        <div class="ctadd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        <a id="block6_hlLink" href="/stock/chips.aspx?no=2330&amp;m=mg" target="_blank"><div class="ctmore" title="看詳細資訊"></div></a>
+    </div>
+
+    
+    
+<table class="tb-stock tbChip">
+    <tr><th class="alt w1">融資變化</th><th class="alt2 w1">融券變化</th><th class="alt w1">借券變化</th><th class="alt2 w1">資券互抵</th><th class="alt w1
+---
+add hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        <a id="block6_hlLink" href="/stock/chips.aspx?no=2330&amp;m=mg" target="_blank"><div class="ctmore" title="看詳細資訊"></div></a>
+    </div>
+
+    
+    
+<table class="tb-stock tbChip">
+    <tr><th class="alt w1">融資變化</th><th class="alt2 w1">融券變化</th><th class="alt w1">借券變化</th><th class="alt2 w1">資券互抵</th><th class="alt w1">資券當沖</th></tr><tr class="alt-row"><td><span class="clr-rd">11</span></td><td><span class="clr-rd">11</span></td><td><span class="clr-rd">140</span></td><td>0</td><td>0.00%</td></tr><tr><th class="alt w1">融資餘額</th><th class="alt2 w1">融券餘額</th><th class="alt w1">借券</th><th class="alt2 w1">借券還券</th><th class="alt w1">借券餘額</th></tr><tr class="alt-row"><td>35,343</td><td>16</td><td>3,861</td><td>11,342</td><td>207,740</td></
+---
+ass="cfdate">更新時間:2026.10.29</div>
+</div>
+
+                        
+<div id='LBlock_7' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img id="block7_imgMark" class="ctmark" src="https://histock.tw/images/2017e/stock/mark3.png" />
+        <div class="ctname handle">台積電 (2330)統計數據</div>
+        <div class="ctclose" title="關閉視窗" onclick='closeBlock("LBlock_7")'></div>
+        <div class="ctadd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        
+    </div>
+
+    
+    
+<table class="tb-stock tbChip">
+    <tr><th class="w1">項目</th><th class="w1">起始日期</th><th class="w1">連續天數</th><th class="w1">累積數量</th></tr><tr class="alt-row"><th>外資</th><td>2026.10.06</td><td><span class="clr-gr">賣超16天</span></td><td>-164,597張</td></tr><tr><th>自營</th><td>2026.10.30</td><td><span 
+---
+連續1個月衰退</span></td></tr>
+</table>
+</div>
+
+                        
+<div id='LBlock_5' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img id="block8_imgMark" class="ctmark" src="https://histock.tw/images/2017e/stock/mark3.png" />
+        <div class="ctname handle">台積電 (2330)八大官股買賣超</div>
+        <div class="ctclose" title="關閉視窗" onclick='closeBlock("LBlock_5")'></div>
+        <div class="ctadd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        <a id="block8_hlLink" href="/stock/broker.aspx?no=2330" target="_blank"><div class="ctmore" title="看詳細資訊"></div></a>
+    </div>
+
+    
+    
+
+<div class="grid-body">
+    <div class="cbchart">
+        <div id="chart_Broker8" class="mainchart schart" style="height:355px;"></div>
+        <div class="chartInfo">
+      
+---
+dd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        <a id="block8_hlLink" href="/stock/broker.aspx?no=2330" target="_blank"><div class="ctmore" title="看詳細資訊"></div></a>
+    </div>
+
+    
+    
+
+<div class="grid-body">
+    <div class="cbchart">
+        <div id="chart_Broker8" class="mainchart schart" style="height:355px;"></div>
+        <div class="chartInfo">
+            <div id="chartInfo_Broker8" ></div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        initalChart_Broker8({"Money1":"[[1785715200000,57118],[1785801600000,50888],[1785888000000,-50288],[1785974400000,29803],[1786060800000,4857],[1786320000000,-90],[1786406400000,-9507],[1786492800000,-13820],[1786579200000,-22436],[1786665600000,9539],[1786924800000,-23558],[1787011200000,-64
+---
+],[1791936000000,2490],[1792022400000,2440],[1792108800000,2420],[1792368000000,2420],[1792454400000,2405],[1792540800000,2420],[1792627200000,2385],[1793059200000,2400],[1793145600000,2425],[1793232000000,2415],[1793318400000,2370]]"});
+    });
+
+    function initalChart_Broker8(data) {
+        Highcharts.setOptions({
+            lang: {
+                thousandsSep: ','
+            }
+        });
+        var chart, options;
+        options = {
+            chart: {
+                renderTo: 'chart_Broker8',
+                plotBorderWidth: 2,
+                alignTicks: false,
+                animation: false,
+                events: {
+                    load: function () {
+                        try {
+                            var maxLength = this.series[1].points.length - 1;//要用1
+                            var day = this.series[1].points[maxLength].x;
+                            var template = '<ul class="ci_col3"><li><div>' + Highcharts.dateFormat('%Y/%m/%d'
+---
+            load: function () {
+                        try {
+                            var maxLength = this.series[1].points.length - 1;//要用1
+                            var day = this.series[1].points[maxLength].x;
+                            var template = '<ul class="ci_col3"><li><div>' + Highcharts.dateFormat('%Y/%m/%d', day) + '</div></li><li class="ci_head"><div>官股</div><div>張</div><div>萬元</div></li>';
+
+                            template += '<li><div class="ci_title">合庫</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[11].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[3].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">土銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[12].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[4].points[maxLength].y, 0) + '</div></li>';
+
+        
+---
+                           var template = '<ul class="ci_col3"><li><div>' + Highcharts.dateFormat('%Y/%m/%d', day) + '</div></li><li class="ci_head"><div>官股</div><div>張</div><div>萬元</div></li>';
+
+                            template += '<li><div class="ci_title">合庫</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[11].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[3].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">土銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[12].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[4].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">台銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[13].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.s
+---
+Y/%m/%d', day) + '</div></li><li class="ci_head"><div>官股</div><div>張</div><div>萬元</div></li>';
+
+                            template += '<li><div class="ci_title">合庫</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[11].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[3].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">土銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[12].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[4].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">台銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[13].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[5].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><d
+---
+ci_value2">' + Highcharts.numberFormat(this.series[11].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[3].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">土銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[12].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[4].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">台銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[13].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[5].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">台企</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[14].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.s
+---
+ci_value3">' + Highcharts.numberFormat(this.series[3].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">土銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[12].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[4].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">台銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[13].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[5].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">台企</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[14].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[6].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><d
+---
+ci_value2">' + Highcharts.numberFormat(this.series[12].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[4].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">台銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[13].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[5].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">台企</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[14].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[6].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">彰銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[15].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.s
+---
+ci_value3">' + Highcharts.numberFormat(this.series[4].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">台銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[13].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[5].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">台企</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[14].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[6].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">彰銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[15].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[7].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><d
+---
+ci_value2">' + Highcharts.numberFormat(this.series[13].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[5].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">台企</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[14].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[6].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">彰銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[15].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[7].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">第一</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[16].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.s
+---
+ci_value3">' + Highcharts.numberFormat(this.series[5].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">台企</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[14].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[6].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">彰銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[15].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[7].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">第一</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[16].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[8].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><d
+---
+ci_value2">' + Highcharts.numberFormat(this.series[14].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[6].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">彰銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[15].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[7].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">第一</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[16].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[8].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">兆豐</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[17].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.s
+---
+ci_value3">' + Highcharts.numberFormat(this.series[6].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">彰銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[15].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[7].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">第一</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[16].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[8].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">兆豐</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[17].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[9].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><d
+---
+ci_value2">' + Highcharts.numberFormat(this.series[15].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[7].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">第一</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[16].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[8].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">兆豐</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[17].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[9].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">華南</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[18].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.s
+---
+ci_value3">' + Highcharts.numberFormat(this.series[7].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">第一</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[16].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[8].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">兆豐</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[17].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[9].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">華南</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[18].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[10].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><
+---
+ci_value2">' + Highcharts.numberFormat(this.series[16].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[8].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">兆豐</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[17].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[9].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">華南</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[18].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[10].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">合計</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[2].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.s
+---
+ci_value3">' + Highcharts.numberFormat(this.series[8].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">兆豐</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[17].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[9].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">華南</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[18].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[10].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">合計</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[2].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[1].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '</ul>'
+---
+ci_value2">' + Highcharts.numberFormat(this.series[17].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[9].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">華南</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[18].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[10].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">合計</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[2].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[1].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '</ul>';
+                            $('#chartInfo_Broker8').html(template);
+                        } catch (e) {
+                            //console.log(e);
+                        }
+
+---
+ci_value3">' + Highcharts.numberFormat(this.series[9].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">華南</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[18].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[10].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">合計</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[2].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[1].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '</ul>';
+                            $('#chartInfo_Broker8').html(template);
+                        } catch (e) {
+                            //console.log(e);
+                        }
+                    }
+                }
+            },
+            legend: {
+                ena
+---
+i_value2">' + Highcharts.numberFormat(this.series[18].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[10].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">合計</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[2].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[1].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '</ul>';
+                            $('#chartInfo_Broker8').html(template);
+                        } catch (e) {
+                            //console.log(e);
+                        }
+                    }
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            credits: {
+                enabled: false
+            },
+            scrollbar: {
+                enabled: false
+            },
+           
+---
+ci_value3">' + Highcharts.numberFormat(this.series[10].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '<li><div class="ci_title">合計</div><div class="ci_value2">' + Highcharts.numberFormat(this.series[2].points[maxLength].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.series[1].points[maxLength].y, 0) + '</div></li>';
+
+                            template += '</ul>';
+                            $('#chartInfo_Broker8').html(template);
+                        } catch (e) {
+                            //console.log(e);
+                        }
+                    }
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            credits: {
+                enabled: false
+            },
+            scrollbar: {
+                enabled: false
+            },
+            rangeSelector: {
+                enabled: false
+            },
+            navigator: {
+      
+---
+ false
+            },
+            rangeSelector: {
+                enabled: false
+            },
+            navigator: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            title: {
+                text: '台積電 (2330)',
+                floating: true,
+                x: -55,
+                y: 15
+            },
+            subtitle: {
+                text: '嗨投資 histock.tw',
+                floating: true,
+                align: 'right',
+                y: 15
+            },
+            xAxis: {
+                labels: {
+                    formatter: function () { return Highcharts.dateFormat('%Y/%m/%d', this.value); }
+                }
+            },
+            yAxis: [{
+                top: 30,
+                height: 290,
+                gridLineWidth: 0,
+                title: { text: '' },
+                labels: { enabled: false }
+            }, {
+                top: 30
+---
+     y: 15
+            },
+            subtitle: {
+                text: '嗨投資 histock.tw',
+                floating: true,
+                align: 'right',
+                y: 15
+            },
+            xAxis: {
+                labels: {
+                    formatter: function () { return Highcharts.dateFormat('%Y/%m/%d', this.value); }
+                }
+            },
+            yAxis: [{
+                top: 30,
+                height: 290,
+                gridLineWidth: 0,
+                title: { text: '' },
+                labels: { enabled: false }
+            }, {
+                top: 30,
+                height: 290,
+                title: { text: '' },
+                opposite: false,
+                labels: {
+                    align: 'left', x: 0, formatter: function () { return this.value + "元"; }
+                }
+            }, {
+                top: 500,
+                height: 0,
+                title: { text: '' }
+            }],
+      
+---
+olor: '#aaaaaa',
+                    dashStyle: 'LongDash'
+                }],
+                backgroundColor: '#2d2d2d',
+                shared: true,
+                formatter: function () {
+                    try {
+                        var template = '<ul class="ci_col3"><li><div>' + Highcharts.dateFormat('%Y/%m/%d', this.x) + '</div></li><li class="ci_head"><div>官股</div><div>張</div><div>萬元</div></li>';
+                        var color = '';
+                        template += '<li><div class="ci_title">合庫</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[11].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[3].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">土銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[12].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[4].y, 0) + '</div></li>';
+
+                        template += '<li><div 
+---
+e = '<ul class="ci_col3"><li><div>' + Highcharts.dateFormat('%Y/%m/%d', this.x) + '</div></li><li class="ci_head"><div>官股</div><div>張</div><div>萬元</div></li>';
+                        var color = '';
+                        template += '<li><div class="ci_title">合庫</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[11].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[3].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">土銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[12].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[4].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">台銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[13].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[5].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">
+---
+'</div></li><li class="ci_head"><div>官股</div><div>張</div><div>萬元</div></li>';
+                        var color = '';
+                        template += '<li><div class="ci_title">合庫</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[11].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[3].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">土銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[12].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[4].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">台銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[13].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[5].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">台企</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[14].y, 0) +
+---
+iv class="ci_title">合庫</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[11].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[3].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">土銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[12].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[4].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">台銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[13].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[5].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">台企</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[14].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[6].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">
+---
+s.points[11].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[3].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">土銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[12].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[4].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">台銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[13].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[5].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">台企</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[14].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[6].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">彰銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[15].y, 0) +
+---
+iv class="ci_title">土銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[12].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[4].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">台銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[13].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[5].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">台企</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[14].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[6].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">彰銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[15].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[7].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">
+---
+s.points[12].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[4].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">台銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[13].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[5].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">台企</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[14].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[6].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">彰銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[15].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[7].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">第一</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[16].y, 0) +
+---
+iv class="ci_title">台銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[13].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[5].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">台企</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[14].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[6].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">彰銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[15].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[7].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">第一</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[16].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[8].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">
+---
+s.points[13].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[5].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">台企</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[14].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[6].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">彰銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[15].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[7].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">第一</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[16].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[8].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">兆豐</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[17].y, 0) +
+---
+iv class="ci_title">台企</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[14].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[6].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">彰銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[15].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[7].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">第一</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[16].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[8].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">兆豐</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[17].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[9].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">
+---
+s.points[14].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[6].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">彰銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[15].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[7].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">第一</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[16].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[8].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">兆豐</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[17].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[9].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">華南</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[18].y, 0) +
+---
+iv class="ci_title">彰銀</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[15].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[7].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">第一</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[16].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[8].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">兆豐</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[17].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[9].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">華南</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[18].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[10].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title"
+---
+s.points[15].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[7].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">第一</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[16].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[8].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">兆豐</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[17].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[9].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">華南</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[18].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[10].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">合計</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[2].y, 0) +
+---
+iv class="ci_title">第一</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[16].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[8].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">兆豐</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[17].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[9].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">華南</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[18].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[10].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">合計</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[2].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[1].y, 0) + '</div></li>';
+
+                        template += '</ul>';
+                 
+---
+s.points[16].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[8].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">兆豐</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[17].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[9].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">華南</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[18].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[10].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">合計</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[2].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[1].y, 0) + '</div></li>';
+
+                        template += '</ul>';
+                        $('#chartInfo_Broker8').html(template);
+                    } catch (e) {
+---
+iv class="ci_title">兆豐</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[17].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[9].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">華南</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[18].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[10].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">合計</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[2].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[1].y, 0) + '</div></li>';
+
+                        template += '</ul>';
+                        $('#chartInfo_Broker8').html(template);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                    return false;
+                }
+            },
+            series: [{
+    
+---
+s.points[17].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[9].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">華南</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[18].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[10].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">合計</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[2].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[1].y, 0) + '</div></li>';
+
+                        template += '</ul>';
+                        $('#chartInfo_Broker8').html(template);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                    return false;
+                }
+            },
+            series: [{
+                name: '收盤價', dataGrouping: { enabled: false }, yAxis: 1, zIndex: 2
+  
+---
+v class="ci_title">華南</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[18].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[10].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">合計</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[2].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[1].y, 0) + '</div></li>';
+
+                        template += '</ul>';
+                        $('#chartInfo_Broker8').html(template);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                    return false;
+                }
+            },
+            series: [{
+                name: '收盤價', dataGrouping: { enabled: false }, yAxis: 1, zIndex: 2
+            }, {
+                type: 'column',
+                name: '買賣總金額(億元)', color: '#E41B17', negativeColor: '#41A317', dataGrouping: { enabled: false },
+ 
+---
+s.points[18].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[10].y, 0) + '</div></li>';
+
+                        template += '<li><div class="ci_title">合計</div><div class="ci_value2">' + Highcharts.numberFormat(this.points[2].y, 0) + '</div><div class="ci_value3">' + Highcharts.numberFormat(this.points[1].y, 0) + '</div></li>';
+
+                        template += '</ul>';
+                        $('#chartInfo_Broker8').html(template);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                    return false;
+                }
+            },
+            series: [{
+                name: '收盤價', dataGrouping: { enabled: false }, yAxis: 1, zIndex: 2
+            }, {
+                type: 'column',
+                name: '買賣總金額(億元)', color: '#E41B17', negativeColor: '#41A317', dataGrouping: { enabled: false },
+                zIndex: 1
+            }, {
+                name: '買賣超張數', dataGr
+---
+].data = eval(data['Count4']);
+            options.series[15].data = eval(data['Count5']);
+            options.series[16].data = eval(data['Count6']);
+            options.series[17].data = eval(data['Count7']);
+            options.series[18].data = eval(data['Count8']);
+            chart = new Highcharts.StockChart(options);
+        }
+</script>
+</div>
+
+                        
+<div id='LBlock_6' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img id="block9_imgMark" class="ctmark" src="https://histock.tw/images/2017e/stock/mark3.png" />
+        <div class="ctname handle">台積電 (2330)分點買賣日報</div>
+        <div class="ctclose" title="關閉視窗" onclick='closeBlock("LBlock_6")'></div>
+        <div class="ctadd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        <a id=
+---
+al(data['Count4']);
+            options.series[15].data = eval(data['Count5']);
+            options.series[16].data = eval(data['Count6']);
+            options.series[17].data = eval(data['Count7']);
+            options.series[18].data = eval(data['Count8']);
+            chart = new Highcharts.StockChart(options);
+        }
+</script>
+</div>
+
+                        
+<div id='LBlock_6' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img id="block9_imgMark" class="ctmark" src="https://histock.tw/images/2017e/stock/mark3.png" />
+        <div class="ctname handle">台積電 (2330)分點買賣日報</div>
+        <div class="ctclose" title="關閉視窗" onclick='closeBlock("LBlock_6")'></div>
+        <div class="ctadd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        <a id="block9_hlL
+---
+rt(options);
+        }
+</script>
+</div>
+
+                        
+<div id='LBlock_6' class="grid-item w398">
+    <div class="grid-hdr">
+        
+        <img id="block9_imgMark" class="ctmark" src="https://histock.tw/images/2017e/stock/mark3.png" />
+        <div class="ctname handle">台積電 (2330)分點買賣日報</div>
+        <div class="ctclose" title="關閉視窗" onclick='closeBlock("LBlock_6")'></div>
+        <div class="ctadd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        <a id="block9_hlLink" href="/stock/branch.aspx?no=2330" target="_blank"><div class="ctmore" title="看詳細資訊"></div></a>
+    </div>
+
+    
+    
+
+<div class="grid-body">
+    
+
+    <div class="cbchart" style="margin-top: 5px;">
+        <div id="chart_BrokerBranch" class="mainchart w99p" style="height: 358px;"></div>
+   
+---
+dd hide2" title="新增至自選條件"></div>
+        <div class="ctdelete hide2" title="從自選條件刪除"></div>
+        <div class="grid-ctrl"><a class="toggle"><div class="ctzoom" title="圖表放大"></div><div class="ctzoomout hide2" title="圖表縮小"></div></a></div>
+        <a id="block9_hlLink" href="/stock/branch.aspx?no=2330" target="_blank"><div class="ctmore" title="看詳細資訊"></div></a>
+    </div>
+
+    
+    
+
+<div class="grid-body">
+    
+
+    <div class="cbchart" style="margin-top: 5px;">
+        <div id="chart_BrokerBranch" class="mainchart w99p" style="height: 358px;"></div>
+        
+    </div>
+</div>
+<div class="card-foot grid-foot">
+    <table class="tb-stock tbChip tbHide" style="margin-top: -20px;">
+        <tr>
+            <th class="w1 w90 chsell">券商名稱</th>
+            <th class="w1 w70 chsell hidecell">買張</th>
+            <th class="w1 w70 chsell hidecell">賣張</th>
+            <th class="w1 w70 chsell">賣超</th>
+            <th class="w1 w70 chsell">均價</th>
+            <th class="

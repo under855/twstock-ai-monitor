@@ -1,0 +1,40 @@
+name: Verify AAPL real-time feed
+on:
+  push:
+    branches: ['feature-live-validation-20261030']
+    paths: ['.github/workflows/verify-aapl-live-feed.yml']
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Poll AAPL real-time / extended-hours feed
+        run: |
+          python - <<'PY'
+          import json,time,urllib.request,datetime,zoneinfo
+          tz=zoneinfo.ZoneInfo('America/New_York')
+          base='https://query1.finance.yahoo.com/v8/finance/chart/AAPL?range=1d&interval=1m&includePrePost=true'
+          prev=None; advances=0; price_changes=0; prev_price=None
+          for n in range(4):
+              u=base+'&_='+str(int(time.time()*1000))
+              req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'})
+              try:
+                  with urllib.request.urlopen(req,timeout=12) as r: j=json.load(r)
+              except Exception:
+                  req=urllib.request.Request('https://proxy.cors.dev/'+u,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'})
+                  with urllib.request.urlopen(req,timeout=12) as r: j=json.load(r)
+              x=j['chart']['result'][0]; m=x.get('meta') or {}; ts=x.get('timestamp') or []; q=(x.get('indicators',{}).get('quote') or [{}])[0]
+              valid=[(t,c) for t,c in zip(ts,q.get('close') or []) if c is not None]
+              lt,lc=valid[-1] if valid else (None,None)
+              rt=m.get('regularMarketTime'); rp=m.get('regularMarketPrice')
+              chosen_t=lt or rt; chosen_p=lc if lc is not None else rp
+              def fmt(t): return datetime.datetime.fromtimestamp(t,tz).strftime('%Y-%m-%d %H:%M:%S %Z') if t else None
+              print(json.dumps({'sample':n+1,'metaPrice':rp,'metaTime':fmt(rt),'lastBarPrice':chosen_p,'lastBarTime':fmt(chosen_t)},ensure_ascii=False),flush=True)
+              if prev is not None and chosen_t and chosen_t>prev: advances+=1
+              if prev_price is not None and chosen_p is not None and chosen_p!=prev_price: price_changes+=1
+              if chosen_t: prev=chosen_t
+              if chosen_p is not None: prev_price=chosen_p
+              if n<3: time.sleep(15)
+          print('TIME_ADVANCES',advances,'PRICE_CHANGES',price_changes)
+          if prev is None: raise SystemExit('no timestamp')
+          PY

@@ -1,0 +1,51 @@
+name: Production MIS chart verification
+on:
+  push:
+    branches: ['prod-verify-mis-chart-20261030']
+    paths: ['.github/workflows/prod-verify-mis-chart-20261030.yml']
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Wait for production chart layer
+        run: |
+          SITE='https://under855.github.io/twstock-ai-monitor'
+          for i in $(seq 1 30); do
+            if curl -fsSL "$SITE/extras-v090.js?_=$RANDOM" | grep -q 'misSeriesFor(code)'; then echo 'MIS chart layer deployed'; exit 0; fi
+            sleep 5
+          done
+          echo 'new chart layer not visible'; exit 1
+      - name: Browser production regression check
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          test -n "$CHROME"; export CHROME
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          cat > verify-prod.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:1280,height:1000},timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'block'});
+          const codes=['2330','009817','0050','3711','3293','2002','00878','00919'];
+          await p.addInitScript(c=>localStorage.setItem('twAiWatchV3',JSON.stringify(c)),codes);
+          const errors=[];p.on('pageerror',e=>errors.push(e.message));
+          await p.goto('https://under855.github.io/twstock-ai-monitor/?misverify='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForFunction(()=>document.querySelectorAll('#watch article.row').length>=8,null,{timeout:60000});
+          await p.waitForFunction(()=>document.querySelectorAll('#watch canvas.spark[data-today-full="1"]').length>=8,null,{timeout:45000});
+          await p.waitForSelector('#foreignLiveTest',{timeout:30000});
+          const first=await p.evaluate(()=>({scores:[...document.querySelectorAll('.scoreNum')].map(x=>x.textContent.trim()),charts:[...document.querySelectorAll('#watch canvas.spark')].map(x=>({points:Number(x.dataset.todayPoints||0),official:Number(x.dataset.todayOfficialPoints||0),end:x.dataset.todayEnd})),foreign:document.querySelector('#foreignLiveTest')?.dataset?.accepted||'0',taiex:document.querySelector('#taiexChart')?.dataset?.todayEnd,errors:[]}));
+          console.log('FIRST',JSON.stringify(first));
+          if(first.scores.filter(x=>/^\d+$/.test(x)).length<6)throw Error('scores regressed');
+          if(first.charts.some(x=>x.points<2))throw Error('stock chart missing');
+          if(!first.taiex)throw Error('TAIEX chart missing');
+          const row=p.locator('#watch article.row').filter({has:p.locator('.sym',{hasText:'3711'})}).first();await row.click();await p.waitForSelector('#sheet.show',{timeout:15000});await p.waitForTimeout(3000);
+          const detail=await p.evaluate(()=>({news:document.querySelectorAll('#news .event').length,tabs:[...document.querySelectorAll('#detailChartTabs button')].map(x=>x.textContent.trim()),price:document.getElementById('dPrice')?.textContent?.trim()}));
+          console.log('DETAIL',JSON.stringify(detail));
+          if(detail.news<1)throw Error('news regressed');
+          if(!['今日','5日','20日','60日'].every(x=>detail.tabs.includes(x)))throw Error('detail tabs regressed');
+          if(errors.length)throw Error(errors.join(' | '));
+          await b.close();
+          JS
+          node ./verify-prod.mjs

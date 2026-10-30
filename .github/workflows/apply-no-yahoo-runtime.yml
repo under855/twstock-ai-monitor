@@ -2,7 +2,7 @@ name: Apply no-Yahoo official-source runtime
 on:
   push:
     branches: ['source-migration-no-yahoo-20261030']
-    paths: ['.github/workflows/apply-no-yahoo-runtime.yml']
+    paths: ['.github/workflows/apply-no-yahoo-runtime.yml','scripts/patch_no_yahoo_runtime.py','scripts/patch_cover_kabutan.py']
   workflow_dispatch:
 permissions:
   contents: write
@@ -17,7 +17,9 @@ jobs:
       - uses: actions/setup-node@v4
         with: {node-version: '22'}
       - name: Apply migration
-        run: python scripts/patch_no_yahoo_runtime.py
+        run: |
+          python scripts/patch_no_yahoo_runtime.py
+          python scripts/patch_cover_kabutan.py
       - name: Static source audit
         shell: bash
         run: |
@@ -28,7 +30,7 @@ jobs:
           grep -F 'www.twse.com.tw/exchangeReport/STOCK_DAY' extras-v090.js
           grep -F 'www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock' extras-v090.js
           grep -F 'api.nasdaq.com/api/quote/NVDA/info' foreign-live-test.js
-          grep -F '5253:TYO' foreign-live-test.js
+          grep -F 's.kabutan.jp/stocks/5253' foreign-live-test.js
           grep -F "tw-ai-monitor-v095official1" sw.js
       - name: Verify official daily source payloads
         shell: bash
@@ -59,10 +61,11 @@ jobs:
           await p.goto('http://127.0.0.1:8000/?officialqa='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
           await p.waitForSelector('#nvdaValidation',{timeout:20000});await p.waitForSelector('#coverValidation',{timeout:20000});
           await p.waitForFunction(()=>Number(document.querySelector('#nvdaValidation')?.dataset.accepted||0)>=1,null,{timeout:30000});
-          const cards=await p.evaluate(()=>({nvda:{n:Number(nvdaValidation.dataset.accepted||0),rt:nvdaValidation.dataset.realTime,price:nvdaValidation.dataset.price,time:nvdaValidation.dataset.sourceTime},cover:{rt:coverValidation.dataset.realTime,status:document.getElementById('coverStatus')?.textContent,price:coverValidation.dataset.price||null},rows:document.querySelectorAll('#watch article.row').length,errors:[]}));
+          await p.waitForFunction(()=>document.querySelector('#coverValidation')?.dataset?.price,null,{timeout:30000});
+          const cards=await p.evaluate(()=>({nvda:{n:Number(nvdaValidation.dataset.accepted||0),rt:nvdaValidation.dataset.realTime,price:nvdaValidation.dataset.price,time:nvdaValidation.dataset.sourceTime},cover:{n:Number(coverValidation.dataset.accepted||0),rt:coverValidation.dataset.realTime,status:document.getElementById('coverStatus')?.textContent,price:coverValidation.dataset.price||null,time:coverValidation.dataset.sourceTime||null},rows:document.querySelectorAll('#watch article.row').length,errors:[]}));
           console.log('CARDS',JSON.stringify(cards));
-          if(cards.nvda.n<1||cards.nvda.rt!=='true')throw Error('NVDA Nasdaq realtime marker missing');
-          if(cards.cover.rt!=='false'||!/15/.test(cards.cover.status||''))throw Error('COVER delay labeling missing');
+          if(cards.nvda.n<1||cards.nvda.rt!=='true'||!cards.nvda.price)throw Error('NVDA Nasdaq realtime marker missing');
+          if(cards.cover.rt!=='false'||!/15/.test(cards.cover.status||'')||!cards.cover.price)throw Error('COVER delayed quote/label missing');
           if(cards.rows<8)throw Error('watchlist regressed');
           await p.waitForTimeout(5000);
           const scoreCount=await p.evaluate(()=>[...document.querySelectorAll('.scoreNum')].filter(x=>/^\d+$/.test(x.textContent.trim())).length);

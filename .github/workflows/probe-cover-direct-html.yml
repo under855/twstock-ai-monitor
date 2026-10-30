@@ -1,0 +1,21 @@
+name: Probe COVER direct HTML through CORS bridge
+on:
+  push:
+    branches: ['source-migration-no-yahoo-20261030']
+    paths: ['.github/workflows/probe-cover-direct-html.yml']
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe mobile and pc Kabutan HTML
+        shell: bash
+        run: |
+          set +e
+          for src in 'https://s.kabutan.jp/stocks/5253/' 'https://kabutan.jp/stock/?code=5253'; do
+            u="https://proxy.cors.dev/$src"
+            echo "=== $src ==="
+            curl -L --max-time 25 -sS "$u" -o /tmp/k.html
+            echo SIZE $(wc -c </tmp/k.html)
+            grep -n -E '1,5[0-9][0-9]|15分|現在値|株価|09:[0-9][0-9]|5253|カバー' /tmp/k.html | head -80 || true
+          done

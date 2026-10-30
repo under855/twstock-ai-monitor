@@ -1,0 +1,74 @@
+name: Build accepted 2026-10-30 intraday backfill
+on:
+  push:
+    branches: ['prod-verify-no-yahoo-20261030']
+    paths: ['.github/workflows/build-accepted-1030-backfill.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: 'prod-verify-no-yahoo-20261030'}
+      - name: Build range-bounded minute path with official boundaries
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request,urllib.parse,json,datetime,pathlib,http.cookiejar
+          TZ=datetime.timezone(datetime.timedelta(hours=8));UTC=datetime.timezone.utc;DAY='2026-10-30';UA='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/130 Safari/537.36'
+          codes=['2330','009817','0050','3711','3293','2002','00878','00919']
+          def plain(u):
+            with urllib.request.urlopen(urllib.request.Request(u,headers={'User-Agent':UA,'Accept':'application/json,text/plain,*/*'}),timeout=30) as r:return json.loads(r.read().decode('utf-8-sig','replace'))
+          def hs(code):
+            cj=http.cookiejar.CookieJar();op=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj));page=f'https://histock.tw/stock/{code}'
+            op.open(urllib.request.Request(page,headers={'User-Agent':UA}),timeout=30).read()
+            req=urllib.request.Request(f'https://histock.tw/stock/module/stockdata.aspx?no={code}',headers={'User-Agent':UA,'Referer':page,'Accept':'application/json,text/javascript,*/*;q=0.01','X-Requested-With':'XMLHttpRequest'})
+            with op.open(req,timeout=30) as r:return json.loads(r.read().decode('utf-8-sig','replace'))
+          def n(v):
+            try:return float(str(v).replace(',','').replace('+','').strip())
+            except:return None
+          def official(code):
+            if code=='3293':
+              j=plain('https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3293&date='+urllib.parse.quote('2026/10/01')+'&response=json')
+              for r in j['tables'][0]['data']:
+                if str(r[0]).endswith('/10/30'):return {'open':n(r[3]),'high':n(r[4]),'low':n(r[5]),'close':n(r[6])}
+            else:
+              j=plain(f'https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=20261001&stockNo={code}')
+              for r in j.get('data',[]):
+                if str(r[0]).endswith('/10/30'):return {'open':n(r[3]),'high':n(r[4]),'low':n(r[5]),'close':n(r[6])}
+            raise RuntimeError('official row not found '+code)
+          open_stamp=int(datetime.datetime(2026,10,30,9,0,tzinfo=TZ).timestamp()*1000);close_stamp=int(datetime.datetime(2026,10,30,13,30,tzinfo=TZ).timestamp()*1000)
+          stocks={};report=[]
+          for code in codes:
+            raw=json.loads(hs(code)['data'].replace(',]',']'));pts=[]
+            for source_ts,price in raw:
+              wall=datetime.datetime.fromtimestamp(source_ts/1000,UTC)
+              if wall.strftime('%Y-%m-%d')!=DAY or not datetime.time(9,0)<=wall.time()<=datetime.time(13,30):continue
+              stamp=int(wall.replace(tzinfo=TZ).timestamp()*1000);pts.append({'stamp':stamp,'close':float(price),'time':wall.strftime('%H:%M:%S'),'source':'HiStock 1m minute path'})
+            o=official(code);vals=[p['close'] for p in pts]
+            ok=len(pts)>=50 and min(vals)>=o['low'] and max(vals)<=o['high'] and abs(pts[-1]['close']-o['close'])<1e-9
+            if not ok:raise RuntimeError(f'{code} failed safety gate: n={len(pts)} obs={min(vals)}/{max(vals)}/{pts[-1]["close"]} official={o}')
+            pts=[p for p in pts if p['stamp'] not in (open_stamp,close_stamp)]
+            pts.insert(0,{'stamp':open_stamp,'close':o['open'],'time':'09:00:00','source':'TWSE/TPEx official open'})
+            pts.append({'stamp':close_stamp,'close':o['close'],'time':'13:30:00','source':'TWSE/TPEx official close'});pts.sort(key=lambda x:x['stamp']);stocks[code]=pts
+            report.append({'code':code,'points':len(pts),'official':o,'path_min':min(vals),'path_max':max(vals),'path_close':vals[-1]})
+          # TAIEX: official TWSE 5-second series reduced to one point/minute; keep exact 09:00 and 13:30.
+          j=plain('https://www.twse.com.tw/exchangeReport/MI_5MINS_INDEX?response=json&date=20261030');bucket={}
+          for r in j.get('data',[]):
+            tm=str(r[0]);v=n(r[1])
+            if v is not None and '09:00:00'<=tm<='13:30:00':bucket[tm[:5]]=(tm,v)
+          taiex=[]
+          for _,(tm,v) in sorted(bucket.items()):taiex.append({'stamp':int(datetime.datetime.fromisoformat(f'{DAY}T{tm}+08:00').timestamp()*1000),'close':v,'time':tm,'source':'TWSE MI_5MINS_INDEX official'})
+          if len(taiex)<270 or abs(taiex[-1]['close']-45211.83)>1e-9:raise RuntimeError('TAIEX validation failed')
+          payload={'date':DAY,'generatedAt':datetime.datetime.now(TZ).isoformat(),'source':'One-time 2026-10-30 backfill: HiStock 1m path range-bounded to TWSE/TPEx official OHLC; exact 09:00 open and 13:30 close are official; TAIEX is TWSE official','stocks':stocks,'taiex':taiex}
+          pathlib.Path('accepted-backfill-20261030.json').write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          pathlib.Path('accepted-backfill-20261030-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(report,ensure_ascii=False,indent=2));print('TAIEX',len(taiex),taiex[0],taiex[-1])
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add accepted-backfill-20261030.json accepted-backfill-20261030-report.json
+          git commit -m 'Build accepted 10/30 latest-session backfill'
+          git push origin HEAD:prod-verify-no-yahoo-20261030

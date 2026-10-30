@@ -1,0 +1,73 @@
+name: Apply official MIS chart handoff
+on:
+  push:
+    branches: ['feature-official-mis-chart-20261030']
+    paths: ['.github/workflows/apply-official-mis-chart.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature-official-mis-chart-20261030
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Protect core and unrelated files
+        run: |
+          git fetch origin main
+          git diff --exit-code origin/main -- live-v091.js index.html sw.js
+      - name: Apply chart handoff patch
+        run: python .github/scripts/patch_official_mis_chart.py
+      - name: Static validation
+        run: |
+          node --check extras-v090.js
+          grep -F 'misSeriesFor(code)' extras-v090.js
+          grep -F 'captureTaiexMis' extras-v090.js
+          grep -F 'todayOfficialPoints' extras-v090.js
+      - name: Browser deterministic handoff test
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          test -n "$CHROME"; export CHROME
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          python -m http.server 8000 >/tmp/http.log 2>&1 &
+          cat > verify-mis-handoff.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:1280,height:900},timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'block'});
+          await p.addInitScript(()=>{
+            const day=new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}).replaceAll('-','');
+            const iso=new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});
+            const t=x=>Date.parse(`${iso}T${x}+08:00`);
+            localStorage.setItem('twAiWatchV3',JSON.stringify(['0050']));
+            localStorage.setItem(`tw_live091_series_${day}`,JSON.stringify({'0050':[
+              {stamp:t('10:00:00'),close:101,source:'TWSE MIS 盤中最新成交'},
+              {stamp:t('10:00:15'),close:101.2,source:'TWSE MIS 盤中最新成交'},
+              {stamp:t('10:00:30'),close:101.1,source:'TWSE MIS 盤中最新成交'}
+            ]}));
+            localStorage.setItem(`tw_taiex_mis_series_${day}`,JSON.stringify([
+              {stamp:t('10:00:00'),close:45001},{stamp:t('10:00:15'),close:45005},{stamp:t('10:00:30'),close:45003}
+            ]));
+          });
+          await p.goto('http://127.0.0.1:8000',{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForFunction(()=>Number(document.querySelector('canvas.spark')?.dataset.todayOfficialPoints||0)>=3,null,{timeout:45000});
+          await p.waitForFunction(()=>Number(document.querySelector('#taiexChart')?.dataset.todayOfficialPoints||0)>=3,null,{timeout:30000});
+          const out=await p.evaluate(()=>{const c=document.querySelector('canvas.spark'),t=document.querySelector('#taiexChart');return {stock:{official:Number(c.dataset.todayOfficialPoints),end:c.dataset.todayEnd,last:Number(c.dataset.todayOfficialLast)},taiex:{official:Number(t.dataset.todayOfficialPoints),end:t.dataset.todayEnd,last:Number(t.dataset.todayOfficialLast)}}});
+          console.log(JSON.stringify(out));
+          if(out.stock.official<3||out.stock.end!=='10:00')throw Error('stock MIS handoff failed');
+          if(out.taiex.official<3||out.taiex.end!=='10:00')throw Error('TAIEX MIS handoff failed');
+          await b.close();
+          JS
+          node ./verify-mis-handoff.mjs
+      - name: Commit chart layer only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js
+          git diff --cached --quiet && exit 0
+          git commit -m 'Use official MIS sequence for live chart tail'
+          git push origin HEAD:feature-official-mis-chart-20261030

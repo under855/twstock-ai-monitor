@@ -214,10 +214,18 @@
     const firstDate=d[0]?.time instanceof Date?d[0].time:new Date(d[0]?.time);const day=Number.isFinite(firstDate?.getTime?.())?firstDate.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}):twIsoDay(),t0=Date.parse(`${day}T09:00:00+08:00`),t1=Date.parse(`${day}T13:30:00+08:00`),span=t1-t0;
     const X=x=>p.l+Math.max(0,Math.min(1,(new Date(x.time).getTime()-t0)/span))*(W-p.l-p.r),Y=v=>p.t+(H-p.t-p.b)*(hi-Number(v))/(hi-lo);
     if(!compact){ctx.strokeStyle='#1e3550';ctx.fillStyle='#91a8c2';ctx.font=`${11*dpr}px sans-serif`;ctx.lineWidth=Math.max(1,dpr);for(let k=0;k<4;k++){const y=p.t+(H-p.t-p.b)*k/3;ctx.beginPath();ctx.moveTo(p.l,y);ctx.lineTo(W-p.r,y);ctx.stroke();ctx.fillText((hi-(hi-lo)*k/3).toFixed(2),3*dpr,y+4*dpr)}for(const [label,ratio] of [['09:00',0],['11:15',.5],['13:30',1]]){const x=p.l+(W-p.l-p.r)*ratio;ctx.fillText(label,Math.max(2*dpr,Math.min(W-42*dpr,x-14*dpr)),H-6*dpr)}}
-    const fallback=d.at(-1).close-d[0].close,delta=Number.isFinite(Number(change))?Number(change):fallback;ctx.strokeStyle=delta>=0?'#ff7272':'#64d69a';ctx.lineWidth=Math.max(1.5*dpr,compact?1.8*dpr:2.2*dpr);ctx.beginPath();d.forEach((x,i)=>{const xx=X(x),yy=Y(x.close);if(i)ctx.lineTo(xx,yy);else ctx.moveTo(xx,yy)});ctx.stroke();return true;
+    const delta=Number.isFinite(Number(change))?Number(change):0,trend=delta>0?'up':delta<0?'down':'flat';ctx.strokeStyle=trend==='up'?'#ff7272':trend==='down'?'#64d69a':'#d2dceb';canvas.dataset.trendColor=trend;canvas.dataset.trendChange=String(delta);ctx.lineWidth=Math.max(1.5*dpr,compact?1.8*dpr:2.2*dpr);ctx.beginPath();d.forEach((x,i)=>{const xx=X(x),yy=Y(x.close);if(i)ctx.lineTo(xx,yy);else ctx.moveTo(xx,yy)});ctx.stroke();return true;
+  }
+  function sessionChangeFor(code){
+    try{
+      const row=rowFor(String(code)),txt=row?.querySelector('.chg')?.textContent?.trim()||'';
+      const m=txt.match(/[-+]?\d+(?:\.\d+)?/);if(m){const n=Number(m[0]);if(Number.isFinite(n))return n}
+    }catch{}
+    try{const n=Number(window.__TW_LIVE_V091__?.stocks?.[String(code)]?.change);if(Number.isFinite(n))return n}catch{}
+    return 0;
   }
   function drawTodayPoints(code,points,canvas,compact){
-    if(!canvas)return false;const merged=mergedTodayPoints(code,Array.isArray(points)?points:[]),change=Number(window.__TW_LIVE_V091__?.stocks?.[String(code)]?.change);
+    if(!canvas)return false;const merged=mergedTodayPoints(code,Array.isArray(points)?points:[]),change=sessionChangeFor(code);
     if(merged.length<2||!drawFixedIntraday(canvas,merged,compact,change))return false;
     const vals=merged.map(x=>Number(x.close)),min=Math.min(...vals),max=Math.max(...vals),minI=vals.indexOf(min),maxI=vals.indexOf(max),firstHm=hmTw(merged[0].time),lastHm=hmTw(merged.at(-1).time);
     const fullStart=firstHm<='09:05';

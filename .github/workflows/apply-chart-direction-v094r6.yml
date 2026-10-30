@@ -1,0 +1,79 @@
+name: Apply chart direction repair v0.9.4r6
+on:
+  push:
+    branches: ['fix-chart-direction-v094r6']
+    paths:
+      - '.github/workflows/apply-chart-direction-v094r6.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Preserve market core
+        run: sha256sum live-v091.js scripts/update_latest.py data/latest.json > /tmp/core.before
+      - name: Apply isolated chart patch
+        run: python scripts/patch_chart_direction_v094r6.py
+      - name: Static verification
+        run: |
+          node --check extras-v090.js
+          grep -F 'installChronologicalDraw' extras-v090.js
+          grep -F 'todayFallbackResolved' extras-v090.js
+          grep -F 'refreshTodayFallbackCharts(true)' extras-v090.js
+          grep -F './extras-v090.js?v=094r6' index.html
+          grep -F "const CACHE='tw-ai-monitor-v094r6';" sw.js
+          sha256sum live-v091.js scripts/update_latest.py data/latest.json > /tmp/core.after
+          diff -u /tmp/core.before /tmp/core.after
+      - name: Verify current intraday payloads
+        run: |
+          python - <<'PY'
+          import json, urllib.request
+          syms=['0050.TW','3711.TW','3293.TWO','2002.TW','00878.TW','00919.TW']
+          for sym in syms:
+              upstream=f'https://query1.finance.yahoo.com/v8/finance/chart/{sym}?range=1d&interval=5m&includePrePost=false'
+              req=urllib.request.Request('https://proxy.cors.dev/'+upstream,headers={'User-Agent':'Mozilla/5.0'})
+              with urllib.request.urlopen(req,timeout=20) as r: j=json.load(r)
+              x=j['chart']['result'][0]
+              ts=x.get('timestamp') or []
+              close=(x.get('indicators',{}).get('quote') or [{}])[0].get('close') or []
+              pts=sorted(dict((int(t),float(c)) for t,c in zip(ts,close) if c is not None).items())
+              assert len(pts)>=2,(sym,len(pts))
+              assert all(pts[i][0]<pts[i+1][0] for i in range(len(pts)-1))
+              print(sym,'points',len(pts),'first',pts[0][1],'last',pts[-1][1],'net',round(pts[-1][1]-pts[0][1],2))
+          PY
+      - name: Local browser acceptance
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          test -n "$CHROME"
+          export CHROME
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          python -m http.server 8000 >/tmp/http.log 2>&1 &
+          sleep 2
+          cat > verify-prod.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:390,height:844},locale:'zh-TW',timezoneId:'Asia/Taipei',serviceWorkers:'block'});
+          const errors=[];p.on('pageerror',e=>errors.push(e.message));
+          await p.goto('http://127.0.0.1:8000/?v='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForFunction(()=>window.__TW_EXTRAS_V090__?.ok===true,null,{timeout:30000});
+          await p.waitForFunction(()=>document.querySelectorAll('#watch article.row').length>=6,null,{timeout:60000});
+          await p.waitForTimeout(12000);
+          const rows=await p.evaluate(()=>[...document.querySelectorAll('#watch article.row')].map(x=>({code:x.querySelector('.sym')?.textContent?.trim(),canvas:!!x.querySelector('canvas.spark'),fallback:!!x.querySelector('.sparkFallback')})));
+          console.log('MAIN_CHART_DOM',JSON.stringify(rows));
+          if(rows.some(x=>!x.canvas||x.fallback))throw Error('main chart canvas missing');
+          if(errors.length)throw Error(errors.join(' | '));
+          await b.close();
+          JS
+          node verify-prod.mjs
+      - name: Commit repair
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js index.html sw.js
+          git commit -m 'Fix chronological today charts and canvas recovery'
+          git push origin HEAD:fix-chart-direction-v094r6

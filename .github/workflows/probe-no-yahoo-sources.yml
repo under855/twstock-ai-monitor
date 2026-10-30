@@ -1,0 +1,38 @@
+name: Probe non-Yahoo market data sources
+on:
+  workflow_dispatch:
+  push:
+    branches: ['source-migration-no-yahoo-20261030']
+    paths: ['.github/workflows/probe-no-yahoo-sources.yml']
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe sources
+        shell: bash
+        run: |
+          set +e
+          ua='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/130 Safari/537.36'
+          echo '=== TWSE MIS intraday chart listed ==='
+          for u in \
+            'https://mis.twse.com.tw/stock/api/getChartOhlcStatis.jsp?ex=tse&ch=tse_2330.tw&fqy=1&delay=0' \
+            'https://mis.twse.com.tw/stock/api/getChartOhlcStatis.jsp?ex=otc&ch=otc_3293.tw&fqy=1&delay=0'; do
+            echo "URL=$u"; curl -L --max-time 15 -A "$ua" -sS -w '\nHTTP=%{http_code}\n' "$u" | head -c 4000; echo; done
+          echo '=== TWSE official monthly history ==='
+          curl -L --max-time 15 -A "$ua" -sS -w '\nHTTP=%{http_code}\n' 'https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=20261001&stockNo=2330' | head -c 4000; echo
+          echo '=== TPEx official history guesses ==='
+          for u in \
+            'https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3293&date=2026/10/01&response=json' \
+            'https://www.tpex.org.tw/web/stock/aftertrading/daily_trading_info/st43_result.php?l=zh-tw&d=115/10&stkno=3293'; do
+            echo "URL=$u"; curl -L --max-time 15 -A "$ua" -sS -w '\nHTTP=%{http_code}\n' "$u" | head -c 4000; echo; done
+          echo '=== Nasdaq NVDA official API ==='
+          for u in \
+            'https://api.nasdaq.com/api/quote/NVDA/info?assetclass=stocks' \
+            'https://api.nasdaq.com/api/quote/NVDA/realtime-trades?assetclass=stocks&limit=20'; do
+            echo "URL=$u"; curl -L --max-time 15 -A "$ua" -H 'Accept: application/json, text/plain, */*' -H 'Referer: https://www.nasdaq.com/' -sS -w '\nHTTP=%{http_code}\n' "$u" | head -c 6000; echo; done
+          echo '=== JPX COVER 5253 official search/detail ==='
+          for u in \
+            'https://quote.jpx.co.jp/jpxhp/main/index.aspx?F=stock_search&freeword=5253' \
+            'https://quote.jpx.co.jp/jpxhp/main/index.aspx?F=stock_detail&code=5253'; do
+            echo "URL=$u"; curl -L --max-time 15 -A "$ua" -sS -w '\nHTTP=%{http_code}\n' "$u" | head -c 6000; echo; done
+          exit 0

@@ -1,0 +1,73 @@
+name: Production latest-session chart verification
+on:
+  push:
+    branches: ['prod-verify-no-yahoo-20261030']
+    paths: ['.github/workflows/prod-verify-latest-session.yml']
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Wait for production runtime and retained session
+        shell: bash
+        run: |
+          SITE='https://under855.github.io/twstock-ai-monitor'
+          RAW='https://raw.githubusercontent.com/under855/twstock-ai-monitor/market-data/data/intraday/latest.json'
+          for i in $(seq 1 60); do
+            html=$(curl -fsSL "$SITE/?_=$RANDOM" || true)
+            extras=$(curl -fsSL "$SITE/extras-v090.js?_=$RANDOM" || true)
+            sw=$(curl -fsSL "$SITE/sw.js?_=$RANDOM" || true)
+            data=$(curl -fsSL "$RAW?_=$RANDOM" || true)
+            if echo "$html" | grep -q 'extras-v090.js?v=095session1' && echo "$extras" | grep -q 'MI_5MINS_INDEX' && echo "$sw" | grep -q 'tw-ai-monitor-v095session1' && echo "$data" | grep -q '"date":"2026-10-30"'; then
+              printf '%s' "$html" >/tmp/index.html;printf '%s' "$extras" >/tmp/extras.js;printf '%s' "$data" >/tmp/intraday.json
+              echo 'Production runtime and retained session are visible';exit 0
+            fi
+            sleep 5
+          done
+          exit 1
+      - name: Source audit
+        run: |
+          ! grep -Eqi 'query1\.finance\.yahoo|finance\.yahoo|yahooQuote|yahooDaily|0700\.HK|騰訊' /tmp/index.html /tmp/extras.js
+          python - <<'PY'
+          import json
+          j=json.load(open('/tmp/intraday.json'))
+          assert j['date']=='2026-10-30'
+          assert all(c in j['stocks'] and len(j['stocks'][c])>=50 for c in ['2330','009817','0050','3711','3293','2002','00878','00919'])
+          assert len(j['taiex'])>=270 and abs(j['taiex'][-1]['close']-45211.83)<1e-9
+          print('retained data ok')
+          PY
+      - name: Browser production acceptance
+        shell: bash
+        run: |
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); export CHROME
+          cat > verify-latest-session.mjs <<'JS'
+          import {chromium} from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:1280,height:1000},timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'block'});
+          const codes=['2330','009817','0050','3711','3293','2002','00878','00919'];const errors=[];p.on('pageerror',e=>errors.push(e.message));
+          await p.addInitScript(c=>localStorage.setItem('twAiWatchV3',JSON.stringify(c)),codes);
+          await p.goto('https://under855.github.io/twstock-ai-monitor/?sessionqa='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForFunction(()=>document.querySelectorAll('#watch article.row').length>=8,null,{timeout:60000});
+          await p.waitForFunction(()=>[...document.querySelectorAll('#watch article.row canvas.spark')].filter(c=>c.dataset.sessionDate==='2026-10-30'&&Number(c.dataset.todayPoints)>=50).length>=8,null,{timeout:60000});
+          await p.waitForFunction(()=>document.getElementById('taiexChart')?.dataset?.sessionDate==='2026-10-30',null,{timeout:60000});
+          await p.waitForTimeout(3000);
+          const snap=()=>p.evaluate(()=>({
+            rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent.trim(),price:r.querySelector('.price')?.textContent.trim(),score:r.querySelector('.scoreNum')?.textContent.trim(),points:Number(r.querySelector('canvas.spark')?.dataset?.todayPoints||0),session:r.querySelector('canvas.spark')?.dataset?.sessionDate||'',width:r.querySelector('canvas.spark')?.getBoundingClientRect().width||0})),
+            taiex:{value:document.getElementById('taiex')?.textContent.trim(),points:Number(taiexChart.dataset.todayPoints||0),session:taiexChart.dataset.sessionDate||'',msg:taiexChartMsg.textContent.trim()},errors
+          }));
+          let s=await snap();console.log('BEFORE',JSON.stringify(s));
+          if(s.rows.length!==8||s.rows.some(x=>x.points<50||x.session!=='2026-10-30'||x.width<200||x.width>530))throw Error('stock chart/session/width regression');
+          if(s.taiex.session!=='2026-10-30'||s.taiex.points<270||s.taiex.value!=='45,211.83')throw Error('TAIEX regression '+JSON.stringify(s.taiex));
+          if(errors.length)throw Error(errors.join(' | '));
+          await p.waitForTimeout(18000);s=await snap();console.log('AFTER',JSON.stringify(s));
+          if(s.rows.some(x=>x.points<50||x.session!=='2026-10-30'))throw Error('15s repaint erased latest session');
+          const r3711=s.rows.find(x=>x.code==='3711');if(!r3711||r3711.price!=='668')throw Error('3711 quote regression');
+          const row=p.locator('#watch article.row').filter({has:p.locator('.sym',{hasText:'3711'})}).first();await row.click();await p.waitForSelector('#sheet.show',{timeout:15000});await p.waitForTimeout(3500);
+          const d=await p.evaluate(()=>({price:dPrice.textContent.trim(),news:document.querySelectorAll('#news .event').length,tabs:[...document.querySelectorAll('#detailChartTabs button')].map(x=>x.textContent.trim())}));console.log('DETAIL',JSON.stringify(d));
+          if(d.price!=='668'||d.news<1||!['今日','5日','20日','60日'].every(x=>d.tabs.includes(x)))throw Error('detail regression');
+          await b.close();
+          JS
+          node verify-latest-session.mjs

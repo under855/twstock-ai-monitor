@@ -1,4 +1,4 @@
-name: Build validated 2026-10-30 intraday backfill
+name: Audit 2026-10-30 intraday backfill
 on:
   push:
     branches: ['prod-verify-no-yahoo-20261030']
@@ -7,12 +7,12 @@ on:
 permissions:
   contents: write
 jobs:
-  build:
+  audit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with: {ref: 'prod-verify-no-yahoo-20261030'}
-      - name: Fetch HiStock intraday and verify against official daily OHLC
+      - name: Audit all 8 HiStock minute paths against official daily OHLC
         shell: bash
         run: |
           python - <<'PY'
@@ -25,15 +25,14 @@ jobs:
           def histock(code):
             cj=http.cookiejar.CookieJar();op=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj));page=f'https://histock.tw/stock/{code}'
             op.open(urllib.request.Request(page,headers={'User-Agent':UA}),timeout=30).read()
-            u=f'https://histock.tw/stock/module/stockdata.aspx?no={code}'
-            req=urllib.request.Request(u,headers={'User-Agent':UA,'Referer':page,'Accept':'application/json,text/javascript,*/*;q=0.01','X-Requested-With':'XMLHttpRequest'})
+            req=urllib.request.Request(f'https://histock.tw/stock/module/stockdata.aspx?no={code}',headers={'User-Agent':UA,'Referer':page,'Accept':'application/json,text/javascript,*/*;q=0.01','X-Requested-With':'XMLHttpRequest'})
             with op.open(req,timeout=30) as r:return json.loads(r.read().decode('utf-8-sig','replace'))
           def n(v):
             try:return float(str(v).replace(',','').replace('+','').strip())
             except:return None
           def official(code):
             if code=='3293':
-              u='https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3293&date='+urllib.parse.quote('2026/10/01')+'&response=json';j=plain_json(u)
+              j=plain_json('https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3293&date='+urllib.parse.quote('2026/10/01')+'&response=json')
               for r in j['tables'][0]['data']:
                 if str(r[0]).endswith('/10/30'):return {'open':n(r[3]),'high':n(r[4]),'low':n(r[5]),'close':n(r[6])}
             else:
@@ -41,34 +40,25 @@ jobs:
               for r in j.get('data',[]):
                 if str(r[0]).endswith('/10/30'):return {'open':n(r[3]),'high':n(r[4]),'low':n(r[5]),'close':n(r[6])}
             raise RuntimeError('official row not found '+code)
-          stocks={};summary=[]
-          open_stamp=int(datetime.datetime(2026,10,30,9,0,tzinfo=TZ).timestamp()*1000);close_stamp=int(datetime.datetime(2026,10,30,13,30,tzinfo=TZ).timestamp()*1000)
+          audit=[]
           for code in codes:
-            j=histock(code);raw=json.loads(j['data'].replace(',]',']'));pts=[]
-            for source_ts,price in raw:
-              wall=datetime.datetime.fromtimestamp(source_ts/1000,UTC)
-              if wall.strftime('%Y-%m-%d')!=DAY or not (datetime.time(9,0)<=wall.time()<=datetime.time(13,30)):continue
-              normalized=int(wall.replace(tzinfo=TZ).timestamp()*1000)
-              pts.append({'stamp':normalized,'close':float(price),'time':wall.strftime('%H:%M:%S'),'source':'HiStock 1m backfill'})
-            o=official(code)
-            if len(pts)<50:raise RuntimeError(f'{code} insufficient {len(pts)}')
-            vals=[p['close'] for p in pts]
-            if abs(min(vals)-o['low'])>1e-9 or abs(max(vals)-o['high'])>1e-9 or abs(pts[-1]['close']-o['close'])>1e-9:raise RuntimeError(f'{code} mismatch HiStock {min(vals)}/{max(vals)}/{pts[-1]["close"]} official {o}')
-            pts=[p for p in pts if p['stamp'] not in (open_stamp,close_stamp)]
-            pts.insert(0,{'stamp':open_stamp,'close':o['open'],'time':'09:00:00','source':'TWSE/TPEx official open'});pts.append({'stamp':close_stamp,'close':o['close'],'time':'13:30:00','source':'TWSE/TPEx official close'});pts.sort(key=lambda x:x['stamp']);stocks[code]=pts
-            summary.append({'code':code,'points':len(pts),'first':pts[0]['close'],'min':min(p['close'] for p in pts),'max':max(p['close'] for p in pts),'last':pts[-1]['close'],'official':o})
-          j=plain_json('https://www.twse.com.tw/exchangeReport/MI_5MINS_INDEX?response=json&date=20261030');bucket={}
-          for r in j.get('data',[]):
-            tm=str(r[0]);v=n(r[1])
-            if v is not None and '09:00:00'<=tm<='13:30:00':bucket[tm[:5]]=(tm,v)
-          taiex=[]
-          for _,(tm,v) in sorted(bucket.items()):taiex.append({'stamp':int(datetime.datetime.fromisoformat(f'{DAY}T{tm}+08:00').timestamp()*1000),'close':v,'time':tm,'source':'TWSE MI_5MINS_INDEX official'})
-          payload={'date':DAY,'generatedAt':datetime.datetime.now(TZ).isoformat(),'source':'Validated HiStock 1m backfill calibrated to TWSE/TPEx official OHLC; TAIEX TWSE official','stocks':stocks,'taiex':taiex}
-          pathlib.Path('validated-backfill-20261030.json').write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8');pathlib.Path('validated-backfill-20261030-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-          print(json.dumps(summary,ensure_ascii=False,indent=2));print('TAIEX',len(taiex),taiex[0],taiex[-1])
+            try:
+              j=histock(code);raw=json.loads(j['data'].replace(',]',']'));vals=[];times=[]
+              for source_ts,price in raw:
+                wall=datetime.datetime.fromtimestamp(source_ts/1000,UTC)
+                if wall.strftime('%Y-%m-%d')==DAY and datetime.time(9,0)<=wall.time()<=datetime.time(13,30):
+                  vals.append(float(price));times.append(wall.strftime('%H:%M:%S'))
+              o=official(code)
+              if not vals: raise RuntimeError('no intraday points')
+              obs={'min':min(vals),'max':max(vals),'last':vals[-1],'first':vals[0]}
+              row={'code':code,'points':len(vals),'official':o,'observed':obs,'low_gap':round(obs['min']-o['low'],6),'high_gap':round(o['high']-obs['max'],6),'close_gap':round(obs['last']-o['close'],6),'within_official_range':obs['min']>=o['low'] and obs['max']<=o['high'],'close_exact':abs(obs['last']-o['close'])<1e-9,'first_time':times[0],'last_time':times[-1]}
+              audit.append(row)
+            except Exception as e:audit.append({'code':code,'error':repr(e)})
+          pathlib.Path('validated-backfill-20261030-audit.json').write_text(json.dumps(audit,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(audit,ensure_ascii=False,indent=2))
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add validated-backfill-20261030.json validated-backfill-20261030-summary.json
-          git commit -m 'Build validated 2026-10-30 intraday backfill'
+          git add validated-backfill-20261030-audit.json
+          git commit -m 'Audit all 10/30 intraday fallback paths' || true
           git push origin HEAD:prod-verify-no-yahoo-20261030

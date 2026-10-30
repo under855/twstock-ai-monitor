@@ -1,0 +1,97 @@
+=== DAYK size=14949 ===
+function initalchart_DayK(stockNo, chartTitle, chartVolumeTitle) {
+    Highcharts.setOptions({
+    //Highcharts.seriesTypes.column.prototype.pointAttribs = (function (func) {
+    //            var candleSeries = this.chart.series[7]; // Probably you'll need to change the index
+    //            attribs.fill = state == 'hover' ? Highcharts.Color(color).brighten(0.3).get() : color;
+    //}(Highcharts.seriesTypes.column.prototype.pointAttribs));
+        chart: {
+            renderTo: 'chart_DayK',
+                       '<li><div class="ci_title">日期</div><div class="ci_value"><span class="@color">' + Highcharts.dateFormat('%m/%d', day) + '</span></div></li>' +
+                       '<li><div class="ci_title">' + volume + '</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.series[8].points[maxLength].y, 0) + '</span></div></li>' +
+                       '<li><div class="ci_title">5MA</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[1].points[maxLength].y, 1) + '</span></div></li>' +
+                       '<li><div class="ci_title">10MA</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[2].points[maxLength].y, 1) + '</span></div></li>' +
+                       '<li><div class="ci_title">20MA</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[3].points[maxLength].y, 1) + '</span></div></li>' +
+                       '<li><div class="ci_title">K9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[11].points[maxLength].y, 2) + '</span></div></li>' +
+                       '<li><div class="ci_title">D9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[12].points[maxLength].y, 2) + '</span></div></li>' +
+                       '<li><div class="ci_title">RSI6</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[13].points[maxLength].y, 2) + '</span></div></li>' +
+                       '<li><div class="ci_title">RSI12</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[14].points[maxLength].y, 2) + '</span></div></li>' +
+                       '<li><div class="ci_title">MACD</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.series[17].points[maxLength].y, 2) + '</span></div></li>' +
+                       '<li><div class="ci_title">更新時間</div><div class="ci_value"><span>' + uptime.getHours() + ':' + ('00' + uptime.getMinutes()).slice(-2)+ '</span></div></li>' +
+                        $('#chartInfo_DayK').html(template);
+            text: chartTitle,
+                formatter: function () { return Highcharts.dateFormat('%Y/%m/%d', this.value); },
+               '<li><div class="ci_title">日期</div><div class="ci_value"><span class="@color">' + Highcharts.dateFormat('%m/%d', this.x) + '</span></div></li>' +
+               '<li><div class="ci_title">' + volume + '</div><div class="ci_value"><span class="@color">' + Highcharts.numberFormat(this.points[7].y, 0) + '</span></div></li>' +
+               '<li><div class="ci_title">5MA</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[1].y, 1) + '</span></div></li>' +
+               '<li><div class="ci_title">10MA</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[2].y, 1) + '</span></div></li>' +
+               '<li><div class="ci_title">20MA</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[3].y, 1) + '</span></div></li>' +
+               '<li><div class="ci_title">K9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[10].y, 2) + '</span></div></li>' +
+               '<li><div class="ci_title">D9</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[11].y, 2) + '</span></div></li>' +
+               '<li><div class="ci_title">RSI6</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[12].y, 2) + '</span></div></li>' +
+               '<li><div class="ci_title">RSI12</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[13].y, 2) + '</span></div></li>' +
+               '<li><div class="ci_title">MACD</div><div class="ci_value"><span>' + Highcharts.numberFormat(this.points[16].y, 2) + '</span></div></li>' +
+                $('#chartInfo_DayK').html(template);
+            title: { margin: -65, text: chartVolumeTitle, rotation: 0, align: 'high', y: 15 }
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+            name: chartTitle,
+            dataGrouping: { enabled: false }
+            name: chartVolumeTitle,
+            dataGrouping: { enabled: false },
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+            dataGrouping: { enabled: false }
+    var paraUrl = '/stock/chip/chartdata.aspx?no=' + stockNo + '&days=80&m=dailyk,close,volume,mean5,mean10,mean20,mean60,mean120,mean5volume,mean20volume,k9,d9,rsi6,rsi12,dif,macd,osc';
+    $.ajax({
+        url: hiChartUrl(paraUrl), type: 'get', dataType: "json",
+        success: function (data) {
+            if (hiChartTokenError(data, "#chart_DayK")) return;
+            options.series[0].data = eval(data['Close']);
+            options.series[1].data = eval(data['Mean5']);
+            options.series[2].data = eval(data['Mean10']);
+            options.series[3].data = eval(data['Mean20']);
+            options.series[4].data = eval(data['Mean60']);
+            options.series[5].data = eval(data['Mean120']);
+            options.series[6].data = eval(data['Mean240']);
+            options.series[7].data = eval(data['DailyK']);
+            options.series[8].data = eval(data['Volume']);
+            options.series[9].data = eval(data['Mean5Volume']);
+            options.series[10].data = eval(data['Mean20Volume']);
+            options.series[11].data = eval(data['K9']);
+            options.series[12].data = eval(data['D9']);
+            options.series[13].data = eval(data['RSI6']);
+            options.series[14].data = eval(data['RSI12']);
+            options.series[15].data = eval(data['OSC']);
+            options.series[16].data = eval(data['DIF']);
+            options.series[17].data = eval(data['MACD']);
+            var chart = new Highcharts.StockChart(options);
+            setRange(chart, 4);
+--- URLs/paths ---
+/stock/chip/chartdata.aspx?no=
+=== TOKEN size=1372 ===
+    var reloadKey = 'HiChartToken.reload:' + window.location.pathname + window.location.search;
+    window.hiChartUrl = function (url) {
+        var token = window.HiChartToken;
+        if (token && target.searchParams.get('no') === token.no) {
+            target.searchParams.set('p', token.p);
+        } else if (window.HiChartPageToken) {
+            target.searchParams.set('p', window.HiChartPageToken);
+    window.hiChartTokenError = function (data, selector) {
+        if (!data || data.Error !== 'token') {
+            if (data && !data.Error) {
+            if (!window.sessionStorage.getItem(reloadKey)) {
+--- URLs/paths ---

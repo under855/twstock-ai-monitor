@@ -1,0 +1,39 @@
+name: Probe JPX COVER public data path
+on:
+  push:
+    branches: ['source-migration-no-yahoo-20261030']
+    paths: ['.github/workflows/probe-jpx-cover.yml']
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect JPX public quote page
+        shell: bash
+        run: |
+          set -e
+          ua='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/130 Safari/537.36'
+          curl -L -A "$ua" -sS 'https://quote.jpx.co.jp/jpxhp/main/index.aspx?F=stock_search' -o /tmp/jpx.html
+          echo '=== JS assets ==='
+          grep -oE 'src="[^"]+\.js[^\"]*"' /tmp/jpx.html | head -50 || true
+          echo '=== possible api/ajax paths ==='
+          grep -oEi 'https?://[^"'"' ]+|/[A-Za-z0-9_./?-]*(api|ajax|json)[A-Za-z0-9_./?=&-]*' /tmp/jpx.html | head -100 || true
+          echo '=== 5253 search in HTML ==='
+          grep -n '5253\|COVER\|カバー' /tmp/jpx.html | head -30 || true
+          echo '=== download relevant JS and grep endpoints ==='
+          python - <<'PY'
+          import re,requests,urllib.parse
+          html=open('/tmp/jpx.html',encoding='utf-8',errors='ignore').read()
+          base='https://quote.jpx.co.jp/jpxhp/main/'
+          for src in re.findall(r'src=["\']([^"\']+\.js[^"\']*)',html,re.I):
+              url=urllib.parse.urljoin(base,src)
+              try:
+                  t=requests.get(url,timeout=15,headers={'User-Agent':'Mozilla/5.0'}).text
+              except Exception: continue
+              if any(k in t.lower() for k in ['stock_search','ajax','fetch(','xmlhttprequest','api/']):
+                  print('\nJS',url)
+                  for line in t.splitlines():
+                      lo=line.lower()
+                      if any(k in lo for k in ['ajax','fetch(','xmlhttprequest','api/','stock_search','stocksearch','searchstock']):
+                          print(line[:1200])
+          PY

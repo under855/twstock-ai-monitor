@@ -16,30 +16,35 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
-          import urllib.request,urllib.parse,json,re,datetime,pathlib
-          TZ=datetime.timezone(datetime.timedelta(hours=8)); DAY='2026-10-30'; UA={'User-Agent':'Mozilla/5.0'}
+          import urllib.request,urllib.parse,json,datetime,pathlib,http.cookiejar
+          TZ=datetime.timezone(datetime.timedelta(hours=8)); DAY='2026-10-30'; UA='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/130 Safari/537.36'
           codes=['2330','009817','0050','3711','3293','2002','00878','00919']
-          def get_text(u):
-            with urllib.request.urlopen(urllib.request.Request(u,headers=UA),timeout=30) as r:return r.read().decode('utf-8-sig','replace')
-          def get_json(u):return json.loads(get_text(u))
+          def plain_json(u):
+            req=urllib.request.Request(u,headers={'User-Agent':UA,'Accept':'application/json,text/plain,*/*'})
+            with urllib.request.urlopen(req,timeout=30) as r:return json.loads(r.read().decode('utf-8-sig','replace'))
+          def histock(code):
+            cj=http.cookiejar.CookieJar();op=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj));page=f'https://histock.tw/stock/{code}'
+            op.open(urllib.request.Request(page,headers={'User-Agent':UA}),timeout=30).read()
+            u=f'https://histock.tw/stock/module/stockdata.aspx?no={code}'
+            req=urllib.request.Request(u,headers={'User-Agent':UA,'Referer':page,'Accept':'application/json,text/javascript,*/*;q=0.01','X-Requested-With':'XMLHttpRequest'})
+            with op.open(req,timeout=30) as r:return json.loads(r.read().decode('utf-8-sig','replace'))
           def n(v):
             try:return float(str(v).replace(',','').replace('+','').strip())
             except:return None
           def official(code):
             if code=='3293':
-              u='https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3293&date='+urllib.parse.quote('2026/10/01')+'&response=json';j=get_json(u)
+              u='https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3293&date='+urllib.parse.quote('2026/10/01')+'&response=json';j=plain_json(u)
               for r in j['tables'][0]['data']:
                 if str(r[0]).endswith('/10/30'):return {'open':n(r[3]),'high':n(r[4]),'low':n(r[5]),'close':n(r[6])}
             else:
-              j=get_json(f'https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=20261001&stockNo={code}')
+              j=plain_json(f'https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=20261001&stockNo={code}')
               for r in j.get('data',[]):
                 if str(r[0]).endswith('/10/30'):return {'open':n(r[3]),'high':n(r[4]),'low':n(r[5]),'close':n(r[6])}
             raise RuntimeError('official row not found '+code)
-          stocks={}; summary=[]
+          stocks={};summary=[]
+          open_stamp=int(datetime.datetime(2026,10,30,9,0,tzinfo=TZ).timestamp()*1000);close_stamp=int(datetime.datetime(2026,10,30,13,30,tzinfo=TZ).timestamp()*1000)
           for code in codes:
-            j=get_json(f'https://histock.tw/stock/module/stockdata.aspx?no={code}')
-            raw=json.loads(j['data'].replace(',]',']'))
-            pts=[]
+            j=histock(code);raw=json.loads(j['data'].replace(',]',']'));pts=[]
             for ts,price in raw:
               d=datetime.datetime.fromtimestamp(ts/1000,TZ)
               if d.strftime('%Y-%m-%d')!=DAY or not (datetime.time(9,0)<=d.time()<=datetime.time(13,30)):continue
@@ -47,29 +52,18 @@ jobs:
             o=official(code)
             if len(pts)<50:raise RuntimeError(f'{code} insufficient {len(pts)}')
             vals=[p['close'] for p in pts]
-            if abs(min(vals)-o['low'])>1e-9 or abs(max(vals)-o['high'])>1e-9 or abs(pts[-1]['close']-o['close'])>1e-9:
-              raise RuntimeError(f'{code} mismatch histock min/max/last={min(vals)}/{max(vals)}/{pts[-1]["close"]} official={o}')
-            open_stamp=int(datetime.datetime(2026,10,30,9,0,tzinfo=TZ).timestamp()*1000)
-            close_stamp=int(datetime.datetime(2026,10,30,13,30,tzinfo=TZ).timestamp()*1000)
-            # Official opening and closing values own the exact boundary points.
+            if abs(min(vals)-o['low'])>1e-9 or abs(max(vals)-o['high'])>1e-9 or abs(pts[-1]['close']-o['close'])>1e-9:raise RuntimeError(f'{code} mismatch HiStock {min(vals)}/{max(vals)}/{pts[-1]["close"]} official {o}')
             pts=[p for p in pts if p['stamp'] not in (open_stamp,close_stamp)]
-            pts.insert(0,{'stamp':open_stamp,'close':o['open'],'time':'09:00:00','source':'TWSE/TPEx official open'})
-            pts.append({'stamp':close_stamp,'close':o['close'],'time':'13:30:00','source':'TWSE/TPEx official close'})
-            pts.sort(key=lambda x:x['stamp']);stocks[code]=pts
+            pts.insert(0,{'stamp':open_stamp,'close':o['open'],'time':'09:00:00','source':'TWSE/TPEx official open'});pts.append({'stamp':close_stamp,'close':o['close'],'time':'13:30:00','source':'TWSE/TPEx official close'});pts.sort(key=lambda x:x['stamp']);stocks[code]=pts
             summary.append({'code':code,'points':len(pts),'first':pts[0]['close'],'min':min(p['close'] for p in pts),'max':max(p['close'] for p in pts),'last':pts[-1]['close'],'official':o})
-          # TAIEX is fully official TWSE, reduce 5-second feed to minute-end points plus exact boundaries.
-          j=get_json('https://www.twse.com.tw/exchangeReport/MI_5MINS_INDEX?response=json&date=20261030'); bucket={}
+          j=plain_json('https://www.twse.com.tw/exchangeReport/MI_5MINS_INDEX?response=json&date=20261030');bucket={}
           for r in j.get('data',[]):
             tm=str(r[0]);v=n(r[1])
-            if v is None or tm<'09:00:00' or tm>'13:30:00':continue
-            minute=tm[:5];bucket[minute]=(tm,v)
+            if v is not None and '09:00:00'<=tm<='13:30:00':bucket[tm[:5]]=(tm,v)
           taiex=[]
-          for minute,(tm,v) in sorted(bucket.items()):
-            stamp=int(datetime.datetime.fromisoformat(f'{DAY}T{tm}+08:00').timestamp()*1000)
-            taiex.append({'stamp':stamp,'close':v,'time':tm,'source':'TWSE MI_5MINS_INDEX official'})
+          for _,(tm,v) in sorted(bucket.items()):taiex.append({'stamp':int(datetime.datetime.fromisoformat(f'{DAY}T{tm}+08:00').timestamp()*1000),'close':v,'time':tm,'source':'TWSE MI_5MINS_INDEX official'})
           payload={'date':DAY,'generatedAt':datetime.datetime.now(TZ).isoformat(),'source':'Validated HiStock 1m backfill calibrated to TWSE/TPEx official OHLC; TAIEX TWSE official','stocks':stocks,'taiex':taiex}
-          pathlib.Path('validated-backfill-20261030.json').write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
-          pathlib.Path('validated-backfill-20261030-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          pathlib.Path('validated-backfill-20261030.json').write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8');pathlib.Path('validated-backfill-20261030-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           print(json.dumps(summary,ensure_ascii=False,indent=2));print('TAIEX',len(taiex),taiex[0],taiex[-1])
           PY
           git config user.name 'github-actions[bot]'

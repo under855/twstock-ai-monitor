@@ -1,0 +1,38 @@
+name: Probe HiStock chart JS endpoints
+on:
+  push:
+    branches: ['prod-verify-no-yahoo-20261030']
+    paths: ['.github/workflows/probe-histock-js.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: 'prod-verify-no-yahoo-20261030'}
+      - name: Inspect chart scripts and candidate endpoints
+        shell: bash
+        run: |
+          set -e
+          ua='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/130 Safari/537.36'
+          curl -fsSL -A "$ua" 'https://histock.tw/jscript/stock/2017/DayK.js?v=20261029' -o /tmp/dayk.js
+          curl -fsSL -A "$ua" 'https://histock.tw/JScript/chartToken.js?v=20261029' -o /tmp/token.js
+          python - <<'PY'
+          import re,pathlib
+          texts=[('DAYK',pathlib.Path('/tmp/dayk.js').read_text(errors='replace')),('TOKEN',pathlib.Path('/tmp/token.js').read_text(errors='replace'))]
+          out=[]
+          for name,t in texts:
+            out += [f'=== {name} size={len(t)} ===']
+            for line in t.splitlines():
+              if re.search(r'ajax|url:|\.asmx|\.ashx|api|json|chart|data|token|Get[A-Z]|post\(|get\(',line,re.I): out.append(line[:2200])
+            out.append('--- URLs/paths ---')
+            for x in sorted(set(re.findall(r'''(?:https?://[^"'\s]+|/[A-Za-z0-9_./?-]+(?:\.ashx|\.asmx|\.php|\.json|\.aspx)[^"'\s]*)''',t,re.I))): out.append(x[:1500])
+          pathlib.Path('probe-histock-js.txt').write_text('\n'.join(out),encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add probe-histock-js.txt
+          git commit -m 'Record HiStock chart JavaScript probe' || true
+          git push origin HEAD:prod-verify-no-yahoo-20261030

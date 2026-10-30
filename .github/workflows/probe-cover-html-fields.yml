@@ -1,0 +1,18 @@
+name: Probe COVER Google Finance fields
+on:
+  push:
+    branches: ['source-migration-no-yahoo-20261030']
+    paths: ['.github/workflows/probe-cover-html-fields.yml']
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find machine-readable fields
+        shell: bash
+        run: |
+          curl -L --max-time 30 -sS 'https://proxy.cors.dev/https://www.google.com/finance/quote/5253:TYO?hl=en' -o /tmp/gf.html
+          echo '=== fields ==='
+          grep -oE 'data-last-[a-z-]+="[^"]+"' /tmp/gf.html | head -30 || true
+          echo '=== price fragments ==='
+          grep -oE '.{0,100}(1,535|1535|5253:TYO).{0,180}' /tmp/gf.html | head -30 || true

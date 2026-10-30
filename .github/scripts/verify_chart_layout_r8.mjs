@@ -1,0 +1,15 @@
+import { chromium } from 'playwright-core';
+const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+const p=await b.newPage({viewport:{width:1280,height:900},timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'block'});
+await p.addInitScript(()=>localStorage.setItem('twAiWatchV3',JSON.stringify(['2330','009817','0050','3711','3293','2002','00878','00919'])));
+const errs=[];p.on('pageerror',e=>errs.push(e.message));
+await p.goto('http://127.0.0.1:8000',{waitUntil:'domcontentloaded',timeout:60000});
+await p.waitForFunction(()=>document.querySelectorAll('#watch canvas.spark[data-today-full="1"]').length>=8,null,{timeout:45000});
+await p.waitForFunction(()=>document.querySelector('#taiexChart[data-today-full="1"]'),null,{timeout:30000});
+const out=await p.evaluate(()=>({watch:[...document.querySelectorAll('#watch article.row')].map(r=>{const c=r.querySelector('canvas.spark');return {code:r.querySelector('.sym')?.textContent?.trim(),start:c?.dataset.todayStart,end:c?.dataset.todayEnd,min:c?.dataset.todayMinTime,max:c?.dataset.todayMaxTime,pts:c?.dataset.todayPoints}}),taiex:{start:taiexChart.dataset.todayStart,end:taiexChart.dataset.todayEnd,pts:taiexChart.dataset.todayPoints},countCard:!!document.getElementById('watchCount')}));
+console.log(JSON.stringify(out));
+if(out.countCard)throw Error('watchCount still visible');
+if(out.watch.some(x=>x.start!=='09:00'||x.end>'13:30'||Number(x.pts)<2))throw Error('bad stock intraday axis');
+if(out.taiex.start!=='09:00'||out.taiex.end>'13:30'||Number(out.taiex.pts)<2)throw Error('bad taiex intraday axis');
+if(errs.length)throw Error(errs.join(' | '));
+await b.close();

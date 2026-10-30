@@ -8,31 +8,17 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Inspect JPX public quote page
+      - name: Inspect JPX stock search JS
         shell: bash
         run: |
           set -e
           ua='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/130 Safari/537.36'
-          curl -L -A "$ua" -sS 'https://quote.jpx.co.jp/jpxhp/main/index.aspx?F=stock_search' -o /tmp/jpx.html
-          echo '=== JS assets ==='
-          grep -oE 'src="[^"]+\.js[^\"]*"' /tmp/jpx.html | head -50 || true
-          echo '=== 5253 search in HTML ==='
-          grep -n '5253\|COVER\|カバー' /tmp/jpx.html | head -30 || true
-          echo '=== relevant JS endpoint lines ==='
-          python - <<'PY'
-          import re,requests,urllib.parse
-          html=open('/tmp/jpx.html',encoding='utf-8',errors='ignore').read()
-          base='https://quote.jpx.co.jp/jpxhp/main/'
-          for src in re.findall(r'src=["\']([^"\']+\.js[^"\']*)',html,re.I):
-              url=urllib.parse.urljoin(base,src)
-              try:
-                  t=requests.get(url,timeout=15,headers={'User-Agent':'Mozilla/5.0'}).text
-              except Exception as e:
-                  print('ERR',url,e); continue
-              if any(k in t.lower() for k in ['stock_search','ajax','fetch(','xmlhttprequest','api/']):
-                  print('\nJS',url)
-                  for line in t.splitlines():
-                      lo=line.lower()
-                      if any(k in lo for k in ['ajax','fetch(','xmlhttprequest','api/','stock_search','stocksearch','searchstock','url:']):
-                          print(line[:1600])
-          PY
+          u='https://quote.jpx.co.jp/jpxhp/common/js/qc/pages/stock_search.js?20261015'
+          curl -L -A "$ua" -sS "$u" -o /tmp/stock_search.js
+          echo '=== size ==='; wc -c /tmp/stock_search.js
+          echo '=== url/path strings ==='
+          grep -oE 'https?://[^"'"' ]+|[A-Za-z0-9_./-]+\.(json|aspx|php)(\?[^"'"' ]*)?' /tmp/stock_search.js | sort -u | head -100 || true
+          echo '=== ajax/get/post lines ==='
+          grep -nEi '\$\.ajax|\$\.get|\$\.post|fetch\(|url[[:space:]]*:|stock[_-]?search|code_search' /tmp/stock_search.js | head -120 || true
+          echo '=== first 24000 chars ==='
+          head -c 24000 /tmp/stock_search.js

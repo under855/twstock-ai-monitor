@@ -183,7 +183,11 @@
   }
   function drawTodayPoints(code,points,canvas,compact){
     if(!canvas||!Array.isArray(points)||points.length<2||typeof draw!=='function')return false;
-    draw(canvas,chronologicalPoints(points).map(x=>({date:x.time,close:x.close})),compact,liveTodayPrice(code));return true;
+    const ordered=chronologicalPoints(points);
+    draw(canvas,ordered.map(x=>({date:x.time,close:x.close})),compact,liveTodayPrice(code));
+    const hm=d=>new Date(d).toLocaleTimeString('en-GB',{timeZone:'Asia/Taipei',hour:'2-digit',minute:'2-digit',hour12:false});
+    canvas.dataset.todayFull='1';canvas.dataset.todayPoints=String(ordered.length);canvas.dataset.todayStart=hm(ordered[0].time);canvas.dataset.todayEnd=hm(ordered.at(-1).time);
+    return true;
   }
 
   async function yahooTodayIntraday(code){
@@ -195,7 +199,13 @@
       for(const url of [`https://proxy.cors.dev/${upstream}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(upstream)}`]){
         try{
           const j=await fetchJson(url,7000),r=j?.chart?.result?.[0],ts=r?.timestamp||[],q=r?.indicators?.quote?.[0]||{},byTime=new Map();
-          for(let i=0;i<ts.length;i++){const close=Number(q.close?.[i]);if(!Number.isFinite(close))continue;const d=new Date(Number(ts[i])*1000),day=d.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});if(day!==today)continue;byTime.set(d.getTime(),{time:d,close})}
+          for(let i=0;i<ts.length;i++){
+            const close=Number(q.close?.[i]);if(!Number.isFinite(close))continue;
+            const d=new Date(Number(ts[i])*1000),day=d.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});if(day!==today)continue;
+            const hm=d.toLocaleTimeString('en-GB',{timeZone:'Asia/Taipei',hour:'2-digit',minute:'2-digit',hour12:false});
+            if(hm<'09:00'||hm>'13:30')continue;
+            byTime.set(d.getTime(),{time:d,close});
+          }
           const out=[...byTime.values()].sort((a,b)=>a.time-b.time);if(out.length>=2)return out;
         }catch{}
       }
@@ -218,6 +228,13 @@
   async function refreshTodayFallbackCharts(force=false){
     if(typeof watchlist!=='function')return false;const codes=[...new Set(watchlist().map(String))];await Promise.allSettled(codes.map(code=>ensureTodayChartFor(code,force)));return true;
   }
+
+  function drawResolvedMainToday(code,canvas=null){
+    const key=String(code),cached=todayFallbackResolved.get(key);
+    if(!cached?.points||cached.points.length<2)return false;
+    return drawTodayPoints(key,cached.points,canvas||mainCanvasFor(key),true);
+  }
+  window.__TW_DRAW_MAIN_TODAY__=(code,canvas)=>drawResolvedMainToday(code,canvas);
 
   async function yahooDailyHistory(code){
     let market='';try{market=String(universeMap?.get?.(String(code))?.market||'')}catch{}

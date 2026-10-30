@@ -1,0 +1,89 @@
+name: Apply main chart owner fix v0.9.4r7
+on:
+  push:
+    branches: ['fix-main-chart-owner-v094r7']
+    paths:
+      - '.github/workflows/apply-main-chart-owner-v094r7.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Preserve non-chart market files
+        run: sha256sum scripts/update_latest.py data/latest.json > /tmp/core.before
+      - name: Apply isolated chart ownership patch
+        run: python scripts/patch_main_chart_owner_v094r7.py
+      - name: Static verification
+        run: |
+          node --check extras-v090.js
+          node --check live-v091.js
+          grep -F "hm<'09:00'||hm>'13:30'" extras-v090.js
+          grep -F '__TW_DRAW_MAIN_TODAY__' extras-v090.js
+          grep -F '__TW_DRAW_MAIN_TODAY__' live-v091.js
+          grep -F './extras-v090.js?v=094r7' index.html
+          grep -F './live-v091.js?v=094r7' index.html
+          grep -F "const CACHE='tw-ai-monitor-v094r7';" sw.js
+          sha256sum scripts/update_latest.py data/latest.json > /tmp/core.after
+          diff -u /tmp/core.before /tmp/core.after
+      - name: Verify full-day payload window
+        run: |
+          python - <<'PY'
+          import json, urllib.request, datetime, zoneinfo
+          syms=['2330.TW','009817.TW','0050.TW','3711.TW','3293.TWO','2002.TW','00878.TW','00919.TW']
+          tz=zoneinfo.ZoneInfo('Asia/Taipei')
+          for sym in syms:
+              upstream=f'https://query1.finance.yahoo.com/v8/finance/chart/{sym}?range=1d&interval=5m&includePrePost=false'
+              req=urllib.request.Request('https://proxy.cors.dev/'+upstream,headers={'User-Agent':'Mozilla/5.0'})
+              with urllib.request.urlopen(req,timeout=20) as r: j=json.load(r)
+              x=j['chart']['result'][0]; ts=x.get('timestamp') or []; close=(x.get('indicators',{}).get('quote') or [{}])[0].get('close') or []
+              pts=[]
+              for t,c in zip(ts,close):
+                  if c is None: continue
+                  d=datetime.datetime.fromtimestamp(int(t),tz)
+                  hm=d.strftime('%H:%M')
+                  if '09:00' <= hm <= '13:30': pts.append((int(t),float(c),hm))
+              pts=sorted(dict((t,(c,hm)) for t,c,hm in pts).items())
+              assert len(pts)>=2,(sym,len(pts))
+              assert pts[0][1][1]>='09:00' and pts[-1][1][1]<='13:30',(sym,pts[0],pts[-1])
+              print(sym,len(pts),pts[0][1][1],pts[-1][1][1])
+          PY
+      - name: Browser acceptance after live repaint cycle
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          test -n "$CHROME"; export CHROME
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          python -m http.server 8000 >/tmp/http.log 2>&1 &
+          sleep 2
+          cat > verify-r7.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:1280,height:900},locale:'zh-TW',timezoneId:'Asia/Taipei',serviceWorkers:'block'});
+          const codes=['2330','009817','0050','3711','3293','2002','00878','00919'];
+          await p.addInitScript(codes=>localStorage.setItem('twAiWatchV3',JSON.stringify(codes)),codes);
+          const errors=[];p.on('pageerror',e=>errors.push(e.message));
+          await p.goto('http://127.0.0.1:8000/?r7='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForFunction(()=>document.querySelectorAll('#watch article.row').length>=8,null,{timeout:60000});
+          await p.waitForFunction(()=>[...document.querySelectorAll('#watch canvas.spark')].filter(c=>c.dataset.todayFull==='1').length>=8,null,{timeout:45000});
+          const read=()=>p.evaluate(()=>[...document.querySelectorAll('#watch article.row')].map(r=>{const c=r.querySelector('canvas.spark');return {code:r.querySelector('.sym')?.textContent?.trim(),full:c?.dataset.todayFull,points:Number(c?.dataset.todayPoints||0),start:c?.dataset.todayStart,end:c?.dataset.todayEnd}}));
+          const first=await read();console.log('FIRST',JSON.stringify(first));
+          if(first.some(x=>x.full!=='1'||x.points<2||x.start<'09:00'||x.end>'13:30'))throw Error('invalid full-day chart before live repaint');
+          await p.waitForTimeout(18000);
+          const second=await read();console.log('AFTER_LIVE_REPAINT',JSON.stringify(second));
+          if(second.some(x=>x.full!=='1'||x.points<2||x.start<'09:00'||x.end>'13:30'))throw Error('full-day chart overwritten by live repaint');
+          if(errors.length)throw Error(errors.join(' | '));
+          await b.close();
+          JS
+          node verify-r7.mjs
+      - name: Commit repair
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js live-v091.js index.html sw.js
+          git commit -m 'Keep 09:00-13:30 chart across live repaints'
+          git push origin HEAD:fix-main-chart-owner-v094r7

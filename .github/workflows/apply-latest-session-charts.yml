@@ -1,0 +1,70 @@
+name: Apply latest-session chart repair
+on:
+  push:
+    branches: ['fix-latest-session-charts-20261030']
+    paths: ['.github/workflows/apply-latest-session-charts.yml','scripts/patch_last_session_charts.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-latest-session-charts-20261030
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Apply patch
+        run: python scripts/patch_last_session_charts.py
+      - name: Static checks
+        shell: bash
+        run: |
+          node --check extras-v090.js
+          node --check live-v091.js
+          grep -F 'MI_5MINS_INDEX' extras-v090.js
+          grep -F '最近交易日' extras-v090.js
+          grep -F '最近交易日' index.html
+          ! grep -Eqi 'query1\.finance\.yahoo|finance\.yahoo|0700\.HK|騰訊' extras-v090.js live-v091.js index.html
+          grep -F "tw-ai-monitor-v095session1" sw.js
+      - name: Browser acceptance with synthetic retained session
+        shell: bash
+        run: |
+          npm install --no-save playwright-core@latest >/dev/null 2>&1
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); test -n "$CHROME"; export CHROME
+          python -m http.server 8000 >/tmp/http.log 2>&1 &
+          cat > verify.mjs <<'JS'
+          import {chromium} from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const p=await b.newPage({viewport:{width:1280,height:1000},timezoneId:'Asia/Taipei',locale:'zh-TW',serviceWorkers:'block'});
+          const codes=['2330','009817','0050','3711','3293','2002','00878','00919'];
+          await p.route('**/market-data/data/intraday/latest.json*',async route=>{
+            const date='2026-10-29';const mk=(base)=>Array.from({length:55},(_,i)=>({stamp:Date.parse(`${date}T${String(9+Math.floor(i*5/60)).padStart(2,'0')}:${String((i*5)%60).padStart(2,'0')}:00+08:00`),close:base+(i%7-3)*0.5,time:'09:00:00',source:'TWSE MIS'}));
+            const stocks={2330:mk(2415),'009817':mk(8.59),'0050':mk(107.25),3711:mk(683),3293:mk(808),2002:mk(19.45),'00878':mk(35.3),'00919':mk(32.87)};
+            await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({date,generatedAt:'2026-10-29T13:30:00+08:00',source:'TWSE MIS official snapshots',stocks,taiex:mk(46368)})});
+          });
+          await p.addInitScript(c=>localStorage.setItem('twAiWatchV3',JSON.stringify(c)),codes);
+          await p.goto('http://127.0.0.1:8000/?qa='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await p.waitForFunction(()=>document.querySelectorAll('#watch article.row').length>=8,null,{timeout:30000});
+          await p.waitForTimeout(5000);
+          const state=await p.evaluate(()=>({rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent.trim(),canvas:!!r.querySelector('canvas.spark'),points:r.querySelector('canvas.spark')?.dataset?.todayPoints||null,session:r.querySelector('canvas.spark')?.dataset?.sessionDate||null,width:r.querySelector('canvas.spark')?.getBoundingClientRect().width||0})),taiex:{points:taiexChart.dataset.todayPoints||null,session:taiexChart.dataset.sessionDate||null,msg:taiexChartMsg.textContent.trim(),width:taiexChart.getBoundingClientRect().width}}));
+          console.log(JSON.stringify(state));
+          if(state.rows.some(x=>!x.canvas||Number(x.points)<2||x.session!=='2026-10-29'))throw Error('retained stock session failed');
+          if(!state.taiex.points||!state.taiex.session)throw Error('taiex chart failed');
+          if(state.rows.some(x=>x.width>530))throw Error('desktop spark width regressed');
+          await p.waitForTimeout(18000);
+          const after=await p.evaluate(()=>[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent.trim(),points:r.querySelector('canvas.spark')?.dataset?.todayPoints||null,session:r.querySelector('canvas.spark')?.dataset?.sessionDate||null})));
+          if(after.some(x=>Number(x.points)<2||x.session!=='2026-10-29'))throw Error('15s repaint erased retained session');
+          await b.close();
+          JS
+          node verify.mjs
+      - name: Commit patched runtime
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js live-v091.js index.html sw.js
+          git diff --cached --quiet && exit 0
+          git commit -m 'Show latest trading session charts after close and holidays'
+          git push origin HEAD:fix-latest-session-charts-20261030

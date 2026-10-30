@@ -1,0 +1,47 @@
+name: Probe HiStock all stock chart scripts
+on:
+  push:
+    branches: ['prod-verify-no-yahoo-20261030']
+    paths: ['.github/workflows/probe-histock-alljs.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: 'prod-verify-no-yahoo-20261030'}
+      - name: Scan all first-party JS references for chart endpoints
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re,urllib.request,urllib.parse,pathlib
+          ua={'User-Agent':'Mozilla/5.0'}
+          def get(u):
+            with urllib.request.urlopen(urllib.request.Request(u,headers=ua),timeout=20) as r:return r.read().decode('utf-8','replace')
+          html=get('https://histock.tw/stock/2330')
+          srcs=[]
+          for x in re.findall(r'<script[^>]+src=["\']([^"\']+)',html,re.I):
+            u=urllib.parse.urljoin('https://histock.tw/stock/2330',x)
+            if 'histock.tw' in u or u.startswith('https://histock.tw'): srcs.append(u)
+          out=[]
+          for u in list(dict.fromkeys(srcs)):
+            try:t=get(u)
+            except Exception as e:out.append(f'ERR {u} {e}');continue
+            hits=[]
+            for line in t.splitlines():
+              if re.search(r'chartdata\.aspx|intraday|5min|minute|分時|五分|m=|ajax|hiChartUrl|stock/chip',line,re.I):hits.append(line[:2500])
+            if hits:
+              out.append(f'=== {u} size={len(t)} ===');out.extend(hits[:250])
+          # also inspect relevant inline lines from stock page
+          out.append('=== INLINE ===')
+          for line in html.splitlines():
+            if re.search(r'chart|5分|分時|inital|tchart|dataToken|HiChart',line,re.I):out.append(line[:2500])
+          pathlib.Path('probe-histock-alljs.txt').write_text('\n'.join(out),encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add probe-histock-alljs.txt
+          git commit -m 'Record HiStock stock chart endpoint scan' || true
+          git push origin HEAD:prod-verify-no-yahoo-20261030

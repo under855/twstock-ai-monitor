@@ -1,12 +1,24 @@
 {
-  "generatedAt": "2026-10-31T16:48:55.492204+00:00",
+  "generatedAt": "2026-10-31T18:55:48.977209+00:00",
   "stocks": {
     "0050": [
+      {
+        "title": "元大台灣50 伺機布局 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE92Y2YzODhwVVJ5eFpzMzVRLWxOY0ZaV0Y1WmxzSnpaUjctYW1fTXo2dWtydkVOUW1vaTZCa1dDQlBPQ2wwXzVzOUJXalJnX25KMFRSNnU5cW5OZ9IBX0FVX3lxTE1aSDR5Wm1wWjNUWjJrenl1dnZkRkpmcy1qa2FMbTV2U1JKaHN1Smd6c2dHem5rSHVfRXdqdDJmUi1GV1dIdTRpR2tVTW45bGRqZ3ZvT3lYYUM2bWtZRG9Z?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793467923000
+      },
       {
         "title": "外資賣超創台股第7大 調節0050、主動式ETF - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9pNXR6bGx6RXY5c1ZFUVpqZUZTNEcwZ3djUmxVWGV0LVJlRUxkT2xic3h3UXdXZlRGNGRaWG9iak42bmpIUDJQTjFtQmNSekJqYVVETGRqWFN4R19SbVZB0gFkQVVfeXFMUEtFLVlLVGZULUZNR2xrbDlGeW1hcTVEeE1uM3lDRzFteHo3RjNPU0JjWjBGZzdZRXlkUlVUamVBU3RaX0tEdVZvNE5wc2NBNHFTcUNCRHNPaVJFa3dDaHByMVd5WA?oc=5",
         "publisher": "自由財經",
         "time": 1793360932000
+      },
+      {
+        "title": "整理包／0050 市值型 ETF 王位遭挑戰！006208 一拆八搶市 009804、009816 也來了...四檔買誰好？ - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1MMzBtcV8zRmJrTngwLVVrVXFyWXQyY3l6YnJrd1MtMmlvSmRud2EtN29EaWJiTlQtcG1iX0JVUm1UeFFfZzJBbUlWcUx0UmQtcHNJakI1UFBtWC1Q?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793350800000
       },
       {
         "title": "006208擬1拆8！0050還值得買？同追台灣50 買進門檻、持有成本比一比- 理財 - 工商時報",
@@ -37,27 +49,9 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1SWG82RkI5NndpdjU1dFZuQURVVVVMVVB2dDNXc3FSVkRMS0dHcDVGVUxYdElJRDNudWNKNnlwbXdXN2xqbTlOZXZBcWNpWWUxMldRdTdwM0hBeGRlcG5Z0gFkQVVfeXFMUGpxQjgwWHhUbmNrdUp5WF9VR0VoYnhmazBjTWNwOVd1UGhYUFZmNDEzZU9VYmFqRVVwZ003cUhWa296a01XUEE1YmlhUTVjdmxvWGNrSkMzdHFZR0RQOVU5YmJZQg?oc=5",
         "publisher": "自由財經",
         "time": 1793086409000
-      },
-      {
-        "title": "投資小白問這檔ETF能追上0050嗎？網友神回「台股要上50萬點」 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE85WC15Y2ZTSEdvd2wydmFuZjJkWjk5M3hSZEJNb2U0bFpoU25DWDZ1blZONkxMQ0JiSjZHQmd4cVdlRXlJaTZweVl1bmhzS19abzBaVnJnNVU4ZXc0aFEw0gFkQVVfeXFMTTdGeVhmano0cTFJeEhRazY1Rm5xc2xsT2RqV1I5SHN6RUxOd3JCemg1VVhUS000LWl4eXRTVU1xa1J2SkR5UmgyaFVDOEV6Zk9rTlYtUF8zX05PYmpBbmduODF2QQ?oc=5",
-        "publisher": "自由財經",
-        "time": 1792970040000
-      },
-      {
-        "title": "台股反向、高息 ETF 熱 元大台灣 50 反 1 單周獲買超 5.4 萬張稱冠 | 基金天地 | 理財 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBCUkdPZDlXZFk1cC1mTzhnOVNVWVlNclJmR2tFZTljR2lCU2JRbDRST0UxWEY2LVhlT3dFVHFRbjd1NkNzd3dXNDZkaDlCd01xRC1MY2d4QnZIUQ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1792945915000
       }
     ],
     "3711": [
-      {
-        "title": "日月光 Q3 大賺逾半個股本 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxQa3hPMXpkekNJelFXQkJ2Y05PeW5zMWZwT0JENmxpZjNKZzJWM282SmNBc1RrYVdTOWRldmZET1F1ci1rZWpCV2lScDdjLXBOY3RrWlJwZ0VJMU9wX3RqN0E3aUVBR2tmeXZLNDl1Y3J6T0NaaHVDaHRJektRazlaa9IBX0FVX3lxTE1vT1JxUERCQUZHUTlMUWN5d1c3Zi1qWVY1Z2I5SnJLQ3RabS13M2MyREc2U1FWcG5TR3c0Vk1DN2tRenNyOXlyNWgxeXBKQlhDRzgzdGZpN2YtazJIcjVZ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793297123000
-      },
       {
         "title": "日月光上調資本支出 全力搶食測試、CPO 大餅 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9HQlQwcEtBVGZZLXVkVVEzdmRZM2xSbUtZdW9MRms3OWVnZWhHMWd0RFZJa1JndnBuaEdfNXQzRUhxODR4ZHg0ZzZXUVJjd1hzYWVCeUJ3Qld5QdIBX0FVX3lxTE02MjJ4WW1rUEFmV1kydTNoaGVqN1VMMW9YcmM1YkFSN210NXp2bGFRYTdmdzRlRjBGaGRUZ3h0M255U3VyU2s1QWdlRXg1a0d3ZzFGcEs4V2pFR2o0UVRj?oc=5",
@@ -65,8 +59,14 @@
         "time": 1793297060000
       },
       {
+        "title": "〈日月光法說〉Q3純益季增28%EPS6.13元 封測業務毛利率衝破3成天花板將成未來基準底線 - 鉅亨網",
+        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE4xdUJMdnpVQkxuVjRiM0k4Ql93Tm9SRlNzZzJxX1VkMmhtbEF6SUZ5ZVI2NWNOaUlCS0ZHWmc0RktHcnE3Qm9ORHE0NURXX0k?oc=5",
+        "publisher": "鉅亨網",
+        "time": 1793283165000
+      },
+      {
         "title": "〈日月光法說〉Q4 營收估季增 6-8%、再度追加資本支出 LEAP目標上修明年可望翻倍 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE9PQkd5NlhPV2dOTXZJd0xjeHFPYnRzY2sxTFJqVHF5SzhZNy1xSTZDZ3UteVo3SVloTWo4SWRQM0hFQW1ReHJQX1RzNA?oc=5",
+        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE4wTnR6NS1mX0FRRW9uQ1dJZkVGSk9pZHlIaVZDUDB1RDRyVXl2VHFfU0UyamdVbU5iWGJXT1lUMnhiVmFoOVpGTlVnNzNXc0E?oc=5",
         "publisher": "鉅亨網",
         "time": 1793281672000
       },
@@ -121,12 +121,6 @@
         "time": 1792047600000
       },
       {
-        "title": "鈊象、宇峻Q3營收雙創高- 日報 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5hMDdxb2F3aE5PTFJ0S3FOeVl5Uk94ZXJHSHhyZ0dRQ2djQ1lmeFE3QnV4UjZUczBSeUxwRnVCTlBOYjlTMlZlRVRmVW5fTWlfWUN5XzRldlNub2pNeVl3?oc=5",
-        "publisher": "工商時報",
-        "time": 1791702000000
-      },
-      {
         "title": "鈊象下半年營運優於上半年 法人上修全年 EPS 至47.2元 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9Cel9weWV6QThibmtsUTdpWkIyaVpabEFIUFdLdkxDckxWSElmU0drRk5xVE9KVHRIUkdXV0twWUdIcUY2cFNkb1RZaVRqSXkwbjFTYjBlTDF2TTTSAWBBVV95cUxPVmlNNXYyeWhGeXVsai01dGhVdXhaTDRHUHZ5cGczTlFncGVwdTA2QzN3LWhrUWxEOW5rcFRLbjRQcVVjVjc4SG1GS0loOGVHY05sNXAxUTM0X1NfZ2FGak0?oc=5",
         "publisher": "經濟日報",
@@ -137,6 +131,18 @@
         "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9XU2IxX1hmVy1wMzNsdFRtbWFFbG1MbFhoVVNZVVJrNXdWMGpUd3FxUWItWUZpTVVpMERiRmNRSkR4elpwc2RIc2pYdjRsRlBQSHBhX0pWNXFzeEHSAWBBVV95cUxNc2NZb2huOHU0T21WUnZkdVEtSlhVMjMwamNVTENXbFZQSXFwdlJrTlAwS1pjZmZpRFhkM0ctVTBIVzlJRXZjLTdUSWp6WGhycS0wNEtlcGxrOWs3Wndabkw?oc=5",
         "publisher": "經濟日報",
         "time": 1791442800000
+      },
+      {
+        "title": "Q4行情走「小碎步」！法人卡位16檔績優股系統電、鈊象、全新入列- 日報 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5rRkdlMURLT2R2S1VTZVVCU1dKQ2k0Y1FvR01NdVJlSExHRW5mNUZFTnA2czdKejVINGZVRmNETnE1QzFLM1NJdlNHSDZKWmhYQ0tuNXBKbGFlNlQ4dkZr?oc=5",
+        "publisher": "工商時報",
+        "time": 1791183600000
+      },
+      {
+        "title": "鈊象 瞄準逾150天 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9oek1iX1BJUnpKbjA0aV9HdUlHemJIQlJ0R0ZkYkstbmNJYmozMDFzRjJYWU5aQklKbEtmS29HVVZoTHFUend2Q3BhZi10LXdaUElQZ05HeDhYQdIBX0FVX3lxTE5vTEhGcmh4MXJDSFpoQ0E5dG1aRE1NRmFWVUVxcVZtbUxSSGI0MTVQdUZwZktIN1QxbWdrZ2RXSlVMQTNjTmJfVXpXUWhRMDlGVU1pcEE1V2pESlcyenY4?oc=5",
+        "publisher": "經濟日報",
+        "time": 1791097200000
       }
     ],
     "2002": [
@@ -210,7 +216,7 @@
       },
       {
         "title": "00878第4季配息倒數！股民敲碗1.1元、挑戰1.2元 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5DV0tvemtuX2NOQnozcEI5LURvZHNscUlIXzlDV2kwRkJuRGhoTEZaQkxrbTB1Y3FwSy1lRFE0TnJ5UTVhMnZVZVR4M0R0RklmU3RjSnRrWi1xdnE1dlhhLW8yZ2_SAWRBVV95cUxOQ1dLb3prbl9jTkJ6M3BCOS1Eb2RzbHFJSF85Q1dpMEZCbkRoaExGWkJMa20wdWNxcEstZURRNE5yeVE1YTJ2VWVUeDNEdEZJZlN0Y0p0a1otcXZxNXZYYS1vMmdv?oc=5",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1TSFduYWgtRnZsVENPNTBJQ3BDYTNjM1FVT2VwY3JXQVlRQVNCWTRnM0dNd3pwZDlYYklidWJHenZNdmd3NDg3QUctY0tjaFlERmxjWEJqSGdGNEltOTdn0gFkQVVfeXFMTkNXS296a25fY05CejNwQjktRG9kc2xxSUhfOUNXaTBGQm5EaGhMRlpCTGttMHVjcXBLLWVEUTROcnlRNWEydlVlVHgzRHRGSWZTdGNKdGtaLXF2cTV2WGEtbzJnbw?oc=5",
         "publisher": "自由財經",
         "time": 1793158839000
       },
@@ -219,6 +225,12 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9Yc09GSHUxeXZMYlpPQlNobjN3MVVMU25iYXlnOUxNY29SVUlQdW1lcGg0RVN4dE9TZ3U2ZDB1NXNfdU1WT0tfaGRNSG1vLXJqb211aEpMcng5cWxiUUU4?oc=5",
         "publisher": "工商時報",
         "time": 1793157480000
+      },
+      {
+        "title": "0056、00878、00919之外還能怎麼配？達人點名月月配ETF新組合領息差距曝光- 理財 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1mTGtKNW04ay1xUmhEQjZ4N3drYVUySkxqOFNVc0I2OXZ5X2xQY01IeHV1LUxjd3Y0XzdCVy11NVliaE4xdTBmR0pINFhfeE90TElZa01nZlJNZHluNWg4?oc=5",
+        "publisher": "工商時報",
+        "time": 1791788400000
       },
       {
         "title": "00919、0056、00878 該選誰？別只看配息高！達人曝「含息報酬率」真相大公開：這2檔竟然賺更多？ - 鉅亨網",
@@ -255,12 +267,6 @@
       {
         "title": "00919、00918...21檔ETF配息大紅包來了！421億股息本周入帳前三大發錢主力揭曉- 日報 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE51dGRDSnR6by1aVnN3dkJQV2hiMnRTT1g0RnRXSWRnaUZkVVNNWkt4ajFsTlozWGhhUHhaUmN0cy1QTVZ3bnJNTE94MWNRZUtZdkRtdlhLRzhiZktuV1JF?oc=5",
-        "publisher": "工商時報",
-        "time": 1791788400000
-      },
-      {
-        "title": "0056、00878、00919之外還能怎麼配？達人點名月月配ETF新組合領息差距曝光- 理財 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1mTGtKNW04ay1xUmhEQjZ4N3drYVUySkxqOFNVc0I2OXZ5X2xQY01IeHV1LUxjd3Y0XzdCVy11NVliaE4xdTBmR0pINFhfeE90TElZa01nZlJNZHluNWg4?oc=5",
         "publisher": "工商時報",
         "time": 1791788400000
       },

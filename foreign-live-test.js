@@ -27,3 +27,30 @@
   function start(){mount();safeRun(nvda,'nvdaStatus');safeRun(cover,'coverStatus');setInterval(()=>safeRun(nvda,'nvdaStatus'),15000);setInterval(()=>safeRun(cover,'coverStatus'),60000);addEventListener('resize',()=>{draw(document.getElementById('nvdaChart'),states.NVDA.points);draw(document.getElementById('coverChart'),states.COVER.points)})}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
+
+/* TAIEX top-card hotfix: prefer same-day MIS; otherwise latest official retained close. */
+(() => {
+  'use strict';
+  const twDay=()=>new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}).replaceAll('-','');
+  const fmt=(v,d=2)=>Number(v).toLocaleString('zh-TW',{minimumFractionDigits:d,maximumFractionDigits:d});
+  const cls=v=>Number(v)>0?'up':Number(v)<0?'down':'flat';
+  let latest=null;
+  async function loadLatest(){
+    try{const r=await fetch('./data/latest.json?_='+Date.now(),{cache:'no-store'});if(!r.ok)return;const j=await r.json(),x=j?.taiex;if(x&&Number.isFinite(Number(x.close))){latest={date:String(x.date||''),price:Number(x.close),change:Number(x.change),time:'13:30:00',source:'TWSE 官方最近交易日'}}}catch{}
+  }
+  function paint(){
+    const live=window.__TW_LIVE_V091__?.taiex,today=twDay();
+    const x=live&&String(live.date)===today&&Number.isFinite(Number(live.price))?{date:live.date,price:Number(live.price),change:Number(live.change),time:String(live.time||''),source:'TWSE MIS 盤中即時'}:latest;
+    if(!x)return;
+    const v=document.getElementById('taiex'),c=document.getElementById('taiexChg'),mt=document.getElementById('marketTime');
+    if(v)v.textContent=fmt(x.price,2);
+    if(c){const ch=Number.isFinite(x.change)?x.change:0;c.textContent=`${ch>0?'+':''}${fmt(ch,2)}｜${x.source}${x.time?' '+x.time:''}`;c.className='s '+cls(ch)}
+    if(mt&&String(x.date)!==today)mt.textContent=`最近交易日 ${String(x.date).replaceAll('-','/')}`;
+  }
+  async function run(){await loadLatest();paint()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
+  setInterval(paint,15000);
+  setInterval(run,60000);
+  addEventListener('focus',run);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)run()});
+})();

@@ -1,0 +1,53 @@
+name: Apply final close chart correction
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/patch_final_close_chart_20261102.py'
+      - '.github/workflows/apply-final-close-chart-20261102.yml'
+permissions:
+  contents: write
+jobs:
+  patch-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Apply patch
+        run: python scripts/patch_final_close_chart_20261102.py
+      - name: Syntax check
+        run: node --check extras-v090.js
+      - name: Semantic verification 1
+        run: |
+          grep -F "function rowSessionPrices(code)" extras-v090.js
+          grep -F "T09:00:00+08:00" extras-v090.js
+          grep -F "T13:30:00+08:00" extras-v090.js
+          grep -F "close:q.open" extras-v090.js
+          grep -F "close:q.close" extras-v090.js
+      - name: Semantic verification 2 synthetic close-vs-open
+        run: |
+          node - <<'NODE'
+          const tests=[{name:'3293',open:808,close:797,want:'down'},{name:'2002',open:19.25,close:19.4,want:'up'},{name:'00878',open:34.79,close:34.8,want:'up'},{name:'00919',open:32.49,close:32.48,want:'down'}];
+          for(const t of tests){const d=t.close-t.open,got=d>0?'up':d<0?'down':'flat';if(got!==t.want)throw Error(`${t.name}: ${got} != ${t.want}`);console.log(t.name,t.open,'->',t.close,d,got)}
+          NODE
+      - name: Verify endpoint ordering
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('extras-v090.js').read_text()
+          assert "byStamp.set(tOpen" in s and "byStamp.set(tClose" in s
+          assert s.index("byStamp.set(tOpen") < s.index("byStamp.set(tClose")
+          assert "const open=Number(d[0].close)" in s
+          assert "const endDelta=rel.at(-1).rel" in s
+          print('endpoint ordering + open-zero semantics OK')
+          PY
+      - name: Commit corrected chart
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js
+          git diff --cached --quiet && exit 0
+          git commit -m 'Anchor intraday chart to official open and close'
+          git push origin HEAD:main

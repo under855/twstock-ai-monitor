@@ -3,7 +3,6 @@ on:
   push:
     paths:
       - '.github/workflows/repair-runtime-final-20261102.yml'
-      - 'scripts/final_fx_strip.py'
 permissions:
   contents: write
 jobs:
@@ -18,8 +17,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           s=Path('index.html').read_text(encoding='utf-8')
-          assert 'id="fxStrip"' in s
-          assert 'id="fxBoardStrip"' in s
+          assert 'id="fxStrip"' in s and 'id="fxBoardStrip"' in s
           assert 'repeat(9,minmax(82px,1fr))' in s
           assert 'setInterval(load,60000)' in s
           assert '\\n<script id="live-fx-board">' not in s
@@ -31,7 +29,7 @@ jobs:
           s=Path('index.html').read_text(encoding='utf-8')
           blocks=re.findall(r'<script(?: [^>]*)?>([\s\S]*?)</script>',s)
           Path('/tmp/all-inline.js').write_text('\n'.join(blocks),encoding='utf-8')
-          print('VERIFY 2 EXTRACT PASS')
+          print('VERIFY 2 PASS')
           PY
           node --check /tmp/all-inline.js
       - name: Commit

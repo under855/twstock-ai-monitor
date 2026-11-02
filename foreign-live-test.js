@@ -66,6 +66,7 @@
       .row{grid-template-columns:112px 190px minmax(210px,1fr) 68px 28px;grid-template-areas:"name price chart score open";column-gap:12px}
       .row .p{align-self:stretch;display:flex;flex-direction:column;justify-content:center;padding:5px 12px;border-left:2px solid rgba(120,173,255,.22);border-right:1px solid rgba(50,75,104,.38)}
       .row .price{font-size:28px;line-height:1.02;font-weight:950;letter-spacing:-.6px}
+      .row .price.up{color:#ff7272}.row .price.down{color:#64d69a}.row .price.flat{color:#eef5ff}
       .row .chg{font-size:16px;line-height:1.3;font-weight:900;margin-top:7px;white-space:nowrap}
       .row .chg .quotePct{margin-left:7px;font-weight:850}
       .row .spark,.row .sparkFallback{height:54px}
@@ -85,8 +86,10 @@
   function enhanceRow(row){
     const priceEl=row.querySelector('.price'),chgEl=row.querySelector('.chg');if(!priceEl||!chgEl)return;
     const price=n(priceEl.textContent),chg=n(chgEl.textContent);
-    if(price==null||chg==null){chgEl.textContent='—';return}
+    if(price==null||chg==null){priceEl.classList.remove('up','down','flat');chgEl.textContent='—';return}
     const prev=price-chg,pct=prev?chg/prev*100:null;
+    const trend=chg>0?'up':chg<0?'down':'flat';
+    priceEl.classList.remove('up','down','flat');priceEl.classList.add(trend);
     const arrow=chg>0?'▲':chg<0?'▼':'—',sign=chg>0?'+':'';
     chgEl.innerHTML=`${arrow} ${sign}${fmt(chg)}${pct==null?'':`<span class="quotePct">${pct>0?'+':''}${pct.toFixed(2)}%</span>`}`;
     const meta=row.querySelector('.meta');if(meta){const spans=meta.querySelectorAll('span');if(spans.length>1)spans[spans.length-1].style.display='none'}

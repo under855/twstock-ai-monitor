@@ -41,6 +41,7 @@
     const global=document.querySelector('.globalMarkets'),globalTitle=global?.previousElementSibling?.classList?.contains('sectionTitle')?global.previousElementSibling:null,anchor=globalTitle||global||watchTitle;anchor.parentNode.insertBefore(split,anchor);split.append(left,right);if(globalTitle)left.appendChild(globalTitle);if(global)left.appendChild(global);left.appendChild(watchTitle);left.appendChild(watch);right.appendChild(fx);right.appendChild(cashBox());return true;
   }
 
-  let tries=0;function boot(){if(buildSplit()){loadBotCash();setInterval(loadBotCash,300000);return}if(++tries<80)setTimeout(boot,250)}
+  function loadPaperTrading(){if(document.querySelector('script[data-paper-trading]'))return;const s=document.createElement('script');s.src='./paper-trading-v100.js?v=100a';s.dataset.paperTrading='1';document.body.appendChild(s);}
+  let tries=0;function boot(){if(buildSplit()){loadBotCash();setInterval(loadBotCash,300000);loadPaperTrading();return}if(++tries<80)setTimeout(boot,250)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();

@@ -1,0 +1,91 @@
+name: Final open-zero chart cache fix
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/final-open-zero-cachefix-20261102.yml'
+permissions:
+  contents: write
+jobs:
+  fix-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Force clients to load corrected chart renderer
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          old='<script src="./extras-v090.js?v=095color1"></script>'
+          new='<script src="./extras-v090.js?v=096openzero-final"></script>'
+          if old not in s and new not in s:
+              raise SystemExit('extras cache-buster marker not found')
+          s=s.replace(old,new)
+          old2='<script src="./live-v091.js?v=094r9"></script>'
+          new2='<script src="./live-v091.js?v=096openzero-final"></script>'
+          if old2 in s: s=s.replace(old2,new2)
+          p.write_text(s)
+
+          sw=Path('sw.js')
+          t=sw.read_text()
+          import re
+          t=re.sub(r"const CACHE='[^']+';", "const CACHE='tw-ai-monitor-v096openzero-final';", t, count=1)
+          sw.write_text(t)
+          PY
+      - name: Acceptance QA pass 1
+        run: |
+          node --check extras-v090.js
+          node --check live-v091.js
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('extras-v090.js').read_text()
+          checks=[
+            "const open=Number(d[0].close)",
+            "rel:Number(x.close)-open",
+            "const maxAbs=Math.max(0,...rel.map(x=>Math.abs(x.rel)))",
+            "const endDelta=rel.at(-1).rel",
+            "trend=endDelta>0?'up':endDelta<0?'down':'flat'",
+            "if(Number.isFinite(tOpen))byStamp.set(tOpen",
+            "if(Number.isFinite(tClose))byStamp.set(tClose",
+          ]
+          for x in checks:
+              assert x in s, x
+          idx=Path('index.html').read_text()
+          assert 'extras-v090.js?v=096openzero-final' in idx
+          assert 'live-v091.js?v=096openzero-final' in idx
+          print('QA1 PASS')
+          PY
+      - name: Acceptance QA pass 2 exact user rules
+        run: |
+          python3 - <<'PY'
+          def verify(open_, seq):
+              rel=[v-open_ for v in seq]
+              half=max(max(abs(v) for v in rel)*1.10, abs(open_)*.0005, .01)
+              Y=lambda v:(half-v)/(2*half)
+              trend='up' if rel[-1]>0 else 'down' if rel[-1]<0 else 'flat'
+              assert abs(Y(0)-.5)<1e-12
+              assert Y(rel[-1]) < .5 if seq[-1]>open_ else Y(rel[-1]) > .5 if seq[-1]<open_ else abs(Y(rel[-1])-.5)<1e-12
+              return trend,rel[-1],Y(rel[-1])
+          cases=[
+            (800,[800,810,805,797],'down'),
+            (19.25,[19.25,19.0,19.35,19.4],'up'),
+            (34.79,[34.79,34.62,34.72,34.8],'up'),
+            (32.49,[32.49,32.34,32.55,32.48],'down'),
+          ]
+          for o,seq,want in cases:
+              got=verify(o,seq)
+              assert got[0]==want,(o,seq,got,want)
+              print(o,seq[-1],got)
+          print('QA2 PASS')
+          PY
+      - name: Commit cache fix
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html sw.js
+          git diff --cached --quiet && exit 0
+          git commit -m "Force corrected open-zero chart renderer to clients"
+          git push origin main

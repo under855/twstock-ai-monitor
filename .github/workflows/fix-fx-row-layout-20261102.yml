@@ -1,0 +1,104 @@
+name: Fix FX row layout and syntax
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-fx-row-layout-20261102.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch layout and FX script
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          a=s.index('<style id="no-line-charts">')
+          b=s.index('</style>',a)+len('</style>')
+          css='''<style id="no-line-charts">
+.marketChart,.marketChartMeta,.spark,.sparkFallback{display:none!important}
+.marketChartCard{display:block!important}
+.cards>.card:first-child{display:none!important}.cards{grid-template-columns:1fr!important}
+/* Stock rows use only about half the content width; the freed right half is reserved for FX. */
+.row{grid-template-columns:96px 82px 64px 28px minmax(360px,1fr);grid-template-areas:"name price score open fx";align-items:center}
+.fxBoard{display:grid;grid-template-columns:repeat(5,minmax(72px,1fr));gap:7px;margin-top:7px}
+.fxItem,.fxMini{background:#071321;border:1px solid #1d3552;border-radius:9px;padding:7px 8px;min-width:0}
+.fxItem b,.fxMini b{display:block;font-size:11px;color:#bcd1e8}.fxItem strong,.fxMini strong{display:block;font-size:15px;margin-top:2px}.fxItem small,.fxMini small{display:block;color:#718aa5;font-size:9px;margin-top:2px}
+.fxSlot{grid-area:fx;display:grid;grid-template-columns:repeat(3,minmax(100px,1fr));gap:6px;min-width:0}.fxNote{font-size:9px;color:#718aa5;margin-top:6px}
+@media(max-width:720px){.row{grid-template-columns:88px 75px 58px 24px;grid-template-areas:"name price score open" "fx fx fx fx"}.fxSlot{grid-template-columns:repeat(3,1fr);grid-column:1/-1}.fxBoard{grid-template-columns:repeat(3,1fr)}}
+</style>'''
+          s=s[:a]+css+s[b:]
+          marker='<script id="live-fx-board">'
+          if marker in s:
+            a=s.index(marker)
+            b=s.index('</script>',a)+len('</script>')
+            js='''<script id="live-fx-board">
+(function(){
+  const FX=[['USD','美元'],['JPY','日圓'],['EUR','歐元'],['GBP','英鎊'],['AUD','澳幣'],['CNY','人民幣'],['HKD','港幣'],['KRW','韓元'],['SGD','新加坡幣']];
+  let latest=null,lastFetch=0;
+  function fmt(code,v){return (code==='JPY'||code==='KRW')?v.toFixed(4):v.toFixed(3)}
+  function card(c,n,mini){const r=latest&&latest.rates?latest.rates[c]:null,twd=r?1/r:null;return '<div class="'+(mini?'fxMini':'fxItem')+'"><b>'+c+' '+n+'</b><strong>'+(twd?fmt(c,twd):'—')+'</strong><small>1 '+c+' ≈ TWD</small></div>'}
+  function render(){
+    const board=document.getElementById('fxBoard');
+    if(board) board.innerHTML=latest?FX.slice(0,5).map(x=>card(x[0],x[1],false)).join(''):'<div class="muted small">即時匯率載入中…</div>';
+    const note=document.getElementById('fxNote');
+    if(note&&latest) note.textContent='即時外匯參考價｜1 單位外幣約等於多少新台幣｜更新 '+new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    document.querySelectorAll('#watch .row').forEach(function(row,i){
+      let slot=row.querySelector('.fxSlot');
+      if(!slot){slot=document.createElement('div');slot.className='fxSlot';row.appendChild(slot)}
+      const start=(i*3)%FX.length,items=[FX[start],FX[(start+1)%FX.length],FX[(start+2)%FX.length]];
+      slot.innerHTML=items.map(x=>card(x[0],x[1],true)).join('');
+    });
+  }
+  async function load(){
+    if(Date.now()-lastFetch<60000&&latest){render();return}
+    try{
+      const res=await fetch('https://open.er-api.com/v6/latest/TWD?ts='+Date.now(),{cache:'no-store'});
+      if(!res.ok) throw new Error('FX '+res.status);
+      const j=await res.json();
+      if(j.result!=='success'||!j.rates) throw new Error('FX payload');
+      latest=j;lastFetch=Date.now();render();
+    }catch(e){const board=document.getElementById('fxBoard');if(board&&!latest)board.innerHTML='<div class="muted small">即時匯率暫時無法取得</div>'}
+  }
+  const watch=document.getElementById('watch');
+  if(watch)new MutationObserver(render).observe(watch,{childList:true});
+  load();setInterval(load,60000);
+})();
+</script>'''
+            s=s[:a]+js+s[b:]
+          s=s.replace('主要外幣兌新台幣｜最新參考匯率','即時外匯｜各國貨幣兌新台幣')
+          p.write_text(s,encoding='utf-8')
+      - name: Verify twice
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text(encoding='utf-8')
+          assert 'grid-template-areas:"name price score open fx"' in s
+          assert 'grid-template-columns:repeat(3,minmax(100px,1fr))' in s
+          assert 'setInterval(load,60000)' in s
+          assert 'open.er-api.com/v6/latest/TWD?ts=' in s
+          assert '即時外匯｜各國貨幣兌新台幣' in s
+          print('VERIFY 1 PASS')
+          PY
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('index.html').read_text(encoding='utf-8')
+          m=re.search(r'<script id="live-fx-board">([\s\S]*?)</script>',s)
+          assert m and "FX=[['USD','美元']" in m.group(1)
+          Path('/tmp/fx.js').write_text(m.group(1),encoding='utf-8')
+          print('VERIFY 2 EXTRACT PASS')
+          PY
+          node --check /tmp/fx.js
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Fix FX layout and runtime syntax"
+          git push

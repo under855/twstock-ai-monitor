@@ -1,0 +1,46 @@
+name: Install 50-50 stock FX layout
+on:
+  push:
+    paths:
+      - '.github/workflows/install-split-layout-v095.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install split layout loader and refresh cache
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          tag='<script src="split-layout-v095.js?v=095split1"></script>'
+          if 'split-layout-v095.js' not in s:
+              s=s.replace('</body>',tag+'\n</body>')
+          p.write_text(s)
+          sw=Path('sw.js')
+          if sw.exists():
+              t=sw.read_text()
+              import re
+              t=re.sub(r"tw-ai-monitor-v[^'\"]+",'tw-ai-monitor-v095split1',t)
+              sw.write_text(t)
+          PY
+          node --check split-layout-v095.js
+          grep -q 'split-layout-v095.js?v=095split1' index.html
+          grep -q 'grid-template-columns:minmax(0,1fr) minmax(0,1fr)' split-layout-v095.js
+          grep -q 'right.appendChild(fx)' split-layout-v095.js
+      - name: Commit
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add index.html sw.js split-layout-v095.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'Apply 50-50 stock and FX screen layout'
+            git push
+          fi

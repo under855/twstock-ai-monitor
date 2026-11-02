@@ -35,11 +35,20 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
   .panel{max-height:94vh;max-height:calc(100svh - env(safe-area-inset-top));padding-bottom:calc(42px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
 }
 </style>
+
+<style id="no-line-charts">
+/* Line charts intentionally removed from the product UI. */
+.marketChartCard,.spark,.sparkFallback{display:none!important}
+.row{grid-template-columns:96px 82px 64px 28px;grid-template-areas:"name price score open"}
+.cards>.card:first-child{display:none!important}
+.cards{grid-template-columns:1fr!important}
+@media(max-width:720px){.row{grid-template-columns:88px 75px 58px 24px}}
+</style>
 </head>
 <body>
 <div class="app">
   <header class="top">
-    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.4｜盤中即時行情・即時線圖｜15 秒更新</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
+    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.4｜盤中即時行情｜15 秒更新</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
     <div class="search"><input id="code" inputmode="text" autocomplete="off" placeholder="搜尋代號或名稱，例如 2610、華航"><button id="searchBtn" class="primary">搜尋</button></div>
     <div id="searchResults" class="searchResults"></div>
     <div class="toolbar"><span class="pill" id="clock">—</span><span class="pill">評分 100 分制</span><span class="pill" id="universePill">台股名冊：載入中…</span><span class="pill">行情：TWSE／TPEx</span><span class="pill" id="refreshPill">自動更新：15 秒</span></div>

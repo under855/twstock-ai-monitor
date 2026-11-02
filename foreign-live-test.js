@@ -5,96 +5,32 @@
   const states={NVDA:{lastTs:'',accepted:0,points:[]},COVER:{lastTs:'',accepted:0,points:[]}};
   function style(){if(document.getElementById('officialValidationStyle'))return;const s=document.createElement('style');s.id='officialValidationStyle';s.textContent=`.foreignValidation{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:9px 0 13px}.foreignCard{background:linear-gradient(145deg,#10223a,#0b1828);border:1px solid #213954;border-radius:15px;padding:13px}.foreignCard h3{font-size:16px;margin:3px 0 9px}.foreignTop{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.foreignStatus{font-size:11px;font-weight:800}.foreignGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.foreignMetric small{display:block;color:#93a9c2;font-size:10px}.foreignMetric b{display:block;margin-top:2px}.foreignChart{width:100%;height:52px;background:#071321;border-radius:8px;margin-top:9px}.sourceNote{font-size:10px;color:#93a9c2;line-height:1.5;margin-top:7px}.state-ok{color:#63d49a}.state-delay{color:#ffd166}.state-warn{color:#ff8b8b}@media(max-width:720px){.foreignValidation{grid-template-columns:1fr}.foreignGrid{grid-template-columns:1fr 1fr}}`;document.head.appendChild(s)}
   function draw(c,a){if(!c||a.length<2)return;const ctx=c.getContext('2d'),r=c.getBoundingClientRect(),dpr=Math.max(1,devicePixelRatio||1),w=Math.max(100,Math.round((r.width||500)*dpr)),h=Math.max(35,Math.round((r.height||52)*dpr));c.width=w;c.height=h;ctx.clearRect(0,0,w,h);const vals=a.map(x=>x.p),lo=Math.min(...vals),hi=Math.max(...vals),span=hi===lo?1:hi-lo;ctx.strokeStyle=a.at(-1).p>=a[0].p?'#ff7272':'#64d69a';ctx.lineWidth=Math.max(1.5,1.8*dpr);ctx.beginPath();a.forEach((x,i)=>{const xx=3*dpr+(w-6*dpr)*(i/Math.max(1,a.length-1)),yy=3*dpr+(h-6*dpr)*(hi-x.p)/span;i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)});ctx.stroke()}
-  function mount(){style();if(document.getElementById('officialValidation'))return;const anchor=document.querySelector('.sectionTitle');if(!anchor)return;const box=document.createElement('section');box.id='officialValidation';box.className='foreignValidation';box.innerHTML=`
-    <article class="foreignCard" id="nvdaValidation"><div class="foreignTop"><div><small>美股即時驗證｜Nasdaq 官方資料</small><h3>NVIDIA <span style="color:#93a9c2">NVDA</span></h3></div><span class="foreignStatus" id="nvdaStatus">讀取中</span></div><div class="foreignGrid"><div class="foreignMetric"><small>最新價</small><b id="nvdaPrice">—</b></div><div class="foreignMetric"><small>Nasdaq 原始時間</small><b id="nvdaSourceTime">—</b></div><div class="foreignMetric"><small>市場狀態</small><b id="nvdaMarket">—</b></div><div class="foreignMetric"><small>有效新資料</small><b id="nvdaCount">0</b></div></div><canvas id="nvdaChart" class="foreignChart"></canvas><div class="sourceNote">來源：Nasdaq 官方 Quote API；瀏覽器透過 r.jina.ai 讀取官方回應。只有 Nasdaq 原始成交時間改變才計為新資料，並顯示 Nasdaq 的 isRealTime 標記。</div></article>
-    <article class="foreignCard" id="coverValidation"><div class="foreignTop"><div><small>日股來源驗證｜不宣稱即時</small><h3>COVER <span style="color:#93a9c2">5253・東證</span></h3></div><span class="foreignStatus state-delay" id="coverStatus">JPX 至少延遲 15 分鐘</span></div><div class="foreignGrid"><div class="foreignMetric"><small>參考價</small><b id="coverPrice">—</b></div><div class="foreignMetric"><small>資料時間</small><b id="coverSourceTime">—</b></div><div class="foreignMetric"><small>漲跌</small><b id="coverChange">—</b></div><div class="foreignMetric"><small>有效新資料</small><b id="coverCount">0</b></div></div><canvas id="coverChart" class="foreignChart"></canvas><div class="sourceNote">JPX 官方說明：免費個股行情至少延遲 15 分鐘；本卡以日本株探（Kabutan）公開延遲行情作交叉顯示，僅驗證 COVER 資料流與延遲標示，不作即時行情依據。台股與評分不使用本來源。</div></article>`;anchor.parentNode.insertBefore(box,anchor)}
-  async function nvda(){
-    const u='https://r.jina.ai/https://api.nasdaq.com/api/quote/NVDA/info?assetclass=stocks&_='+Date.now(),r=await fetch(u,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const t=await r.text(),i=t.indexOf('{');if(i<0)throw Error('Nasdaq JSON missing');const j=JSON.parse(t.slice(i)),d=j?.data,p=d?.primaryData;if(!p)throw Error('Nasdaq payload missing');const price=num(p.lastSalePrice),ts=String(p.lastTradeTimestamp||'');if(price==null||!ts)throw Error('Nasdaq quote missing');const s=states.NVDA,key=ts+"|"+price;if(key!==s.lastTs){s.lastTs=key;s.accepted++;s.points.push({p:price,t:Date.now()});if(s.points.length>80)s.points.shift()}document.getElementById('nvdaPrice').textContent=price.toFixed(2);document.getElementById('nvdaSourceTime').textContent=ts.replace(/, 2026 /,', ');document.getElementById('nvdaMarket').textContent=String(d.marketStatus||'—');document.getElementById('nvdaCount').textContent=String(s.accepted);const st=document.getElementById('nvdaStatus');st.textContent=p.isRealTime===true?'Nasdaq 標示即時':'Nasdaq 未標示即時';st.className='foreignStatus '+(p.isRealTime===true?'state-ok':'state-delay');const card=document.getElementById('nvdaValidation');card.dataset.accepted=String(s.accepted);card.dataset.sourceTime=ts;card.dataset.price=String(price);card.dataset.realTime=String(p.isRealTime===true);draw(document.getElementById('nvdaChart'),s.points)
-  }
-  async function cover(){
-    const card=document.getElementById('coverValidation');if(card)card.dataset.realTime='false';
-    const upstream='https://kabutan.jp/stock/?code=5253&_='+Date.now(),u='https://proxy.cors.dev/'+upstream,r=await fetch(u,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const t=await r.text();
-    const pm=t.match(/<span class="kabuka">\s*([0-9][0-9,]*(?:\.[0-9]+)?)円<\/span>/i),price=pm?num(pm[1]):null;
-    const block=t.match(/<h2[^>]*>[\s\S]*?5253[\s\S]*?カバー[\s\S]*?<\/h2>[\s\S]{0,1800}/i)?.[0]||t;
-    const tm=block.match(/<time[^>]*datetime="[^"]*T(\d{2}:\d{2})\+09:00"[^>]*>\s*([^<]+)\s*<\/time>/i),ts=tm?(tm[2]||tm[1]).trim():'—';
-    const cm=block.match(/class="si_i1_dl1"[\s\S]{0,800}?([+-][0-9][0-9,]*(?:\.[0-9]+)?)/i),chg=cm?num(cm[1]):null;
-    if(price==null)throw Error('COVER delayed quote missing');
-    const key=ts+'|'+price,s=states.COVER;if(key!==s.lastTs){s.lastTs=key;s.accepted++;s.points.push({p:price,t:Date.now()});if(s.points.length>80)s.points.shift()}
-    document.getElementById('coverPrice').textContent='¥'+price.toLocaleString('zh-TW');document.getElementById('coverSourceTime').textContent=ts+' JST';document.getElementById('coverCount').textContent=String(s.accepted);document.getElementById('coverChange').textContent=chg==null?'—':(chg>=0?'+':'')+chg.toLocaleString('zh-TW');
-    if(card){card.dataset.accepted=String(s.accepted);card.dataset.sourceTime=ts;card.dataset.price=String(price);card.dataset.realTime='false'}draw(document.getElementById('coverChart'),s.points)
-  }
+  function mount(){style();if(document.getElementById('officialValidation'))return;const anchor=document.querySelector('.sectionTitle');if(!anchor)return;const box=document.createElement('section');box.id='officialValidation';box.className='foreignValidation';box.innerHTML=`<article class="foreignCard" id="nvdaValidation"><div class="foreignTop"><div><small>美股即時驗證｜Nasdaq 官方資料</small><h3>NVIDIA <span style="color:#93a9c2">NVDA</span></h3></div><span class="foreignStatus" id="nvdaStatus">讀取中</span></div><div class="foreignGrid"><div class="foreignMetric"><small>最新價</small><b id="nvdaPrice">—</b></div><div class="foreignMetric"><small>Nasdaq 原始時間</small><b id="nvdaSourceTime">—</b></div><div class="foreignMetric"><small>市場狀態</small><b id="nvdaMarket">—</b></div><div class="foreignMetric"><small>有效新資料</small><b id="nvdaCount">0</b></div></div><canvas id="nvdaChart" class="foreignChart"></canvas><div class="sourceNote">來源：Nasdaq 官方 Quote API；瀏覽器透過 r.jina.ai 讀取官方回應。只有 Nasdaq 原始成交時間改變才計為新資料。</div></article><article class="foreignCard" id="coverValidation"><div class="foreignTop"><div><small>日股來源驗證｜不宣稱即時</small><h3>COVER <span style="color:#93a9c2">5253・東證</span></h3></div><span class="foreignStatus state-delay" id="coverStatus">JPX 至少延遲 15 分鐘</span></div><div class="foreignGrid"><div class="foreignMetric"><small>參考價</small><b id="coverPrice">—</b></div><div class="foreignMetric"><small>資料時間</small><b id="coverSourceTime">—</b></div><div class="foreignMetric"><small>漲跌</small><b id="coverChange">—</b></div><div class="foreignMetric"><small>有效新資料</small><b id="coverCount">0</b></div></div><canvas id="coverChart" class="foreignChart"></canvas><div class="sourceNote">JPX 免費個股行情至少延遲 15 分鐘；本卡僅作來源驗證。</div></article>`;anchor.parentNode.insertBefore(box,anchor)}
+  async function nvda(){const u='https://r.jina.ai/https://api.nasdaq.com/api/quote/NVDA/info?assetclass=stocks&_='+Date.now(),r=await fetch(u,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const t=await r.text(),i=t.indexOf('{');if(i<0)throw Error('Nasdaq JSON missing');const j=JSON.parse(t.slice(i)),d=j?.data,p=d?.primaryData;if(!p)throw Error('Nasdaq payload missing');const price=num(p.lastSalePrice),ts=String(p.lastTradeTimestamp||'');if(price==null||!ts)throw Error('Nasdaq quote missing');const s=states.NVDA,key=ts+'|'+price;if(key!==s.lastTs){s.lastTs=key;s.accepted++;s.points.push({p:price,t:Date.now()});if(s.points.length>80)s.points.shift()}document.getElementById('nvdaPrice').textContent=price.toFixed(2);document.getElementById('nvdaSourceTime').textContent=ts;document.getElementById('nvdaMarket').textContent=String(d.marketStatus||'—');document.getElementById('nvdaCount').textContent=String(s.accepted);const st=document.getElementById('nvdaStatus');st.textContent=p.isRealTime===true?'Nasdaq 標示即時':'Nasdaq 未標示即時';st.className='foreignStatus '+(p.isRealTime===true?'state-ok':'state-delay');draw(document.getElementById('nvdaChart'),s.points)}
+  async function cover(){const card=document.getElementById('coverValidation');if(card)card.dataset.realTime='false';const upstream='https://kabutan.jp/stock/?code=5253&_='+Date.now(),u='https://proxy.cors.dev/'+upstream,r=await fetch(u,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const t=await r.text();const pm=t.match(/<span class="kabuka">\s*([0-9][0-9,]*(?:\.[0-9]+)?)円<\/span>/i),price=pm?num(pm[1]):null;if(price==null)throw Error('COVER delayed quote missing');document.getElementById('coverPrice').textContent='¥'+price.toLocaleString('zh-TW')}
   function safeRun(fn,statusId){fn().catch(e=>{const x=document.getElementById(statusId);if(x){x.textContent='來源暫時無法讀取';x.className='foreignStatus state-warn'}console.warn(e)})}
-  function start(){mount();safeRun(nvda,'nvdaStatus');safeRun(cover,'coverStatus');setInterval(()=>safeRun(nvda,'nvdaStatus'),15000);setInterval(()=>safeRun(cover,'coverStatus'),60000);addEventListener('resize',()=>{draw(document.getElementById('nvdaChart'),states.NVDA.points);draw(document.getElementById('coverChart'),states.COVER.points)})}
+  function start(){mount();safeRun(nvda,'nvdaStatus');safeRun(cover,'coverStatus');setInterval(()=>safeRun(nvda,'nvdaStatus'),15000);setInterval(()=>safeRun(cover,'coverStatus'),60000)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
 
-/* TAIEX top-card hotfix: prefer same-day MIS; otherwise latest official retained close. */
+/* TAIEX top-card: same-day MIS first; latest official retained close otherwise. */
 (() => {
   'use strict';
   const twDay=()=>new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}).replaceAll('-','');
   const fmt=(v,d=2)=>Number(v).toLocaleString('zh-TW',{minimumFractionDigits:d,maximumFractionDigits:d});
-  const cls=v=>Number(v)>0?'up':Number(v)<0?'down':'flat';
-  let latest=null;
-  async function loadLatest(){
-    try{const r=await fetch('./data/latest.json?_='+Date.now(),{cache:'no-store'});if(!r.ok)return;const j=await r.json(),x=j?.taiex;if(x&&Number.isFinite(Number(x.close))){latest={date:String(x.date||''),price:Number(x.close),change:Number(x.change),time:'13:30:00',source:'TWSE 官方最近交易日'}}}catch{}
-  }
-  function paint(){
-    const live=window.__TW_LIVE_V091__?.taiex,today=twDay();
-    const x=live&&String(live.date)===today&&Number.isFinite(Number(live.price))?{date:live.date,price:Number(live.price),change:Number(live.change),time:String(live.time||''),source:'TWSE MIS 盤中即時'}:latest;
-    if(!x)return;
-    const v=document.getElementById('taiex'),c=document.getElementById('taiexChg'),mt=document.getElementById('marketTime');
-    if(v)v.textContent=fmt(x.price,2);
-    if(c){const ch=Number.isFinite(x.change)?x.change:0;c.textContent=`${ch>0?'+':''}${fmt(ch,2)}｜${x.source}${x.time?' '+x.time:''}`;c.className='s '+cls(ch)}
-    if(mt&&String(x.date)!==today)mt.textContent=`最近交易日 ${String(x.date).replaceAll('-','/')}`;
-  }
-  async function run(){await loadLatest();paint()}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
-  setInterval(paint,15000);
-  setInterval(run,60000);
-  addEventListener('focus',run);
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden)run()});
+  const cls=v=>Number(v)>0?'up':Number(v)<0?'down':'flat';let latest=null;
+  async function loadLatest(){try{const r=await fetch('./data/latest.json?_='+Date.now(),{cache:'no-store'});if(!r.ok)return;const j=await r.json(),x=j?.taiex;if(x&&Number.isFinite(Number(x.close)))latest={date:String(x.date||''),price:Number(x.close),change:Number(x.change),time:'13:30:00',source:'TWSE 官方最近交易日'}}catch{}}
+  function paint(){const live=window.__TW_LIVE_V091__?.taiex,today=twDay();const x=live&&String(live.date)===today&&Number.isFinite(Number(live.price))?{date:live.date,price:Number(live.price),change:Number(live.change),time:String(live.time||''),source:'TWSE MIS 盤中即時'}:latest;if(!x)return;const v=document.getElementById('taiex'),c=document.getElementById('taiexChg'),mt=document.getElementById('marketTime');if(v)v.textContent=fmt(x.price,2);if(c){const ch=Number.isFinite(x.change)?x.change:0;c.textContent=`${ch>0?'+':''}${fmt(ch,2)}｜${x.source}${x.time?' '+x.time:''}`;c.className='s '+cls(ch)}if(mt&&String(x.date)!==today)mt.textContent=`最近交易日 ${String(x.date).replaceAll('-','/')}`}
+  async function run(){await loadLatest();paint()}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();setInterval(paint,15000);setInterval(run,60000);addEventListener('focus',run);document.addEventListener('visibilitychange',()=>{if(!document.hidden)run()});
 })();
 
-/* Quote-first watchlist redesign. Display-only: price, change and percentage lead; chart follows. */
+/* Quote-first watchlist: display-only enhancement. */
 (() => {
   'use strict';
   const n=v=>{if(v==null||v==='')return null;const x=Number(String(v).replace(/[^0-9.+-]/g,''));return Number.isFinite(x)?x:null};
   const fmt=v=>Number(v).toLocaleString('zh-TW',{maximumFractionDigits:2});
-  function install(){
-    if(document.getElementById('quoteFirstLayout'))return;
-    const s=document.createElement('style');s.id='quoteFirstLayout';s.textContent=`
-      .row{grid-template-columns:112px 190px minmax(210px,1fr) 68px 28px;grid-template-areas:"name price chart score open";column-gap:12px}
-      .row .p{align-self:stretch;display:flex;flex-direction:column;justify-content:center;padding:5px 12px;border-left:2px solid rgba(120,173,255,.22);border-right:1px solid rgba(50,75,104,.38)}
-      .row .price{font-size:28px;line-height:1.02;font-weight:950;letter-spacing:-.6px}
-      .row .price.up{color:#ff7272}.row .price.down{color:#64d69a}.row .price.flat{color:#eef5ff}
-      .row .chg{font-size:16px;line-height:1.3;font-weight:900;margin-top:7px;white-space:nowrap}
-      .row .chg .quotePct{margin-left:7px;font-weight:850}
-      .row .spark,.row .sparkFallback{height:54px}
-      .row .name{font-size:16px}.row .sym{font-size:12px}
-      .row .meta span:last-child{display:none}
-      .row .meta:has(span:last-child[style*="display: none"]){justify-content:flex-start}
-      @media(max-width:720px){
-        .row{grid-template-columns:minmax(88px,1fr) minmax(145px,1.45fr) 54px 24px;grid-template-areas:"name price score open" "chart chart chart chart";gap:8px 7px;padding:11px}
-        .row .p{border-right:0;padding:4px 0 4px 9px}
-        .row .price{font-size:27px}.row .chg{font-size:15px;margin-top:6px}
-        .row .spark,.row .sparkFallback{width:100%;height:54px;margin-top:3px}
-        .row .dayline,.row .meta{grid-column:1/-1}
-      }
-      @media(max-width:390px){.row{grid-template-columns:minmax(76px,.9fr) minmax(138px,1.5fr) 48px 18px}.row .price{font-size:25px}.row .chg{font-size:14px}.row .scoreNum{font-size:21px}.row .chg .quotePct{margin-left:5px}}
-    `;document.head.appendChild(s);
-  }
-  function enhanceRow(row){
-    const priceEl=row.querySelector('.price'),chgEl=row.querySelector('.chg');if(!priceEl||!chgEl)return;
-    const price=n(priceEl.textContent),chg=n(chgEl.textContent);
-    if(price==null||chg==null){priceEl.classList.remove('up','down','flat');chgEl.textContent='—';return}
-    const prev=price-chg,pct=prev?chg/prev*100:null;
-    const trend=chg>0?'up':chg<0?'down':'flat';
-    priceEl.classList.remove('up','down','flat');priceEl.classList.add(trend);
-    const arrow=chg>0?'▲':chg<0?'▼':'—',sign=chg>0?'+':'';
-    chgEl.innerHTML=`${arrow} ${sign}${fmt(chg)}${pct==null?'':`<span class="quotePct">${pct>0?'+':''}${pct.toFixed(2)}%</span>`}`;
-    const meta=row.querySelector('.meta');if(meta){const spans=meta.querySelectorAll('span');if(spans.length>1)spans[spans.length-1].style.display='none'}
-  }
-  function enhance(){document.querySelectorAll('#watch .row').forEach(enhanceRow)}
-  function start(){install();enhance();const w=document.getElementById('watch');if(w)new MutationObserver(()=>enhance()).observe(w,{childList:true,subtree:true,characterData:true});setInterval(enhance,15000)}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+  function install(){if(document.getElementById('quoteFirstLayout'))return;const s=document.createElement('style');s.id='quoteFirstLayout';s.textContent=`.row{grid-template-columns:112px 190px minmax(210px,1fr) 68px 28px;grid-template-areas:"name price chart score open";column-gap:12px}.row .p{align-self:stretch;display:flex;flex-direction:column;justify-content:center;padding:5px 12px;border-left:2px solid rgba(120,173,255,.22);border-right:1px solid rgba(50,75,104,.38)}.row .price{font-size:28px;line-height:1.02;font-weight:950;letter-spacing:-.6px}.row .chg{font-size:16px;line-height:1.3;font-weight:900;margin-top:7px;white-space:nowrap}.row .chg .quotePct{margin-left:7px;font-weight:850}.row .price.quote-up,.row .chg.quote-up{color:#ff2020!important;text-shadow:0 0 1px rgba(255,32,32,.25)}.row .price.quote-down,.row .chg.quote-down{color:#00b84a!important;text-shadow:0 0 1px rgba(0,184,74,.2)}.row .price.quote-flat,.row .chg.quote-flat{color:#f2f6fb!important}.row .spark,.row .sparkFallback{height:54px}.row .name{font-size:16px}.row .sym{font-size:12px}.row .meta span:last-child{display:none}@media(max-width:720px){.row{grid-template-columns:minmax(88px,1fr) minmax(145px,1.45fr) 54px 24px;grid-template-areas:"name price score open" "chart chart chart chart";gap:8px 7px;padding:11px}.row .p{border-right:0;padding:4px 0 4px 9px}.row .price{font-size:27px}.row .chg{font-size:15px;margin-top:6px}.row .spark,.row .sparkFallback{width:100%;height:54px;margin-top:3px}.row .dayline,.row .meta{grid-column:1/-1}}@media(max-width:390px){.row{grid-template-columns:minmax(76px,.9fr) minmax(138px,1.5fr) 48px 18px}.row .price{font-size:25px}.row .chg{font-size:14px}.row .scoreNum{font-size:21px}.row .chg .quotePct{margin-left:5px}}`;document.head.appendChild(s)}
+  function enhanceRow(row){const priceEl=row.querySelector('.price'),chgEl=row.querySelector('.chg');if(!priceEl||!chgEl)return;const price=n(priceEl.textContent),chg=n(chgEl.textContent);if(price==null||chg==null)return;const prev=price-chg,pct=prev?chg/prev*100:null,arrow=chg>0?'▲':chg<0?'▼':'—',sign=chg>0?'+':'',trend=chg>0?'up':chg<0?'down':'flat',html=`${arrow} ${sign}${fmt(chg)}${pct==null?'':`<span class="quotePct">${pct>0?'+':''}${pct.toFixed(2)}%</span>`}`;priceEl.classList.remove('quote-up','quote-down','quote-flat');chgEl.classList.remove('quote-up','quote-down','quote-flat');priceEl.classList.add('quote-'+trend);chgEl.classList.add('quote-'+trend);if(chgEl.innerHTML!==html)chgEl.innerHTML=html;const meta=row.querySelector('.meta');if(meta){const spans=meta.querySelectorAll('span');if(spans.length>1&&spans[spans.length-1].style.display!=='none')spans[spans.length-1].style.display='none'}}
+  let scheduled=false;function enhance(){document.querySelectorAll('#watch .row').forEach(enhanceRow)}function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;enhance()})}
+  function start(){install();enhance();const w=document.getElementById('watch');if(w)new MutationObserver(schedule).observe(w,{childList:true,subtree:true,characterData:true});setInterval(enhance,15000)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();

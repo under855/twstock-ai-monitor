@@ -47,6 +47,7 @@
   function values(row){const t=row.querySelector('.dayline')?.textContent||'';const m=t.replaceAll(',','').match(/高\s*([0-9.]+)\s*低\s*([0-9.]+)/);return m?{hi:m[1],lo:m[2]}:null}
   function add(row){const canvas=row.querySelector('canvas.spark');if(!canvas)return;let o=row.querySelector('.chartAxisOverlay');if(!o){o=document.createElement('div');o.className='chartAxisOverlay';o.innerHTML='<span class="axisHigh">—</span><span class="axisLow">—</span><span class="axisT0">09:00</span><span class="axisTm">11:15</span><span class="axisT1">13:30</span>';row.appendChild(o)}const v=values(row);if(v){o.querySelector('.axisHigh').textContent=v.hi;o.querySelector('.axisLow').textContent=v.lo}o.style.display=canvas.offsetParent===null?'none':''}
   function refresh(){document.querySelectorAll('#watch .row').forEach(add)}
-  function start(){install();refresh();setTimeout(refresh,1200);setInterval(refresh,15000)}
+  let queued=false;function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;refresh()})}
+  function start(){install();refresh();const w=document.getElementById('watch');if(w)new MutationObserver(schedule).observe(w,{childList:true,subtree:true,characterData:true});[80,180,350,700,1200,2000].forEach(ms=>setTimeout(refresh,ms));setInterval(refresh,15000)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();

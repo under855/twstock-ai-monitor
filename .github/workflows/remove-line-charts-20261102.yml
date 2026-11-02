@@ -1,0 +1,31 @@
+name: Remove line charts from dashboard
+on:
+  push:
+    paths:
+      - '.github/workflows/remove-line-charts-20261102.yml'
+permissions:
+  contents: write
+jobs:
+  remove-charts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove chart UI
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          css='''\n<style id="no-line-charts">\n/* Line charts intentionally removed from the product UI. */\n.marketChartCard,.spark,.sparkFallback{display:none!important}\n.row{grid-template-columns:96px 82px 64px 28px;grid-template-areas:"name price score open"}\n.cards>.card:first-child{display:none!important}\n.cards{grid-template-columns:1fr!important}\n@media(max-width:720px){.row{grid-template-columns:88px 75px 58px 24px}}\n</style>\n'''
+          if 'id="no-line-charts"' not in s:
+              s=s.replace('</head>',css+'</head>')
+          s=s.replace('v0.9.4｜盤中即時行情・即時線圖｜15 秒更新','v0.9.4｜盤中即時行情｜15 秒更新')
+          p.write_text(s,encoding='utf-8')
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Remove line charts from dashboard UI"
+          git push

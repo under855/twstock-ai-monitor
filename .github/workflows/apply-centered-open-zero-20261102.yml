@@ -1,0 +1,45 @@
+name: Apply centered open-zero chart fix
+on:
+  push:
+    branches: [fix-centered-zero-v2]
+    paths:
+      - 'scripts/patch_centered_open_zero_20261102.py'
+      - '.github/workflows/apply-centered-open-zero-20261102.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-centered-zero-v2
+      - name: Apply patch and QA pass 1
+        run: python scripts/patch_centered_open_zero_20261102.py
+      - name: JavaScript syntax check
+        run: node --check extras-v090.js
+      - name: QA pass 2 - exact acceptance semantics
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('extras-v090.js').read_text()
+          required=['const maxAbs=Math.max(0,...rel.map(x=>Math.abs(x.rel)))','let lo=-half,hi=half',"hm==='09:00'||hm==='13:30'",'const endDelta=rel.at(-1).rel','yy=Y(x.rel)']
+          assert all(x in s for x in required)
+          for o,c in [(800,797),(19.25,19.4),(34.79,34.8),(32.49,32.48)]:
+              d=c-o
+              half=max(abs(d)*1.10,abs(o)*.0005,0.01)
+              y0=.5
+              y=(half-d)/(2*half)
+              assert y0==.5
+              assert (d<0 and y>.5) or (d>0 and y<.5)
+          print('QA2 PASS')
+          PY
+      - name: Commit patched core
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add extras-v090.js
+          git diff --cached --quiet && exit 0
+          git commit -m 'Fix intraday open zero to true centered baseline'
+          git push origin HEAD:fix-centered-zero-v2

@@ -1,0 +1,29 @@
+name: Apply open-zero intraday chart fix
+on:
+  push:
+    branches: ['fix-open-zero-chart-20261102']
+    paths:
+      - '.github/workflows/apply-open-zero-chart-20261102.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch chart core
+        run: python scripts/patch_open_zero_chart_20261102.py
+      - name: Verify syntax and semantics
+        run: |
+          node --check extras-v090.js
+          grep -F "const open=Number(d[0].close)" extras-v090.js
+          grep -F "const endDelta=rel.at(-1).rel" extras-v090.js
+          grep -F "yy=Y(x.rel)" extras-v090.js
+      - name: Commit repair
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add extras-v090.js
+          git commit -m 'Fix intraday chart relative to open zero baseline'
+          git push origin HEAD:fix-open-zero-chart-20261102

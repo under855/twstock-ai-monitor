@@ -211,7 +211,13 @@
     const base=chronologicalPoints(points),baseDay=base.length?new Date(base[0]?.time??base[0]?.stamp).toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}):'',today=twIsoDay(),sessionDay=baseDay||today,byStamp=new Map();
     for(const x of base){const d=new Date(x?.time??x?.stamp),stamp=d.getTime(),close=Number(x?.close);if(!Number.isFinite(stamp)||!Number.isFinite(close))continue;const hm=hmTw(d);if(hm<'09:00'||hm>'13:30')continue;byStamp.set(stamp,{time:d,close,official:true,source:String(x?.source||'TWSE MIS 官方留存')})}
     if(!baseDay||baseDay===today){for(const x of misSeriesFor(code))byStamp.set(x.time.getTime(),x);const lp=livePointFor(code);if(lp)byStamp.set(lp.time.getTime(),{...lp,official:true,source:'TWSE MIS 最新成交'})}
-    const q=rowSessionPrices(code);if(q){const tOpen=Date.parse(`${sessionDay}T09:00:00+08:00`),tClose=Date.parse(`${sessionDay}T13:30:00+08:00`);if(Number.isFinite(tOpen))byStamp.set(tOpen,{time:new Date(tOpen),close:q.open,official:true,source:'今日開盤價'});if(Number.isFinite(tClose))byStamp.set(tClose,{time:new Date(tClose),close:q.close,official:true,source:'今日收盤價'})}
+    const q=rowSessionPrices(code);if(q){
+      // 09:00 and 13:30 are authoritative session anchors. Remove same-minute sampled ticks first.
+      for(const [stamp,x] of [...byStamp.entries()]){const hm=hmTw(x.time);if(hm==='09:00'||hm==='13:30')byStamp.delete(stamp)}
+      const tOpen=Date.parse(`${sessionDay}T09:00:00+08:00`),tClose=Date.parse(`${sessionDay}T13:30:00+08:00`);
+      if(Number.isFinite(tOpen))byStamp.set(tOpen,{time:new Date(tOpen),close:q.open,official:true,source:'今日開盤價'});
+      if(Number.isFinite(tClose))byStamp.set(tClose,{time:new Date(tClose),close:q.close,official:true,source:'今日收盤價'});
+    }
     return [...byStamp.values()].sort((a,b)=>a.time-b.time);
   }
   function drawFixedIntraday(canvas,points,compact=false,change=null){
@@ -220,7 +226,9 @@
     const d=chronologicalPoints(points).filter(x=>Number.isFinite(Number(x.close)));if(d.length<2)return false;
     // This chart is relative to TODAY'S OPEN, not previous close. 09:00 is the zero baseline.
     const open=Number(d[0].close),rel=d.map(x=>({...x,rel:Number(x.close)-open}));
-    let lo=Math.min(0,...rel.map(x=>x.rel)),hi=Math.max(0,...rel.map(x=>x.rel));if(hi===lo){hi+=1;lo-=1}const pad=Math.max((hi-lo)*.08,Math.abs(open)*.0005,0.01);hi+=pad;lo-=pad;
+    // Opening price is the visual zero AND must stay at the vertical center.
+    // Use a symmetric Y range around zero so +x and -x have equal distance.
+    const maxAbs=Math.max(0,...rel.map(x=>Math.abs(x.rel))),half=Math.max(maxAbs*1.10,Math.abs(open)*.0005,0.01);let lo=-half,hi=half;
     const p={l:compact?4*dpr:44*dpr,r:compact?4*dpr:12*dpr,t:6*dpr,b:compact?4*dpr:24*dpr};
     const firstDate=d[0]?.time instanceof Date?d[0].time:new Date(d[0]?.time);const day=Number.isFinite(firstDate?.getTime?.())?firstDate.toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}):twIsoDay(),t0=Date.parse(`${day}T09:00:00+08:00`),t1=Date.parse(`${day}T13:30:00+08:00`),span=t1-t0;
     const X=x=>p.l+Math.max(0,Math.min(1,(new Date(x.time).getTime()-t0)/span))*(W-p.l-p.r),Y=v=>p.t+(H-p.t-p.b)*(hi-Number(v))/(hi-lo),zeroY=Y(0);

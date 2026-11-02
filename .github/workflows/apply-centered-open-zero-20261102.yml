@@ -1,7 +1,7 @@
 name: Apply centered open-zero chart fix
 on:
   push:
-    branches: [fix-centered-zero-v2]
+    branches: [main]
     paths:
       - 'scripts/patch_centered_open_zero_20261102.py'
       - '.github/workflows/apply-centered-open-zero-20261102.yml'
@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: fix-centered-zero-v2
+          ref: main
       - name: Apply patch and QA pass 1
         run: python scripts/patch_centered_open_zero_20261102.py
       - name: JavaScript syntax check
@@ -42,4 +42,4 @@ jobs:
           git add extras-v090.js
           git diff --cached --quiet && exit 0
           git commit -m 'Fix intraday open zero to true centered baseline'
-          git push origin HEAD:fix-centered-zero-v2
+          git push origin HEAD:main

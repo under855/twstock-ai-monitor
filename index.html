@@ -37,14 +37,15 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
 </style>
 
 <style id="no-line-charts">
-/* Line charts intentionally removed from the product UI. */
 .marketChart,.marketChartMeta,.spark,.sparkFallback{display:none!important}
-.marketChartCard{display:block!important}
-.row{grid-template-columns:96px 82px minmax(260px,520px) 64px 28px;grid-template-areas:"name price fx score open"}
-.cards>.card:first-child{display:none!important}
-.cards{grid-template-columns:1fr!important}
-.fxBoard{display:grid;grid-template-columns:repeat(5,minmax(72px,1fr));gap:7px;margin-top:7px}.fxItem{background:#071321;border:1px solid #1d3552;border-radius:9px;padding:7px 8px;min-width:0}.fxItem b{display:block;font-size:11px;color:#bcd1e8}.fxItem strong{display:block;font-size:15px;margin-top:2px}.fxItem small{display:block;color:#718aa5;font-size:9px;margin-top:2px}.fxSlot{grid-area:fx;display:flex;gap:7px;align-items:center;min-width:0;overflow:hidden}.fxMini{flex:1;background:#071321;border:1px solid #1d3552;border-radius:8px;padding:7px 9px;min-width:0}.fxMini b{font-size:11px;color:#a9c6e5}.fxMini strong{font-size:15px;margin-left:7px}.fxMini small{display:block;color:#718aa5;font-size:9px;margin-top:2px}.fxNote{font-size:9px;color:#718aa5;margin-top:6px}
-@media(max-width:720px){.row{grid-template-columns:88px 75px minmax(90px,1fr) 58px 24px;grid-template-areas:"name price fx score open"}.fxBoard{grid-template-columns:repeat(3,1fr)}.fxMini{padding:6px}.fxMini strong{display:block;margin-left:0;font-size:13px}}
+.marketChartCard{display:none!important}
+.cards>.card:first-child{display:none!important}.cards{grid-template-columns:1fr!important}
+.row{grid-template-columns:minmax(150px,1.15fr) minmax(120px,.8fr) 72px 28px;grid-template-areas:"name price score open" "day day day day" "meta meta meta meta";gap:6px 12px;padding:7px 11px;min-height:0}
+.row .dayline{grid-area:day;padding-top:3px}.row .meta{grid-area:meta;padding-top:2px}.row .fxSlot{display:none!important}
+.fxStrip{display:grid;grid-template-columns:repeat(9,minmax(82px,1fr));gap:6px;margin:8px 0 12px;padding:9px;background:#0b1727;border:1px solid #213954;border-radius:15px}
+.fxStripTitle{grid-column:1/-1;font-size:11px;color:#93a9c2;display:flex;justify-content:space-between;gap:10px}.fxItem{background:#071321;border:1px solid #1d3552;border-radius:8px;padding:6px 7px;min-width:0}.fxItem b{display:block;font-size:10px;color:#bcd1e8}.fxItem strong{display:block;font-size:14px;margin-top:2px}.fxItem small{display:block;color:#718aa5;font-size:8px;margin-top:2px}
+@media(max-width:900px){.fxStrip{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:720px){.row{grid-template-columns:minmax(105px,1fr) minmax(90px,.8fr) 58px 24px;grid-template-areas:"name price score open" "day day day day" "meta meta meta meta"}.fxStrip{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
@@ -62,6 +63,8 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
     <div class="marketCard"><div class="l">資料狀態</div><div id="marketStatus" class="v" style="font-size:17px">讀取中</div><div id="marketTime" class="s muted">—</div></div>
     <div class="marketCard marketChartCard"><div class="l">主要外幣兌新台幣｜最新參考匯率</div><div id="fxBoard" class="fxBoard"><div class="muted small">匯率載入中…</div></div><div id="fxNote" class="fxNote">1 單位外幣約等於多少新台幣</div><canvas id="taiexChart" class="marketChart" width="620" height="90"></canvas><div class="marketChartMeta"><span>09:00</span><span id="taiexChartMsg">—</span><span>13:30</span></div></div>
   </section>
+
+  <section id="fxStrip" class="fxStrip"><div class="fxStripTitle"><span>即時外匯｜各國貨幣兌新台幣</span><span id="fxStamp">載入中…</span></div><div id="fxBoardStrip" style="display:contents"></div></section>
 
   <div class="sectionTitle">我的監控牆</div>
   <main id="watch" class="watch"></main>
@@ -293,23 +296,13 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 <script src="./foreign-live-test.js?v=2"></script>
 
 <script id="live-fx-board">
-(()=>{
-const FX=[['USD','美元','🇺🇸'],['JPY','日圓','🇯🇵'],['EUR','歐元','🇪🇺'],['CNY','人民幣','🇨🇳'],['KRW','韓元','🇰🇷'],['GBP','英鎊','🇬🇧'],['AUD','澳幣','🇦🇺'],['HKD','港幣','🇭🇰'],['SGD','新加坡幣','🇸🇬']];
-let latest=null,lastFetch=0;
-const fmt=(code,v)=>code==='JPY'||code==='KRW'?v.toFixed(4):v.toFixed(3);
-function render(){
- const board=document.getElementById('fxBoard'); if(!board)return;
- if(!latest){board.innerHTML='<div class="muted small">匯率載入中…</div>';return}
- board.innerHTML=FX.slice(0,5).map(([c,n,f])=>{const r=latest.rates?.[c];const twd=r?1/r:null;return `<div class="fxItem"><b>${f} ${c}</b><strong>${twd?fmt(c,twd):'—'}</strong><small>${n} / TWD</small></div>`}).join('');
- const note=document.getElementById('fxNote');if(note)note.textContent='1 單位外幣約等於多少新台幣｜資料時間：'+new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
- document.querySelectorAll('#watch .row').forEach((row,i)=>{let slot=row.querySelector('.fxSlot');if(!slot){slot=document.createElement('div');slot.className='fxSlot';const score=row.querySelector('.score');row.insertBefore(slot,score||null)}const [c,n,f]=FX[i%FX.length],r=latest.rates?.[c],twd=r?1/r:null;slot.innerHTML=`<div class="fxMini"><b>${f} ${c}</b><strong>${twd?fmt(c,twd):'—'}</strong><small>1 ${c} ≈ TWD｜${n}</small></div>`});
-}
-async function load(){
- if(Date.now()-lastFetch<300000&&latest){render();return}
- try{const res=await fetch('https://open.er-api.com/v6/latest/TWD',{cache:'no-store'});if(!res.ok)throw new Error('FX '+res.status);const j=await res.json();if(j.result!=='success'||!j.rates)throw new Error('FX payload');latest=j;lastFetch=Date.now();render()}catch(e){const board=document.getElementById('fxBoard');if(board)board.innerHTML='<div class="muted small">匯率暫時無法取得</div>'}
-}
-const watch=document.getElementById('watch');if(watch)new MutationObserver(()=>render()).observe(watch,{childList:true,subtree:true});
-load();setInterval(load,300000);
+(function(){
+  const FX=[['USD','美元'],['JPY','日圓'],['EUR','歐元'],['GBP','英鎊'],['AUD','澳幣'],['CNY','人民幣'],['HKD','港幣'],['KRW','韓元'],['SGD','新加坡幣']];
+  let latest=null;
+  function fmt(c,v){return (c==='JPY'||c==='KRW')?v.toFixed(4):v.toFixed(3)}
+  function render(){const board=document.getElementById('fxBoardStrip');if(!board||!latest)return;board.innerHTML=FX.map(function(x){const c=x[0],n=x[1],r=latest.rates[c],v=r?1/r:null;return '<div class="fxItem"><b>'+c+' '+n+'</b><strong>'+(v?fmt(c,v):'—')+'</strong><small>1 '+c+' ≈ TWD</small></div>'}).join('');const stamp=document.getElementById('fxStamp');if(stamp)stamp.textContent='更新 '+new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+  async function load(){try{const r=await fetch('https://open.er-api.com/v6/latest/TWD?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('FX');const j=await r.json();if(j.result!=='success'||!j.rates)throw Error('FX data');latest=j;render()}catch(e){const x=document.getElementById('fxStamp');if(x)x.textContent='匯率來源暫時無法取得'}}
+  load();setInterval(load,60000);
 })();
 </script>
 </body>

@@ -291,5 +291,26 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 <script src="./extras-v090.js?v=096openzero-final"></script>
 <script src="./live-v091.js?v=096openzero-final"></script>
 <script src="./foreign-live-test.js?v=2"></script>
-\n<script id="live-fx-board">\n(()=>{\nconst FX=[['USD','美元','🇺🇸'],['JPY','日圓','🇯🇵'],['EUR','歐元','🇪🇺'],['CNY','人民幣','🇨🇳'],['KRW','韓元','🇰🇷'],['GBP','英鎊','🇬🇧'],['AUD','澳幣','🇦🇺'],['HKD','港幣','🇭🇰'],['SGD','新加坡幣','🇸🇬']];\nlet latest=null,lastFetch=0;\nconst fmt=(code,v)=>code==='JPY'||code==='KRW'?v.toFixed(4):v.toFixed(3);\nfunction render(){\n const board=document.getElementById('fxBoard'); if(!board)return;\n if(!latest){board.innerHTML='<div class="muted small">匯率載入中…</div>';return}\n board.innerHTML=FX.slice(0,5).map(([c,n,f])=>{const r=latest.rates?.[c];const twd=r?1/r:null;return `<div class="fxItem"><b>${f} ${c}</b><strong>${twd?fmt(c,twd):'—'}</strong><small>${n} / TWD</small></div>`}).join('');\n const note=document.getElementById('fxNote');if(note)note.textContent='1 單位外幣約等於多少新台幣｜資料時間：'+new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});\n document.querySelectorAll('#watch .row').forEach((row,i)=>{let slot=row.querySelector('.fxSlot');if(!slot){slot=document.createElement('div');slot.className='fxSlot';const score=row.querySelector('.score');row.insertBefore(slot,score||null)}const [c,n,f]=FX[i%FX.length],r=latest.rates?.[c],twd=r?1/r:null;slot.innerHTML=`<div class="fxMini"><b>${f} ${c}</b><strong>${twd?fmt(c,twd):'—'}</strong><small>1 ${c} ≈ TWD｜${n}</small></div>`});\n}\nasync function load(){\n if(Date.now()-lastFetch<300000&&latest){render();return}\n try{const res=await fetch('https://open.er-api.com/v6/latest/TWD',{cache:'no-store'});if(!res.ok)throw new Error('FX '+res.status);const j=await res.json();if(j.result!=='success'||!j.rates)throw new Error('FX payload');latest=j;lastFetch=Date.now();render()}catch(e){const board=document.getElementById('fxBoard');if(board)board.innerHTML='<div class="muted small">匯率暫時無法取得</div>'}\n}\nconst watch=document.getElementById('watch');if(watch)new MutationObserver(()=>render()).observe(watch,{childList:true,subtree:true});\nload();setInterval(load,300000);\n})();\n</script>\n</body>
+
+<script id="live-fx-board">
+(()=>{
+const FX=[['USD','美元','🇺🇸'],['JPY','日圓','🇯🇵'],['EUR','歐元','🇪🇺'],['CNY','人民幣','🇨🇳'],['KRW','韓元','🇰🇷'],['GBP','英鎊','🇬🇧'],['AUD','澳幣','🇦🇺'],['HKD','港幣','🇭🇰'],['SGD','新加坡幣','🇸🇬']];
+let latest=null,lastFetch=0;
+const fmt=(code,v)=>code==='JPY'||code==='KRW'?v.toFixed(4):v.toFixed(3);
+function render(){
+ const board=document.getElementById('fxBoard'); if(!board)return;
+ if(!latest){board.innerHTML='<div class="muted small">匯率載入中…</div>';return}
+ board.innerHTML=FX.slice(0,5).map(([c,n,f])=>{const r=latest.rates?.[c];const twd=r?1/r:null;return `<div class="fxItem"><b>${f} ${c}</b><strong>${twd?fmt(c,twd):'—'}</strong><small>${n} / TWD</small></div>`}).join('');
+ const note=document.getElementById('fxNote');if(note)note.textContent='1 單位外幣約等於多少新台幣｜資料時間：'+new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
+ document.querySelectorAll('#watch .row').forEach((row,i)=>{let slot=row.querySelector('.fxSlot');if(!slot){slot=document.createElement('div');slot.className='fxSlot';const score=row.querySelector('.score');row.insertBefore(slot,score||null)}const [c,n,f]=FX[i%FX.length],r=latest.rates?.[c],twd=r?1/r:null;slot.innerHTML=`<div class="fxMini"><b>${f} ${c}</b><strong>${twd?fmt(c,twd):'—'}</strong><small>1 ${c} ≈ TWD｜${n}</small></div>`});
+}
+async function load(){
+ if(Date.now()-lastFetch<300000&&latest){render();return}
+ try{const res=await fetch('https://open.er-api.com/v6/latest/TWD',{cache:'no-store'});if(!res.ok)throw new Error('FX '+res.status);const j=await res.json();if(j.result!=='success'||!j.rates)throw new Error('FX payload');latest=j;lastFetch=Date.now();render()}catch(e){const board=document.getElementById('fxBoard');if(board)board.innerHTML='<div class="muted small">匯率暫時無法取得</div>'}
+}
+const watch=document.getElementById('watch');if(watch)new MutationObserver(()=>render()).observe(watch,{childList:true,subtree:true});
+load();setInterval(load,300000);
+})();
+</script>
+</body>
 </html>

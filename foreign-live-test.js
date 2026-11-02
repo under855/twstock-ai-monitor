@@ -54,3 +54,28 @@
   addEventListener('focus',run);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)run()});
 })();
+
+/* Price-first watchlist layout: make price/change the first visual signal, chart second. */
+(() => {
+  'use strict';
+  function install(){
+    if(document.getElementById('priceFirstLayout'))return;
+    const s=document.createElement('style');s.id='priceFirstLayout';s.textContent=`
+      .row{grid-template-columns:112px 150px minmax(220px,1fr) 68px 28px;grid-template-areas:"name price chart score open";column-gap:12px}
+      .row .p{align-self:stretch;display:flex;flex-direction:column;justify-content:center;padding:5px 10px;border-left:2px solid rgba(120,173,255,.22);border-right:1px solid rgba(50,75,104,.38)}
+      .row .price{font-size:27px;line-height:1.05;font-weight:950;letter-spacing:-.5px}
+      .row .chg{font-size:15px;line-height:1.25;font-weight:850;margin-top:6px;white-space:nowrap}
+      .row .spark,.row .sparkFallback{height:54px}
+      .row .name{font-size:16px}.row .sym{font-size:12px}
+      @media(max-width:720px){
+        .row{grid-template-columns:minmax(86px,1fr) minmax(118px,1.18fr) 54px 24px;grid-template-areas:"name price score open" "chart chart chart chart";gap:8px 7px;padding:11px}
+        .row .p{border-left:0;border-right:0;padding:3px 0 3px 8px;border-left:2px solid rgba(120,173,255,.22)}
+        .row .price{font-size:25px}.row .chg{font-size:14px;margin-top:5px}
+        .row .spark,.row .sparkFallback{width:100%;height:52px;margin-top:3px}
+        .row .dayline,.row .meta{grid-column:1/-1}
+      }
+      @media(max-width:390px){.row{grid-template-columns:minmax(78px,.95fr) minmax(108px,1.15fr) 50px 20px}.row .price{font-size:23px}.row .chg{font-size:13px}.row .scoreNum{font-size:21px}}
+    `;document.head.appendChild(s);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
+})();

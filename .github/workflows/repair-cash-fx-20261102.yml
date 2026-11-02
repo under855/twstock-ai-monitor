@@ -1,0 +1,72 @@
+name: Repair cash FX display
+on:
+  push:
+    paths: ['.github/workflows/repair-cash-fx-20261102.yml']
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Repair FX script
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('split-layout-v095.js')
+          s=p.read_text()
+          old="""    right.appendChild(fx);
+    return true;
+"""
+          new="""    right.appendChild(fx);
+    enhanceCashFx(fx);
+    return true;
+"""
+          if old in s and 'enhanceCashFx(fx);' not in s:
+              s=s.replace(old,new)
+          marker="""  let tries=0;
+"""
+          addon=r'''
+  const CASH_CODES=['USD','JPY','EUR','GBP','AUD','CNY','HKD','KRW','SGD'];
+  const CASH_NAMES={USD:'美元',JPY:'日圓',EUR:'歐元',GBP:'英鎊',AUD:'澳幣',CNY:'人民幣',HKD:'港幣',KRW:'韓元',SGD:'新加坡幣'};
+  function enhanceCashFx(fx){
+    if(!fx||fx.dataset.cashEnhanced==='1') return;
+    fx.dataset.cashEnhanced='1';
+    fx.innerHTML='<div class="fxStripTitle"><span>即時匯市｜臺灣銀行現金牌告</span><span id="cashFxTime">載入中…</span></div><div id="cashFxGrid" style="grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px"></div><div style="grid-column:1/-1;color:#91a8c2;font-size:11px">現金買進＝銀行向你買外幣｜現金賣出＝你用台幣向銀行買外幣現鈔</div>';
+    loadCashFx(); setInterval(loadCashFx,300000);
+  }
+  async function loadCashFx(){
+    const grid=document.getElementById('cashFxGrid'), tm=document.getElementById('cashFxTime'); if(!grid)return;
+    try{
+      const url='https://rate.bot.com.tw/xrt?Lang=zh-TW';
+      const proxies=['https://api.allorigins.win/raw?url='+encodeURIComponent(url),'https://corsproxy.io/?url='+encodeURIComponent(url)];
+      let text='';
+      for(const u of proxies){try{const r=await fetch(u,{cache:'no-store'});if(r.ok){text=await r.text();if(text.includes('現金匯率'))break}}catch(e){}}
+      if(!text) throw Error('臺銀牌告暫時無法讀取');
+      const doc=new DOMParser().parseFromString(text,'text/html');
+      const rows=[...doc.querySelectorAll('table tbody tr')]; const data={};
+      for(const tr of rows){
+        const code=(tr.querySelector('.visible-phone')?.textContent||'').match(/\(([A-Z]{3})\)/)?.[1];
+        if(!code)continue; const tds=[...tr.querySelectorAll('td')];
+        const nums=tds.map(td=>(td.textContent||'').trim()).filter(x=>/^\d+(\.\d+)?$/.test(x));
+        if(nums.length>=2)data[code]={buy:nums[0],sell:nums[1]};
+      }
+      grid.innerHTML=CASH_CODES.map(c=>{const q=data[c];return '<div class="fxItem"><b>'+c+' '+CASH_NAMES[c]+'</b><div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px"><div><small>現金買進</small><strong style="display:block">'+(q?.buy||'—')+'</strong></div><div><small>現金賣出</small><strong style="display:block">'+(q?.sell||'—')+'</strong></div></div></div>'}).join('');
+      if(tm)tm.textContent='更新 '+new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    }catch(e){grid.innerHTML='<div style="grid-column:1/-1;color:#ffcc66;padding:10px">臺灣銀行現金牌告暫時無法取得，稍後自動重試。</div>';if(tm)tm.textContent='讀取失敗';}
+  }
+'''
+          if 'function enhanceCashFx' not in s:
+              s=s.replace(marker,addon+'\n'+marker)
+          p.write_text(s)
+          PY
+          node --check split-layout-v095.js
+      - name: Commit repair
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add split-layout-v095.js
+          git diff --cached --quiet && exit 0
+          git commit -m "Repair Taiwan Bank cash FX panel"
+          git push

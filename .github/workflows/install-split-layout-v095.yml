@@ -18,6 +18,7 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
           p=Path('index.html')
           s=p.read_text()
           tag='<script src="split-layout-v095.js?v=095split1"></script>'
@@ -27,7 +28,6 @@ jobs:
           sw=Path('sw.js')
           if sw.exists():
               t=sw.read_text()
-              import re
               t=re.sub(r"tw-ai-monitor-v[^'\"]+",'tw-ai-monitor-v095split1',t)
               sw.write_text(t)
           PY
@@ -44,3 +44,4 @@ jobs:
             git commit -m 'Apply 50-50 stock and FX screen layout'
             git push
           fi
+# trigger-2

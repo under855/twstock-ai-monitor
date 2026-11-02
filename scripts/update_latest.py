@@ -1,15 +1,27 @@
 #!/usr/bin/env python3
-import json, urllib.request, urllib.parse, datetime, pathlib, sys
+import json, urllib.request, urllib.parse, datetime, pathlib, sys, time
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / 'data' / 'latest.json'
 DIV_OUT = ROOT / 'data' / 'dividends.json'
 UA = {'User-Agent':'Mozilla/5.0 twstock-ai-monitor/1.0','Accept':'application/json'}
 
-def get(url, timeout=30):
-    req=urllib.request.Request(url,headers=UA)
-    with urllib.request.urlopen(req,timeout=timeout) as r:
-        return json.loads(r.read().decode('utf-8-sig'))
+def get(url, timeout=30, attempts=4):
+    last=None
+    for attempt in range(1, attempts+1):
+        try:
+            req=urllib.request.Request(url,headers=UA)
+            with urllib.request.urlopen(req,timeout=timeout) as r:
+                raw=r.read().decode('utf-8-sig').strip()
+                if not raw: raise RuntimeError('empty response')
+                return json.loads(raw)
+        except Exception as e:
+            last=e
+            if attempt<attempts:
+                wait=min(2**(attempt-1),8)
+                print(f'WARN request failed ({attempt}/{attempts}), retry in {wait}s: {url} :: {e}', file=sys.stderr)
+                time.sleep(wait)
+    raise RuntimeError(f'official API failed after {attempts} attempts: {url} :: {last}')
 
 def n(v):
     if v is None:return None
@@ -56,35 +68,22 @@ def fetch_taiex(trade_date, rows=None):
     if matched is None:
         matched=rows[-1]
     if len(matched)<6: raise RuntimeError('FMTQIK row missing TAIEX columns')
-    return {
-        'date':roc_to_iso(matched[0]),
-        'close':n(matched[4]),
-        'change':n(matched[5]),
-        'source':'TWSE FMTQIK'
-    }
+    return {'date':roc_to_iso(matched[0]),'close':n(matched[4]),'change':n(matched[5]),'source':'TWSE FMTQIK'}
 
 def fetch_live_taiex(fallback):
     try:
         ts=int(datetime.datetime.now(datetime.timezone.utc).timestamp()*1000)
         url=f'https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_t00.tw&json=1&delay=0&_={ts}'
-        j=get(url, timeout=20)
+        j=get(url, timeout=20, attempts=2)
         arr=j.get('msgArray') or []
         m=next((x for x in arr if str(x.get('c',''))=='t00' or str(x.get('ch',''))=='t00.tw'), arr[0] if arr else None)
         if not m: return fallback
-        z=n(m.get('z')); y=n(m.get('y'))
-        d=str(m.get('d') or '').strip()
+        z=n(m.get('z')); y=n(m.get('y')); d=str(m.get('d') or '').strip()
         if z is None or len(d)!=8: return fallback
         iso=f'{d[:4]}-{d[4:6]}-{d[6:8]}'
         today=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).date().isoformat()
         if iso!=today: return fallback
-        return {
-            'date':iso,
-            'close':z,
-            'change':(z-y) if y is not None else None,
-            'previousClose':y,
-            'time':str(m.get('t') or m.get('%') or ''),
-            'source':'TWSE MIS live'
-        }
+        return {'date':iso,'close':z,'change':(z-y) if y is not None else None,'previousClose':y,'time':str(m.get('t') or m.get('%') or ''),'source':'TWSE MIS live'}
     except Exception as e:
         print(f'WARN live TAIEX failed: {e}', file=sys.stderr)
         return fallback
@@ -97,21 +96,12 @@ def fetch_twse(trade_date):
         if not c: continue
         row_date=roc_to_iso(r.get('Date'))
         if not row_date: continue
-        out[c]={
-            'symbol':c,'name':str(r.get('Name','')).strip(),'market':'TWSE',
-            'close':n(r.get('ClosingPrice')),'open':n(r.get('OpeningPrice')),
-            'high':n(r.get('HighestPrice')),'low':n(r.get('LowestPrice')),
-            'volume':n(r.get('TradeVolume')),'change':n(r.get('Change')),
-            'tradeDate':row_date,'source':'TWSE STOCK_DAY_ALL'
-        }
+        out[c]={'symbol':c,'name':str(r.get('Name','')).strip(),'market':'TWSE','close':n(r.get('ClosingPrice')),'open':n(r.get('OpeningPrice')),'high':n(r.get('HighestPrice')),'low':n(r.get('LowestPrice')),'volume':n(r.get('TradeVolume')),'change':n(r.get('Change')),'tradeDate':row_date,'source':'TWSE STOCK_DAY_ALL'}
     if len(out)<500: raise RuntimeError(f'TWSE rows too few: {len(out)}')
     return out
 
 def fetch_tpex(trade_date):
-    urls=[
-        'https://www.tpex.org.tw/openapi/v1/tpex_mainboard_quotes',
-        'https://www.tpex.org.tw/openapi/v1/tpex_daily_market_value'
-    ]
+    urls=['https://www.tpex.org.tw/openapi/v1/tpex_mainboard_quotes','https://www.tpex.org.tw/openapi/v1/tpex_daily_market_value']
     last=None
     for url in urls:
         try:
@@ -122,73 +112,38 @@ def fetch_tpex(trade_date):
                 if not c: continue
                 row_date=roc_to_iso(r.get('Date'))
                 if not row_date: continue
-                out[c]={
-                    'symbol':c,
-                    'name':str(r.get('CompanyName') or r.get('SecuritiesCompanyName') or r.get('SecuritiesName') or '').strip(),
-                    'market':'TPEx',
-                    'close':n(r.get('Close') or r.get('ClosePrice') or r.get('LatestPrice')),
-                    'open':n(r.get('Open') or r.get('OpenPrice')),
-                    'high':n(r.get('High') or r.get('HighPrice')),
-                    'low':n(r.get('Low') or r.get('LowPrice')),
-                    'volume':n(r.get('TradingShares') or r.get('TradeVolume')),
-                    'change':n(r.get('Change') or r.get('ChangeAmount')),
-                    'tradeDate':row_date,'source':'TPEx OpenAPI'
-                }
+                out[c]={'symbol':c,'name':str(r.get('CompanyName') or r.get('SecuritiesCompanyName') or r.get('SecuritiesName') or '').strip(),'market':'TPEx','close':n(r.get('Close') or r.get('ClosePrice') or r.get('LatestPrice')),'open':n(r.get('Open') or r.get('OpenPrice')),'high':n(r.get('High') or r.get('HighPrice')),'low':n(r.get('Low') or r.get('LowPrice')),'volume':n(r.get('TradingShares') or r.get('TradeVolume')),'change':n(r.get('Change') or r.get('ChangeAmount')),'tradeDate':row_date,'source':'TPEx OpenAPI'}
             if len(out)>=300:return out
             last=RuntimeError(f'TPEx rows too few: {len(out)} from {url}')
         except Exception as e:last=e
     raise last or RuntimeError('TPEx failed')
 
 def fetch_etf_dividends(end_date):
-    end=datetime.date.fromisoformat(end_date)
-    start=end-datetime.timedelta(days=370)
-    params=urllib.parse.urlencode({
-        'stkNo':'',
-        'startDate':start.strftime('%Y%m%d'),
-        'endDate':end.strftime('%Y%m%d'),
-        'response':'json'
-    })
+    end=datetime.date.fromisoformat(end_date); start=end-datetime.timedelta(days=370)
+    params=urllib.parse.urlencode({'stkNo':'','startDate':start.strftime('%Y%m%d'),'endDate':end.strftime('%Y%m%d'),'response':'json'})
     j=get('https://www.twse.com.tw/rwd/zh/ETF/etfDiv?'+params, timeout=40)
-    rows=j.get('data') or []
-    out=[]
+    rows=j.get('data') or []; out=[]
     for r in rows:
         if not isinstance(r,list) or len(r)<6: continue
-        code=str(r[0] or '').strip()
-        exd=roc_to_iso(r[2]); rec=roc_to_iso(r[3]); pay=roc_to_iso(r[4])
+        code=str(r[0] or '').strip(); exd=roc_to_iso(r[2]); rec=roc_to_iso(r[3]); pay=roc_to_iso(r[4])
         if not code or not exd: continue
-        out.append({
-            'code':code,'name':str(r[1] or '').strip(),'type':'ETF','market':'TWSE',
-            'exDate':exd,'recordDate':rec,'paymentDate':pay,'cashDividend':n(r[5]),
-            'stockDividendRatio':None,'source':'TWSE ETF 收益分配','eventType':'ex-dividend'
-        })
-    if not any(x['code']=='0050' for x in out):
-        raise RuntimeError('ETF dividend feed missing 0050')
+        out.append({'code':code,'name':str(r[1] or '').strip(),'type':'ETF','market':'TWSE','exDate':exd,'recordDate':rec,'paymentDate':pay,'cashDividend':n(r[5]),'stockDividendRatio':None,'source':'TWSE ETF 收益分配','eventType':'ex-dividend'})
+    if not any(x['code']=='0050' for x in out): raise RuntimeError('ETF dividend feed missing 0050')
     return out
 
 def write_json(path,payload):
-    path.parent.mkdir(parents=True,exist_ok=True)
-    tmp=path.with_suffix('.tmp')
-    tmp.write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
-    tmp.replace(path)
+    path.parent.mkdir(parents=True,exist_ok=True); tmp=path.with_suffix('.tmp')
+    tmp.write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8'); tmp.replace(path)
 
 def main():
-    market_rows=fmtqik_rows()
-    trade_date=latest_trade_date(market_rows)
-    taiex=fetch_live_taiex(fetch_taiex(trade_date,market_rows))
-    twse=fetch_twse(trade_date)
-    tpex=fetch_tpex(trade_date)
-    symbols={**twse,**tpex}
-    now=datetime.datetime.now(datetime.timezone.utc).isoformat()
-    payload={
-        'generatedAt':now,'tradeDate':trade_date,'taiex':taiex,
-        'counts':{'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},
-        'symbols':symbols
-    }
+    market_rows=fmtqik_rows(); trade_date=latest_trade_date(market_rows)
+    taiex=fetch_live_taiex(fetch_taiex(trade_date,market_rows)); twse=fetch_twse(trade_date); tpex=fetch_tpex(trade_date)
+    symbols={**twse,**tpex}; now=datetime.datetime.now(datetime.timezone.utc).isoformat()
+    payload={'generatedAt':now,'tradeDate':trade_date,'taiex':taiex,'counts':{'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},'symbols':symbols}
     write_json(OUT,payload)
     print(json.dumps({'ok':True,'tradeDate':trade_date,'taiex':taiex,'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},ensure_ascii=False))
 
 if __name__=='__main__':
     try: main()
     except Exception as e:
-        print(f'ERROR: {e}',file=sys.stderr)
-        raise
+        print(f'ERROR: {e}',file=sys.stderr); raise

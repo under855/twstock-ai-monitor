@@ -38,17 +38,19 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
 
 <style id="no-line-charts">
 /* Line charts intentionally removed from the product UI. */
-.marketChartCard,.spark,.sparkFallback{display:none!important}
-.row{grid-template-columns:96px 82px 64px 28px;grid-template-areas:"name price score open"}
+.marketChart,.marketChartMeta,.spark,.sparkFallback{display:none!important}
+.marketChartCard{display:block!important}
+.row{grid-template-columns:96px 82px minmax(260px,520px) 64px 28px;grid-template-areas:"name price fx score open"}
 .cards>.card:first-child{display:none!important}
 .cards{grid-template-columns:1fr!important}
-@media(max-width:720px){.row{grid-template-columns:88px 75px 58px 24px}}
+.fxBoard{display:grid;grid-template-columns:repeat(5,minmax(72px,1fr));gap:7px;margin-top:7px}.fxItem{background:#071321;border:1px solid #1d3552;border-radius:9px;padding:7px 8px;min-width:0}.fxItem b{display:block;font-size:11px;color:#bcd1e8}.fxItem strong{display:block;font-size:15px;margin-top:2px}.fxItem small{display:block;color:#718aa5;font-size:9px;margin-top:2px}.fxSlot{grid-area:fx;display:flex;gap:7px;align-items:center;min-width:0;overflow:hidden}.fxMini{flex:1;background:#071321;border:1px solid #1d3552;border-radius:8px;padding:7px 9px;min-width:0}.fxMini b{font-size:11px;color:#a9c6e5}.fxMini strong{font-size:15px;margin-left:7px}.fxMini small{display:block;color:#718aa5;font-size:9px;margin-top:2px}.fxNote{font-size:9px;color:#718aa5;margin-top:6px}
+@media(max-width:720px){.row{grid-template-columns:88px 75px minmax(90px,1fr) 58px 24px;grid-template-areas:"name price fx score open"}.fxBoard{grid-template-columns:repeat(3,1fr)}.fxMini{padding:6px}.fxMini strong{display:block;margin-left:0;font-size:13px}}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="top">
-    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.4｜盤中即時行情｜15 秒更新</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
+    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.4｜盤中即時行情・外匯｜15 秒更新</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
     <div class="search"><input id="code" inputmode="text" autocomplete="off" placeholder="搜尋代號或名稱，例如 2610、華航"><button id="searchBtn" class="primary">搜尋</button></div>
     <div id="searchResults" class="searchResults"></div>
     <div class="toolbar"><span class="pill" id="clock">—</span><span class="pill">評分 100 分制</span><span class="pill" id="universePill">台股名冊：載入中…</span><span class="pill">行情：TWSE／TPEx</span><span class="pill" id="refreshPill">自動更新：15 秒</span></div>
@@ -58,7 +60,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
   <section class="market">
     <div class="marketCard"><div class="l">台灣加權指數</div><div id="taiex" class="v">—</div><div id="taiexChg" class="s muted">讀取中</div></div>
     <div class="marketCard"><div class="l">資料狀態</div><div id="marketStatus" class="v" style="font-size:17px">讀取中</div><div id="marketTime" class="s muted">—</div></div>
-    <div class="marketCard marketChartCard"><div class="l">台灣加權指數｜最近交易日走勢</div><canvas id="taiexChart" class="marketChart" width="620" height="90"></canvas><div class="marketChartMeta"><span>09:00</span><span id="taiexChartMsg">載入最近交易日分時…</span><span>13:30</span></div></div>
+    <div class="marketCard marketChartCard"><div class="l">主要外幣兌新台幣｜最新參考匯率</div><div id="fxBoard" class="fxBoard"><div class="muted small">匯率載入中…</div></div><div id="fxNote" class="fxNote">1 單位外幣約等於多少新台幣</div><canvas id="taiexChart" class="marketChart" width="620" height="90"></canvas><div class="marketChartMeta"><span>09:00</span><span id="taiexChartMsg">—</span><span>13:30</span></div></div>
   </section>
 
   <div class="sectionTitle">我的監控牆</div>
@@ -289,5 +291,5 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 <script src="./extras-v090.js?v=096openzero-final"></script>
 <script src="./live-v091.js?v=096openzero-final"></script>
 <script src="./foreign-live-test.js?v=2"></script>
-</body>
+\n<script id="live-fx-board">\n(()=>{\nconst FX=[['USD','美元','🇺🇸'],['JPY','日圓','🇯🇵'],['EUR','歐元','🇪🇺'],['CNY','人民幣','🇨🇳'],['KRW','韓元','🇰🇷'],['GBP','英鎊','🇬🇧'],['AUD','澳幣','🇦🇺'],['HKD','港幣','🇭🇰'],['SGD','新加坡幣','🇸🇬']];\nlet latest=null,lastFetch=0;\nconst fmt=(code,v)=>code==='JPY'||code==='KRW'?v.toFixed(4):v.toFixed(3);\nfunction render(){\n const board=document.getElementById('fxBoard'); if(!board)return;\n if(!latest){board.innerHTML='<div class="muted small">匯率載入中…</div>';return}\n board.innerHTML=FX.slice(0,5).map(([c,n,f])=>{const r=latest.rates?.[c];const twd=r?1/r:null;return `<div class="fxItem"><b>${f} ${c}</b><strong>${twd?fmt(c,twd):'—'}</strong><small>${n} / TWD</small></div>`}).join('');\n const note=document.getElementById('fxNote');if(note)note.textContent='1 單位外幣約等於多少新台幣｜資料時間：'+new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});\n document.querySelectorAll('#watch .row').forEach((row,i)=>{let slot=row.querySelector('.fxSlot');if(!slot){slot=document.createElement('div');slot.className='fxSlot';const score=row.querySelector('.score');row.insertBefore(slot,score||null)}const [c,n,f]=FX[i%FX.length],r=latest.rates?.[c],twd=r?1/r:null;slot.innerHTML=`<div class="fxMini"><b>${f} ${c}</b><strong>${twd?fmt(c,twd):'—'}</strong><small>1 ${c} ≈ TWD｜${n}</small></div>`});\n}\nasync function load(){\n if(Date.now()-lastFetch<300000&&latest){render();return}\n try{const res=await fetch('https://open.er-api.com/v6/latest/TWD',{cache:'no-store'});if(!res.ok)throw new Error('FX '+res.status);const j=await res.json();if(j.result!=='success'||!j.rates)throw new Error('FX payload');latest=j;lastFetch=Date.now();render()}catch(e){const board=document.getElementById('fxBoard');if(board)board.innerHTML='<div class="muted small">匯率暫時無法取得</div>'}\n}\nconst watch=document.getElementById('watch');if(watch)new MutationObserver(()=>render()).observe(watch,{childList:true,subtree:true});\nload();setInterval(load,300000);\n})();\n</script>\n</body>
 </html>

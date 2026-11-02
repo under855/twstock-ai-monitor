@@ -44,7 +44,7 @@
   function loadPaperTrading(){
     if(document.querySelector('script[data-paper-trading]'))return;
     const s=document.createElement('script');s.src='./paper-trading-v100.js?v=100b';s.dataset.paperTrading='1';
-    s.onload=()=>{if(!document.querySelector('script[data-paper-reset]')){const r=document.createElement('script');r.src='./paper-trading-reset-v101.js?v=101a';r.dataset.paperReset='1';document.body.appendChild(r);}};
+    s.onload=()=>{if(!document.querySelector('script[data-paper-reset]')){const r=document.createElement('script');r.src='./paper-trading-reset-v101.js?v=101b';r.dataset.paperReset='1';document.body.appendChild(r);}};
     document.body.appendChild(s);
   }
   let tries=0;function boot(){if(buildSplit()){loadBotCash();setInterval(loadBotCash,300000);loadPaperTrading();return}if(++tries<80)setTimeout(boot,250)}

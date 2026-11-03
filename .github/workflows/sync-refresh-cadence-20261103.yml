@@ -1,0 +1,87 @@
+name: Synchronize safe refresh cadence 2026-11-03
+on:
+  push:
+    branches: ['main']
+    paths:
+      - '.github/workflows/sync-refresh-cadence-20261103.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+      - name: Apply coordinated refresh cadence
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def patch(path, replacements):
+              p=Path(path)
+              s=p.read_text(encoding='utf-8')
+              original=s
+              for old,new in replacements:
+                  if old not in s:
+                      print(f'WARN missing in {path}: {old[:80]!r}')
+                  s=s.replace(old,new)
+              if s!=original:
+                  p.write_text(s,encoding='utf-8')
+                  print('updated',path)
+              else:
+                  print('unchanged',path)
+
+          patch('index.html',[
+              ('台股 AI 監控台 v0.9.4 Web','台股 AI 監控台 v0.9.5 Web'),
+              ('v0.9.4｜盤中即時行情・外匯｜15 秒更新','v0.9.5｜盤中即時行情・外匯｜4 秒更新'),
+              ('自動更新：15 秒','自動更新：4 秒'),
+              ('./live-v091.js?v=096openzero-final','./live-v091.js?v=095fast4'),
+              ('./foreign-live-test.js?v=2','./foreign-live-test.js?v=3fast'),
+              ('split-layout-v095.js?v=095split1','split-layout-v095.js?v=095sync2'),
+              ('load();setInterval(load,60000);','load();setInterval(load,30000);'),
+          ])
+
+          patch('extras-v090.js',[
+              ("const VERSION='0.9.4';","const VERSION='0.9.5';"),
+              ('Date.now()-taiexTodayFetchedAt<300000','Date.now()-taiexTodayFetchedAt<60000'),
+              ('},15000);setInterval(()=>ensureTaiexTop(true),300000);','},4000);setInterval(()=>ensureTaiexTop(true),60000);'),
+              ('setInterval(run,15000);setInterval(()=>refreshTodayFallbackCharts(true).catch(()=>{}),60000);','setInterval(run,4000);setInterval(()=>refreshTodayFallbackCharts(true).catch(()=>{}),30000);'),
+          ])
+
+          patch('foreign-live-test.js',[
+              ("setInterval(()=>safeRun(nvda,'nvdaStatus'),15000);setInterval(()=>safeRun(cover,'coverStatus'),60000)","setInterval(()=>safeRun(nvda,'nvdaStatus'),10000);setInterval(()=>safeRun(cover,'coverStatus'),60000)"),
+              ('setInterval(paint,15000);setInterval(run,60000);','setInterval(paint,4000);setInterval(run,30000);'),
+              ('setInterval(enhance,15000)','setInterval(enhance,4000)'),
+          ])
+
+          patch('split-layout-v095.js',[
+              ('setInterval(loadBotCash,300000)','setInterval(loadBotCash,60000)'),
+          ])
+
+          patch('.github/workflows/build-news-cache-v094r5.yml',[
+              ("- cron: '17 */2 * * *'","- cron: '*/15 * * * *'"),
+          ])
+          PY
+      - name: Verify key cadence values
+        run: |
+          grep -q "const INTERVAL=4000" live-v091.js
+          grep -q "盤中即時：4 秒" live-v091.js
+          grep -q "自動更新：4 秒" index.html
+          grep -q "setInterval(load,30000)" index.html
+          grep -q "setInterval(loadBotCash,60000)" split-layout-v095.js
+          grep -q "cron: '\*/15 \* \* \* \*'" .github/workflows/build-news-cache-v094r5.yml
+      - name: Commit synchronized cadence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html extras-v090.js foreign-live-test.js split-layout-v095.js .github/workflows/build-news-cache-v094r5.yml
+          if git diff --cached --quiet; then
+            echo 'No cadence changes needed'
+            exit 0
+          fi
+          git commit -m 'Synchronize safe refresh cadence across app'
+          git pull --rebase origin main
+          git push origin HEAD:main

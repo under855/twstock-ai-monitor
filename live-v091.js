@@ -1,7 +1,7 @@
 (() => {
   'use strict';
-  const VERSION='0.9.4';
-  const INTERVAL=15000;
+  const VERSION='0.9.5';
+  const INTERVAL=4000;
   const BACKUP_INTERVAL=60000;
   const MAX_POINTS=600;
   const QKEY='tw_live091_quotes_';
@@ -142,7 +142,6 @@
 
   function seedCurrent(){}
 
-
   function drawLine(canvas,a){
     if(!canvas)return false;const ctx=canvas.getContext('2d');if(!ctx)return false;
     const data=(a||[]).filter(p=>sameDay(Number(p.stamp))&&num(p.close)!=null).sort((x,y)=>x.stamp-y.stamp);
@@ -156,7 +155,7 @@
   function row(code){return [...document.querySelectorAll('#watch article.row')].find(x=>x.querySelector('.sym')?.textContent?.trim()===String(code))||null}
   function canvasFor(r){let c=r?.querySelector('canvas.spark');if(c)return c;const f=r?.querySelector('.sparkFallback');if(!f)return null;c=document.createElement('canvas');c.className='spark';f.replaceWith(c);return c}
   function maskRow(code){
-    const r=row(code);if(!r)return;r.dataset.liveState='loading';r.dataset.liveDate=today();delete r.dataset.liveStamp;delete r.dataset.livePrice;const p=r.querySelector('.price'),ch=r.querySelector('.chg'),d=r.querySelector('.dayline'),m=r.querySelector('.meta');if(p)p.textContent='—';if(ch){ch.textContent='行情載入中';ch.className='chg flat'}if(d)d.textContent='載入最近交易日行情';if(m)m.innerHTML='<span>TWSE／TPEx 官方行情</span><span>15 秒重試</span>';const c=canvasFor(r);if(!(typeof window.__TW_DRAW_MAIN_TODAY__==='function'&&window.__TW_DRAW_MAIN_TODAY__(code,c)))drawLine(c,series.get(code)||[])
+    const r=row(code);if(!r)return;r.dataset.liveState='loading';r.dataset.liveDate=today();delete r.dataset.liveStamp;delete r.dataset.livePrice;const p=r.querySelector('.price'),ch=r.querySelector('.chg'),d=r.querySelector('.dayline'),m=r.querySelector('.meta');if(p)p.textContent='—';if(ch){ch.textContent='行情載入中';ch.className='chg flat'}if(d)d.textContent='載入最近交易日行情';if(m)m.innerHTML='<span>TWSE／TPEx 官方行情</span><span>4 秒重試</span>';const c=canvasFor(r);if(!(typeof window.__TW_DRAW_MAIN_TODAY__==='function'&&window.__TW_DRAW_MAIN_TODAY__(code,c)))drawLine(c,series.get(code)||[])
   }
   function paintRow(code,q){
     const r=row(code);if(!r)return;if(!q?.live||q.date!==today()){const r=row(code),c=canvasFor(r);if(typeof window.__TW_DRAW_MAIN_TODAY__==='function'&&window.__TW_DRAW_MAIN_TODAY__(code,c))return;maskRow(code);return}r.dataset.liveState='live';r.dataset.liveDate=q.date;r.dataset.liveStamp=String(q.stamp);r.dataset.livePrice=String(q.price);
@@ -191,7 +190,7 @@
   function paintStatus(){
     const b=document.getElementById('liveBadge'),s=document.getElementById('marketStatus'),t=document.getElementById('marketTime'),p=document.getElementById('refreshPill'),ok=lastSuccessAt>0||hasTodayData();
     if(marketOpen()){
-      if(p)p.textContent=`盤中即時：15 秒｜v${VERSION}`;if(b){b.textContent=ok?`盤中即時 v${VERSION}`:`即時來源重試中 v${VERSION}`;b.className=ok?'liveBadge ok':'liveBadge warn'}if(s)s.textContent=ok?'盤中即時':'即時來源重試';if(t)t.textContent=`最近輪詢 ${hhmmss(lastPollAt||Date.now())}`;
+      if(p)p.textContent=`盤中即時：4 秒｜v${VERSION}`;if(b){b.textContent=ok?`盤中即時 v${VERSION}`:`即時來源重試中 v${VERSION}`;b.className=ok?'liveBadge ok':'liveBadge warn'}if(s)s.textContent=ok?'盤中即時':'即時來源重試';if(t)t.textContent=`最近輪詢 ${hhmmss(lastPollAt||Date.now())}`;
     }else if(hasTodayData()){
       if(p)p.textContent=`今日收盤／最後成交｜v${VERSION}`;if(b){b.textContent=`今日資料 v${VERSION}`;b.className='liveBadge ok'}if(s)s.textContent='今日收盤';if(t)t.textContent=`MIS 最後成交／指數 ${taiex?.time||''}`;
     }
@@ -203,7 +202,7 @@
   if(originalRender)render=async function(allowNetwork=false){const x=await originalRender(marketOpen()?false:allowNetwork);if(marketOpen()||hasTodayData())paintAll();return x};
   if(originalShow)show=async function(code,opts={}){code=String(code);const q=quotes.get(code);if(q?.date===today()||marketOpen())quoteCache[code]=q||placeholder(code);const x=await originalShow(code,opts);if(q?.date===today()||marketOpen()){paintDetail();poll(true)}return x};
 
-  function debug(){const stocks={};for(const code of watchCodes()){const q=quotes.get(code),a=series.get(code)||[],r=row(code);stocks[code]={date:q?.date||null,price:q?.price??null,tradeTime:q?.tradeTime||null,stamp:q?.stamp||null,source:q?.source||null,seriesPoints:a.length,seriesLastStamp:a.at(-1)?.stamp||null,domState:r?.dataset?.liveState||null,domDate:r?.dataset?.liveDate||null,domStamp:Number(r?.dataset?.liveStamp||0)||null,domPrice:r?.dataset?.livePrice||null}}window.__TW_LIVE_V091__={version:VERSION,marketWindow:marketOpen(),cycle,lastPollAt,lastSuccessAt,taiex:taiex?{date:taiex.date,price:taiex.price,time:taiex.time,stamp:taiex.stamp}:null,stocks}}
+  function debug(){const stocks={};for(const code of watchCodes()){const q=quotes.get(code),a=series.get(code)||[],r=row(code);stocks[code]={date:q?.date||null,price:q?.price??null,tradeTime:q?.tradeTime||null,stamp:q?.stamp||null,source:q?.source||null,seriesPoints:a.length,seriesLastStamp:a.at(-1)?.stamp||null,domState:r?.dataset?.liveState||null,domDate:r?.dataset?.liveDate||null,domStamp:Number(r?.dataset?.liveStamp||0)||null,domPrice:r?.dataset?.livePrice||null}}window.__TW_LIVE_V091__={version:VERSION,intervalMs:INTERVAL,marketWindow:marketOpen(),cycle,lastPollAt,lastSuccessAt,taiex:taiex?{date:taiex.date,price:taiex.price,time:taiex.time,stamp:taiex.stamp}:null,stocks}}
 
   async function pollBackup(force=false){
     if(backupBusy||(!force&&Date.now()-lastBackupAt<BACKUP_INTERVAL))return false;backupBusy=true;lastBackupAt=Date.now();
@@ -216,6 +215,7 @@
     }catch(e){await pollBackup(true);paintAll();debug();window.__TW_LIVE_V091__.error=String(e?.message||e)}finally{busy=false}
   }
   function start(){
+    const subtitle=document.querySelector('.brand small');if(subtitle)subtitle.textContent=subtitle.textContent.replace(/15 秒更新/g,'4 秒更新');
     loadToday();paintAll();poll(true);pollBackup(true);if(marketOpen()){setInterval(()=>poll(false),INTERVAL);setInterval(()=>pollBackup(false),BACKUP_INTERVAL)}else{const p=document.getElementById('refreshPill');if(p&&!hasTodayData())p.textContent=`休市／檢查今日最終資料｜v${VERSION}`;debug()}
     addEventListener('focus',()=>{poll(true);pollBackup(true)});document.addEventListener('visibilitychange',()=>{if(!document.hidden){poll(true);pollBackup(true)}});
   }

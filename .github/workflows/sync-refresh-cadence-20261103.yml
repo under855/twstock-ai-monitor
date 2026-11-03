@@ -1,4 +1,4 @@
-name: Synchronize safe refresh cadence 2026-11-03
+name: Patch Taiwan Bank cash FX parser
 on:
   push:
     branches: ['main']
@@ -15,68 +15,49 @@ jobs:
         with:
           fetch-depth: 0
           ref: main
-      - name: Apply coordinated refresh cadence
+      - name: Patch parser and cache key
+        shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
+          p=Path('split-layout-v095.js')
+          s=p.read_text(encoding='utf-8')
+          old="""  function parseBot(html){const doc=new DOMParser().parseFromString(html,'text/html'),rows=[];for(const tr of doc.querySelectorAll('table tbody tr')){const text=(tr.textContent||'').replace(/\\s+/g,' ').trim();const m=text.match(/\\(([A-Z]{3})\\)/);if(!m||!CURRENCIES.includes(m[1]))continue;const nums=[...tr.querySelectorAll('td')].map(td=>(td.textContent||'').trim()).filter(x=>/^-?\\d+(\\.\\d+)?$/.test(x));if(nums.length>=2)rows.push({code:m[1],buy:nums[0],sell:nums[1]});}const body=(doc.body?.textContent||'').replace(/\\s+/g,' ');const tm=body.match(/牌價最新掛牌時間[：:]\\s*([^取幣]+?)(?=幣別|$)/);return {rows,time:tm?tm[1].trim():''};}
+"""
+          new="""  function parseBot(html){
+    const doc=new DOMParser().parseFromString(html,'text/html'),rows=[];
+    const clean=v=>String(v??'').trim();
+    const valid=v=>/^\\d+(?:\\.\\d+)?$/.test(v);
+    for(const tr of doc.querySelectorAll('table tbody tr')){
+      const text=(tr.textContent||'').replace(/\\s+/g,' ').trim();
+      const m=text.match(/\\(([A-Z]{3})\\)/);if(!m||!CURRENCIES.includes(m[1]))continue;
+      const buy=clean(tr.querySelector('td[data-table="本行現金買入"]')?.textContent);
+      const sell=clean(tr.querySelector('td[data-table="本行現金賣出"]')?.textContent);
+      if(valid(buy)&&valid(sell))rows.push({code:m[1],buy,sell});
+    }
+    const body=(doc.body?.textContent||'').replace(/\\s+/g,' '),tm=body.match(/牌價最新掛牌時間[：:]\\s*([^取幣]+?)(?=幣別|$)/);
+    return {rows,time:tm?tm[1].trim():''};
+  }
+"""
+          if old not in s:
+              raise SystemExit('old parser not found')
+          p.write_text(s.replace(old,new),encoding='utf-8')
 
-          def patch(path, replacements):
-              p=Path(path)
-              s=p.read_text(encoding='utf-8')
-              original=s
-              for old,new in replacements:
-                  if old not in s:
-                      print(f'WARN missing in {path}: {old[:80]!r}')
-                  s=s.replace(old,new)
-              if s!=original:
-                  p.write_text(s,encoding='utf-8')
-                  print('updated',path)
-              else:
-                  print('unchanged',path)
-
-          patch('index.html',[
-              ('台股 AI 監控台 v0.9.4 Web','台股 AI 監控台 v0.9.5 Web'),
-              ('v0.9.4｜盤中即時行情・外匯｜15 秒更新','v0.9.5｜盤中即時行情・外匯｜4 秒更新'),
-              ('自動更新：15 秒','自動更新：4 秒'),
-              ('./live-v091.js?v=096openzero-final','./live-v091.js?v=095fast4'),
-              ('./foreign-live-test.js?v=2','./foreign-live-test.js?v=3fast'),
-              ('split-layout-v095.js?v=095split1','split-layout-v095.js?v=095sync2'),
-              ('load();setInterval(load,60000);','load();setInterval(load,30000);'),
-          ])
-
-          patch('extras-v090.js',[
-              ("const VERSION='0.9.4';","const VERSION='0.9.5';"),
-              ('Date.now()-taiexTodayFetchedAt<300000','Date.now()-taiexTodayFetchedAt<60000'),
-              ('},15000);setInterval(()=>ensureTaiexTop(true),300000);','},4000);setInterval(()=>ensureTaiexTop(true),60000);'),
-              ('setInterval(run,15000);setInterval(()=>refreshTodayFallbackCharts(true).catch(()=>{}),60000);','setInterval(run,4000);setInterval(()=>refreshTodayFallbackCharts(true).catch(()=>{}),30000);'),
-          ])
-
-          patch('foreign-live-test.js',[
-              ("setInterval(()=>safeRun(nvda,'nvdaStatus'),15000);setInterval(()=>safeRun(cover,'coverStatus'),60000)","setInterval(()=>safeRun(nvda,'nvdaStatus'),10000);setInterval(()=>safeRun(cover,'coverStatus'),60000)"),
-              ('setInterval(paint,15000);setInterval(run,60000);','setInterval(paint,4000);setInterval(run,30000);'),
-              ('setInterval(enhance,15000)','setInterval(enhance,4000)'),
-          ])
-
-          patch('split-layout-v095.js',[
-              ('setInterval(loadBotCash,300000)','setInterval(loadBotCash,60000)'),
-          ])
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          if 'split-layout-v095.js?v=095sync2' not in s:
+              raise SystemExit('split cache key not found')
+          p.write_text(s.replace('split-layout-v095.js?v=095sync2','split-layout-v095.js?v=095sync3'),encoding='utf-8')
           PY
-      - name: Verify key cadence values
-        run: |
-          grep -q "const INTERVAL=4000" live-v091.js
-          grep -q "盤中即時：4 秒" live-v091.js
-          grep -q "自動更新：4 秒" index.html
-          grep -q "setInterval(load,30000)" index.html
-          grep -q "setInterval(loadBotCash,60000)" split-layout-v095.js
-      - name: Commit synchronized cadence
+          node --check split-layout-v095.js
+          grep -q 'data-table="本行現金買入"' split-layout-v095.js
+          grep -q 'data-table="本行現金賣出"' split-layout-v095.js
+          grep -q 'split-layout-v095.js?v=095sync3' index.html
+      - name: Commit fix
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add index.html extras-v090.js foreign-live-test.js split-layout-v095.js
-          if git diff --cached --quiet; then
-            echo 'No cadence changes needed'
-            exit 0
-          fi
-          git commit -m 'Synchronize safe refresh cadence across app'
+          git add split-layout-v095.js index.html
+          git commit -m 'Fix Taiwan Bank cash FX column parsing'
           git pull --rebase origin main
           git push origin HEAD:main

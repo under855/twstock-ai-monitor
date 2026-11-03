@@ -30,7 +30,20 @@
 
   function findWatchTitle(){return [...document.querySelectorAll('.sectionTitle')].find(x=>/監控牆/.test(x.textContent||''))||null;}
   function cashBox(){let b=document.getElementById('botCashFxV096');if(b)return b;b=document.createElement('section');b.id='botCashFxV096';b.className='botCashFx';b.innerHTML='<div class="botCashFxHead"><div class="botCashFxTitle">臺灣銀行｜現金買進・賣出</div><div class="botCashFxTime">讀取最新牌告…</div></div><div class="botCashFxGrid"><div class="botCashFxCell botCashFxHdr">幣別</div><div class="botCashFxCell botCashFxHdr botCashFxNum">現金買進</div><div class="botCashFxCell botCashFxHdr botCashFxNum">現金賣出</div></div><div class="botCashFxNote">銀行「買進」是銀行向你買外幣；你拿台幣買外幣現鈔時，主要看「現金賣出」。</div>';return b;}
-  function parseBot(html){const doc=new DOMParser().parseFromString(html,'text/html'),rows=[];for(const tr of doc.querySelectorAll('table tbody tr')){const text=(tr.textContent||'').replace(/\s+/g,' ').trim();const m=text.match(/\(([A-Z]{3})\)/);if(!m||!CURRENCIES.includes(m[1]))continue;const nums=[...tr.querySelectorAll('td')].map(td=>(td.textContent||'').trim()).filter(x=>/^-?\d+(\.\d+)?$/.test(x));if(nums.length>=2)rows.push({code:m[1],buy:nums[0],sell:nums[1]});}const body=(doc.body?.textContent||'').replace(/\s+/g,' ');const tm=body.match(/牌價最新掛牌時間[：:]\s*([^取幣]+?)(?=幣別|$)/);return {rows,time:tm?tm[1].trim():''};}
+  function parseBot(html){
+    const doc=new DOMParser().parseFromString(html,'text/html'),rows=[];
+    const clean=v=>String(v??'').trim();
+    const valid=v=>/^\d+(?:\.\d+)?$/.test(v);
+    for(const tr of doc.querySelectorAll('table tbody tr')){
+      const text=(tr.textContent||'').replace(/\s+/g,' ').trim();
+      const m=text.match(/\(([A-Z]{3})\)/);if(!m||!CURRENCIES.includes(m[1]))continue;
+      const buy=clean(tr.querySelector('td[data-table="本行現金買入"]')?.textContent);
+      const sell=clean(tr.querySelector('td[data-table="本行現金賣出"]')?.textContent);
+      if(valid(buy)&&valid(sell))rows.push({code:m[1],buy,sell});
+    }
+    const body=(doc.body?.textContent||'').replace(/\s+/g,' ');const tm=body.match(/牌價最新掛牌時間[：:]\s*([^取幣]+?)(?=幣別|$)/);
+    return {rows,time:tm?tm[1].trim():''};
+  }
   async function loadBotCash(){const box=cashBox(),grid=box.querySelector('.botCashFxGrid'),time=box.querySelector('.botCashFxTime');const urls=[`https://api.allorigins.win/raw?url=${encodeURIComponent(BOT_URL)}`,`https://proxy.cors.dev/${BOT_URL}`];for(const u of urls){try{const ac=new AbortController(),t=setTimeout(()=>ac.abort(),8000);let r;try{r=await fetch(u,{cache:'no-store',signal:ac.signal});}finally{clearTimeout(t)}if(!r.ok)continue;const p=parseBot(await r.text());if(!p.rows.length)continue;grid.querySelectorAll('.botCashFxCell:not(.botCashFxHdr)').forEach(x=>x.remove());for(const x of p.rows){grid.insertAdjacentHTML('beforeend',`<div class="botCashFxCell botCashFxCode">${x.code}</div><div class="botCashFxCell botCashFxNum">${x.buy}</div><div class="botCashFxCell botCashFxNum">${x.sell}</div>`);}time.textContent=p.time?`掛牌 ${p.time}`:'臺銀最新牌告';return true;}catch{}}time.textContent='臺銀牌告暫時無法讀取';return false;}
 
   function buildSplit(){

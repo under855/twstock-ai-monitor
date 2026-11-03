@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.9.4';
+  const VERSION='0.9.5';
 
   function editDistance(a,b,max=2){
     a=String(a||'');b=String(b||'');
@@ -337,8 +337,8 @@
     const tradeDate=await latestOfficialTradeDate(),full=await twseIndexFullSession(tradeDate);return full.length>=2?full:out;
   }
   function drawTaiexTop(points){const c=document.getElementById('taiexChart'),merged=mergedTaiexPoints(points);if(!c||merged.length<2)return false;const txt=document.getElementById('taiexChg')?.textContent||'',m=txt.replaceAll(',','').match(/[+-]?\d+(?:\.\d+)?/),chg=m?Number(m[0]):null;if(!drawFixedIntraday(c,merged,true,chg))return false;const official=merged.filter(x=>x.official);c.dataset.todayFull='1';c.dataset.todayPoints=String(merged.length);c.dataset.todayOfficialPoints=String(official.length);c.dataset.todayOfficialFirst=official.length?String(official[0].time.getTime()):'';c.dataset.todayOfficialLast=official.length?String(official.at(-1).time.getTime()):'';c.dataset.todayStart=hmTw(merged[0].time);c.dataset.todayEnd=hmTw(merged.at(-1).time);const msg=document.getElementById('taiexChartMsg'),sessionDate=new Date(merged[0].time).toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});c.dataset.sessionDate=sessionDate;if(msg)msg.textContent=sessionDate===twIsoDay()?`今日｜TWSE 官方 ${official.length||merged.length} 點`:`${sessionDate.replaceAll('-','/')} 最近交易日｜TWSE 官方`;return true}
-  async function ensureTaiexTop(force=false){if(!force&&taiexTodayCache?.length>=2&&Date.now()-taiexTodayFetchedAt<300000)return drawTaiexTop(taiexTodayCache);const p=await officialTaiexIntraday(force);if(p.length>=2){taiexTodayCache=p;taiexTodayFetchedAt=Date.now();return drawTaiexTop(p)}const msg=document.getElementById('taiexChartMsg');if(msg)msg.textContent='最近交易日分時資料暫時無法取得';return false}
-  function startTaiexTop(){setTimeout(()=>ensureTaiexTop(false),250);setTimeout(()=>ensureTaiexTop(false),1400);setInterval(()=>{captureTaiexMis();if(taiexTodayCache?.length>=2)drawTaiexTop(taiexTodayCache)},15000);setInterval(()=>ensureTaiexTop(true),300000);addEventListener('resize',()=>{if(taiexTodayCache?.length>=2)drawTaiexTop(taiexTodayCache)});return true}
+  async function ensureTaiexTop(force=false){if(!force&&taiexTodayCache?.length>=2&&Date.now()-taiexTodayFetchedAt<60000)return drawTaiexTop(taiexTodayCache);const p=await officialTaiexIntraday(force);if(p.length>=2){taiexTodayCache=p;taiexTodayFetchedAt=Date.now();return drawTaiexTop(p)}const msg=document.getElementById('taiexChartMsg');if(msg)msg.textContent='最近交易日分時資料暫時無法取得';return false}
+  function startTaiexTop(){setTimeout(()=>ensureTaiexTop(false),250);setTimeout(()=>ensureTaiexTop(false),1400);setInterval(()=>{captureTaiexMis();if(taiexTodayCache?.length>=2)drawTaiexTop(taiexTodayCache)},4000);setInterval(()=>ensureTaiexTop(true),60000);addEventListener('resize',()=>{if(taiexTodayCache?.length>=2)drawTaiexTop(taiexTodayCache)});return true}
 
 
   const offNum=v=>{if(v==null)return null;const n=Number(String(v).replaceAll(',','').replace('+','').trim());return Number.isFinite(n)?n:null};
@@ -389,7 +389,7 @@
   function startTodayOnlyMainCharts(){
     let timer=null;const run=()=>enforceTodayOnlyMainCharts(),watch=document.getElementById('watch');
     if(watch)new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(run,80)}).observe(watch,{childList:true,subtree:true});
-    setTimeout(run,150);setTimeout(run,900);setTimeout(run,2500);setInterval(run,15000);setInterval(()=>refreshTodayFallbackCharts(true).catch(()=>{}),60000);return true;
+    setTimeout(run,150);setTimeout(run,900);setTimeout(run,2500);setInterval(run,4000);setInterval(()=>refreshTodayFallbackCharts(true).catch(()=>{}),30000);return true;
   }
 
   const detailModeByCode=new Map();

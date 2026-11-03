@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="台股監控台">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>台股 AI 監控台 v0.9.4 Web</title>
+<title>台股 AI 監控台 v0.9.5 Web</title>
 <style>
 :root{--bg:#060d18;--panel:#0d1929;--panel2:#11233a;--line:#213954;--text:#edf5ff;--muted:#93a9c2;--accent:#78adff;--up:#ff6b6b;--down:#63d49a;--warn:#ffd166;--neutral:#d2dceb;--shadow:0 12px 28px rgba(0,0,0,.22)}
 *{box-sizing:border-box}html{background:var(--bg)}body{margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;background:radial-gradient(circle at 50% -10%,#13325a 0,#07111f 35%,#050b13 72%);min-height:100vh}
@@ -51,10 +51,10 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
 <body>
 <div class="app">
   <header class="top">
-    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.4｜盤中即時行情・外匯｜15 秒更新</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
+    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.5｜盤中即時行情・外匯｜4 秒更新</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
     <div class="search"><input id="code" inputmode="text" autocomplete="off" placeholder="搜尋代號或名稱，例如 2610、華航"><button id="searchBtn" class="primary">搜尋</button></div>
     <div id="searchResults" class="searchResults"></div>
-    <div class="toolbar"><span class="pill" id="clock">—</span><span class="pill">評分 100 分制</span><span class="pill" id="universePill">台股名冊：載入中…</span><span class="pill">行情：TWSE／TPEx</span><span class="pill" id="refreshPill">自動更新：15 秒</span></div>
+    <div class="toolbar"><span class="pill" id="clock">—</span><span class="pill">評分 100 分制</span><span class="pill" id="universePill">台股名冊：載入中…</span><span class="pill">行情：TWSE／TPEx</span><span class="pill" id="refreshPill">自動更新：4 秒</span></div>
       <div id="errorBanner" class="errorBanner"></div>
   </header>
 
@@ -292,8 +292,8 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 
 <script src="./dividend-enhance.js?v=094r1"></script>
 <script src="./extras-v090.js?v=096openzero-final"></script>
-<script src="./live-v091.js?v=096openzero-final"></script>
-<script src="./foreign-live-test.js?v=2"></script>
+<script src="./live-v091.js?v=095fast4"></script>
+<script src="./foreign-live-test.js?v=3fast"></script>
 
 <script id="live-fx-board">
 (function(){
@@ -302,9 +302,9 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
   function fmt(c,v){return (c==='JPY'||c==='KRW')?v.toFixed(4):v.toFixed(3)}
   function render(){const board=document.getElementById('fxBoardStrip');if(!board||!latest)return;board.innerHTML=FX.map(function(x){const c=x[0],n=x[1],r=latest.rates[c],v=r?1/r:null;return '<div class="fxItem"><b>'+c+' '+n+'</b><strong>'+(v?fmt(c,v):'—')+'</strong><small>1 '+c+' ≈ TWD</small></div>'}).join('');const stamp=document.getElementById('fxStamp');if(stamp)stamp.textContent='更新 '+new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
   async function load(){try{const r=await fetch('https://open.er-api.com/v6/latest/TWD?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('FX');const j=await r.json();if(j.result!=='success'||!j.rates)throw Error('FX data');latest=j;render()}catch(e){const x=document.getElementById('fxStamp');if(x)x.textContent='匯率來源暫時無法取得'}}
-  load();setInterval(load,60000);
+  load();setInterval(load,30000);
 })();
 </script>
-<script src="split-layout-v095.js?v=095split1"></script>
+<script src="split-layout-v095.js?v=095sync2"></script>
 </body>
 </html>

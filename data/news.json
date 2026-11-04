@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-04T15:32:23.246003+00:00",
+  "generatedAt": "2026-11-04T16:34:15.476362+00:00",
   "stocks": {
     "0050": [
       {
@@ -46,6 +46,18 @@
       }
     ],
     "3711": [
+      {
+        "title": "日月光、京元電 四檔俏 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE8taFhPdVI5VS1jT1ZIM0U1UTV2ZUd0X3BzQ0NfbzB6NHZHQ2VNM3M5dFg3YmUtcXBVaFU3Y1RuaWRCTm5uVU5sbkYydV96dER0NlZNRUZIS19wNDFWaGt3bnlhWjBSOUd1WFYxbUljaUM5R3M00gFfQVVfeXFMUGNtSnMwRGVURHJJZl9DMHJrbHktdG51QnB3Yjl0ckttOExzc3dfeDhUdW9FVUxnM05QcWpuZk1mc1poR1YwT09JTHg3cjRBVGlhdEFfOGIwQjJxMWNvbms?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793806463000
+      },
+      {
+        "title": "矽品傳砸千億 中科二林擴產 日月光集團衝刺先進封裝 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE01TDRsYjFuMzBfNDdQOUJ1Ul9aR3NyNGplbExDUElqbU5wNTZ4M0ZJZmJPS2F2MkQ3VHpLMFNWdVFObFNxb3N6dlMwMGxHcjdmZXhMMHFjS2JFUdIBX0FVX3lxTFBrV1l2bmJPTFRaVkJHTTB3SUVadldQQ2pZUUhZRWthVlFreEtoTFMwUDF2MTA5TF8wbHpoeWhzODZxUjZXdnJCamltdi1kOVBSRHdrX0ZSQkFTTlRKM1BB?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793692800000
+      },
       {
         "title": "【日月光投控法說會 AI 摘要】2026/10/29 - 鉅亨網",
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBldU1vYV83dG85bTh3TnFKLXB5VkdDZDVCMWszbWVrLVVIdWozZDVscmh4aW94RE00bEZKOTdtWm5kUGFZdUt6c3pKRnFrUW8?oc=5",
@@ -117,6 +129,18 @@
     ],
     "2002": [
       {
+        "title": "中鋼鋼板下季接單看旺 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5UM1JZaWZtc3VrRXZlcDdfdHpibXU0akFFQ0dYQVV6cGp6LUtYWllHcHRuQ2lDcVc0UHlIMnJSUWZWd0NGRWR5ZTQ3OUl0dGZ3R0dPU24tRHZZZ9IBX0FVX3lxTFBYQkR5aWlQckxteTNPNUdzMDRDLThIdkZRY3NUTmJBTi1VZjN5dDFVM0lHQXVSVkpFQnhSRl9KV0lVdk05OFdsVzlXaXc1YmhGVXF4QXUtdUFTVmhBZEZB?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793809264000
+      },
+      {
+        "title": "台泥、中鋼 押逾五個月 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE4wT3NJM2ZkRnJZTnZQbnNzcVRFZlUzcWcxdGEzQm1nM2p6aFJ6aGtfcGwwdllOb1BHWkNra3NKdjBBTGpsODdtQ3BEYUdDNHFyZTgxT1JpX1BvZ9IBX0FVX3lxTE5VVFlKYmtLa2FLSk1lV3lfc0liNS1SaHMxMTR2YmdJYXJpbG1oYTg0bzRacG1rQjY2TUl2U2lkMjBiWGU2dnlNS2I4dU1BcUpOdkJGT25PdlpJb1RJbk5J?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793806441000
+      },
+      {
         "title": "中鋼鋼板供不應求 今年訂單滿載、明年首季接單看旺 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1JR2FKYUdTUkpJb2N5VlZpajdlRDc3b1czYVc1dWxnNG04TDNXQ2Uwd0hYYTh0RUE5THRNVGFzQUhJSWJqbTBNTzVUNnZDZ1JhUVVsTDFfeFUxQdIBX0FVX3lxTE1TUWh1XzBaTG51ZlFleGdJU0hiS3N3X0hRTVZpUF9sbG1JbHJjNFNzYkQ2LTlYSDIwUndvQUtycWcyUFJQSzI0aG1BY2NpRTlZTWkyY3h3aUVnMjVUS1lR?oc=5",
         "publisher": "經濟日報",
@@ -151,18 +175,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9QcjJZRW82TVBCSzVmUzBla2RiLVhsak5QS0FtTTNuNFltQ0ZXa3JIVTNFV21QczRXcUlGTFpXa3J2UEpVREFZUUZqcXpzWHJZSlVwdXpSb2xRNFRxWlBF?oc=5",
         "publisher": "工商時報",
         "time": 1793473200000
-      },
-      {
-        "title": "中鋼9月稅前盈餘月減19% 前三季賺43億元 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1fS2Ffb0k1SUtmMVFBX3hNaWpsbm5NZFJIeDZfcGtFYWdyMXFKNk5yM1VTVHUzeW5DUFhMMDhsTUNtR1ZSOFJtWGRyV0lRb0U?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1793090596000
-      },
-      {
-        "title": "中鋼9月稅前獲利月減19%，惟前3季明顯改善- 新聞 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOdXllSzRadG15UjJCUDdLb1Zad0hnOE5qNWx1bVpPUEltZ3NEMEhlS09yZGdoOUZDZFEtT3k2RVhLLTBEZ3RRR0Z4bHdYNHhEclhsdlZPbVhTdUJrNjl5NTNtOFR0ZmhyaHRVSTlERXI4TjRodG1XYVVzWFRoSG1faXBYQ2ZvWmxRa3RhazhWeGtXdw?oc=5",
-        "publisher": "MoneyDJ",
-        "time": 1793087400000
       }
     ],
     "00878": [
@@ -197,6 +209,12 @@
         "time": 1793612880000
       },
       {
+        "title": "00878擬配1.25元、殖利率3.59%創新高 今年配息季季高 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFA3SE1RUG1yTGRCQzd1Y3RqTW5RQjFXM2RHYnZXODdmSWxja0hxY1pVZnlESVlNNnlhQUlNME4zLUNhaEVMenY3VnhRWWNDZ2xjWjZXLVFzejNod9IBX0FVX3lxTE1fRFZvZDlnMUV5b3hNY0l3cHR1Um16Z1BKcGdfcnozNmFZQnYtNWFLYl9BOFdEZWluRERpWFZoc19aR1dHZjdFM3NONWh0REhyYnQxeVRab1AyamVZMjBF?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793610968000
+      },
+      {
         "title": "8月台股 ETF 配息一次看 00878、00929、00891等配息飆新高 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1uaUFsaXgyRUh3aUI1OWVDQV81WEpVMjg0dFUtQmFOdkpidnNXdDY5SHhpM1p2RTM3OWl5QjQ2d21hdHEwWl9saGg3QTZETF80WjBabWZWcm1DQdIBX0FVX3lxTE9TcnRVa0psdHE1dHlNQTZyN0xyRTEzZGMzRHRyblp4Qk1Hb0dwTDhEYTNod3AtZ1Ytb3lKdERwLUNwRHNzeGdyLUtWSU8tTWpOc1JybHdPbW1qWXhuLTRN?oc=5",
         "publisher": "經濟日報",
@@ -207,12 +225,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBJaHlsa3JJb2ZGZ25IZ3FRYndpWE5oMjA0N0Q1YndRdHkzbGFPMUJiRHNUT3FmczJVRzJDM1Zsb0VaVDdPZmZSMURuLXdVVUMxZ1oyb1JxTWtDT3oxWmRZ?oc=5",
         "publisher": "工商時報",
         "time": 1793600880000
-      },
-      {
-        "title": "國泰永續高股息11/17除息　預估配息1.25元續創新高 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1HQUx0NWFPOFB4YTloYjg5d2FDcW1UT01QNjNvODI1MG96YjFsU2E0Q0t0WDJySlluaFZDSExIeFNTOUFDb3JGVVV4a25EUUp6bGtCOHNQQjkzb29Kd1NZVFJ6Vk5uM1BqcnMtdnR4a2NXR1BQenBDR250b9IBX0FVX3lxTE4ybXRFd24yZGNqU1RkVjhNbFF5ZTdva2lWa2ZVelZFUWZieTc5czVDYjJkbE03VjVrVHpiSGdxU25EbUhYN09oR2dsbVZKUnd6X0xBYWFjQl9KRy1mTnVJ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793520000000
       }
     ],
     "00919": [
@@ -223,22 +235,28 @@
         "time": 1793692800000
       },
       {
+        "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793606400000
+      },
+      {
         "title": "領錢了！台股本周21檔 ETF 發放股利共421億、00919配發207.8億最多 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE8xOThxSWptVnBuU2FWYkp0djR0bW5nV2hTc3YwdDBITnBvc1ZMSjhSQ0l4VU4xSFRJUmFjNEF0dkJVaTJ2VmlaczhvdGVnaE5zUnhWVjNjRTVIQdIBX0FVX3lxTE1Xc0k5MVNTWVloYi1rTmIzUGI0Vmh6NzRvWF9fZ3lWMnU3VTdQOEppcXVOV2VzTmp2VjlxV1RXS1pXcWtWVHJrTjVTQ3dXdjhYLVc3NVduejNUSXVfcVA0?oc=5",
         "publisher": "經濟日報",
         "time": 1793606400000
       },
       {
-        "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793520000000
-      },
-      {
         "title": "群益台灣精選高息ETF基金 的總覽 | 鉅亨網 - 基金老司機 - 鉅亨網",
         "link": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxNWTBzcERwektRQXdWb3FLdTNUcjVFQTZuMVJPSFkwVkZxSEdJYVk5WVdwM3BhQm1fbjdvdFF5TjJiajNOalRBZWROeXcwUjBKVk0xSEl2eU5WSTRmRXVrRzhidHJnZkFSSmxHeDdyczR0WFRlWXc0VjcwcEF4cFZ3clN2alpsaDc5WXl0QWhfbVR5SklESlJuQ0puaUoyYnVWZWMybklTSkRSV0RBMVhGUFctT0F1SXByenR5WXFTdENYUUs2UUMwOUpDSHBBemllTVlPazdKMkt2NFFkcTFhOA?oc=5",
         "publisher": "鉅亨網",
         "time": 1793188872000
+      },
+      {
+        "title": "00919第14次填息只花20天！年化配息率13.77%再受關注 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5GRFRpS2hlWWNJT2VEd0JNOFhKZGlfY0dnenY0U1dGOFU2UTRINmcxRkx6S1RqLUpsNk51WXVva1R4Yk1mT3hRTGJFM1RwQkszZzlHbzN5RFc2UdIBX0FVX3lxTE9MdTd4YldkNFp1NHA2LUI5ZERNSEI3eXl0U016bkpocm12YXNfdlQzWTd1X0hxaU03RjNUVGhHSDJQN1JCSWUxOXo5a3ZmSEhkREEzTHZhT016SE44ZDRz?oc=5",
+        "publisher": "經濟日報",
+        "time": 1792134000000
       },
       {
         "title": "台股ETF配息時間表！421億股息大紅包 00919、00918、00981A等21檔配息、發放日、平均領息一次看 - 工商時報",

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-04T16:34:15.476362+00:00",
+  "generatedAt": "2026-11-04T17:34:00.536350+00:00",
   "stocks": {
     "0050": [
       {
@@ -119,12 +119,6 @@
         "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9Cel9weWV6QThibmtsUTdpWkIyaVpabEFIUFdLdkxDckxWSElmU0drRk5xVE9KVHRIUkdXV0twWUdIcUY2cFNkb1RZaVRqSXkwbjFTYjBlTDF2TTTSAWBBVV95cUxPVmlNNXYyeWhGeXVsai01dGhVdXhaTDRHUHZ5cGczTlFncGVwdTA2QzN3LWhrUWxEOW5rcFRLbjRQcVVjVjc4SG1GS0loOGVHY05sNXAxUTM0X1NfZ2FGak0?oc=5",
         "publisher": "經濟日報",
         "time": 1791529200000
-      },
-      {
-        "title": "鈊象9月每股盈餘5.13元 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9XU2IxX1hmVy1wMzNsdFRtbWFFbG1MbFhoVVNZVVJrNXdWMGpUd3FxUWItWUZpTVVpMERiRmNRSkR4elpwc2RIc2pYdjRsRlBQSHBhX0pWNXFzeEHSAWBBVV95cUxNc2NZb2huOHU0T21WUnZkdVEtSlhVMjMwamNVTENXbFZQSXFwdlJrTlAwS1pjZmZpRFhkM0ctVTBIVzlJRXZjLTdUSWp6WGhycS0wNEtlcGxrOWs3Wndabkw?oc=5",
-        "publisher": "經濟日報",
-        "time": 1791442800000
       }
     ],
     "2002": [
@@ -279,6 +273,12 @@
     ],
     "2330": [
       {
+        "title": "英特爾10月股價慘崩45％！晶圓代工還找不到大客戶 挑戰台積電卡關 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE91VGNfbUVPZVc5ZEVBci1fVzNWN0kzRzZKZzNFaVR1Y3d3YjJHdk1iMnFlSnR2YzU3YmVPeTNVZzVxcy1TcVNWZDNMMFNfUlNQMVktaFcyZlpiNnFnZFRn0gFkQVVfeXFMT05DVE9WclRHdUxITnpGWlc0TGltQnEyOGFVT08yYUdyTm5RRFc5bWswRElGRTdjelZnV0k4eHlQY2NjNllvTHRYRXZZc1ZqclYyaklPRFJTcHVyY3RxeE1TaWhYSw?oc=5",
+        "publisher": "自由財經",
+        "time": 1793671690000
+      },
+      {
         "title": "AI戰場誰笑到最後？外媒讚台積電坐收龐大利益「不管誰贏都能賺」 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9uMTZNaE1OYTlVWlIxRGowVVFpYVdLekhMTk54VlB3UFlrSy1vS2dGRHItM2hLU0JqSEdnQ3NLNzBjc19qYTZxaEhNck80UnNVaWhMbEo4NnI3elZoWC0w0gFkQVVfeXFMTW9vNGhGbnNCcFJMbGlTcU5hTkNrd1pnbDl3LUdhc1VnZUxCdUNMVkI4TnhONlNwdFo3TEVjam12bmV1cmNmeko4UlZhOEhXN2JKdVUyZWRmbGozTTV5dHBQLTJGag?oc=5",
         "publisher": "自由財經",
@@ -319,12 +319,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBRRERLWUx6MXktdllEeFMtaWxsTENla0lwMnFqX0FOOFEyQVBocWVoR2pyXzUxT2dwdzRidVEtcWRVREthZU5XOW1UYlh4eW1iZTJvZ1NCUmdfNTI2bk1N0gFkQVVfeXFMT3BOakJFWXVyeXVLN1Y4bVpQang0SU0wNWtZcURuNDZOWjAySWxZVUZ2YTNFNTNPc0xTOVU1NXlBWnAyT1drdzEyZjBvc2dlTm56QXFLMnRUbEs1M202V3lBa0tJQg?oc=5",
         "publisher": "自由財經",
         "time": 1792047600000
-      },
-      {
-        "title": "台積電面臨2.57兆元獲利變數 法說會後股價「波動幅度」預曝 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5HVTdsaFZWeVB6VjZxWEdxNGZXR3p3Mk1DNXplZ0ZqMlc0YXUwRElacXhTWmxYV3VlM2VrTW05UDhXWG5zTTEwbDVELXJGSlRYbXJlRG43ak1FSzgyQTU00gFkQVVfeXFMTVVyRklEbHN0cFJXbWdEVDZONE0wZGRfT1BmRnplMlFGNTVwdXE2MUJGSFRnSHB4X1VITndNQ3ZkQzFSMVFwYVhuU1FKT0FoaExGNGlCUThReXZPUkZUa2R5MVJDdQ?oc=5",
-        "publisher": "自由財經",
-        "time": 1791961200000
       }
     ]
   },

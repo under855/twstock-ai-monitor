@@ -62,8 +62,17 @@
   }
   function previousClose(date){
     const live=window.__TW_LIVE_V091__?.stocks?.[CODE],today=twDate();
-    if(date===today&&String(live?.date||'')===today.replaceAll('-','')){
-      const n=number(live.prev);if(n!==null)return n;
+    if(date===today){
+      if(String(live?.date||'')===today.replaceAll('-','')){
+        const n=number(live.prev);if(n!==null)return n;
+      }
+      try{
+        const quotes=JSON.parse(localStorage.getItem('tw_live091_quotes_'+today.replaceAll('-',''))||'{}');
+        const q=quotes?.[CODE];
+        if(String(q?.date||'')===today.replaceAll('-','')&&Number.isFinite(Number(q?.stamp))&&dayFromStamp(Number(q.stamp))===today){
+          const n=number(q.prev);if(n!==null)return n;
+        }
+      }catch{}
     }
     try{
       const hist=historyCache?.[CODE]||[];

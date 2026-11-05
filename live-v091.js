@@ -65,13 +65,24 @@
     const ac=new AbortController(),timer=setTimeout(()=>ac.abort(),timeout);
     try{const r=await fetch(url,{cache:'no-store',signal:ac.signal});if(!r.ok)throw Error(`HTTP ${r.status}`);return await r.json()}finally{clearTimeout(timer)}
   }
-  async function viaProxy(upstream,timeout=7000){
-    const primary=`https://proxy.cors.dev/${upstream}`;
-    return await getJson(primary,timeout);
-  }
+  // Do not depend on one public CORS gateway. Requests are sequential and the outer poll is single-flight.
+  let proxyPreferred=0,misFailureCount=0,nextMisAttemptAt=0;
   async function fetchMis(codes){
-    const u=`https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=${encodeURIComponent(channelList(codes).join('|'))}&json=1&delay=0&_=${Date.now()}`;
-    const j=await viaProxy(u,7000);if(!Array.isArray(j?.msgArray))throw Error('MIS payload missing');return j.msgArray;
+    const now=Date.now();if(now<nextMisAttemptAt)throw Error('MIS retry backoff');
+    const u=`https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=${encodeURIComponent(channelList(codes).join('|'))}&json=1&delay=0&_=${now}`;
+    const endpoints=[`https://proxy.cors.dev/${u}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`];
+    let last=null;
+    for(let attempt=0;attempt<endpoints.length;attempt++){
+      const index=(proxyPreferred+attempt)%endpoints.length;
+      try{
+        const j=await getJson(endpoints[index],5500);
+        if(!Array.isArray(j?.msgArray))throw Error('MIS payload missing');
+        proxyPreferred=index;misFailureCount=0;nextMisAttemptAt=0;return j.msgArray;
+      }catch(e){last=e}
+    }
+    misFailureCount++;
+    nextMisAttemptAt=Date.now()+Math.min(30000,8000*Math.min(misFailureCount,3));
+    throw last||Error('MIS unavailable');
   }
 
   function isoCompact(v){return String(v||'').replaceAll('-','').replaceAll('/','');}
@@ -87,6 +98,9 @@
   }
   function parseBackup(j,codes){
     const map=new Map();let idx=null;const wanted=new Set((codes||[]).map(String));
+    // latest.json is a daily snapshot, not an intraday tick feed. During trading it must not
+    // fabricate a future 13:30 timestamp and overwrite real MIS quotes or prices.
+    if(marketOpen())return {map,idx};
     const ti=j?.taiex||{},td=isoCompact(ti?.date);
     if(td===today()&&num(ti?.close)!=null){
       const tt=/^\d{2}:\d{2}:\d{2}$/.test(String(ti?.time||''))?String(ti.time):'13:33:00';
@@ -188,9 +202,10 @@
   }
   function hasTodayData(){if(taiex?.date===today())return true;for(const q of quotes.values())if(q?.date===today()&&num(q.price)!=null)return true;return false}
   function paintStatus(){
-    const b=document.getElementById('liveBadge'),s=document.getElementById('marketStatus'),t=document.getElementById('marketTime'),p=document.getElementById('refreshPill'),ok=lastSuccessAt>0||hasTodayData();
+    const b=document.getElementById('liveBadge'),s=document.getElementById('marketStatus'),t=document.getElementById('marketTime'),p=document.getElementById('refreshPill');
+    const fresh=lastSuccessAt>0&&Date.now()-lastSuccessAt<=30000;
     if(marketOpen()){
-      if(p)p.textContent=`盤中即時：4 秒｜v${VERSION}`;if(b){b.textContent=ok?`盤中即時 v${VERSION}`:`即時來源重試中 v${VERSION}`;b.className=ok?'liveBadge ok':'liveBadge warn'}if(s)s.textContent=ok?'盤中即時':'即時來源重試';if(t)t.textContent=`最近輪詢 ${hhmmss(lastPollAt||Date.now())}`;
+      if(p)p.textContent=`盤中輪詢 4 秒（失敗自動退避）｜v${VERSION}`;if(b){b.textContent=fresh?`盤中資料已接收 v${VERSION}`:`即時來源重試中 v${VERSION}`;b.className=fresh?'liveBadge ok':'liveBadge warn'}if(s)s.textContent=fresh?'盤中資料已接收':'即時來源重試';if(t)t.textContent=fresh?`最近成功 ${hhmmss(lastSuccessAt)}`:`最近嘗試 ${hhmmss(lastPollAt||Date.now())}｜無可驗證新行情`;
     }else if(hasTodayData()){
       if(p)p.textContent=`今日收盤／最後成交｜v${VERSION}`;if(b){b.textContent=`今日資料 v${VERSION}`;b.className='liveBadge ok'}if(s)s.textContent='今日收盤';if(t)t.textContent=`MIS 最後成交／指數 ${taiex?.time||''}`;
     }
@@ -212,7 +227,7 @@
     if((!marketOpen()&&!force)||busy)return;busy=true;cycle++;lastPollAt=Date.now();
     try{
       const codes=requestedCodes(),{map,idx}=parse(await fetchMis(codes));let accepted=0;if(acceptIndex(idx))accepted++;for(const q of map.values()){if(acceptQuote(q))accepted++}if(accepted)lastSuccessAt=Date.now();saveToday();paintAll();
-    }catch(e){await pollBackup(true);paintAll();debug();window.__TW_LIVE_V091__.error=String(e?.message||e)}finally{busy=false}
+    }catch(e){await pollBackup(true);paintAll();debug();if(window.__TW_LIVE_V091__)window.__TW_LIVE_V091__.error=String(e?.message||e)}finally{busy=false}
   }
   function start(){
     const subtitle=document.querySelector('.brand small');if(subtitle)subtitle.textContent=subtitle.textContent.replace(/15 秒更新/g,'4 秒更新');

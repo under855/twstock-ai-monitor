@@ -90,6 +90,10 @@
   function newerOrEqual(oldv,newv){
     if(!oldv)return true;
     const os=Number(oldv.stamp)||0,ns=Number(newv.stamp)||0;
+    // Old versions incorrectly stamped midday backups at 13:30 before that time.
+    // Never let a future-dated cached quote block a genuinely newer incoming tick.
+    if(os>Date.now()+30000)return true;
+    if(ns>Date.now()+30000)return false;
     if(ns>os)return true;if(ns<os)return false;
     return sourcePriority(newv.source)>sourcePriority(oldv.source);
   }
@@ -139,20 +143,22 @@
 
   function loadToday(){
     const d=today();
-    try{const x=JSON.parse(localStorage.getItem(IKEY+d)||'null');if(x?.date===d&&sameDay(Number(x.stamp))&&num(x.price)!=null)taiex={...x,source:'本日最後盤中指數（重新連線中）'}}catch{}
-    try{const obj=JSON.parse(localStorage.getItem(QKEY+d)||'{}');for(const [code,q] of Object.entries(obj)){if(q?.date===d&&sameDay(Number(q.stamp))&&num(q.price)!=null)quotes.set(code,{...q,source:'本日最後盤中成交（重新連線中）',live:true})}}catch{}
-    try{const obj=JSON.parse(localStorage.getItem(SKEY+d)||'{}');for(const [code,a] of Object.entries(obj)){if(!Array.isArray(a))continue;const clean=a.filter(p=>sameDay(Number(p?.stamp))&&num(p?.close)!=null).sort((x,y)=>x.stamp-y.stamp).slice(-MAX_POINTS);if(clean.length)series.set(code,clean)}}catch{}
+    const validTimestamp=ms=>Number.isFinite(Number(ms))&&Number(ms)<=Date.now()+30000&&sameDay(Number(ms));
+    try{const x=JSON.parse(localStorage.getItem(IKEY+d)||'null');if(x?.date===d&&validTimestamp(x.stamp)&&num(x.price)!=null)taiex={...x,source:'本日最後盤中指數（重新連線中）'}}catch{}
+    try{const obj=JSON.parse(localStorage.getItem(QKEY+d)||'{}');for(const [code,q] of Object.entries(obj)){if(q?.date===d&&validTimestamp(q.stamp)&&num(q.price)!=null&&!/官方備援收盤資料/.test(String(q.source||'')))quotes.set(code,{...q,source:'本日最後盤中成交（重新連線中）',live:true})}}catch{}
+    try{const obj=JSON.parse(localStorage.getItem(SKEY+d)||'{}');for(const [code,a] of Object.entries(obj)){if(!Array.isArray(a))continue;const clean=a.filter(p=>validTimestamp(p?.stamp)&&num(p?.close)!=null&&!/官方備援收盤/.test(String(p.source||''))).sort((x,y)=>x.stamp-y.stamp).slice(-MAX_POINTS);if(clean.length)series.set(code,clean)}}catch{}
   }
   function saveToday(){
     const d=today(),qo={},so={};for(const [c,q] of quotes)if(q?.date===d&&sameDay(q.stamp))qo[c]=q;for(const [c,a] of series)so[c]=a.slice(-MAX_POINTS);
     try{localStorage.setItem(QKEY+d,JSON.stringify(qo));localStorage.setItem(SKEY+d,JSON.stringify(so));if(taiex?.date===d&&sameDay(taiex.stamp))localStorage.setItem(IKEY+d,JSON.stringify(taiex))}catch{}
   }
   function acceptQuote(q){
+    if(!q||!sameDay(q.stamp)||Number(q.stamp)>Date.now()+30000)return false;
     const old=quotes.get(q.code);if(!newerOrEqual(old,q))return false;quotes.set(q.code,q);
     const a=series.get(q.code)||[],last=a.at(-1);if(!last||Number(last.stamp)<q.stamp)a.push({stamp:q.stamp,close:q.price,source:q.source||'行情'});else if(Number(last.stamp)===q.stamp)last.close=q.price;
     a.sort((x,y)=>x.stamp-y.stamp);if(a.length>MAX_POINTS)a.splice(0,a.length-MAX_POINTS);series.set(q.code,a);return true;
   }
-  function acceptIndex(x){if(!x||!newerOrEqual(taiex,x))return false;taiex=x;return true}
+  function acceptIndex(x){if(!x||!sameDay(x.stamp)||Number(x.stamp)>Date.now()+30000||!newerOrEqual(taiex,x))return false;taiex=x;return true}
 
   function seedCurrent(){}
 

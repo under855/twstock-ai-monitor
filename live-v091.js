@@ -77,6 +77,13 @@
       try{
         const j=await getJson(endpoints[index],5500);
         if(!Array.isArray(j?.msgArray))throw Error('MIS payload missing');
+        const ticker=j.msgArray.find(m=>String(m?.c||'')==='t00');
+        if(marketOpen()&&ticker){
+          const epoch=Number(ticker.tlong),ms=epoch>1e12?epoch:stamp(String(ticker.d||''),String(ticker.t||''));
+          if(!Number.isFinite(ms)||ms>Date.now()+30000||Date.now()-ms>90000){
+            throw Error('MIS index feed is stale; try next route');
+          }
+        }
         proxyPreferred=index;misFailureCount=0;nextMisAttemptAt=0;return j.msgArray;
       }catch(e){last=e}
     }
@@ -209,9 +216,11 @@
   function hasTodayData(){if(taiex?.date===today())return true;for(const q of quotes.values())if(q?.date===today()&&num(q.price)!=null)return true;return false}
   function paintStatus(){
     const b=document.getElementById('liveBadge'),s=document.getElementById('marketStatus'),t=document.getElementById('marketTime'),p=document.getElementById('refreshPill');
-    const fresh=lastSuccessAt>0&&Date.now()-lastSuccessAt<=30000;
+    // A successful HTTP request is not proof that the exchange price advanced.
+    const indexAge=taiex?.stamp?Date.now()-Number(taiex.stamp):Infinity;
+    const fresh=lastSuccessAt>0&&Date.now()-lastSuccessAt<=30000&&indexAge<=90000;
     if(marketOpen()){
-      if(p)p.textContent=`盤中輪詢 4 秒（失敗自動退避）｜v${VERSION}`;if(b){b.textContent=fresh?`盤中資料已接收 v${VERSION}`:`即時來源重試中 v${VERSION}`;b.className=fresh?'liveBadge ok':'liveBadge warn'}if(s)s.textContent=fresh?'盤中資料已接收':'即時來源重試';if(t)t.textContent=fresh?`最近成功 ${hhmmss(lastSuccessAt)}`:`最近嘗試 ${hhmmss(lastPollAt||Date.now())}｜無可驗證新行情`;
+      if(p)p.textContent=`行情每 4 秒檢查（資料可能延遲）｜v${VERSION}`;if(b){b.textContent=fresh?`盤中資料已接收 v${VERSION}`:`即時行情延遲／重試中 v${VERSION}`;b.className=fresh?'liveBadge ok':'liveBadge warn'}if(s)s.textContent=fresh?'盤中資料已接收':'即時行情延遲／重試';if(t)t.textContent=fresh?`指數來源時間 ${taiex?.time||'—'}｜最近接收 ${hhmmss(lastSuccessAt)}`:`最近嘗試 ${hhmmss(lastPollAt||Date.now())}｜等待有效資料`;
     }else if(hasTodayData()){
       if(p)p.textContent=`今日收盤／最後成交｜v${VERSION}`;if(b){b.textContent=`今日資料 v${VERSION}`;b.className='liveBadge ok'}if(s)s.textContent='今日收盤';if(t)t.textContent=`MIS 最後成交／指數 ${taiex?.time||''}`;
     }

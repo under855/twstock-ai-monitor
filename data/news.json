@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-05T00:44:24.399239+00:00",
+  "generatedAt": "2026-11-05T01:53:45.162985+00:00",
   "stocks": {
     "0050": [
       {
@@ -9,16 +9,16 @@
         "time": 1793781387000
       },
       {
+        "title": "外資賣超1,499億元史上第五大！0050遭砍7.7萬張 賣超前十 ETF 占6檔 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5adTJiUmtyT1MwVmh3YllFTXNoQTZURTdBcThLek80MHU4dDU5c2NETGlad2RYeFl4VDNxcHVxNGRLZFFHVlIzeUlTNzJrdTVINGI2a3lSb0FWUdIBX0FVX3lxTFB3SFhSelN1OTY3YmQ3ZDVabFRCdXhEcHVwWWhjRERSenV5aThKUXpLV0xIc2s2R0lxWDVySHNYQW80WHZQRVpLUHlSSE91c1IyQWh3b08ydUhaRUlMUHVJ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793779200000
+      },
+      {
         "title": "台股洗盤震盪！0050能逢低布局嗎？市值型、高股息ETF與正投資指南 - 鉅亨網",
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9lNWVMaDMxeWR6RVJ6dl9QVXhYYmVKUHZBUlhZd1VnRk05dkR6MjA3aG1HSERuV0JUakRfb2tNQTh5ZXFHVkdpV1hyZ3dva0k?oc=5",
         "publisher": "鉅亨網",
         "time": 1793776718000
-      },
-      {
-        "title": "外資賣超1,499億元史上第五大！0050遭砍7.7萬張 賣超前十 ETF 占6檔 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5adTJiUmtyT1MwVmh3YllFTXNoQTZURTdBcThLek80MHU4dDU5c2NETGlad2RYeFl4VDNxcHVxNGRLZFFHVlIzeUlTNzJrdTVINGI2a3lSb0FWUdIBX0FVX3lxTFB3SFhSelN1OTY3YmQ3ZDVabFRCdXhEcHVwWWhjRERSenV5aThKUXpLV0xIc2s2R0lxWDVySHNYQW80WHZQRVpLUHlSSE91c1IyQWh3b08ydUhaRUlMUHVJ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793743200000
       },
       {
         "title": "台股狂瀉1,400點！0050失守百元 374萬股東本周迎強震 - 經濟日報",
@@ -173,12 +173,6 @@
     ],
     "00878": [
       {
-        "title": "00878績效逆襲 0050！Q4配息創高還能存嗎？成分股與除息攻略一次看 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFAteVN3eXhxdjRnSnhLX2w1THBUWFAwbVZnbUxodmROTl9GMTFuMDZjUEU5M0VCVzJya251S0ZmTENVcXBYeUstSUJiR29xclE?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1793684510000
-      },
-      {
         "title": "171萬股民樂翻！00878配息1.25元創新高 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFAzTTdEdWxUWHdsTHZoWncwUUpSOUhoeGxlWGl2Q1p5TWttRjIzMi1feUNTT05KWndKRy16QnRqMUhLMUlnNzBMRkJtMFZfTmhSaE9MSTZnck1qdGJseUcw0gFkQVVfeXFMTjFrdWxqSkxYOThIRUJ6VExlMy1OUHZpVUFPUTAtWFkwRGROcjhERUttRE9EQ3JlWDZUcHdRajNnWkhvLUlxUWNySnhCRTNvQVQ2VlhhY3VXbmkzejhzUU5MSHJoNw?oc=5",
         "publisher": "自由財經",
@@ -219,6 +213,12 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBJaHlsa3JJb2ZGZ25IZ3FRYndpWE5oMjA0N0Q1YndRdHkzbGFPMUJiRHNUT3FmczJVRzJDM1Zsb0VaVDdPZmZSMURuLXdVVUMxZ1oyb1JxTWtDT3oxWmRZ?oc=5",
         "publisher": "工商時報",
         "time": 1793600880000
+      },
+      {
+        "title": "國泰永續高股息11/17除息　預估配息1.25元續創新高 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1HQUx0NWFPOFB4YTloYjg5d2FDcW1UT01QNjNvODI1MG96YjFsU2E0Q0t0WDJySlluaFZDSExIeFNTOUFDb3JGVVV4a25EUUp6bGtCOHNQQjkzb29Kd1NZVFJ6Vk5uM1BqcnMtdnR4a2NXR1BQenBDR250b9IBX0FVX3lxTE4ybXRFd24yZGNqU1RkVjhNbFF5ZTdva2lWa2ZVelZFUWZieTc5czVDYjJkbE03VjVrVHpiSGdxU25EbUhYN09oR2dsbVZKUnd6X0xBYWFjQl9KRy1mTnVJ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793520000000
       }
     ],
     "00919": [

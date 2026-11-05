@@ -31,6 +31,8 @@
   };
   const fmt=(v,d=2)=>num(v)==null?'—':num(v).toLocaleString('zh-TW',{maximumFractionDigits:d});
   const cls=v=>num(v)==null?'flat':num(v)>0?'up':num(v)<0?'down':'flat';
+  const setText=(e,v)=>{if(e&&e.textContent!==String(v))e.textContent=String(v)};
+  const setClass=(e,c)=>{if(e&&e.className!==c)e.className=c};
 
   function tp(now=new Date()){
     const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',weekday:'short',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).formatToParts(now);
@@ -182,15 +184,36 @@
   function row(code){return [...document.querySelectorAll('#watch article.row')].find(x=>x.querySelector('.sym')?.textContent?.trim()===String(code))||null}
   function canvasFor(r){let c=r?.querySelector('canvas.spark');if(c)return c;const f=r?.querySelector('.sparkFallback');if(!f)return null;c=document.createElement('canvas');c.className='spark';f.replaceWith(c);return c}
   function maskRow(code){
-    const r=row(code);if(!r)return;r.dataset.liveState='loading';r.dataset.liveDate=today();delete r.dataset.liveStamp;delete r.dataset.livePrice;const p=r.querySelector('.price'),ch=r.querySelector('.chg'),d=r.querySelector('.dayline'),m=r.querySelector('.meta');if(p)p.textContent='—';if(ch){ch.textContent='行情載入中';ch.className='chg flat'}if(d)d.textContent='載入最近交易日行情';if(m)m.innerHTML='<span>TWSE／TPEx 官方行情</span><span>4 秒重試</span>';const c=canvasFor(r);if(!(typeof window.__TW_DRAW_MAIN_TODAY__==='function'&&window.__TW_DRAW_MAIN_TODAY__(code,c)))drawLine(c,series.get(code)||[])
+    const r=row(code);if(!r)return;
+    // A missing tick must not turn the card into a blinking empty placeholder.
+    if(r.dataset.liveState==='live'||r.dataset.liveState==='delayed'){
+      r.dataset.liveState='delayed';setText(r.querySelector('.meta'),'最後已取得行情｜來源延遲，等待新成交');return;
+    }
+    if(r.dataset.liveState==='waiting')return;
+    r.dataset.liveState='waiting';
+    setText(r.querySelector('.meta'),'行情暫時無法讀取｜保留最近交易日資料，非即時');
   }
   function paintRow(code,q){
-    const r=row(code);if(!r)return;if(!q?.live||q.date!==today()){const r=row(code),c=canvasFor(r);if(typeof window.__TW_DRAW_MAIN_TODAY__==='function'&&window.__TW_DRAW_MAIN_TODAY__(code,c))return;maskRow(code);return}r.dataset.liveState='live';r.dataset.liveDate=q.date;r.dataset.liveStamp=String(q.stamp);r.dataset.livePrice=String(q.price);
-    const p=r.querySelector('.price'),ch=r.querySelector('.chg'),d=r.querySelector('.dayline'),m=r.querySelector('.meta');if(p)p.textContent=fmt(q.price);if(ch){ch.textContent=`${q.change>0?'+':''}${fmt(q.change)}`;ch.className=`chg ${cls(q.change)}`}if(d)d.textContent=`${q.tradeTime}　開 ${fmt(q.open)}　高 ${fmt(q.high)}　低 ${fmt(q.low)}　最新 ${fmt(q.price)}　量 ${fmt(q.volume,0)}`;if(m)m.innerHTML=`<span>${q.source}</span><span>成交 ${q.tradeTime}</span>`;const c=canvasFor(r);if(!(typeof window.__TW_DRAW_MAIN_TODAY__==='function'&&window.__TW_DRAW_MAIN_TODAY__(code,c)))drawLine(c,series.get(code)||[]);
-    try{const base=rowForCode(code),val=allVals.find(x=>String(x.Code).trim()===code)||{},hist=historyCache?.[code]||[],s=scoreStock(base,val,hist,q),sn=r.querySelector('.scoreNum'),sl=r.querySelector('.scoreLabel');if(sn){sn.textContent=s.total==null?'—':String(s.total);sn.className=`scoreNum ${scoreCls(s.total)}`}if(sl)sl.textContent=s.total==null?'資料不足':s.mode}catch{}
+    const r=row(code);if(!r)return;
+    if(!q?.live||q.date!==today()){maskRow(code);return}
+    if(r.dataset.liveState==='live'&&r.dataset.liveStamp===String(q.stamp)&&r.dataset.livePrice===String(q.price))return;
+    r.dataset.liveState='live';r.dataset.liveDate=q.date;r.dataset.liveStamp=String(q.stamp);r.dataset.livePrice=String(q.price);
+    const p=r.querySelector('.price'),ch=r.querySelector('.chg'),d=r.querySelector('.dayline'),m=r.querySelector('.meta');
+    setText(p,fmt(q.price));
+    if(ch){setText(ch,(q.change>0?'+':'')+fmt(q.change));setClass(ch,'chg '+cls(q.change))}
+    setText(d,q.tradeTime+'　開 '+fmt(q.open)+'　高 '+fmt(q.high)+'　低 '+fmt(q.low)+'　最新 '+fmt(q.price)+'　量 '+fmt(q.volume,0));
+    setText(m,q.source+'｜成交 '+q.tradeTime);
+    const c=canvasFor(r);if(!(typeof window.__TW_DRAW_MAIN_TODAY__==='function'&&window.__TW_DRAW_MAIN_TODAY__(code,c)))drawLine(c,series.get(code)||[]);
+    try{const base=rowForCode(code),val=allVals.find(x=>String(x.Code).trim()===code)||{},hist=historyCache?.[code]||[],s=scoreStock(base,val,hist,q),sn=r.querySelector('.scoreNum'),sl=r.querySelector('.scoreLabel');if(sn){setText(sn,s.total==null?'—':String(s.total));setClass(sn,'scoreNum '+scoreCls(s.total))}if(sl)setText(sl,s.total==null?'資料不足':s.mode)}catch{}
   }
   function paintIndex(){
-    const v=document.getElementById('taiex'),c=document.getElementById('taiexChg');if(!taiex||taiex.date!==today()){if(marketOpen()){if(v)v.textContent='—';if(c){c.textContent='盤中即時指數載入中';c.className='s muted'}}return}if(v)v.textContent=fmt(taiex.price,2);if(c){c.textContent=`${taiex.change>0?'+':''}${fmt(taiex.change,2)}｜TWSE 盤中即時 ${taiex.time}`;c.className=`s ${cls(taiex.change)}`}
+    const v=document.getElementById('taiex'),c=document.getElementById('taiexChg');
+    if(!taiex||taiex.date!==today()){
+      if(marketOpen()&&v&&(!v.textContent||v.textContent==='讀取中'))setText(v,'—');
+      return;
+    }
+    setText(v,fmt(taiex.price,2));
+    if(c){setText(c,(taiex.change>0?'+':'')+fmt(taiex.change,2)+'｜TWSE 指數時間 '+taiex.time);setClass(c,'s '+cls(taiex.change))}
   }
   function paintDetail(){
     try{

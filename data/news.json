@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-05T14:51:58.343385+00:00",
+  "generatedAt": "2026-11-05T15:49:15.055474+00:00",
   "stocks": {
     "0050": [
       {
@@ -7,30 +7,6 @@
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBsc2VhVjR2UGowSHdfRzBpZy1aa0VnUkszcHVHcXpxUktRaWNUREx4T2FGcEdlaEU3LXJXUklHMl85V01EZGZtbkwtX1NmRUU?oc=5",
         "publisher": "鉅亨網",
         "time": 1793871932000
-      },
-      {
-        "title": "外資今年賣超2.4兆元誰接盤？台股ETF吸金破兆 0050淨申購翻倍 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1FcVp1MjhiVUQ0LVJkNkVVdFl1clcxcExsYnAycHNPWVF3U0dWd01tUnR5aXZ4aDFObmp0aWRKU1EzSzdFZHEwY0lMZE0yaWs?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1793848264000
-      },
-      {
-        "title": "ETF護盤抗外資 0050吸金7,300億元 00631L績效超過100％ - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1XNXdwM1VfNE9qNWM0dFBuX2JEVXdkM1RJMmFIaGpCbGlDaFZ5RjlCMnhFYXlEdVNOUktjd2M5SDhqVnFvQlJRcTU1MTFFaUZwQ2NydkQ3N0M5TTJISTRv?oc=5",
-        "publisher": "工商時報",
-        "time": 1793818800000
-      },
-      {
-        "title": "0050存股族糾結賣點 網曝：有「這些需求」再考慮賣股 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1ETUE0c0d6QWN6UzROZTJYRG1QVkRZSlFRZ3NIUGFhR21xUHRXQWZCbWwzeXZWYmFqOS1ESmlYOVpTd1JKeURUNWhHYXVEdzVGeXBtS0NaeVNScnVoY1RN0gFkQVVfeXFMTVE0MkFmYW4wak9qLTdEdS1IVWxlaklJRnUxaTNkSUZGbHVOZWVfR21HLU9ubXpqNUZyRktzNEVZQ25raU85U3FkdjVXN2lfbjRPOFg4Qm9EMnRlNEJYTnZFOHEwdw?oc=5",
-        "publisher": "自由財經",
-        "time": 1793781387000
-      },
-      {
-        "title": "外資賣超1,499億元史上第五大！0050遭砍7.7萬張 賣超前十 ETF 占6檔 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5adTJiUmtyT1MwVmh3YllFTXNoQTZURTdBcThLek80MHU4dDU5c2NETGlad2RYeFl4VDNxcHVxNGRLZFFHVlIzeUlTNzJrdTVINGI2a3lSb0FWUdIBX0FVX3lxTFB3SFhSelN1OTY3YmQ3ZDVabFRCdXhEcHVwWWhjRERSenV5aThKUXpLV0xIc2s2R0lxWDVySHNYQW80WHZQRVpLUHlSSE91c1IyQWh3b08ydUhaRUlMUHVJ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793779200000
       },
       {
         "title": "台股洗盤震盪！0050能逢低布局嗎？市值型、高股息ETF與正投資指南 - 鉅亨網",
@@ -235,12 +211,6 @@
         "time": 1793779200000
       },
       {
-        "title": "26檔 ETF 台股創高後仍賺錢！00919領軍 價量齊揚前十都有「一特色」 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFByRHVzNVdCTEswdG9fNS0wcDJOTlhXQ0JEeHhzVTVELUlGZnpkbWZKZkF2dV9PYVhGV0VUZmdsTmx4Wl9ENzMtb1BxX2lpMzNVWG1LY1dPbTJnQdIBX0FVX3lxTE5OZXdsX2ZISVZrVE5KdE0zTzdseVJJQWdOUGNpcmt0Z251MjBQa29RdGRYSndIZ3NHc2x6dEhtQWFYanBOMkQ4S2kzMVJxVHFrb3ZPX2JnTWRDRHFxYWxB?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793692800000
-      },
-      {
         "title": "領錢了！台股本周21檔 ETF 發放股利共421億、00919配發207.8億最多 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE8xOThxSWptVnBuU2FWYkp0djR0bW5nV2hTc3YwdDBITnBvc1ZMSjhSQ0l4VU4xSFRJUmFjNEF0dkJVaTJ2VmlaczhvdGVnaE5zUnhWVjNjRTVIQdIBX0FVX3lxTE1Xc0k5MVNTWVloYi1rTmIzUGI0Vmh6NzRvWF9fZ3lWMnU3VTdQOEppcXVOV2VzTmp2VjlxV1RXS1pXcWtWVHJrTjVTQ3dXdjhYLVc3NVduejNUSXVfcVA0?oc=5",
         "publisher": "經濟日報",
@@ -269,9 +239,21 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE51dGRDSnR6by1aVnN3dkJQV2hiMnRTT1g0RnRXSWRnaUZkVVNNWkt4ajFsTlozWGhhUHhaUmN0cy1QTVZ3bnJNTE94MWNRZUtZdkRtdlhLRzhiZktuV1JF?oc=5",
         "publisher": "工商時報",
         "time": 1791788400000
+      },
+      {
+        "title": "台股 ETF 受益人周增7萬 00919、00927、0056等11檔人氣逆勢創高 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9lam1IeC1yVEpEdG05R0JXT1JkZUVSaWpVRlBLQWFPZ1ltQ3d4a0txUUlud3dTb1l6dFp3b3J0YmxnUnZhNC1XUkZMTFpSWWJlbGYxdEpDT0FWZ9IBX0FVX3lxTE1SN3I4UzVEdG9tYTNyT3AxT2Ftbzl5VHlnNjVIWHFaeGFGaTRlaTBOM1RiU1Biako3VVplN1U0SE5MVmlpWjFIa19DWlQyMXlvVlRXb3FhNGE5bENWRHpj?oc=5",
+        "publisher": "經濟日報",
+        "time": 1791356400000
       }
     ],
     "2330": [
+      {
+        "title": "英特爾10月股價慘崩45％！晶圓代工還找不到大客戶 挑戰台積電卡關 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE91VGNfbUVPZVc5ZEVBci1fVzNWN0kzRzZKZzNFaVR1Y3d3YjJHdk1iMnFlSnR2YzU3YmVPeTNVZzVxcy1TcVNWZDNMMFNfUlNQMVktaFcyZlpiNnFnZFRn0gFkQVVfeXFMT05DVE9WclRHdUxITnpGWlc0TGltQnEyOGFVT08yYUdyTm5RRFc5bWswRElGRTdjelZnV0k4eHlQY2NjNllvTHRYRXZZc1ZqclYyaklPRFJTcHVyY3RxeE1TaWhYSw?oc=5",
+        "publisher": "自由財經",
+        "time": 1793671690000
+      },
       {
         "title": "AI戰場誰笑到最後？外媒讚台積電坐收龐大利益「不管誰贏都能賺」 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9uMTZNaE1OYTlVWlIxRGowVVFpYVdLekhMTk54VlB3UFlrSy1vS2dGRHItM2hLU0JqSEdnQ3NLNzBjc19qYTZxaEhNck80UnNVaWhMbEo4NnI3elZoWC0w0gFkQVVfeXFMTW9vNGhGbnNCcFJMbGlTcU5hTkNrd1pnbDl3LUdhc1VnZUxCdUNMVkI4TnhONlNwdFo3TEVjam12bmV1cmNmeko4UlZhOEhXN2JKdVUyZWRmbGozTTV5dHBQLTJGag?oc=5",
@@ -313,12 +295,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBRRERLWUx6MXktdllEeFMtaWxsTENla0lwMnFqX0FOOFEyQVBocWVoR2pyXzUxT2dwdzRidVEtcWRVREthZU5XOW1UYlh4eW1iZTJvZ1NCUmdfNTI2bk1N0gFkQVVfeXFMT3BOakJFWXVyeXVLN1Y4bVpQang0SU0wNWtZcURuNDZOWjAySWxZVUZ2YTNFNTNPc0xTOVU1NXlBWnAyT1drdzEyZjBvc2dlTm56QXFLMnRUbEs1M202V3lBa0tJQg?oc=5",
         "publisher": "自由財經",
         "time": 1792047600000
-      },
-      {
-        "title": "台積電面臨2.57兆元獲利變數 法說會後股價「波動幅度」預曝 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5HVTdsaFZWeVB6VjZxWEdxNGZXR3p3Mk1DNXplZ0ZqMlc0YXUwRElacXhTWmxYV3VlM2VrTW05UDhXWG5zTTEwbDVELXJGSlRYbXJlRG43ak1FSzgyQTU00gFkQVVfeXFMTVVyRklEbHN0cFJXbWdEVDZONE0wZGRfT1BmRnplMlFGNTVwdXE2MUJGSFRnSHB4X1VITndNQ3ZkQzFSMVFwYVhuU1FKT0FoaExGNGlCUThReXZPUkZUa2R5MVJDdQ?oc=5",
-        "publisher": "自由財經",
-        "time": 1791961200000
       }
     ]
   },

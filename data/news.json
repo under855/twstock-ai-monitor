@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-05T23:00:12.046864+00:00",
+  "generatedAt": "2026-11-05T23:51:02.227123+00:00",
   "stocks": {
     "0050": [
       {
@@ -7,6 +7,12 @@
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBsc2VhVjR2UGowSHdfRzBpZy1aa0VnUkszcHVHcXpxUktRaWNUREx4T2FGcEdlaEU3LXJXUklHMl85V01EZGZtbkwtX1NmRUU?oc=5",
         "publisher": "鉅亨網",
         "time": 1793871932000
+      },
+      {
+        "title": "外資賣超1,499億元史上第五大！0050遭砍7.7萬張 賣超前十 ETF 占6檔 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5adTJiUmtyT1MwVmh3YllFTXNoQTZURTdBcThLek80MHU4dDU5c2NETGlad2RYeFl4VDNxcHVxNGRLZFFHVlIzeUlTNzJrdTVINGI2a3lSb0FWUdIBX0FVX3lxTFB3SFhSelN1OTY3YmQ3ZDVabFRCdXhEcHVwWWhjRERSenV5aThKUXpLV0xIc2s2R0lxWDVySHNYQW80WHZQRVpLUHlSSE91c1IyQWh3b08ydUhaRUlMUHVJ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793862000000
       },
       {
         "title": "外資今年賣超2.4兆元誰接盤？台股ETF吸金破兆 0050淨申購翻倍 - 鉅亨網",
@@ -25,12 +31,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1ETUE0c0d6QWN6UzROZTJYRG1QVkRZSlFRZ3NIUGFhR21xUHRXQWZCbWwzeXZWYmFqOS1ESmlYOVpTd1JKeURUNWhHYXVEdzVGeXBtS0NaeVNScnVoY1RN0gFkQVVfeXFMTVE0MkFmYW4wak9qLTdEdS1IVWxlaklJRnUxaTNkSUZGbHVOZWVfR21HLU9ubXpqNUZyRktzNEVZQ25raU85U3FkdjVXN2lfbjRPOFg4Qm9EMnRlNEJYTnZFOHEwdw?oc=5",
         "publisher": "自由財經",
         "time": 1793781387000
-      },
-      {
-        "title": "外資賣超1,499億元史上第五大！0050遭砍7.7萬張 賣超前十 ETF 占6檔 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5adTJiUmtyT1MwVmh3YllFTXNoQTZURTdBcThLek80MHU4dDU5c2NETGlad2RYeFl4VDNxcHVxNGRLZFFHVlIzeUlTNzJrdTVINGI2a3lSb0FWUdIBX0FVX3lxTFB3SFhSelN1OTY3YmQ3ZDVabFRCdXhEcHVwWWhjRERSenV5aThKUXpLV0xIc2s2R0lxWDVySHNYQW80WHZQRVpLUHlSSE91c1IyQWh3b08ydUhaRUlMUHVJ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793779200000
       },
       {
         "title": "台股洗盤震盪！0050能逢低布局嗎？市值型、高股息ETF與正投資指南 - 鉅亨網",
@@ -74,12 +74,6 @@
         "title": "日月光投控9月營收連3個月創高 Q2季增27％續締新猷 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBsekV2RnZ6a2FQNk1lc1dMcnJMbG5xWkNaZmNGOG91cC0tTGpKUmNwVDNPVktGdHJOT1lxVmpscEZReVgyOXUxR1JoTDIzTXl4cUFpT3g3aVJTYlZwVXRv0gFkQVVfeXFMT2VPT0NrWTJiQWtGZ1dxcWVkUWpmNXhCNjRFRjJpV251LWwyend1RWZLWVVRSGtmOG5zZ2l6MUlfV3ZtX1BkREc4ejRyNk9UakE5VUUycGxtS00zMHpUVkNnRVdWQg?oc=5",
         "publisher": "自由財經",
-        "time": 1791788400000
-      },
-      {
-        "title": "日月光投控9月和第3季營收創高AI先進封測幫大忙| 證券 - 中央社 CNA",
-        "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE1pV3NrU3c4aEF5V1VtSVZDVWR1YWlmODl4cV9HbnVxeVprQWZZM2pMdVJ0Q2xfYTdVOWROY0R1YTBhU2tQOWhHcVUtQl9hcXVVS202am01UExlNlVUQ3c?oc=5",
-        "publisher": "中央社 CNA",
         "time": 1791788400000
       }
     ],
@@ -173,12 +167,6 @@
     ],
     "00878": [
       {
-        "title": "8月台股 ETF 配息一次看 00878、00929、00891等配息飆新高 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1uaUFsaXgyRUh3aUI1OWVDQV81WEpVMjg0dFUtQmFOdkpidnNXdDY5SHhpM1p2RTM3OWl5QjQ2d21hdHEwWl9saGg3QTZETF80WjBabWZWcm1DQdIBX0FVX3lxTE9TcnRVa0psdHE1dHlNQTZyN0xyRTEzZGMzRHRyblp4Qk1Hb0dwTDhEYTNod3AtZ1Ytb3lKdERwLUNwRHNzeGdyLUtWSU8tTWpOc1JybHdPbW1qWXhuLTRN?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793692800000
-      },
-      {
         "title": "00878績效逆襲 0050！Q4配息創高還能存嗎？成分股與除息攻略一次看 - 鉅亨網",
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFAteVN3eXhxdjRnSnhLX2w1THBUWFAwbVZnbUxodmROTl9GMTFuMDZjUEU5M0VCVzJya251S0ZmTENVcXBYeUstSUJiR29xclE?oc=5",
         "publisher": "鉅亨網",
@@ -223,6 +211,12 @@
     ],
     "00919": [
       {
+        "title": "整理包／瑤池金母發錢了！00918、00919 創新高 00981A、00929 等 ETF 9 月配息、最後買進日一次看 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1qNmhXc251NnZ2TzdEblhkN2F2R2tiaGo0dC1uSkVNRVotRkdCV3ctZGxIeWFtalBTeXVVMjA2NlNxajdKMDFKOWVnR2p5a21Vc1VIaGtSUXhuYkxa?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793779200000
+      },
+      {
         "title": "26檔 ETF 台股創高後仍賺錢！00919領軍 價量齊揚前十都有「一特色」 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFByRHVzNVdCTEswdG9fNS0wcDJOTlhXQ0JEeHhzVTVELUlGZnpkbWZKZkF2dV9PYVhGV0VUZmdsTmx4Wl9ENzMtb1BxX2lpMzNVWG1LY1dPbTJnQdIBX0FVX3lxTE5OZXdsX2ZISVZrVE5KdE0zTzdseVJJQWdOUGNpcmt0Z251MjBQa29RdGRYSndIZ3NHc2x6dEhtQWFYanBOMkQ4S2kzMVJxVHFrb3ZPX2JnTWRDRHFxYWxB?oc=5",
         "publisher": "經濟日報",
@@ -233,18 +227,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE8xOThxSWptVnBuU2FWYkp0djR0bW5nV2hTc3YwdDBITnBvc1ZMSjhSQ0l4VU4xSFRJUmFjNEF0dkJVaTJ2VmlaczhvdGVnaE5zUnhWVjNjRTVIQdIBX0FVX3lxTE1Xc0k5MVNTWVloYi1rTmIzUGI0Vmh6NzRvWF9fZ3lWMnU3VTdQOEppcXVOV2VzTmp2VjlxV1RXS1pXcWtWVHJrTjVTQ3dXdjhYLVc3NVduejNUSXVfcVA0?oc=5",
         "publisher": "經濟日報",
         "time": 1793692800000
-      },
-      {
-        "title": "群益台灣精選高息ETF基金 的總覽 | 鉅亨網 - 基金老司機 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxNWTBzcERwektRQXdWb3FLdTNUcjVFQTZuMVJPSFkwVkZxSEdJYVk5WVdwM3BhQm1fbjdvdFF5TjJiajNOalRBZWROeXcwUjBKVk0xSEl2eU5WSTRmRXVrRzhidHJnZkFSSmxHeDdyczR0WFRlWXc0VjcwcEF4cFZ3clN2alpsaDc5WXl0QWhfbVR5SklESlJuQ0puaUoyYnVWZWMybklTSkRSV0RBMVhGUFctT0F1SXByenR5WXFTdENYUUs2UUMwOUpDSHBBemllTVlPazdKMkt2NFFkcTFhOA?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1793188872000
-      },
-      {
-        "title": "00919第14次填息只花20天！年化配息率13.77%再受關注 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5GRFRpS2hlWWNJT2VEd0JNOFhKZGlfY0dnenY0U1dGOFU2UTRINmcxRkx6S1RqLUpsNk51WXVva1R4Yk1mT3hRTGJFM1RwQkszZzlHbzN5RFc2UdIBX0FVX3lxTE9MdTd4YldkNFp1NHA2LUI5ZERNSEI3eXl0U016bkpocm12YXNfdlQzWTd1X0hxaU03RjNUVGhHSDJQN1JCSWUxOXo5a3ZmSEhkREEzTHZhT016SE44ZDRz?oc=5",
-        "publisher": "經濟日報",
-        "time": 1792134000000
       },
       {
         "title": "台股ETF配息時間表！421億股息大紅包 00919、00918、00981A等21檔配息、發放日、平均領息一次看 - 工商時報",

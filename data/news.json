@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-05T18:42:09.350430+00:00",
+  "generatedAt": "2026-11-05T19:36:47.973262+00:00",
   "stocks": {
     "0050": [
       {
@@ -117,6 +117,12 @@
     ],
     "2002": [
       {
+        "title": "市況保溫中鋼12月盤價小漲- 日報 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE8zQnJiUmdtQm43OTBSQTE1dnQ1WDhUWkhTTkp0T3phTHRyNVIzLXU4VElBNmxGMm14TTVSTXh6NldhdDd1NmlNQ25FNzhvRVJHR0FXNkFyNHAtUElxSUV3?oc=5",
+        "publisher": "工商時報",
+        "time": 1793905200000
+      },
+      {
         "title": "中鋼12月盤價小漲 穩定供應鏈購料成本擴大接單 - 鉅亨網",
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9GbXNtc1N2aXQ5MVU3TGl5amJKYUlQRDNzbkZOdDA3UWxfZ3huS3cwUUlsLW9qT2hXcXhpbmYxTmxEbnp5MjhGcGhwT3pYYVE?oc=5",
         "publisher": "鉅亨網",
@@ -157,12 +163,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5RYW12OVc4aFVTb0xMN2x2NkJ4VnFKR04xQS1JeEFnSXlaaHJHWG92VXhqMHZGa25YMFBIRmxaMEV0MWdhTzB5RndJREJDZGdRVmhCOUZfVG9WbC0wQTFN?oc=5",
         "publisher": "工商時報",
         "time": 1793732400000
-      },
-      {
-        "title": "外資逆勢連買「不離不棄」 中鋼、台玻、華航等14檔抗跌先鋒受矚目 | 市場焦點 | 證券 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBjVUlPRjlIWnhBNG9rTi1na0NZTE1FRkNnMTF5d2hqMXBSN2dGRFhnQkozTUd0aUlOR01hWlNmdElTbjJ3Ym1ZTGFzRVNudVh2SlI2cXlqOGd5dw?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793716531000
       }
     ],
     "00878": [

@@ -269,7 +269,12 @@
   }
   function start(){
     const subtitle=document.querySelector('.brand small');if(subtitle)subtitle.textContent=subtitle.textContent.replace(/15 秒更新/g,'4 秒更新');
-    loadToday();paintAll();poll(true);pollBackup(true);if(marketOpen()){setInterval(()=>poll(false),INTERVAL);setInterval(()=>pollBackup(false),BACKUP_INTERVAL)}else{const p=document.getElementById('refreshPill');if(p&&!hasTodayData())p.textContent=`休市／檢查今日最終資料｜v${VERSION}`;debug()}
+    loadToday();paintAll();poll(true);if(marketOpen())pollBackup(false);
+    // Always schedule polling: a page opened before 09:00 must start updating when trading begins.
+    // The poll function itself skips requests outside the TW market window.
+    setInterval(()=>poll(false),INTERVAL);
+    setInterval(()=>{if(marketOpen())pollBackup(false)},BACKUP_INTERVAL);
+    if(!marketOpen()){const p=document.getElementById('refreshPill');if(p&&!hasTodayData())setText(p,`休市／檢查今日最終資料｜v${VERSION}`);debug()}
     addEventListener('focus',()=>{poll(true);pollBackup(true)});document.addEventListener('visibilitychange',()=>{if(!document.hidden){poll(true);pollBackup(true)}});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();

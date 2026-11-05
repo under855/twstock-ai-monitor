@@ -46,3 +46,5 @@ jobs:
           await b.close();
           JS
           timeout 100s node diag091.mjs
+
+# Runtime smoke check for 2026-11-05 quote-cache repair

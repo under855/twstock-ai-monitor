@@ -1,13 +1,7 @@
 name: Verify v0.8.1 core release
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'index.html'
-      - 'live-v081.js'
-      - 'sw.js'
-      - '.github/workflows/verify-v081-core.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read

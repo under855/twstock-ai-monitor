@@ -191,7 +191,8 @@
     }
     if(r.dataset.liveState==='waiting')return;
     r.dataset.liveState='waiting';
-    setText(r.querySelector('.meta'),'行情暫時無法讀取｜保留最近交易日資料，非即時');
+    const fallback=universeQuote(code)||snapshotQuote(code);
+    setText(r.querySelector('.meta'),fallback?`${fallback.source}｜非即時`:'行情暫時無法讀取');
   }
   function paintRow(code,q){
     const r=row(code);if(!r)return;
@@ -251,9 +252,9 @@
   function paintAll(){if(!marketOpen()&&!hasTodayData()){debug();return}paintIndex();for(const code of watchCodes()){const q=quotes.get(code);if(q?.date===today())paintRow(code,q);else if(marketOpen())maskRow(code)}paintDetail();paintStatus();debug()}
 
   function placeholder(code){return {code:String(code),price:'',change:'',prev:'',open:'',high:'',low:'',volume:'',date:today(),stamp:null,tradeTime:'',source:'今日資料載入中',live:false}}
-  if(originalQuote)quote=async function(code,allowNetwork=true){const q=quotes.get(String(code));if(q?.date===today())return q;if(marketOpen())return placeholder(code);return originalQuote(code,allowNetwork)};
+  if(originalQuote)quote=async function(code,allowNetwork=true){const q=quotes.get(String(code));if(q?.date===today())return q;if(marketOpen())return universeQuote(code)||snapshotQuote(code)||placeholder(code);return originalQuote(code,allowNetwork)};
   if(originalRender)render=async function(allowNetwork=false){const x=await originalRender(marketOpen()?false:allowNetwork);if(marketOpen()||hasTodayData())paintAll();return x};
-  if(originalShow)show=async function(code,opts={}){code=String(code);const q=quotes.get(code);if(q?.date===today()||marketOpen())quoteCache[code]=q||placeholder(code);const x=await originalShow(code,opts);if(q?.date===today()||marketOpen()){paintDetail();poll(true)}return x};
+  if(originalShow)show=async function(code,opts={}){code=String(code);const q=quotes.get(code);if(q?.date===today()||marketOpen())quoteCache[code]=q||universeQuote(code)||snapshotQuote(code)||placeholder(code);const x=await originalShow(code,opts);if(q?.date===today()||marketOpen()){paintDetail();poll(true)}return x};
 
   function debug(){const stocks={};for(const code of watchCodes()){const q=quotes.get(code),a=series.get(code)||[],r=row(code);stocks[code]={date:q?.date||null,price:q?.price??null,tradeTime:q?.tradeTime||null,stamp:q?.stamp||null,source:q?.source||null,seriesPoints:a.length,seriesLastStamp:a.at(-1)?.stamp||null,domState:r?.dataset?.liveState||null,domDate:r?.dataset?.liveDate||null,domStamp:Number(r?.dataset?.liveStamp||0)||null,domPrice:r?.dataset?.livePrice||null}}window.__TW_LIVE_V091__={version:VERSION,intervalMs:INTERVAL,marketWindow:marketOpen(),cycle,lastPollAt,lastSuccessAt,taiex:taiex?{date:taiex.date,price:taiex.price,time:taiex.time,stamp:taiex.stamp}:null,stocks}}
 

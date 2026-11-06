@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import json, urllib.request, urllib.parse, datetime, pathlib, sys, time
+import json, urllib.request, urllib.parse, datetime, pathlib, re, sys, time
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / 'data' / 'latest.json'
@@ -153,7 +153,8 @@ def fetch_tpex_closing_table(day):
                 'high': n(row[5]), 'low': n(row[6]), 'volume': n(row[8]),
                 'tradeDate': day, 'source': 'TPEx dailyQuotes',
             }
-            for row in table.get('data', []) if len(row) >= 9 and row[0].strip()
+            for row in table.get('data', [])
+            if len(row) >= 9 and re.fullmatch(r'(?:[1-9][0-9]{3}[A-Z]?|00[0-9A-Z]{2,4}|020[0-9]{3})', row[0].strip())
         }
         if len(out) >= 300:
             return out

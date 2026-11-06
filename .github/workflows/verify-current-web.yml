@@ -1,0 +1,39 @@
+name: Verify current web app
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.js'
+      - 'index.html'
+      - 'manifest.webmanifest'
+      - '.github/workflows/verify-current-web.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check published scripts and manifest
+        run: |
+          node <<'JS'
+          const { readFileSync } = require('node:fs');
+          const { execFileSync } = require('node:child_process');
+          const { Script } = require('node:vm');
+          const html = readFileSync('index.html', 'utf8');
+          const files = new Set(['sw.js']);
+          for (const [, attrs, body] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
+            const src = attrs.match(/\bsrc=["']([^"']+)["']/i);
+            if (src && !/^(?:[a-z]+:|\/\/)/i.test(src[1])) {
+              files.add(src[1].split(/[?#]/, 1)[0]);
+            } else if (!src) {
+              new Script(body, { filename: 'index.html' });
+            }
+          }
+          for (const file of files) execFileSync(process.execPath, ['--check', file], { stdio: 'inherit' });
+          JSON.parse(readFileSync('manifest.webmanifest', 'utf8'));
+          JS

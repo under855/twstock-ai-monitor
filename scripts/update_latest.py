@@ -88,10 +88,28 @@ def fetch_live_taiex(fallback):
         print(f'WARN live TAIEX failed: {e}', file=sys.stderr)
         return fallback
 
-def fetch_twse_closing_table(day):
+def fetch_twse_closing_report(day):
     date = day.replace('-', '')
     url = f'https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date={date}&type=ALLBUT0999&response=json'
-    report = get(url, timeout=10, attempts=1)
+    return get(url, timeout=10, attempts=1)
+
+def fetch_twse_closing_index(day):
+    for table in fetch_twse_closing_report(day).get('tables', []):
+        title = table.get('title', '')
+        if '價格指數(臺灣證券交易所)' not in title or roc_to_iso(title.split()[0]) != day:
+            continue
+        for row in table.get('data', []):
+            if len(row) < 4 or row[0] != '發行量加權股價指數':
+                continue
+            close, change = n(row[1]), n(row[3])
+            if close is not None and change is not None:
+                if '>-<' in row[2].replace(' ', ''):
+                    change = -change
+                return {'date': day, 'close': close, 'change': change, 'time': '13:30:00', 'source': 'TWSE MI_INDEX'}
+    return None
+
+def fetch_twse_closing_table(day):
+    report = fetch_twse_closing_report(day)
     for table in report.get('tables', []):
         if '每日收盤行情' not in table.get('title', ''):
             continue
@@ -206,6 +224,12 @@ def write_json(path,payload):
 def main():
     market_rows=fmtqik_rows(); trade_date=latest_trade_date(market_rows)
     taiex=fetch_live_taiex(fetch_taiex(trade_date,market_rows)); twse=fetch_twse(trade_date); tpex=fetch_tpex(trade_date)
+    taipei = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
+    if taipei.weekday() < 5 and (taipei.hour, taipei.minute) >= (13, 30):
+        try:
+            taiex = fetch_twse_closing_index(taipei.date().isoformat()) or taiex
+        except Exception as e:
+            print(f'WARN TWSE closing index unavailable: {e}', file=sys.stderr)
     symbols={**twse,**tpex}; trade_date=max(trade_date,max(row['tradeDate'] for row in twse.values())); now=datetime.datetime.now(datetime.timezone.utc).isoformat()
     payload={'generatedAt':now,'tradeDate':trade_date,'taiex':taiex,'counts':{'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},'symbols':symbols}
     write_json(OUT,payload)

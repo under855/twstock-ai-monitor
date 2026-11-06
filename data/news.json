@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-06T11:43:27.871306+00:00",
+  "generatedAt": "2026-11-06T12:38:54.218455+00:00",
   "stocks": {
     "0050": [
       {
@@ -27,6 +27,12 @@
         "time": 1793865600000
       },
       {
+        "title": "台積電盤中零股交易金額居冠　元大台灣50成交股數最多 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1oSlQ0eXpEY0l2MmpVX2ZWQTlBMmNVbjZ0cHFQZEZTSENtLTJiNGFLeks0d3V5WWtsMnlNZ0xrb1RPcU9xa1Vfdi1uNTVBNGcwYkFTSGFJdkRQQdIBX0FVX3lxTFBwNVZOSHMwS1J2RE13WHNibmtkbGtJeklMWTl1OEJKZEpLNlZzRWYyMl9lNWtSbm5XWGJIdEZGNkJDN0lHcVk3SmtXT3J0aEcxSmk5V2JvQ1ZFa01JSV9F?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793799930000
+      },
+      {
         "title": "台股洗盤震盪！0050能逢低布局嗎？市值型、高股息ETF與正投資指南 - 鉅亨網",
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9lNWVMaDMxeWR6RVJ6dl9QVXhYYmVKUHZBUlhZd1VnRk05dkR6MjA3aG1HSERuV0JUakRfb2tNQTh5ZXFHVkdpV1hyZ3dva0k?oc=5",
         "publisher": "鉅亨網",
@@ -43,12 +49,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFA2aGx6ajJnUjBZR0dSMGUzNW5wdmVuRGFHMzRCaW9WQzBLOTBBUW9nRzAxWFF1aXVNWTV5eUFFSVpBTEdSUTI2NU1rLVoxR1BOa2pwMFktb1RVZ9IBX0FVX3lxTFBPQXFZbkdjRndJZ2dHYXBQN2lrOFZsSHdoejI0aEp5enFZWXBUZ1RsVzdMeEhYeXBOWEJkaDB4MzZuQW1Bb3luMXdFSDYybW16QXdZTXFsVzlSYW8zTDJ3?oc=5",
         "publisher": "經濟日報",
         "time": 1792825200000
-      },
-      {
-        "title": "30歲北漂女想砸錢買一張0050當生日禮物 過來人給「這些建議」 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9lUFJSbFRBN0w1b09wb0pPSll2QWR2cGxSWmR6ZG5ZWXVMR0dUUGtLeS1pRVg4My16eHV2ZHZ1T0EzYVQzb1hpc05rZW8yLTI0S3Y0bkdnenFoVkFWSHdF0gFkQVVfeXFMTm9ubEVoS05TXzZkeFhlZ0VZZHZEMnZKVnYtQkJYZy04WFpOd0t6YkFCUlBhaG92OS1XSmlNejhxZHRMb3l0ZWI4M3J3ek5XZzdIQ1FDcmFOc1NMNGtaS1g1cF94WA?oc=5",
-        "publisher": "自由財經",
-        "time": 1791788400000
       }
     ],
     "3711": [
@@ -112,9 +112,9 @@
     "2002": [
       {
         "title": "中鋼擬投資逾10億　推動固態氧化物燃料電池及碳捕捉與利用 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBHbVdaR3Nld29GR1FBbDluUFBTUlloOHp2dzM0M1BHWVlncU9lSlQzZGtjVUJRdE4ydk9LWE1yb1JXbTZGMk1XQnJRTV9XXzgzOVREZkNkNHRXSTVTeWZYaFlQRURnbTlseDlFY3BYMTJPbHJMRjR30gFfQVVfeXFMUEZONjh4VkVha0ExUWpneG95VUlsYWJjcG5ucjh4bHFhb1l1anZKdHprQ3hsNHI0YnpZeUNZQzdRb09zbmYyUm5oSHBRMVZTeENwWkNWanpvNi1JMW1YNHc?oc=5",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBmdHFLZnl1UC1WcW11SV92SEZNWXAyeTB6aTNSQm9rc2xESWdqZ3ZYTlAwcXJNLUNNZVRGX1djV2trSWJHS3Qwc25BOEFwYWVSanNNbGtwVVpkQdIBX0FVX3lxTFBGTjY4eFZFYWtBMVFqZ3hveVVJbGFiY3BubnI4eGxxYW9ZdWp2SnR6a0N4bDRyNGJ6WXlDWUM3UW9Pc25mMlJuaEhwUTFWU3hDcFpDVmp6bzYtSTFtWDR3?oc=5",
         "publisher": "經濟日報",
-        "time": 1793964680000
+        "time": 1793964630000
       },
       {
         "title": "中鋼Q3每股賺0.07元 投資10.79億元布局SOFC因應製程電氣化 - 鉅亨網",

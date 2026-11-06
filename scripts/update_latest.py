@@ -88,6 +88,33 @@ def fetch_live_taiex(fallback):
         print(f'WARN live TAIEX failed: {e}', file=sys.stderr)
         return fallback
 
+def fetch_twse_closing_table(day):
+    date = day.replace('-', '')
+    url = f'https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date={date}&type=ALLBUT0999&response=json'
+    report = get(url, timeout=10, attempts=1)
+    for table in report.get('tables', []):
+        if '每日收盤行情' not in table.get('title', ''):
+            continue
+        if roc_to_iso(table['title'].split()[0]) != day:
+            continue
+        out = {}
+        for row in table.get('data', []):
+            if len(row) < 11 or not row[0]:
+                continue
+            code = row[0].strip()
+            change = n(row[10])
+            if change is not None and '>-<' in row[9].replace(' ', ''):
+                change = -change
+            out[code] = {
+                'symbol': code, 'name': row[1].strip(), 'market': 'TWSE',
+                'close': n(row[8]), 'open': n(row[5]), 'high': n(row[6]),
+                'low': n(row[7]), 'volume': n(row[2]), 'change': change,
+                'tradeDate': day, 'source': 'TWSE MI_INDEX',
+            }
+        if len(out) >= 500:
+            return out
+    return {}
+
 def fetch_twse(trade_date):
     rows=get('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL')
     out={}
@@ -97,6 +124,16 @@ def fetch_twse(trade_date):
         row_date=roc_to_iso(r.get('Date'))
         if not row_date: continue
         out[c]={'symbol':c,'name':str(r.get('Name','')).strip(),'market':'TWSE','close':n(r.get('ClosingPrice')),'open':n(r.get('OpeningPrice')),'high':n(r.get('HighestPrice')),'low':n(r.get('LowestPrice')),'volume':n(r.get('TradeVolume')),'change':n(r.get('Change')),'tradeDate':row_date,'source':'TWSE STOCK_DAY_ALL'}
+    now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
+    today = now.date().isoformat()
+    if now.weekday() < 5 and (now.hour, now.minute) >= (13, 30):
+        if not any(row['tradeDate'] == today for row in out.values()):
+            try:
+                closing = fetch_twse_closing_table(today)
+                if closing:
+                    return closing
+            except Exception as e:
+                print(f'WARN TWSE closing table unavailable: {e}', file=sys.stderr)
     if len(out)<500: raise RuntimeError(f'TWSE rows too few: {len(out)}')
     return out
 
@@ -138,7 +175,7 @@ def write_json(path,payload):
 def main():
     market_rows=fmtqik_rows(); trade_date=latest_trade_date(market_rows)
     taiex=fetch_live_taiex(fetch_taiex(trade_date,market_rows)); twse=fetch_twse(trade_date); tpex=fetch_tpex(trade_date)
-    symbols={**twse,**tpex}; now=datetime.datetime.now(datetime.timezone.utc).isoformat()
+    symbols={**twse,**tpex}; trade_date=max(trade_date,max(row['tradeDate'] for row in twse.values())); now=datetime.datetime.now(datetime.timezone.utc).isoformat()
     payload={'generatedAt':now,'tradeDate':trade_date,'taiex':taiex,'counts':{'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},'symbols':symbols}
     write_json(OUT,payload)
     print(json.dumps({'ok':True,'tradeDate':trade_date,'taiex':taiex,'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},ensure_ascii=False))

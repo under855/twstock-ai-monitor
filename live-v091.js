@@ -200,7 +200,9 @@
   function paintRow(code,q){
     const r=row(code);if(!r)return;
     if(!q?.live||q.date!==today()){maskRow(code);return}
-    if(r.dataset.liveState==='live'&&r.dataset.liveStamp===String(q.stamp)&&r.dataset.livePrice===String(q.price))return;
+    const signature=JSON.stringify([q.stamp,q.price,q.change,q.open,q.high,q.low,q.volume,q.source]);
+    if(r.dataset.liveState==='live'&&r.dataset.quoteSignature===signature)return;
+    r.dataset.quoteSignature=signature;
     r.dataset.liveState='live';r.dataset.liveDate=q.date;r.dataset.liveStamp=String(q.stamp);r.dataset.livePrice=String(q.price);
     const p=r.querySelector('.price'),ch=r.querySelector('.chg'),d=r.querySelector('.dayline'),m=r.querySelector('.meta');
     setText(p,fmt(q.price));
@@ -259,7 +261,7 @@
   if(originalRender)render=async function(allowNetwork=false){const x=await originalRender(marketOpen()?false:allowNetwork);if(marketOpen()||hasTodayData())paintAll();return x};
   if(originalShow)show=async function(code,opts={}){code=String(code);const q=quotes.get(code);if(q?.date===today()||marketOpen())quoteCache[code]=q||universeQuote(code)||snapshotQuote(code)||placeholder(code);const x=await originalShow(code,opts);if(q?.date===today()||marketOpen()){paintDetail();poll(true)}return x};
 
-  function debug(){const stocks={};for(const code of watchCodes()){const q=quotes.get(code),a=series.get(code)||[],r=row(code);stocks[code]={date:q?.date||null,price:q?.price??null,tradeTime:q?.tradeTime||null,stamp:q?.stamp||null,source:q?.source||null,seriesPoints:a.length,seriesLastStamp:a.at(-1)?.stamp||null,domState:r?.dataset?.liveState||null,domDate:r?.dataset?.liveDate||null,domStamp:Number(r?.dataset?.liveStamp||0)||null,domPrice:r?.dataset?.livePrice||null}}window.__TW_LIVE_V091__={version:VERSION,intervalMs:INTERVAL,marketWindow:marketOpen(),cycle,lastPollAt,lastSuccessAt,taiex:taiex?{date:taiex.date,price:taiex.price,time:taiex.time,stamp:taiex.stamp}:null,stocks}}
+  function debug(){const stocks={};for(const code of watchCodes()){const q=quotes.get(code),a=series.get(code)||[],r=row(code);stocks[code]={date:q?.date||null,price:q?.price??null,tradeTime:q?.tradeTime||null,stamp:q?.stamp||null,source:q?.source||null,seriesPoints:a.length,seriesLastStamp:a.at(-1)?.stamp||null,domState:r?.dataset?.liveState||null,domDate:r?.dataset?.liveDate||null,domStamp:Number(r?.dataset?.liveStamp||0)||null,domPrice:r?.dataset?.livePrice||null}}window.__TW_LIVE_V091__={version:VERSION,intervalMs:INTERVAL,marketWindow:marketOpen(),cycle,lastPollAt,lastSuccessAt,taiex:taiex?{date:taiex.date,price:taiex.price,change:taiex.change,time:taiex.time,stamp:taiex.stamp,source:taiex.source}:null,stocks}}
 
   async function pollBackup(force=false){
     if(backupBusy||(!force&&Date.now()-lastBackupAt<BACKUP_INTERVAL))return false;backupBusy=true;lastBackupAt=Date.now();

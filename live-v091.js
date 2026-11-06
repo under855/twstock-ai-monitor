@@ -103,6 +103,8 @@
     // Never let a future-dated cached quote block a genuinely newer incoming tick.
     if(os>Date.now()+30000)return true;
     if(ns>Date.now()+30000)return false;
+    if(Boolean(oldv.officialClose)!==Boolean(newv.officialClose))return Boolean(newv.officialClose);
+    if(newv.officialClose)return ['price','change','prev','open','high','low','volume'].some(key=>oldv[key]!==newv[key]);
     if(ns>os)return true;if(ns<os)return false;
     return sourcePriority(newv.source)>sourcePriority(oldv.source);
   }
@@ -113,7 +115,7 @@
     const map=new Map();let idx=null;const wanted=new Set((codes||[]).map(String));
     // latest.json is a daily snapshot, not an intraday tick feed. During trading it must not
     // fabricate a future 13:30 timestamp and overwrite real MIS quotes or prices.
-    if(marketOpen())return {map,idx};
+    const p=tp();if(p.h*60+p.min<13*60+30)return {map,idx};
     const ti=j?.taiex||{},td=isoCompact(ti?.date);
     if(td===today()&&num(ti?.close)!=null){
       const tt=/^\d{2}:\d{2}:\d{2}$/.test(String(ti?.time||''))?String(ti.time):'13:33:00';
@@ -123,7 +125,7 @@
     for(const code of wanted){
       const x=obj?.[code];if(!x)continue;const d=isoCompact(x.tradeDate);if(d!==today()||num(x.close)==null)continue;
       const tt='13:30:00',ms=stamp(d,tt);if(ms==null)continue;
-      map.set(code,{code,date:d,price:num(x.close),prev:num(x.close)-num(x.change),change:num(x.change),open:num(x.open),high:num(x.high),low:num(x.low),volume:num(x.volume),tradeTime:tt,stamp:ms,source:'官方備援收盤資料',live:true});
+      map.set(code,{code,date:d,price:num(x.close),prev:num(x.change)==null?null:num(x.close)-num(x.change),change:num(x.change),open:num(x.open),high:num(x.high),low:num(x.low),volume:num(x.volume),tradeTime:tt,stamp:ms,source:'官方收盤資料',officialClose:true,live:true});
     }
     return {map,idx};
   }
@@ -154,7 +156,7 @@
     const d=today();
     const validTimestamp=ms=>Number.isFinite(Number(ms))&&Number(ms)<=Date.now()+30000&&sameDay(Number(ms));
     try{const x=JSON.parse(localStorage.getItem(IKEY+d)||'null');if(x?.date===d&&validTimestamp(x.stamp)&&num(x.price)!=null)taiex={...x,source:'本日最後盤中指數（重新連線中）'}}catch{}
-    try{const obj=JSON.parse(localStorage.getItem(QKEY+d)||'{}');for(const [code,q] of Object.entries(obj)){if(q?.date===d&&validTimestamp(q.stamp)&&num(q.price)!=null&&!/官方備援收盤資料/.test(String(q.source||'')))quotes.set(code,{...q,source:'本日最後盤中成交（重新連線中）',live:true})}}catch{}
+    try{const obj=JSON.parse(localStorage.getItem(QKEY+d)||'{}');for(const [code,q] of Object.entries(obj)){if(q?.date===d&&validTimestamp(q.stamp)&&num(q.price)!=null&&!q.officialClose&&!/官方備援收盤資料/.test(String(q.source||'')))quotes.set(code,{...q,source:'本日最後盤中成交（重新連線中）',live:true})}}catch{}
     try{const obj=JSON.parse(localStorage.getItem(SKEY+d)||'{}');for(const [code,a] of Object.entries(obj)){if(!Array.isArray(a))continue;const clean=a.filter(p=>validTimestamp(p?.stamp)&&num(p?.close)!=null&&!/官方備援收盤/.test(String(p.source||''))).sort((x,y)=>x.stamp-y.stamp).slice(-MAX_POINTS);if(clean.length)series.set(code,clean)}}catch{}
   }
   function saveToday(){
@@ -164,6 +166,7 @@
   function acceptQuote(q){
     if(!q||!sameDay(q.stamp)||Number(q.stamp)>Date.now()+30000)return false;
     const old=quotes.get(q.code);if(!newerOrEqual(old,q))return false;quotes.set(q.code,q);
+    if(q.officialClose)return true;
     const a=series.get(q.code)||[],last=a.at(-1);if(!last||Number(last.stamp)<q.stamp)a.push({stamp:q.stamp,close:q.price,source:q.source||'行情'});else if(Number(last.stamp)===q.stamp)last.close=q.price;
     a.sort((x,y)=>x.stamp-y.stamp);if(a.length>MAX_POINTS)a.splice(0,a.length-MAX_POINTS);series.set(q.code,a);return true;
   }
@@ -202,8 +205,8 @@
     const p=r.querySelector('.price'),ch=r.querySelector('.chg'),d=r.querySelector('.dayline'),m=r.querySelector('.meta');
     setText(p,fmt(q.price));
     if(ch){setText(ch,(q.change>0?'+':'')+fmt(q.change));setClass(ch,'chg '+cls(q.change))}
-    setText(d,q.tradeTime+'　開 '+fmt(q.open)+'　高 '+fmt(q.high)+'　低 '+fmt(q.low)+'　最新 '+fmt(q.price)+'　量 '+fmt(q.volume,0));
-    setText(m,q.source+'｜成交 '+q.tradeTime);
+    setText(d,(q.officialClose?'收盤 ': '')+q.tradeTime+'　開 '+fmt(q.open)+'　高 '+fmt(q.high)+'　低 '+fmt(q.low)+'　最新 '+fmt(q.price)+'　量 '+fmt(q.volume,0));
+    setText(m,q.source+(q.officialClose?'｜':'｜成交 ')+q.tradeTime);
     const c=canvasFor(r);if(!(typeof window.__TW_DRAW_MAIN_TODAY__==='function'&&window.__TW_DRAW_MAIN_TODAY__(code,c)))drawLine(c,series.get(code)||[]);
     try{const base=rowForCode(code),val=allVals.find(x=>String(x.Code).trim()===code)||{},hist=historyCache?.[code]||[],s=scoreStock(base,val,hist,q),sn=r.querySelector('.scoreNum'),sl=r.querySelector('.scoreLabel');if(sn){setText(sn,s.total==null?'—':String(s.total));setClass(sn,'scoreNum '+scoreCls(s.total))}if(sl)setText(sl,s.total==null?'資料不足':s.mode)}catch{}
   }
@@ -231,7 +234,7 @@
       }
       set('dPrice',fmt(q.price));set('dOpen',fmt(q.open));set('dRange',`${fmt(q.high)} / ${fmt(q.low)}`);set('dVolume',fmt(q.volume,0));set('dTime',`${q.source}｜${q.tradeTime}`);
       const ch=document.getElementById('dChange');if(ch){ch.textContent=`${q.change>0?'+':''}${fmt(q.change)}`;ch.className=`v ${cls(q.change)}`}
-      if(title)title.textContent='今日盤中即時走勢';
+      if(title)title.textContent=q.officialClose?'今日交易走勢':'今日盤中即時走勢';
       const a=series.get(code)||[];
       if(!drawRetained())drawLine(big,a);
       if(a.length>=2)set('chartMsg',`今日盤中即時走勢｜${hhmm(a[0].stamp)}～${hhmm(a.at(-1).stamp)}｜最新端為 TWSE MIS 成交`);
@@ -246,7 +249,7 @@
     if(marketOpen()){
       if(p)p.textContent=`行情每 4 秒檢查（資料可能延遲）｜v${VERSION}`;if(b){b.textContent=fresh?`盤中資料已接收 v${VERSION}`:`即時行情延遲／重試中 v${VERSION}`;b.className=fresh?'liveBadge ok':'liveBadge warn'}if(s)s.textContent=fresh?'盤中資料已接收':'即時行情延遲／重試';if(t)t.textContent=fresh?`指數來源時間 ${taiex?.time||'—'}｜最近接收 ${hhmmss(lastSuccessAt)}`:`最近嘗試 ${hhmmss(lastPollAt||Date.now())}｜等待有效資料`;
     }else if(hasTodayData()){
-      if(p)p.textContent=`今日收盤／最後成交｜v${VERSION}`;if(b){b.textContent=`今日資料 v${VERSION}`;b.className='liveBadge ok'}if(s)s.textContent='今日收盤';if(t)t.textContent=`MIS 最後成交／指數 ${taiex?.time||''}`;
+      if(p)p.textContent=`今日收盤／最後成交｜v${VERSION}`;if(b){b.textContent=`今日資料 v${VERSION}`;b.className='liveBadge ok'}if(s)s.textContent='今日收盤／最後成交';if(t)t.textContent=`MIS 最後成交／指數 ${taiex?.time||''}`;
     }
   }
   function paintAll(){if(!marketOpen()&&!hasTodayData()){debug();return}paintIndex();for(const code of watchCodes()){const q=quotes.get(code);if(q?.date===today())paintRow(code,q);else if(marketOpen())maskRow(code)}paintDetail();paintStatus();debug()}
@@ -270,11 +273,11 @@
   }
   function start(){
     const subtitle=document.querySelector('.brand small');if(subtitle)subtitle.textContent=subtitle.textContent.replace(/15 秒更新/g,'4 秒更新');
-    loadToday();paintAll();poll(true);if(marketOpen())pollBackup(false);
+    loadToday();paintAll();poll(true);pollBackup(false);
     // Always schedule polling: a page opened before 09:00 must start updating when trading begins.
     // The poll function itself skips requests outside the TW market window.
     setInterval(()=>poll(false),INTERVAL);
-    setInterval(()=>{if(marketOpen())pollBackup(false)},BACKUP_INTERVAL);
+    setInterval(()=>pollBackup(false),BACKUP_INTERVAL);
     if(!marketOpen()){const p=document.getElementById('refreshPill');if(p&&!hasTodayData())setText(p,`休市／檢查今日最終資料｜v${VERSION}`);debug()}
     addEventListener('focus',()=>{poll(true);pollBackup(true)});document.addEventListener('visibilitychange',()=>{if(!document.hidden){poll(true);pollBackup(true)}});
   }

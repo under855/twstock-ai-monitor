@@ -137,7 +137,37 @@ def fetch_twse(trade_date):
     if len(out)<500: raise RuntimeError(f'TWSE rows too few: {len(out)}')
     return out
 
+def fetch_tpex_closing_table(day):
+    date = day.replace('-', '/')
+    url = f'https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes?date={date}&response=json'
+    report = get(url, timeout=25, attempts=2)
+    for table in report.get('tables', []):
+        if table.get('title') != '上櫃股票行情' or roc_to_iso(table.get('date')) != day:
+            continue
+        if table.get('fields', [])[:9] != ['代號','名稱','收盤','漲跌','開盤','最高','最低','均價','成交股數']:
+            continue
+        out = {
+            row[0].strip(): {
+                'symbol': row[0].strip(), 'name': row[1].strip(), 'market': 'TPEx',
+                'close': n(row[2]), 'change': n(row[3]), 'open': n(row[4]),
+                'high': n(row[5]), 'low': n(row[6]), 'volume': n(row[8]),
+                'tradeDate': day, 'source': 'TPEx dailyQuotes',
+            }
+            for row in table.get('data', []) if len(row) >= 9 and row[0].strip()
+        }
+        if len(out) >= 300:
+            return out
+    return {}
+
 def fetch_tpex(trade_date):
+    now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
+    if now.weekday() < 5 and (now.hour, now.minute) >= (13, 30):
+        try:
+            closing = fetch_tpex_closing_table(now.date().isoformat())
+            if closing:
+                return closing
+        except Exception as e:
+            print(f'WARN TPEx closing table unavailable: {e}', file=sys.stderr)
     urls=['https://www.tpex.org.tw/openapi/v1/tpex_mainboard_quotes','https://www.tpex.org.tw/openapi/v1/tpex_daily_market_value']
     last=None
     for url in urls:

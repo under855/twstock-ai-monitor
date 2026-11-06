@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-06T15:39:44.038853+00:00",
+  "generatedAt": "2026-11-06T16:30:05.817869+00:00",
   "stocks": {
     "0050": [
       {
@@ -13,6 +13,12 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE53cENpOG1ENms0c2cwWWY0U2VVdGpac2VseEV4cmRhWklNUWF3QkF2YVZPN1ZQQTQwT1hhMGpEUjIteTkxUjZuOGhHb2xkdXQ0cE5QRnd5SEtTY2t5SEk40gFkQVVfeXFMT24ySzZIU1N3Vm52cXhwTm00bXUxZkIyaFBwLVhUclV6WlBfZTgzQ2xHTl9Ib3huMkdOZ2NoN2dadXFzbTBYNmlPS05mbmhaTTExS3dCT2h6UUMzUXRuQ2hfeG1TMQ?oc=5",
         "publisher": "自由財經",
         "time": 1793950008000
+      },
+      {
+        "title": "郭哲榮再砸5千萬買0050 累計投入2億元喊：我真的沒錢了 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5hRlMyczBiME1lbzBDblJOUGs2OWtXWFVKMVM1bGtyTjdvWWMydGNjR2VHeDRzZV81dktGQTlxVlp0VTBBVEV1UUhFVWRQaWRyWlBBeW9jeVJzUdIBX0FVX3lxTE9jSFUwWmdnNU5RNTh6Z1k5dm1kLThvSHpWYWtfRUVvOHRpZkhrZUJhNW5Gd3h5ZjlXMGVDeHpyaWM2ZWNlN2k5ZEFWeHBSNW1aSFo5OGgxaG5vWW4tMEpV?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793933468000
       },
       {
         "title": "焦點股》0050：跌破90元 買盤湧入 - 自由財經",
@@ -43,21 +49,9 @@
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9lNWVMaDMxeWR6RVJ6dl9QVXhYYmVKUHZBUlhZd1VnRk05dkR6MjA3aG1HSERuV0JUakRfb2tNQTh5ZXFHVkdpV1hyZ3dva0k?oc=5",
         "publisher": "鉅亨網",
         "time": 1793776718000
-      },
-      {
-        "title": "台股反向、高息 ETF 熱 元大台灣 50 反 1 單周獲買超 5.4 萬張稱冠 | 基金天地 | 理財 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBCUkdPZDlXZFk1cC1mTzhnOVNVWVlNclJmR2tFZTljR2lCU2JRbDRST0UxWEY2LVhlT3dFVHFRbjd1NkNzd3dXNDZkaDlCd01xRC1MY2d4QnZIUQ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1792998000000
       }
     ],
     "3711": [
-      {
-        "title": "封測雙雄跌出機會？三外資齊出手日月光目標價喊到8字頭- 日報 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBzMG1VdDRwc1BFdnp6azdBZF8wYnYtZXNqOFA5OWxTWGlqcVNiZU5uZEV1YndGeTNJSHBzd0FFTUNuTkFqMTJzdjBIbmFhN2QtZlJkNWJ2SWUtNEFyelZZ?oc=5",
-        "publisher": "工商時報",
-        "time": 1792566000000
-      },
       {
         "title": "先進封裝續強 法人調高日月光投控獲利預估值及目標價 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5PYnRpOU9TZEdVTW42TjNjYVJDVDEydkhVa01ZTXhLcEJHSHM5ZnNRWUctQUZFTEtVMmtWaDc3Z0hUUkNxU3RZZHNOeTZmUUI5cTgzRjRwNTNUZ9IBX0FVX3lxTFBkYUN5dS1UT0JmT1Y0MU1qc3VfOUVKdk9qZ0MwcGV2cmlQX29FdGpMaHZsejhUQ0NoR2J5N0xsS0Z1c0hPTDFnN251Y0JkLVBSckhvdnAxalk1NjFObk5N?oc=5",
@@ -74,12 +68,6 @@
         "title": "日月光投控9月營收連3個月創高 Q2季增27％續締新猷 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBsekV2RnZ6a2FQNk1lc1dMcnJMbG5xWkNaZmNGOG91cC0tTGpKUmNwVDNPVktGdHJOT1lxVmpscEZReVgyOXUxR1JoTDIzTXl4cUFpT3g3aVJTYlZwVXRv0gFkQVVfeXFMT2VPT0NrWTJiQWtGZ1dxcWVkUWpmNXhCNjRFRjJpV251LWwyend1RWZLWVVRSGtmOG5zZ2l6MUlfV3ZtX1BkREc4ejRyNk9UakE5VUUycGxtS00zMHpUVkNnRVdWQg?oc=5",
         "publisher": "自由財經",
-        "time": 1791788400000
-      },
-      {
-        "title": "日月光投控9月和第3季營收創高AI先進封測幫大忙| 證券 - 中央社 CNA",
-        "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE1pV3NrU3c4aEF5V1VtSVZDVWR1YWlmODl4cV9HbnVxeVprQWZZM2pMdVJ0Q2xfYTdVOWROY0R1YTBhU2tQOWhHcVUtQl9hcXVVS202am01UExlNlVUQ3c?oc=5",
-        "publisher": "中央社 CNA",
         "time": 1791788400000
       }
     ],
@@ -129,10 +117,10 @@
         "time": 1793978379000
       },
       {
-        "title": "中鋼擬投資逾10億　推動固態氧化物燃料電池及碳捕捉與利用 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBmdHFLZnl1UC1WcW11SV92SEZNWXAyeTB6aTNSQm9rc2xESWdqZ3ZYTlAwcXJNLUNNZVRGX1djV2trSWJHS3Qwc25BOEFwYWVSanNNbGtwVVpkQdIBX0FVX3lxTFBGTjY4eFZFYWtBMVFqZ3hveVVJbGFiY3BubnI4eGxxYW9ZdWp2SnR6a0N4bDRyNGJ6WXlDWUM3UW9Pc25mMlJuaEhwUTFWU3hDcFpDVmp6bzYtSTFtWDR3?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793964630000
+        "title": "中鋼擬投資逾10億推動固態氧化物燃料電池及碳捕捉與利用| 產經 - 中央社 CNA",
+        "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFB3VDkydUQ5Q0VWTk1feHplRE9ZNXlWaWFaUHZHMUhFOXAyQUdBeWdLRnFsOEh4Y0FxSjJ4SzNzV2NXVmFXWFRLVU9PT1pCSzhXbHg0dUk2dkV6QTZoSnc?oc=5",
+        "publisher": "中央社 CNA",
+        "time": 1793963760000
       },
       {
         "title": "中鋼Q3每股賺0.07元 投資10.79億元布局SOFC因應製程電氣化 - 鉅亨網",
@@ -145,12 +133,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1FdEN1ekw4WG8yZmZVOUpYTy05XzVUZUFxb01JU050MXdpdElqUTJJRU91S3VNMHEzUlNPNlZ6eHZjc1dUdzZyZkdqeTY4SXA1WU5nU01NZFVCQdIBX0FVX3lxTE40YUt1cXNHaG9Ua1pKRVZCX045Z2xBT3psUGZyUm1OXzg1U25fdnpHZnVvNkxCZDFNWlB3MS1GSGZsbjhycnRzLWdCdEVSNTZNbndNeU9lWm05blV4VXBV?oc=5",
         "publisher": "經濟日報",
         "time": 1793958600000
-      },
-      {
-        "title": "中鋼勒緊褲帶拚減碳 投資10.7億要做SOFC、CCU - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE52Sk5kUkppVlhWeXpBWHQ2QVV2NkxmbjhqR3NKQVpEMGoyTTZ6SFNCZjRSWkY0MlNOWnlwQkxMSzNmWU5KN3BsNkVjOHYyZzVIckRJalpjMUFCdmpFekNV0gFkQVVfeXFMUGZ5WDh3a19lLTNMYU02c0kzOHRaQVZEZXBZaG44V3R2OTFYMUJNWTJySDhJOFI1WG5UYXg3ejMyRkZ3SUdabWNfOGtWRVAzZzFvM0haelNPbUpMdWZVS3JyWmhUOQ?oc=5",
-        "publisher": "自由財經",
-        "time": 1793955982000
       },
       {
         "title": "市況保溫中鋼12月盤價小漲- 日報 - 工商時報",
@@ -169,6 +151,12 @@
         "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPRXlHS0N4STB6WV9Va085SWc5YUlaQ20xY0ZDRmpBTWRfeTlvcUFRVXRWeUc5QVFlMi12Rjk2Mm1rZnNXY25sbllZZmFsUTFmbEtmWDN6SDFOa1c1ZUxiZ2FDb3lQc0V2VTE0REJQeUFvRFIwdkV1VDR6M0tPb29hWkdwZzMtSEo2QmllY25QS1JmQQ?oc=5",
         "publisher": "MoneyDJ",
         "time": 1793860200000
+      },
+      {
+        "title": "外銷接單升溫、新台幣走貶 中鋼12月盤價全面小漲300元 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9ycFpNaVMzUWVpWmtHSmFQNVNqRGgxWG1iYjFkSEtPMGdBbjYzUjRPQ3dxUXVYNlRfdUhPN3NBVGNfaU92WEVRa3hLOXBPT1V1XzdUNEVlLU9xZ3JrbzhN0gFkQVVfeXFMTWQ5T2k2NFYxV2Z3SVhlU1FfNnp2V05WeVRYeEdta2toR2tXanJGcmdmUnFHNldqenUwY25SNWllZ1pNYy1jT2t3NGlqa3I2cUFBRXpzdDhOS0xJZUtmQllaTFVITQ?oc=5",
+        "publisher": "自由財經",
+        "time": 1793859783000
       }
     ],
     "00878": [

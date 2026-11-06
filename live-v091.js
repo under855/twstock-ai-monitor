@@ -119,7 +119,7 @@
     const ti=j?.taiex||{},td=isoCompact(ti?.date);
     if(td===today()&&num(ti?.close)!=null){
       const tt=/^\d{2}:\d{2}:\d{2}$/.test(String(ti?.time||''))?String(ti.time):'13:33:00';
-      const ms=stamp(td,tt);if(ms!=null)idx={date:td,price:num(ti.close),prev:num(ti.previousClose),change:num(ti.change),time:tt,stamp:ms,source:'官方備援資料'};
+      const ms=stamp(td,tt);if(ms!=null)idx={date:td,price:num(ti.close),prev:num(ti.previousClose),change:num(ti.change),time:tt,stamp:ms,officialClose:ti.source==='TWSE MI_INDEX',source:ti.source==='TWSE MI_INDEX'?'TWSE 官方收盤':'官方備援資料'};
     }
     const obj=j?.symbols||{};
     for(const code of wanted){
@@ -217,7 +217,7 @@
       return;
     }
     setText(v,fmt(taiex.price,2));
-    if(c){setText(c,(taiex.change>0?'+':'')+fmt(taiex.change,2)+'｜TWSE 指數時間 '+taiex.time);setClass(c,'s '+cls(taiex.change))}
+    if(c){setText(c,(taiex.change>0?'+':'')+fmt(taiex.change,2)+'｜'+(taiex.officialClose?'TWSE 官方收盤':'TWSE 指數時間')+' '+taiex.time);setClass(c,'s '+cls(taiex.change))}
   }
   function paintDetail(){
     try{

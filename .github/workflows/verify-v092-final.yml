@@ -1,12 +1,7 @@
 name: Verify v0.9.2 final live PWA acceptance
 on:
-  push:
-    paths:
-      - '.github/workflows/verify-v092-final.yml'
-      - 'live-v091.js'
-      - 'index.html'
-      - 'sw.js'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

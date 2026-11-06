@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const VERSION='0.9.5';
-  const INTERVAL=4000;
+  const INTERVAL=2000;
   const BACKUP_INTERVAL=60000;
   const MAX_POINTS=600;
   const QKEY='tw_live091_quotes_';
@@ -247,7 +247,7 @@
     const indexAge=taiex?.stamp?Date.now()-Number(taiex.stamp):Infinity;
     const fresh=lastSuccessAt>0&&Date.now()-lastSuccessAt<=30000&&indexAge<=90000;
     if(marketOpen()){
-      if(p)p.textContent=`行情每 4 秒檢查（資料可能延遲）｜v${VERSION}`;if(b){b.textContent=fresh?`盤中資料已接收 v${VERSION}`:`即時行情延遲／重試中 v${VERSION}`;b.className=fresh?'liveBadge ok':'liveBadge warn'}if(s)s.textContent=fresh?'盤中資料已接收':'即時行情延遲／重試';if(t)t.textContent=fresh?`指數來源時間 ${taiex?.time||'—'}｜最近接收 ${hhmmss(lastSuccessAt)}`:`最近嘗試 ${hhmmss(lastPollAt||Date.now())}｜等待有效資料`;
+      if(p)p.textContent=`行情每 ${INTERVAL/1000} 秒檢查（資料可能延遲）｜v${VERSION}`;if(b){b.textContent=fresh?`盤中資料已接收 v${VERSION}`:`即時行情延遲／重試中 v${VERSION}`;b.className=fresh?'liveBadge ok':'liveBadge warn'}if(s)s.textContent=fresh?'盤中資料已接收':'即時行情延遲／重試';if(t)t.textContent=fresh?`指數來源時間 ${taiex?.time||'—'}｜最近接收 ${hhmmss(lastSuccessAt)}`:`最近嘗試 ${hhmmss(lastPollAt||Date.now())}｜等待有效資料`;
     }else if(hasTodayData()){
       if(p)p.textContent=`今日收盤／最後成交｜v${VERSION}`;if(b){b.textContent=`今日資料 v${VERSION}`;b.className='liveBadge ok'}if(s)s.textContent='今日收盤／最後成交';if(t)t.textContent=`MIS 最後成交／指數 ${taiex?.time||''}`;
     }
@@ -272,7 +272,6 @@
     }catch(e){await pollBackup(true);paintAll();debug();if(window.__TW_LIVE_V091__)window.__TW_LIVE_V091__.error=String(e?.message||e)}finally{busy=false}
   }
   function start(){
-    const subtitle=document.querySelector('.brand small');if(subtitle)subtitle.textContent=subtitle.textContent.replace(/15 秒更新/g,'4 秒更新');
     loadToday();paintAll();poll(true);pollBackup(false);
     // Always schedule polling: a page opened before 09:00 must start updating when trading begins.
     // The poll function itself skips requests outside the TW market window.

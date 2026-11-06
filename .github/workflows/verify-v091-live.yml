@@ -1,12 +1,7 @@
 name: Verify v0.9.1 complete live acceptance
 on:
-  push:
-    paths:
-      - '.github/workflows/verify-v091-live.yml'
-      - 'live-v091.js'
-      - 'index.html'
-      - 'sw.js'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

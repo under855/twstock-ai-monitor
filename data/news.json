@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-06T09:52:38.442392+00:00",
+  "generatedAt": "2026-11-06T10:53:27.726164+00:00",
   "stocks": {
     "0050": [
       {
@@ -19,12 +19,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBwdG9faUVLOFFIdGNaSWNqUlh2cmdTUU5Jdi1lb2tCTWdnSUQwc1ZEU3V3d3YzVldWaTVJekxLNnE0cWxlbzdFcWdRdmR5aWlqX05xaDBXdTVaSGdmQk9j0gFkQVVfeXFMUGJMRE9LRU5xcTN1T1BFWGhXQVhLWmF2QW9FQ1BVZDRuaVl4RjI5UVFYMUsxSUxoTDJFbHdTd1pSM0o2TW4wa3FCemdtWUhWSW5mdnJRZGI4cDdXbEhhc25nbnkxaA?oc=5",
         "publisher": "自由財經",
         "time": 1793930684000
-      },
-      {
-        "title": "外資賣超1024億元創歷史第十大 狂砍00406A 17萬張、0050 7.2萬張 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBsc2VhVjR2UGowSHdfRzBpZy1aa0VnUkszcHVHcXpxUktRaWNUREx4T2FGcEdlaEU3LXJXUklHMl85V01EZGZtbkwtX1NmRUU?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1793871932000
       },
       {
         "title": "ETF護盤抗外資 0050吸金7,300億元 00631L績效超過100％ - 工商時報",
@@ -49,6 +43,12 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBCUkdPZDlXZFk1cC1mTzhnOVNVWVlNclJmR2tFZTljR2lCU2JRbDRST0UxWEY2LVhlT3dFVHFRbjd1NkNzd3dXNDZkaDlCd01xRC1MY2d4QnZIUQ?oc=5",
         "publisher": "經濟日報",
         "time": 1792998000000
+      },
+      {
+        "title": "元大台灣 50 逢低布局 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFA2aGx6ajJnUjBZR0dSMGUzNW5wdmVuRGFHMzRCaW9WQzBLOTBBUW9nRzAxWFF1aXVNWTV5eUFFSVpBTEdSUTI2NU1rLVoxR1BOa2pwMFktb1RVZ9IBX0FVX3lxTFBPQXFZbkdjRndJZ2dHYXBQN2lrOFZsSHdoejI0aEp5enFZWXBUZ1RsVzdMeEhYeXBOWEJkaDB4MzZuQW1Bb3luMXdFSDYybW16QXdZTXFsVzlSYW8zTDJ3?oc=5",
+        "publisher": "經濟日報",
+        "time": 1792825200000
       }
     ],
     "3711": [
@@ -68,12 +68,6 @@
         "title": "日月光投控9月營收連3個月創高 Q2季增27％續締新猷 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBsekV2RnZ6a2FQNk1lc1dMcnJMbG5xWkNaZmNGOG91cC0tTGpKUmNwVDNPVktGdHJOT1lxVmpscEZReVgyOXUxR1JoTDIzTXl4cUFpT3g3aVJTYlZwVXRv0gFkQVVfeXFMT2VPT0NrWTJiQWtGZ1dxcWVkUWpmNXhCNjRFRjJpV251LWwyend1RWZLWVVRSGtmOG5zZ2l6MUlfV3ZtX1BkREc4ejRyNk9UakE5VUUycGxtS00zMHpUVkNnRVdWQg?oc=5",
         "publisher": "自由財經",
-        "time": 1791788400000
-      },
-      {
-        "title": "日月光投控9月和第3季營收創高AI先進封測幫大忙| 證券 - 中央社 CNA",
-        "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE1pV3NrU3c4aEF5V1VtSVZDVWR1YWlmODl4cV9HbnVxeVprQWZZM2pMdVJ0Q2xfYTdVOWROY0R1YTBhU2tQOWhHcVUtQl9hcXVVS202am01UExlNlVUQ3c?oc=5",
-        "publisher": "中央社 CNA",
         "time": 1791788400000
       }
     ],
@@ -117,6 +111,18 @@
     ],
     "2002": [
       {
+        "title": "中鋼Q3每股賺0.07元 投資10.79億元布局SOFC因應製程電氣化 - 鉅亨網",
+        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5zQkJrd1Z0eEJwLTI4MElkYldqTFU3N0x5Wk1DRDZsTkhTNUpHeFl3OUhXbUU1YUw5NXhfZUVpOFRHWG5kWjY3MjVwQ29aOUU?oc=5",
+        "publisher": "鉅亨網",
+        "time": 1793961071000
+      },
+      {
+        "title": "中鋼財報／第3季獲利11.21億元、EPS 0.07元 連續兩季賺錢 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1FdEN1ekw4WG8yZmZVOUpYTy05XzVUZUFxb01JU050MXdpdElqUTJJRU91S3VNMHEzUlNPNlZ6eHZjc1dUdzZyZkdqeTY4SXA1WU5nU01NZFVCQdIBX0FVX3lxTE40YUt1cXNHaG9Ua1pKRVZCX045Z2xBT3psUGZyUm1OXzg1U25fdnpHZnVvNkxCZDFNWlB3MS1GSGZsbjhycnRzLWdCdEVSNTZNbndNeU9lWm05blV4VXBV?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793958600000
+      },
+      {
         "title": "市況保溫中鋼12月盤價小漲- 日報 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE8zQnJiUmdtQm43OTBSQTE1dnQ1WDhUWkhTTkp0T3phTHRyNVIzLXU4VElBNmxGMm14TTVSTXh6NldhdDd1NmlNQ25FNzhvRVJHR0FXNkFyNHAtUElxSUV3?oc=5",
         "publisher": "工商時報",
@@ -151,18 +157,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1JR2FKYUdTUkpJb2N5VlZpajdlRDc3b1czYVc1dWxnNG04TDNXQ2Uwd0hYYTh0RUE5THRNVGFzQUhJSWJqbTBNTzVUNnZDZ1JhUVVsTDFfeFUxQdIBX0FVX3lxTE1TUWh1XzBaTG51ZlFleGdJU0hiS3N3X0hRTVZpUF9sbG1JbHJjNFNzYkQ2LTlYSDIwUndvQUtycWcyUFJQSzI0aG1BY2NpRTlZTWkyY3h3aUVnMjVUS1lR?oc=5",
         "publisher": "經濟日報",
         "time": 1793780772000
-      },
-      {
-        "title": "中鋼12月盤價平盤機率高- 日報 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5RYW12OVc4aFVTb0xMN2x2NkJ4VnFKR04xQS1JeEFnSXlaaHJHWG92VXhqMHZGa25YMFBIRmxaMEV0MWdhTzB5RndJREJDZGdRVmhCOUZfVG9WbC0wQTFN?oc=5",
-        "publisher": "工商時報",
-        "time": 1793732400000
-      },
-      {
-        "title": "外資逆勢連買「不離不棄」 中鋼、台玻、華航等14檔抗跌先鋒受矚目 | 市場焦點 | 證券 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBjVUlPRjlIWnhBNG9rTi1na0NZTE1FRkNnMTF5d2hqMXBSN2dGRFhnQkozTUd0aUlOR01hWlNmdElTbjJ3Ym1ZTGFzRVNudVh2SlI2cXlqOGd5dw?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793716531000
       }
     ],
     "00878": [
@@ -170,7 +164,7 @@
         "title": "國泰永續高股息11/17除息 預估配息1.25元續創新高 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1KdDlTWjNWTU9nQUpFN0R1a0hEbC1CLUlobkZ5UkJIdEJvamYxZmc3RUcxWFE2cm9xcW1NOW1TS2ZuZTZoc2dwRVMzelExQi1FLWJFcnJoU1BVZ9IBX0FVX3lxTE4ybXRFd24yZGNqU1RkVjhNbFF5ZTdva2lWa2ZVelZFUWZieTc5czVDYjJkbE03VjVrVHpiSGdxU25EbUhYN09oR2dsbVZKUnd6X0xBYWFjQl9KRy1mTnVJ?oc=5",
         "publisher": "經濟日報",
-        "time": 1793692800000
+        "time": 1793865600000
       },
       {
         "title": "00878績效逆襲 0050！Q4配息創高還能存嗎？成分股與除息攻略一次看 - 鉅亨網",

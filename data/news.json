@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-06T08:48:45.592613+00:00",
+  "generatedAt": "2026-11-06T09:52:38.442392+00:00",
   "stocks": {
     "0050": [
       {
@@ -7,6 +7,12 @@
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9uTm1PMWNvQmhGMFp0eWowZUJoczVKLUhnTDgtc2JHcUpnN0RqN0NWYjF2X3pYRmF3SXMtSjFOLUxEMzhyV2JRWWZ6bjlsOW8?oc=5",
         "publisher": "鉅亨網",
         "time": 1793950307000
+      },
+      {
+        "title": "台股失守4萬大關 散戶狂掃0050、00631L單日成交金額創新高 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE53cENpOG1ENms0c2cwWWY0U2VVdGpac2VseEV4cmRhWklNUWF3QkF2YVZPN1ZQQTQwT1hhMGpEUjIteTkxUjZuOGhHb2xkdXQ0cE5QRnd5SEtTY2t5SEk40gFkQVVfeXFMT24ySzZIU1N3Vm52cXhwTm00bXUxZkIyaFBwLVhUclV6WlBfZTgzQ2xHTl9Ib3huMkdOZ2NoN2dadXFzbTBYNmlPS05mbmhaTTExS3dCT2h6UUMzUXRuQ2hfeG1TMQ?oc=5",
+        "publisher": "自由財經",
+        "time": 1793950008000
       },
       {
         "title": "焦點股》0050：跌破90元 買盤湧入 - 自由財經",
@@ -43,12 +49,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBCUkdPZDlXZFk1cC1mTzhnOVNVWVlNclJmR2tFZTljR2lCU2JRbDRST0UxWEY2LVhlT3dFVHFRbjd1NkNzd3dXNDZkaDlCd01xRC1MY2d4QnZIUQ?oc=5",
         "publisher": "經濟日報",
         "time": 1792998000000
-      },
-      {
-        "title": "元大台灣 50 逢低布局 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFA2aGx6ajJnUjBZR0dSMGUzNW5wdmVuRGFHMzRCaW9WQzBLOTBBUW9nRzAxWFF1aXVNWTV5eUFFSVpBTEdSUTI2NU1rLVoxR1BOa2pwMFktb1RVZ9IBX0FVX3lxTFBPQXFZbkdjRndJZ2dHYXBQN2lrOFZsSHdoejI0aEp5enFZWXBUZ1RsVzdMeEhYeXBOWEJkaDB4MzZuQW1Bb3luMXdFSDYybW16QXdZTXFsVzlSYW8zTDJ3?oc=5",
-        "publisher": "經濟日報",
-        "time": 1792825200000
       }
     ],
     "3711": [
@@ -68,6 +68,12 @@
         "title": "日月光投控9月營收連3個月創高 Q2季增27％續締新猷 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBsekV2RnZ6a2FQNk1lc1dMcnJMbG5xWkNaZmNGOG91cC0tTGpKUmNwVDNPVktGdHJOT1lxVmpscEZReVgyOXUxR1JoTDIzTXl4cUFpT3g3aVJTYlZwVXRv0gFkQVVfeXFMT2VPT0NrWTJiQWtGZ1dxcWVkUWpmNXhCNjRFRjJpV251LWwyend1RWZLWVVRSGtmOG5zZ2l6MUlfV3ZtX1BkREc4ejRyNk9UakE5VUUycGxtS00zMHpUVkNnRVdWQg?oc=5",
         "publisher": "自由財經",
+        "time": 1791788400000
+      },
+      {
+        "title": "日月光投控9月和第3季營收創高AI先進封測幫大忙| 證券 - 中央社 CNA",
+        "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE1pV3NrU3c4aEF5V1VtSVZDVWR1YWlmODl4cV9HbnVxeVprQWZZM2pMdVJ0Q2xfYTdVOWROY0R1YTBhU2tQOWhHcVUtQl9hcXVVS202am01UExlNlVUQ3c?oc=5",
+        "publisher": "中央社 CNA",
         "time": 1791788400000
       }
     ],
@@ -205,12 +211,6 @@
         "time": 1793692800000
       },
       {
-        "title": "00919第14次填息只花20天！年化配息率13.77%再受關注 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5GRFRpS2hlWWNJT2VEd0JNOFhKZGlfY0dnenY0U1dGOFU2UTRINmcxRkx6S1RqLUpsNk51WXVva1R4Yk1mT3hRTGJFM1RwQkszZzlHbzN5RFc2UdIBX0FVX3lxTE9MdTd4YldkNFp1NHA2LUI5ZERNSEI3eXl0U016bkpocm12YXNfdlQzWTd1X0hxaU03RjNUVGhHSDJQN1JCSWUxOXo5a3ZmSEhkREEzTHZhT016SE44ZDRz?oc=5",
-        "publisher": "經濟日報",
-        "time": 1792134000000
-      },
-      {
         "title": "台股ETF配息時間表！421億股息大紅包 00919、00918、00981A等21檔配息、發放日、平均領息一次看 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFA4eldYVlhyOG0yQlhZcDNNSHlMREV6ZGxsZWh6b3RGeFc1Y25wcUgzNTl3aGlPelYxNGJwdlNfTkk1VUQza1YtLWdwWXhaRmIyb1BkUGlHeDFIbGloUFVr?oc=5",
         "publisher": "工商時報",
@@ -219,6 +219,12 @@
       {
         "title": "00919、00918...21檔ETF配息大紅包來了！421億股息本周入帳前三大發錢主力揭曉- 日報 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE51dGRDSnR6by1aVnN3dkJQV2hiMnRTT1g0RnRXSWRnaUZkVVNNWkt4ajFsTlozWGhhUHhaUmN0cy1QTVZ3bnJNTE94MWNRZUtZdkRtdlhLRzhiZktuV1JF?oc=5",
+        "publisher": "工商時報",
+        "time": 1791788400000
+      },
+      {
+        "title": "0056、00878、00919之外還能怎麼配？達人點名月月配ETF新組合領息差距曝光- 理財 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1mTGtKNW04ay1xUmhEQjZ4N3drYVUySkxqOFNVc0I2OXZ5X2xQY01IeHV1LUxjd3Y0XzdCVy11NVliaE4xdTBmR0pINFhfeE90TElZa01nZlJNZHluNWg4?oc=5",
         "publisher": "工商時報",
         "time": 1791788400000
       },

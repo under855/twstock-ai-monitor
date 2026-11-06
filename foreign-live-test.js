@@ -13,9 +13,34 @@
   const states=new Map();
   function style(){if(document.getElementById('officialValidationStyle'))return;const s=document.createElement('style');s.id='officialValidationStyle';s.textContent=`.foreignValidation{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:9px 0 13px}.foreignCard{background:linear-gradient(145deg,#10223a,#0b1828);border:1px solid #213954;border-radius:15px;padding:13px}.foreignCard h3{font-size:16px;margin:3px 0 9px}.foreignTop{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.foreignStatus{font-size:11px;font-weight:800}.foreignGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.foreignMetric small{display:block;color:#93a9c2;font-size:10px}.foreignMetric b{display:block;margin-top:2px}.foreignChange{margin-inline-start:7px;font-size:12px;white-space:nowrap}.sourceNote{font-size:10px;color:#93a9c2;line-height:1.5;margin-top:7px}.state-ok{color:#63d49a}.state-delay{color:#ffd166}.state-warn{color:#ff8b8b}@media(max-width:720px){.foreignValidation{grid-template-columns:1fr}.foreignGrid{grid-template-columns:1fr 1fr}}`;document.head.appendChild(s)}
   function mount(){style();if(document.getElementById('officialValidation'))return;const anchor=document.querySelector('.sectionTitle');if(!anchor)return;const box=document.createElement('section');box.id='officialValidation';box.className='foreignValidation';box.innerHTML=stocks.map(([symbol,name])=>{const id=symbol.toLowerCase();return `<article class="foreignCard" id="${id}Validation"><div class="foreignTop"><div><small>美股即時驗證｜Nasdaq 官方資料</small><h3>${name} <span style="color:#93a9c2">${symbol}</span></h3></div><span class="foreignStatus" id="${id}Status">讀取中</span></div><div class="foreignGrid"><div class="foreignMetric"><small>最新價</small><b><span id="${id}Price">—</span><span id="${id}Change" class="foreignChange" aria-label="漲跌金額">—</span></b></div><div class="foreignMetric"><small>Nasdaq 原始時間</small><b id="${id}SourceTime">—</b></div><div class="foreignMetric"><small>市場狀態</small><b id="${id}Market">—</b></div><div class="foreignMetric"><small>有效新資料</small><b id="${id}Count">0</b></div></div><div class="sourceNote">來源：Nasdaq 官方 Quote API；瀏覽器透過 r.jina.ai 讀取官方回應。來源時間或報價變動才計為新資料。</div></article>`}).join('');anchor.parentNode.insertBefore(box,anchor)}
-  async function quoteStock(symbol){const u='https://r.jina.ai/https://api.nasdaq.com/api/quote/'+symbol+'/info?assetclass=stocks&_='+Date.now(),r=await fetch(u,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const t=await r.text(),i=t.indexOf('{');if(i<0)throw Error('Nasdaq JSON missing');const j=JSON.parse(t.slice(i)),d=j?.data,p=d?.primaryData;if(!p||d.symbol!==symbol)throw Error('Nasdaq payload missing');const price=num(p.lastSalePrice),ts=String(p.lastTradeTimestamp||'');if(price==null||!ts)throw Error('Nasdaq quote missing');const id=symbol.toLowerCase(),change=num(p.netChange),key=JSON.stringify([ts,price,change]);const previous=states.get(symbol);const count=(previous?.count||0)+(key!==previous?.key?1:0);states.set(symbol,{key,count});paintQuote(id,price,change,'USD ');document.getElementById(id+'SourceTime').textContent=ts;document.getElementById(id+'Market').textContent=String(d.marketStatus||'—');document.getElementById(id+'Count').textContent=String(count);const st=document.getElementById(id+'Status');st.textContent=p.isRealTime===true?'Nasdaq 標示即時':'Nasdaq 未標示即時';st.className='foreignStatus '+(p.isRealTime===true?'state-ok':'state-delay')}
-  function safeRun(fn,statusId){fn().catch(e=>{const x=document.getElementById(statusId);if(x){x.textContent='來源暫時無法讀取';x.className='foreignStatus state-warn'}console.warn(e)})}
-  function start(){mount();for(const [symbol] of stocks){const run=()=>safeRun(()=>quoteStock(symbol),symbol.toLowerCase()+'Status');run();setInterval(run,10000)}}
+  async function quoteStock(symbol,signal){const u='https://r.jina.ai/https://api.nasdaq.com/api/quote/'+symbol+'/info?assetclass=stocks&_='+Date.now(),r=await fetch(u,{cache:'no-store',signal});if(!r.ok)throw Error('HTTP '+r.status);const t=await r.text(),i=t.indexOf('{');if(i<0)throw Error('Nasdaq JSON missing');const j=JSON.parse(t.slice(i)),d=j?.data,p=d?.primaryData;if(!p||d.symbol!==symbol)throw Error('Nasdaq payload missing');const price=num(p.lastSalePrice),ts=String(p.lastTradeTimestamp||'');if(price==null||price<=0||!ts.trim())throw Error('Nasdaq quote missing');const id=symbol.toLowerCase(),change=num(p.netChange),key=JSON.stringify([ts,price,change]);const previous=states.get(symbol);const count=(previous?.count||0)+(key!==previous?.key?1:0);states.set(symbol,{key,count});paintQuote(id,price,change,'USD ');document.getElementById(id+'SourceTime').textContent=ts;document.getElementById(id+'Market').textContent=String(d.marketStatus||'—');document.getElementById(id+'Count').textContent=String(count);const st=document.getElementById(id+'Status');st.textContent=p.isRealTime===true?'Nasdaq 標示即時':'Nasdaq 未標示即時';st.className='foreignStatus '+(p.isRealTime===true?'state-ok':'state-delay')}
+  function start(){
+    mount();
+    for(const [symbol] of stocks){
+      let pending=false;
+      const run=async()=>{
+        if(pending)return;
+        pending=true;
+        const controller=new AbortController();
+        const timer=setTimeout(()=>controller.abort(),8000);
+        try{
+          await quoteStock(symbol,controller.signal);
+        }catch(error){
+          const status=document.getElementById(symbol.toLowerCase()+'Status');
+          if(status){
+            status.textContent='更新失敗｜保留上次報價';
+            status.className='foreignStatus state-warn';
+          }
+          console.warn(error);
+        }finally{
+          clearTimeout(timer);
+          pending=false;
+        }
+      };
+      run();
+      setInterval(run,10000);
+    }
+  }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
 

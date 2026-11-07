@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-07T07:30:51.582599+00:00",
+  "generatedAt": "2026-11-07T08:28:33.286345+00:00",
   "stocks": {
     "0050": [
       {
@@ -9,10 +9,10 @@
         "time": 1794000600000
       },
       {
-        "title": "第四法人出手承接！0050成交784億元、00631L達340億元雙創新高 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9uTm1PMWNvQmhGMFp0eWowZUJoczVKLUhnTDgtc2JHcUpnN0RqN0NWYjF2X3pYRmF3SXMtSjFOLUxEMzhyV2JRWWZ6bjlsOW8?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1793950307000
+        "title": "台股寫史上盤中最大跌點 散戶狂掃0050、00631L 單日成交金額創新高 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9NaGJ5bkg2NTU2WWMwOFZyYy1XbEtLeWlsRFppSzNBVmt2U1RldVY3U1lGZWtQbFpvckwtM1dXT1dYSHRqSUR3NnRIU0RCaFEtTE5jQWg5d181d9IBX0FVX3lxTE4xc1EtMTRCZExNMnZWVGRiVVgyYmRBcEVnQTNEaWR0ZW1qOFNhZUxXUmpzd2ZqS24xUnl0UlQ0bkliNWgxaVlOdVB2bEZEZ21sT2VvckZPQTJEX3NRSUgw?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793952000000
       },
       {
         "title": "台股失守4萬大關 散戶狂掃0050、00631L單日成交金額創新高 - 自由財經",
@@ -25,12 +25,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBwdG9faUVLOFFIdGNaSWNqUlh2cmdTUU5Jdi1lb2tCTWdnSUQwc1ZEU3V3d3YzVldWaTVJekxLNnE0cWxlbzdFcWdRdmR5aWlqX05xaDBXdTVaSGdmQk9j0gFkQVVfeXFMUGJMRE9LRU5xcTN1T1BFWGhXQVhLWmF2QW9FQ1BVZDRuaVl4RjI5UVFYMUsxSUxoTDJFbHdTd1pSM0o2TW4wa3FCemdtWUhWSW5mdnJRZGI4cDdXbEhhc25nbnkxaA?oc=5",
         "publisher": "自由財經",
         "time": 1793930684000
-      },
-      {
-        "title": "台股寫史上盤中最大跌點 散戶狂掃0050、00631L 單日成交金額創新高 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9NaGJ5bkg2NTU2WWMwOFZyYy1XbEtLeWlsRFppSzNBVmt2U1RldVY3U1lGZWtQbFpvckwtM1dXT1dYSHRqSUR3NnRIU0RCaFEtTE5jQWg5d181d9IBX0FVX3lxTE4xc1EtMTRCZExNMnZWVGRiVVgyYmRBcEVnQTNEaWR0ZW1qOFNhZUxXUmpzd2ZqS24xUnl0UlQ0bkliNWgxaVlOdVB2bEZEZ21sT2VvckZPQTJEX3NRSUgw?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793865600000
       },
       {
         "title": "台積電盤中零股交易金額居冠　元大台灣50成交股數最多 - 經濟日報",
@@ -49,6 +43,12 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBCUkdPZDlXZFk1cC1mTzhnOVNVWVlNclJmR2tFZTljR2lCU2JRbDRST0UxWEY2LVhlT3dFVHFRbjd1NkNzd3dXNDZkaDlCd01xRC1MY2d4QnZIUQ?oc=5",
         "publisher": "經濟日報",
         "time": 1792998000000
+      },
+      {
+        "title": "元大台灣 50 逢低布局 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFA2aGx6ajJnUjBZR0dSMGUzNW5wdmVuRGFHMzRCaW9WQzBLOTBBUW9nRzAxWFF1aXVNWTV5eUFFSVpBTEdSUTI2NU1rLVoxR1BOa2pwMFktb1RVZ9IBX0FVX3lxTFBPQXFZbkdjRndJZ2dHYXBQN2lrOFZsSHdoejI0aEp5enFZWXBUZ1RsVzdMeEhYeXBOWEJkaDB4MzZuQW1Bb3luMXdFSDYybW16QXdZTXFsVzlSYW8zTDJ3?oc=5",
+        "publisher": "經濟日報",
+        "time": 1792825200000
       }
     ],
     "3711": [
@@ -175,12 +175,6 @@
       {
         "title": "8月台股 ETF 配息一次看 00878、00929、00891等配息飆新高 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1uaUFsaXgyRUh3aUI1OWVDQV81WEpVMjg0dFUtQmFOdkpidnNXdDY5SHhpM1p2RTM3OWl5QjQ2d21hdHEwWl9saGg3QTZETF80WjBabWZWcm1DQdIBX0FVX3lxTE9TcnRVa0psdHE1dHlNQTZyN0xyRTEzZGMzRHRyblp4Qk1Hb0dwTDhEYTNod3AtZ1Ytb3lKdERwLUNwRHNzeGdyLUtWSU8tTWpOc1JybHdPbW1qWXhuLTRN?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793865600000
-      },
-      {
-        "title": "國泰永續高股息11/17除息 預估配息1.25元續創新高 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1KdDlTWjNWTU9nQUpFN0R1a0hEbC1CLUlobkZ5UkJIdEJvamYxZmc3RUcxWFE2cm9xcW1NOW1TS2ZuZTZoc2dwRVMzelExQi1FLWJFcnJoU1BVZ9IBX0FVX3lxTE4ybXRFd24yZGNqU1RkVjhNbFF5ZTdva2lWa2ZVelZFUWZieTc5czVDYjJkbE03VjVrVHpiSGdxU25EbUhYN09oR2dsbVZKUnd6X0xBYWFjQl9KRy1mTnVJ?oc=5",
         "publisher": "經濟日報",
         "time": 1793865600000
       },

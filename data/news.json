@@ -1,7 +1,13 @@
 {
-  "generatedAt": "2026-11-08T03:33:56.660269+00:00",
+  "generatedAt": "2026-11-08T04:34:10.322889+00:00",
   "stocks": {
     "0050": [
+      {
+        "title": "國安基金進場 法人點名台積電與0050直接受惠 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE0yM0xRN0ttU2oxMWJYbHFnMlZLeWRhRE84c0lNdlk5SUJSUDdBLWRsbDBidktCY21DbFV3dnNlTVp3d05LRzduTzlrMHRzZ0J0b2pyQkV3YWZXbEkxV1hV0gFkQVVfeXFMTjdCZi1JR2dmbHZKMkw3ZVgwVzFxaGV0SHA0dEF3ZUhWenFBOEdXaVlmVVFaZGtCeGNabkxKMmlYOTZPc3hkZmV6aUZwQmMzYUxjakNVRlpQR2tDeGtmLWJPSjlYVw?oc=5",
+        "publisher": "自由財經",
+        "time": 1794110286000
+      },
       {
         "title": "元大台灣50 適時進場 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE40S3FZdWhFcExOV1dITDREM0NKUjB0MkN1VGdpQmxkVmtycFlhVDdXWWl2ZWtoeWstaURNQi05emtkZENTUEJhWU95SmxYMk1HYl9fOVNCVnFhUdIBX0FVX3lxTE8ydzVQV3FDV1ZhbENvVzdPOXkwU3dJRkZpcGd5SGhNVEVMQzRRajhYQXRIM3BxM01Ib3RDcWVIT1B3b1lTZHFyakZBOU9KTDVCVUhieFNKVVMxNmE0MnA4?oc=5",
@@ -43,12 +49,6 @@
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9lNWVMaDMxeWR6RVJ6dl9QVXhYYmVKUHZBUlhZd1VnRk05dkR6MjA3aG1HSERuV0JUakRfb2tNQTh5ZXFHVkdpV1hyZ3dva0k?oc=5",
         "publisher": "鉅亨網",
         "time": 1793776718000
-      },
-      {
-        "title": "台股反向、高息 ETF 熱 元大台灣 50 反 1 單周獲買超 5.4 萬張稱冠 | 基金天地 | 理財 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBCUkdPZDlXZFk1cC1mTzhnOVNVWVlNclJmR2tFZTljR2lCU2JRbDRST0UxWEY2LVhlT3dFVHFRbjd1NkNzd3dXNDZkaDlCd01xRC1MY2d4QnZIUQ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1792998000000
       }
     ],
     "3711": [
@@ -205,6 +205,12 @@
     ],
     "00919": [
       {
+        "title": "26檔 ETF 台股創高後仍賺錢！00919領軍 價量齊揚前十都有「一特色」 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFByRHVzNVdCTEswdG9fNS0wcDJOTlhXQ0JEeHhzVTVELUlGZnpkbWZKZkF2dV9PYVhGV0VUZmdsTmx4Wl9ENzMtb1BxX2lpMzNVWG1LY1dPbTJnQdIBX0FVX3lxTE5OZXdsX2ZISVZrVE5KdE0zTzdseVJJQWdOUGNpcmt0Z251MjBQa29RdGRYSndIZ3NHc2x6dEhtQWFYanBOMkQ4S2kzMVJxVHFrb3ZPX2JnTWRDRHFxYWxB?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793952000000
+      },
+      {
         "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
         "publisher": "經濟日報",
@@ -215,12 +221,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE8xOThxSWptVnBuU2FWYkp0djR0bW5nV2hTc3YwdDBITnBvc1ZMSjhSQ0l4VU4xSFRJUmFjNEF0dkJVaTJ2VmlaczhvdGVnaE5zUnhWVjNjRTVIQdIBX0FVX3lxTE1Xc0k5MVNTWVloYi1rTmIzUGI0Vmh6NzRvWF9fZ3lWMnU3VTdQOEppcXVOV2VzTmp2VjlxV1RXS1pXcWtWVHJrTjVTQ3dXdjhYLVc3NVduejNUSXVfcVA0?oc=5",
         "publisher": "經濟日報",
         "time": 1793865600000
-      },
-      {
-        "title": "26檔 ETF 台股創高後仍賺錢！00919領軍 價量齊揚前十都有「一特色」 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFByRHVzNVdCTEswdG9fNS0wcDJOTlhXQ0JEeHhzVTVELUlGZnpkbWZKZkF2dV9PYVhGV0VUZmdsTmx4Wl9ENzMtb1BxX2lpMzNVWG1LY1dPbTJnQdIBX0FVX3lxTE5OZXdsX2ZISVZrVE5KdE0zTzdseVJJQWdOUGNpcmt0Z251MjBQa29RdGRYSndIZ3NHc2x6dEhtQWFYanBOMkQ4S2kzMVJxVHFrb3ZPX2JnTWRDRHFxYWxB?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793692800000
       },
       {
         "title": "台股ETF配息時間表！421億股息大紅包 00919、00918、00981A等21檔配息、發放日、平均領息一次看 - 工商時報",

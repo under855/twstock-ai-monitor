@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-08T05:30:07.784465+00:00",
+  "generatedAt": "2026-11-08T06:30:15.762323+00:00",
   "stocks": {
     "0050": [
       {
@@ -13,12 +13,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE40S3FZdWhFcExOV1dITDREM0NKUjB0MkN1VGdpQmxkVmtycFlhVDdXWWl2ZWtoeWstaURNQi05emtkZENTUEJhWU95SmxYMk1HYl9fOVNCVnFhUdIBX0FVX3lxTE8ydzVQV3FDV1ZhbENvVzdPOXkwU3dJRkZpcGd5SGhNVEVMQzRRajhYQXRIM3BxM01Ib3RDcWVIT1B3b1lTZHFyakZBOU9KTDVCVUhieFNKVVMxNmE0MnA4?oc=5",
         "publisher": "經濟日報",
         "time": 1794070872000
-      },
-      {
-        "title": "台股寫史上盤中最大跌點 散戶狂掃0050、00631L 單日成交金額創新高 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9NaGJ5bkg2NTU2WWMwOFZyYy1XbEtLeWlsRFppSzNBVmt2U1RldVY3U1lGZWtQbFpvckwtM1dXT1dYSHRqSUR3NnRIU0RCaFEtTE5jQWg5d181d9IBX0FVX3lxTE4xc1EtMTRCZExNMnZWVGRiVVgyYmRBcEVnQTNEaWR0ZW1qOFNhZUxXUmpzd2ZqS24xUnl0UlQ0bkliNWgxaVlOdVB2bEZEZ21sT2VvckZPQTJEX3NRSUgw?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794038400000
       },
       {
         "title": "台股創史上最大跌點 散戶狂掃0050、00631L - 自由財經",
@@ -49,6 +43,12 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBCUkdPZDlXZFk1cC1mTzhnOVNVWVlNclJmR2tFZTljR2lCU2JRbDRST0UxWEY2LVhlT3dFVHFRbjd1NkNzd3dXNDZkaDlCd01xRC1MY2d4QnZIUQ?oc=5",
         "publisher": "經濟日報",
         "time": 1792998000000
+      },
+      {
+        "title": "元大台灣 50 逢低布局 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFA2aGx6ajJnUjBZR0dSMGUzNW5wdmVuRGFHMzRCaW9WQzBLOTBBUW9nRzAxWFF1aXVNWTV5eUFFSVpBTEdSUTI2NU1rLVoxR1BOa2pwMFktb1RVZ9IBX0FVX3lxTFBPQXFZbkdjRndJZ2dHYXBQN2lrOFZsSHdoejI0aEp5enFZWXBUZ1RsVzdMeEhYeXBOWEJkaDB4MzZuQW1Bb3luMXdFSDYybW16QXdZTXFsVzlSYW8zTDJ3?oc=5",
+        "publisher": "經濟日報",
+        "time": 1792825200000
       }
     ],
     "3711": [
@@ -255,12 +255,6 @@
         "time": 1793936982000
       },
       {
-        "title": "台積電市值從2.2兆上看6.5兆美元 外媒估這時候股價漲3倍 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE0tQnFkUERwSXBCU0RVUTNHTG1WcFdsYUpCNDk0MlczcDlOR3hIVWltcUpyeXpTZnE3MHB4cDdDSjRhMVNpOWpTOV9aRkZka1RjQlVORGxmSW1RaUdmYlNv0gFkQVVfeXFMUFF3bndIaVdoN2pnLVdFYUl4NVhvVlRSaktsZ1doOFZ0emk2MjNvMTJ1cGMwRkxDeWstOXBwcXF5VmtHNWlrdlRpX2pLRFRtaVBMYnp4N2VVekp6ZHJDTW5lV2RQcQ?oc=5",
-        "publisher": "自由財經",
-        "time": 1793624855000
-      },
-      {
         "title": "台積電11張股票領逾7萬！股民哀怨價差快跌沒 網友羨慕炸鍋 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1ic1YtdjhlUEdfbGFmWlhHMndSc2VSNVB1Z2ktbzZrdm8yeWNpWWMxWUJKWTNvUGVfdVp6eE8tLUloZ3c3bHdWQ2R0Sk1DWUREUGtnVVJOWGVLVW5DSl9Z0gFkQVVfeXFMTjdBVXVDZmJJVmtmQVdZeEpoc28tVWhtVFBWNXI3cVk4RlZkU0tRcFRiRk5lMlR4UW5wXzlQbFFOel9seGxPTnFyQW1DYUd1TnhMSUk3djNTWlBVdk5ZYVFqM2RWXw?oc=5",
         "publisher": "自由財經",
@@ -293,6 +287,12 @@
       {
         "title": "台積電面臨2.57兆元獲利變數 法說會後股價「波動幅度」預曝 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5HVTdsaFZWeVB6VjZxWEdxNGZXR3p3Mk1DNXplZ0ZqMlc0YXUwRElacXhTWmxYV3VlM2VrTW05UDhXWG5zTTEwbDVELXJGSlRYbXJlRG43ak1FSzgyQTU00gFkQVVfeXFMTVVyRklEbHN0cFJXbWdEVDZONE0wZGRfT1BmRnplMlFGNTVwdXE2MUJGSFRnSHB4X1VITndNQ3ZkQzFSMVFwYVhuU1FKT0FoaExGNGlCUThReXZPUkZUa2R5MVJDdQ?oc=5",
+        "publisher": "自由財經",
+        "time": 1791961200000
+      },
+      {
+        "title": "台積電股價才創新高、怕買在高點還能追？外媒分析答案揭曉 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9QZ3Zla3J2Y3hzNE83VVVpN2FsRzI1elNlWnlpOGRoaUlYYTBfcGtrVTItWUFGU0xGVGx3bmRFcFViQy00YXVoR3J0TTBXWUU4cUQyaXpLSGM0R21yV0ow0gFkQVVfeXFMTng4b1RHd3dJbG0taTBiSjJtckZpaW50MkxwOE1vSzBjbTF1WEFOaHdZVXA3ZEI0MTVVZmNBcFpqTTBCQzl2M1NTQUhSN2FXX1ZXM2UxY2RCcy1jT244Uk1ZWU5LWQ?oc=5",
         "publisher": "自由財經",
         "time": 1791961200000
       }

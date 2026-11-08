@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-08T22:06:59.633565+00:00",
+  "generatedAt": "2026-11-08T22:45:13.210204+00:00",
   "stocks": {
     "0050": [
       {
@@ -153,10 +153,10 @@
         "time": 1793866217000
       },
       {
-        "title": "反映市場行情，中鋼12月月盤小幅調漲- 新聞 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPRXlHS0N4STB6WV9Va085SWc5YUlaQ20xY0ZDRmpBTWRfeTlvcUFRVXRWeUc5QVFlMi12Rjk2Mm1rZnNXY25sbllZZmFsUTFmbEtmWDN6SDFOa1c1ZUxiZ2FDb3lQc0V2VTE0REJQeUFvRFIwdkV1VDR6M0tPb29hWkdwZzMtSEo2QmllY25QS1JmQQ?oc=5",
-        "publisher": "MoneyDJ",
-        "time": 1793860200000
+        "title": "外銷接單升溫、新台幣走貶 中鋼12月盤價全面小漲300元 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9ycFpNaVMzUWVpWmtHSmFQNVNqRGgxWG1iYjFkSEtPMGdBbjYzUjRPQ3dxUXVYNlRfdUhPN3NBVGNfaU92WEVRa3hLOXBPT1V1XzdUNEVlLU9xZ3JrbzhN0gFkQVVfeXFMTWQ5T2k2NFYxV2Z3SVhlU1FfNnp2V05WeVRYeEdta2toR2tXanJGcmdmUnFHNldqenUwY25SNWllZ1pNYy1jT2t3NGlqa3I2cUFBRXpzdDhOS0xJZUtmQllaTFVITQ?oc=5",
+        "publisher": "自由財經",
+        "time": 1793859783000
       }
     ],
     "00878": [
@@ -167,16 +167,16 @@
         "time": 1794038400000
       },
       {
+        "title": "九檔台股 ETF 創高價 00878、0056等單日股價強彈 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5fQkU5OUJBLUpLLXVhbWpzTjMyWEhydng1b0JpcUxFSnhsNFhOUFN2cFQ0dVNhR21wc1hUUFBfZVExSkhud09GTVZxRE14Q1UtZ0pYaDdBUFJWUdIBX0FVX3lxTE4zd3BDQXBWUXZqQkdhalZGX3FrX0FoV0x6b2I5NS1hWHNRaFIyUjJSYUhpME9DaGpIVTBDM1d4MXJ4X0UwQmgzNUVxdUg5Q0pZc1V5b1RDcnVQNDc0elBJ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794038400000
+      },
+      {
         "title": "193萬投資人笑了！台股狂飆3,186點、ETF 00878及00881配息同飆新高 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1NMWVKNkZzOWxuY0xnS1NjVzEwY0lodnRac3VBRWg2aFNvSExTMnpLYlVOdWFWWGJzYXhnY0REWWhqeThaMU5QcFF2Xy1SNEkyVzNFMGRTdjc1QdIBX0FVX3lxTFB5dkZHSHlKUTFvQ0NObUZBWnNHQXJDVDF2Zm1JMXViMWl5cWdhWnRkZWxNLWdiWE1ZQVliUDRzbmdiUFNFMktiQlBlRGxzOUNSQThMbEY5bC1CaXptRlJz?oc=5",
         "publisher": "經濟日報",
         "time": 1793952000000
-      },
-      {
-        "title": "九檔台股 ETF 創高價 00878、0056等單日股價強彈 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5fQkU5OUJBLUpLLXVhbWpzTjMyWEhydng1b0JpcUxFSnhsNFhOUFN2cFQ0dVNhR21wc1hUUFBfZVExSkhud09GTVZxRE14Q1UtZ0pYaDdBUFJWUdIBX0FVX3lxTE4zd3BDQXBWUXZqQkdhalZGX3FrX0FoV0x6b2I5NS1hWHNRaFIyUjJSYUhpME9DaGpIVTBDM1d4MXJ4X0UwQmgzNUVxdUg5Q0pZc1V5b1RDcnVQNDc0elBJ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793865600000
       },
       {
         "title": "國泰永續高股息-ETF配息狀況 - MoneyDJ",
@@ -223,6 +223,12 @@
         "time": 1793865600000
       },
       {
+        "title": "群益台灣精選高息ETF基金 的總覽 | 鉅亨網 - 基金老司機 - 鉅亨網",
+        "link": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxNWTBzcERwektRQXdWb3FLdTNUcjVFQTZuMVJPSFkwVkZxSEdJYVk5WVdwM3BhQm1fbjdvdFF5TjJiajNOalRBZWROeXcwUjBKVk0xSEl2eU5WSTRmRXVrRzhidHJnZkFSSmxHeDdyczR0WFRlWXc0VjcwcEF4cFZ3clN2alpsaDc5WXl0QWhfbVR5SklESlJuQ0puaUoyYnVWZWMybklTSkRSV0RBMVhGUFctT0F1SXByenR5WXFTdENYUUs2UUMwOUpDSHBBemllTVlPazdKMkt2NFFkcTFhOA?oc=5",
+        "publisher": "鉅亨網",
+        "time": 1793343600000
+      },
+      {
         "title": "00919第14次填息只花20天！年化配息率13.77%再受關注 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5GRFRpS2hlWWNJT2VEd0JNOFhKZGlfY0dnenY0U1dGOFU2UTRINmcxRkx6S1RqLUpsNk51WXVva1R4Yk1mT3hRTGJFM1RwQkszZzlHbzN5RFc2UdIBX0FVX3lxTE9MdTd4YldkNFp1NHA2LUI5ZERNSEI3eXl0U016bkpocm12YXNfdlQzWTd1X0hxaU03RjNUVGhHSDJQN1JCSWUxOXo5a3ZmSEhkREEzTHZhT016SE44ZDRz?oc=5",
         "publisher": "經濟日報",
@@ -239,12 +245,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE51dGRDSnR6by1aVnN3dkJQV2hiMnRTT1g0RnRXSWRnaUZkVVNNWkt4ajFsTlozWGhhUHhaUmN0cy1QTVZ3bnJNTE94MWNRZUtZdkRtdlhLRzhiZktuV1JF?oc=5",
         "publisher": "工商時報",
         "time": 1791788400000
-      },
-      {
-        "title": "高股息ETF近三月強漲 0056、00919吸金10月淨流入破百億元 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBZVTZ1YXlPWWJfdl95dmlrMWtSaVI3SWM4ZV9vVlVNM2pKblVlZW9kdlF1WXBScXB3VWRYUVd4ZUtxN0s0dWtaX1VyRWZwSzc3MDYyMk1jVnZ0RnU2d1pN0gFkQVVfeXFMUG16TUlrSmc4U1h3ZzlxTkw0X3F5SnE1aHhNS1pzdzNScFpuLThseU53UWo0b0RETkI5VERZU1I2RDlUZnlYczlia2wyZnhHTU5MSUIzaVNwWmNHd3l6RURiVUFjSQ?oc=5",
-        "publisher": "自由財經",
-        "time": 1791702000000
       }
     ],
     "2330": [

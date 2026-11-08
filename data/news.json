@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-08T11:29:04.648388+00:00",
+  "generatedAt": "2026-11-08T12:08:47.574827+00:00",
   "stocks": {
     "0050": [
       {
@@ -293,12 +293,12 @@
     ]
   },
   "refreshStatus": {
-    "0050": "retained-previous",
-    "3711": "retained-previous",
-    "3293": "retained-previous",
-    "2002": "retained-previous",
-    "00878": "retained-previous",
-    "00919": "retained-previous",
-    "2330": "retained-previous"
+    "0050": "fresh",
+    "3711": "fresh",
+    "3293": "fresh",
+    "2002": "fresh",
+    "00878": "fresh",
+    "00919": "fresh",
+    "2330": "fresh"
   }
 }

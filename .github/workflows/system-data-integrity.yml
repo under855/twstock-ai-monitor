@@ -15,8 +15,10 @@ on:
       - 'dividend-enhance.js'
       - 'extras-v090.js'
       - '.github/workflows/system-data-integrity.yml'
+  # GitHub Actions uses UTC; 16:00 UTC = 00:00 next day in Taiwan (UTC+8).
+  # Runs every calendar day, including weekends and Taiwanese market holidays.
   schedule:
-    - cron: '50 7 * * 1-5'
+    - cron: '0 16 * * *'
 permissions:
   contents: read
 jobs:

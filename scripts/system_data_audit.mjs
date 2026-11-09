@@ -99,6 +99,23 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   console.log('TRADING_'+opt.name.toUpperCase(),JSON.stringify(trade));
   assert(trade.open&&trade.reset&&trade.limit,'PAPER_TRADE_FORM_MISSING '+opt.name);
   assert(trade.cash.includes('1,000,000'),'INITIAL_CASH_NOT_1M '+opt.name);
+  await page.locator('#ptClose').click();
+  await page.locator('#code').fill('2330');
+  await page.locator('#searchBtn').click();
+  const match=page.locator('#searchResults .searchHit').filter({hasText:'2330'}).first();
+  await match.waitFor({state:'visible',timeout:5000});
+  await match.locator('button').click();
+  await page.waitForTimeout(350);
+  const selected=await page.evaluate(()=>({
+    open:document.getElementById('sheet')?.classList.contains('show'),
+    title:document.getElementById('dTitle')?.textContent||'',
+    score:document.getElementById('scoreParts')?.textContent||'',
+    news:!!document.getElementById('news'),
+    dividend:!!document.getElementById('dividendEvents')
+  }));
+  assert(selected.open&&selected.title.includes('2330'),'SEARCH_DETAIL_FAIL '+opt.name);
+  assert(selected.news&&selected.dividend,'RESEARCH_AND_DIVIDEND_UI_MISSING '+opt.name);
+  console.log('SEARCH_'+opt.name.toUpperCase(),JSON.stringify(selected));
   await ctx.close();
 }
 await browser.close();

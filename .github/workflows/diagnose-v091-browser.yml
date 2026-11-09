@@ -68,9 +68,9 @@ jobs:
             label:document.querySelector('.fxStripTitle')?.textContent,
             bot:document.querySelector('#botCashFxV096')?.textContent?.slice(0,500),
             count:document.querySelectorAll('#botCashFxV096 .botCashFxCode').length,
-            spotCount:document.querySelectorAll('#fxBoardStrip .fxItem').length,
-            usdCash:[...document.querySelectorAll('#botCashFxV096 .botCashFxCell')].map(x=>x.textContent?.trim()).slice(3,6),
-            usdSpot:document.querySelector('#fxBoardStrip .fxItem strong')?.textContent,
+            spotCount:document.querySelectorAll('#botCashFxV096 .botCashFxCode').length,
+            usdCash:[...document.querySelectorAll('#botCashFxV096 .botCashFxCell')].map(x=>x.textContent?.trim()).slice(5,8),
+            usdSpot:[...document.querySelectorAll('#botCashFxV096 .botCashFxCell')].map(x=>x.textContent?.trim())[9],
             timestamp:document.querySelector('#fxStamp')?.textContent,
             oldProvider:[...document.scripts].some(x=>x.textContent?.includes('open.er-api.com'))
           }));

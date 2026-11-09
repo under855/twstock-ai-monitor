@@ -55,6 +55,7 @@
     const today=twDay(),live=window.__TW_LIVE_V091__?.taiex;
     const liveToday=live&&String(live.date)===today&&Number.isFinite(Number(live.price));
     const officialToday=latest?.officialClose&&latest.date.replaceAll('-','')===today;
+    if(liveToday&&!officialToday)return; // Live controller owns the active-session index display.
     const x=officialToday?latest:liveToday?{date:live.date,price:Number(live.price),change:live.change==null?null:Number(live.change),time:String(live.time||''),source:live.source||'TWSE MIS 盤中資料'}:latest;
     if(!x)return;
     const v=document.getElementById('taiex'),c=document.getElementById('taiexChg'),mt=document.getElementById('marketTime');

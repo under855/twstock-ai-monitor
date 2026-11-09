@@ -125,7 +125,7 @@
     for(const code of wanted){
       const x=obj?.[code];if(!x)continue;const d=isoCompact(x.tradeDate);if(d!==today()||num(x.close)==null)continue;
       const tt='13:30:00',ms=stamp(d,tt);if(ms==null)continue;
-      map.set(code,{code,date:d,price:num(x.close),prev:num(x.change)==null?null:num(x.close)-num(x.change),change:num(x.change),open:num(x.open),high:num(x.high),low:num(x.low),volume:num(x.volume),tradeTime:tt,stamp:ms,source:'官方收盤資料',officialClose:true,live:true});
+      map.set(code,{code,date:d,price:num(x.close),prev:num(x.change)==null?null:num(x.close)-num(x.change),change:num(x.change),open:num(x.open),high:num(x.high),low:num(x.low),volume:num(x.volume),tradeTime:tt,stamp:ms,volumeUnit:'shares',source:'官方收盤資料',officialClose:true,live:true});
     }
     return {map,idx};
   }
@@ -135,7 +135,7 @@
     const tr=m?.trade||{},price=num(tr?.z)??num(m?.z);if(price==null)return null;
     const time=String(tr?.t||m?.t||''),ms=stamp(date,time);if(ms==null)return null;
     const prev=num(m?.y);
-    return {code,date,price,prev,change:prev==null?null:price-prev,open:num(m?.o),high:num(m?.h),low:num(m?.l),volume:num(m?.v),tradeTime:time,stamp:ms,source:'TWSE MIS 盤中最新成交',live:true};
+    return {code,date,price,prev,change:prev==null?null:price-prev,open:num(m?.o),high:num(m?.h),low:num(m?.l),volume:num(m?.v),tradeTime:time,stamp:ms,volumeUnit:'lots',source:'TWSE MIS 盤中最新成交',live:true};
   }
   function parseTaiex(m){
     if(String(m?.d||'')!==today())return null;
@@ -207,7 +207,7 @@
     const p=r.querySelector('.price'),ch=r.querySelector('.chg'),d=r.querySelector('.dayline'),m=r.querySelector('.meta');
     setText(p,fmt(q.price));
     if(ch){setText(ch,(q.change>0?'+':'')+fmt(q.change));setClass(ch,'chg '+cls(q.change))}
-    setText(d,(q.officialClose?'收盤 ': '')+q.tradeTime+'　開 '+fmt(q.open)+'　高 '+fmt(q.high)+'　低 '+fmt(q.low)+'　最新 '+fmt(q.price)+'　量 '+fmt(q.volume,0));
+    setText(d,(q.officialClose?'收盤 ': '')+q.tradeTime+'　開 '+fmt(q.open)+'　高 '+fmt(q.high)+'　低 '+fmt(q.low)+'　最新 '+fmt(q.price)+'　量 '+fmt(q.volume,0)+(q.volumeUnit==='lots'?' 張':q.volumeUnit==='shares'?' 股':'（單位未確認）'));
     setText(m,q.source+(q.officialClose?'｜':'｜成交 ')+q.tradeTime);
     const c=canvasFor(r);if(!(typeof window.__TW_DRAW_MAIN_TODAY__==='function'&&window.__TW_DRAW_MAIN_TODAY__(code,c)))drawLine(c,series.get(code)||[]);
     try{const base=rowForCode(code),val=allVals.find(x=>String(x.Code).trim()===code)||{},hist=historyCache?.[code]||[],s=scoreStock(base,val,hist,q),sn=r.querySelector('.scoreNum'),sl=r.querySelector('.scoreLabel');if(sn){setText(sn,s.total==null?'—':String(s.total));setClass(sn,'scoreNum '+scoreCls(s.total))}if(sl)setText(sl,s.total==null?'資料不足':s.mode)}catch{}
@@ -234,7 +234,7 @@
         }else set('chartMsg','最近交易日走勢載入中');
         return;
       }
-      set('dPrice',fmt(q.price));set('dOpen',fmt(q.open));set('dRange',`${fmt(q.high)} / ${fmt(q.low)}`);set('dVolume',fmt(q.volume,0));set('dTime',`${q.source}｜${q.tradeTime}`);
+      set('dPrice',fmt(q.price));set('dOpen',fmt(q.open));set('dRange',`${fmt(q.high)} / ${fmt(q.low)}`);set('dVolume',fmt(q.volume,0)+(q.volumeUnit==='lots'?' 張':q.volumeUnit==='shares'?' 股':'（單位未確認）'));set('dTime',`${q.source}｜${q.tradeTime}`);
       const ch=document.getElementById('dChange');if(ch){ch.textContent=`${q.change>0?'+':''}${fmt(q.change)}`;ch.className=`v ${cls(q.change)}`}
       if(title)title.textContent=q.officialClose?'今日交易走勢':'今日盤中即時走勢';
       const a=series.get(code)||[];

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T10:22:24.875917+00:00",
+  "generatedAt": "2026-11-09T11:22:29.545812+00:00",
   "stocks": {
     "0050": [
       {
@@ -19,12 +19,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE0yM0xRN0ttU2oxMWJYbHFnMlZLeWRhRE84c0lNdlk5SUJSUDdBLWRsbDBidktCY21DbFV3dnNlTVp3d05LRzduTzlrMHRzZ0J0b2pyQkV3YWZXbEkxV1hV0gFkQVVfeXFMTjdCZi1JR2dmbHZKMkw3ZVgwVzFxaGV0SHA0dEF3ZUhWenFBOEdXaVlmVVFaZGtCeGNabkxKMmlYOTZPc3hkZmV6aUZwQmMzYUxjakNVRlpQR2tDeGtmLWJPSjlYVw?oc=5",
         "publisher": "自由財經",
         "time": 1794110286000
-      },
-      {
-        "title": "元大台灣50〈0050.TW〉 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9JQXVwR01LUHFHN2RVTFJtdFZnR2taRkpSY0kyT0RWWkRjdDBoZnlwRHJuSVVfWHd3ejQxcjFwRldRQ0UtWVo1azI0Umo1Vkx5NkNCNndnTENlYUpBRjlmWWlDYm9pelBTT1pV?oc=5",
-        "publisher": "MoneyDJ",
-        "time": 1793952000000
       },
       {
         "title": "焦點股》0050：跌破90元 買盤湧入 - 自由財經",
@@ -49,6 +43,12 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1VbEVQaDM4VGY2d1NfX2J2QlkxdlNtUWlmS1JtMWJ2YXFEUjJUckd3UU5DYmYwTkJOOFVQTnBEMkRnY01HZGthb0MwSXRSTW5DM0YweG9Rc3hiU0psWkYw0gFkQVVfeXFMUEJTaldmSENtbEF3Q3kxUDZZRjRjOGtyQVJ3ZTVONTd3V2xkd1hpLUNFOHBfQ2VfUjRYMDZlZklFQ1liUVhxWXM1WGNUMWlvTHptMXNPRHc2MHdLNTRBRzRnd0dTRg?oc=5",
         "publisher": "自由財經",
         "time": 1792306800000
+      },
+      {
+        "title": "30歲北漂女想砸錢買一張0050當生日禮物 過來人給「這些建議」 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9lUFJSbFRBN0w1b09wb0pPSll2QWR2cGxSWmR6ZG5ZWXVMR0dUUGtLeS1pRVg4My16eHV2ZHZ1T0EzYVQzb1hpc05rZW8yLTI0S3Y0bkdnenFoVkFWSHdF0gFkQVVfeXFMTm9ubEVoS05TXzZkeFhlZ0VZZHZEMnZKVnYtQkJYZy04WFpOd0t6YkFCUlBhaG92OS1XSmlNejhxZHRMb3l0ZWI4M3J3ek5XZzdIQ1FDcmFOc1NMNGtaS1g1cF94WA?oc=5",
+        "publisher": "自由財經",
+        "time": 1791788400000
       }
     ],
     "3711": [
@@ -179,6 +179,12 @@
         "time": 1794038400000
       },
       {
+        "title": "台股 ETF 配息報喜 00878、00982A 等股息及配發率創高 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9sS0lhZFpqaUgyUzQ4WTVoY0h2YXFnSVl3NFdxcDlWb1E5RXphY0thUVRTaVFMSUhxVU42bmpYQ3NOQ1FyTTVkeE90NVVFYjlhVlItT1RYem9BQdIBX0FVX3lxTE84SnNkZGxndU5lRXRZakdVUDlGd0g5dGgxZVEzTTlKbXpBM3g4RE5zdGhyc29tcXp4Zkk1WlRoTUFDRy1xUFVmMFpYZkNubmNRRHRJcVA5Z05CN1pBSlo4?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793952000000
+      },
+      {
         "title": "國泰永續高股息-ETF配息狀況 - MoneyDJ",
         "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE41UWthZmowZVNaYjRPLWhIRlNQNVZKZzZGeEhlaGdrdXQ1UjFiU3pLdDlzR3RrQzd0NnI5N2tMaDRXMkp3N1h4S2hRd1ZDMzdiVzllRnJrSWI2elVCSWswd1dRMjgyeU9kSTlySkVCV2xEdUtVN0FTSGdrVmw?oc=5",
         "publisher": "MoneyDJ",
@@ -201,12 +207,6 @@
       {
         "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793952000000
-      },
-      {
-        "title": "26檔 ETF 台股創高後仍賺錢！00919領軍 價量齊揚前十都有「一特色」 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFByRHVzNVdCTEswdG9fNS0wcDJOTlhXQ0JEeHhzVTVELUlGZnpkbWZKZkF2dV9PYVhGV0VUZmdsTmx4Wl9ENzMtb1BxX2lpMzNVWG1LY1dPbTJnQdIBX0FVX3lxTE5OZXdsX2ZISVZrVE5KdE0zTzdseVJJQWdOUGNpcmt0Z251MjBQa29RdGRYSndIZ3NHc2x6dEhtQWFYanBOMkQ4S2kzMVJxVHFrb3ZPX2JnTWRDRHFxYWxB?oc=5",
         "publisher": "經濟日報",
         "time": 1793952000000
       },
@@ -239,15 +239,15 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE51dGRDSnR6by1aVnN3dkJQV2hiMnRTT1g0RnRXSWRnaUZkVVNNWkt4ajFsTlozWGhhUHhaUmN0cy1QTVZ3bnJNTE94MWNRZUtZdkRtdlhLRzhiZktuV1JF?oc=5",
         "publisher": "工商時報",
         "time": 1791788400000
+      },
+      {
+        "title": "高股息ETF近三月強漲 0056、00919吸金10月淨流入破百億元 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBZVTZ1YXlPWWJfdl95dmlrMWtSaVI3SWM4ZV9vVlVNM2pKblVlZW9kdlF1WXBScXB3VWRYUVd4ZUtxN0s0dWtaX1VyRWZwSzc3MDYyMk1jVnZ0RnU2d1pN0gFkQVVfeXFMUG16TUlrSmc4U1h3ZzlxTkw0X3F5SnE1aHhNS1pzdzNScFpuLThseU53UWo0b0RETkI5VERZU1I2RDlUZnlYczlia2wyZnhHTU5MSUIzaVNwWmNHd3l6RURiVUFjSQ?oc=5",
+        "publisher": "自由財經",
+        "time": 1791702000000
       }
     ],
     "2330": [
-      {
-        "title": "台積電股價反彈2,200元關卡以上 市值回升至逾59兆 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFA4Q21Vejc0VjNUUE15QU5OTDdXTW5EbG0wM3UtWE15STk5WTdBdU9GazFUM3pmVkhpZUx6UXp5T0s1VFZpeU9LTGYxSFJqTnNzTUdGSmcwVzhpd9IBX0FVX3lxTE1fenhmUzZVQkFGRjFWbkRtR01jWFgtbXJ6MGZMaUc3cjI5R0VWdVdMenhiZ0x4QjZiRmFPVUVMbHg4bDhXSVpFSlotc1BkWFdrUjJXWVAzaUV6Y1hqUXlB?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794192114000
-      },
       {
         "title": "台積電11張股票領逾7萬！股民哀怨價差快跌沒 網友羨慕炸鍋 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1ic1YtdjhlUEdfbGFmWlhHMndSc2VSNVB1Z2ktbzZrdm8yeWNpWWMxWUJKWTNvUGVfdVp6eE8tLUloZ3c3bHdWQ2R0Sk1DWUREUGtnVVJOWGVLVW5DSl9Z0gFkQVVfeXFMTjdBVXVDZmJJVmtmQVdZeEpoc28tVWhtVFBWNXI3cVk4RlZkU0tRcFRiRk5lMlR4UW5wXzlQbFFOel9seGxPTnFyQW1DYUd1TnhMSUk3djNTWlBVdk5ZYVFqM2RWXw?oc=5",
@@ -289,6 +289,12 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9QZ3Zla3J2Y3hzNE83VVVpN2FsRzI1elNlWnlpOGRoaUlYYTBfcGtrVTItWUFGU0xGVGx3bmRFcFViQy00YXVoR3J0TTBXWUU4cUQyaXpLSGM0R21yV0ow0gFkQVVfeXFMTng4b1RHd3dJbG0taTBiSjJtckZpaW50MkxwOE1vSzBjbTF1WEFOaHdZVXA3ZEI0MTVVZmNBcFpqTTBCQzl2M1NTQUhSN2FXX1ZXM2UxY2RCcy1jT244Uk1ZWU5LWQ?oc=5",
         "publisher": "自由財經",
         "time": 1791961200000
+      },
+      {
+        "title": "現在投資台積電多久可望翻倍 外媒算出報酬率在「這區間」 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBRSHMtSmFiMm9DU3lYNXNtRWVPUXJUQ2dJUHhSUDEzYUtXUU8zaTdYb1BxOS12bjJTZ3RnVFBpTkhCa3NyMWRJRFR6QjlOaXhOenVnZEVCdlhWTzhPUThF0gFkQVVfeXFMTmpqbDcwbU1CcTVpTGcyWDJoOExUMDdPS2VHWklfblg5SDRmUzF0MDJFbE16cHVTTFdfZjJjcXh3LWJ1NDVfR0JtcHlqZFNRT09LLWt4bFJteVhRNGRFMDY4YnpHNw?oc=5",
+        "publisher": "自由財經",
+        "time": 1791874800000
       }
     ]
   },

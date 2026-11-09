@@ -27,6 +27,13 @@ for(const code of ['0050','00878','00919','2330','3711','3293','2002']){
     assert(v.close>=v.low-.0001&&v.close<=v.high+.0001,'BAD_CLOSE_RANGE '+code);
   }
 }
+const news=JSON.parse(fs.readFileSync('data/news.json','utf8'));
+const dividends=JSON.parse(fs.readFileSync('data/dividends.json','utf8'));
+assert(news&&typeof news==='object','NEWS_JSON_INVALID');
+assert(dividends&&typeof dividends==='object','DIVIDEND_JSON_INVALID');
+assert(fs.statSync('data/dividends.json').size>1000,'DIVIDEND_DATA_EMPTY');
+assert(fs.statSync('data/news.json').size>500,'NEWS_DATA_EMPTY');
+console.log('SECONDARY_DATA_JSON_PASS',Object.keys(news),Object.keys(dividends).slice(0,12));
 console.log('STATIC_DATA_PASS',day,latest.taiex.close,Object.keys(latest.symbols).length);
 const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
 const errors=[];

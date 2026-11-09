@@ -136,6 +136,12 @@
   function tick(){paint();if(activePilot()&&document.visibilityState==='visible')refreshOfficial().then(()=>paint()).catch(()=>{})}
   window.addEventListener('resize',()=>paint(true));
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')paint(true)});
+  // Render as soon as the detail dialog opens; do not wait for the next 4-second tick.
+  const sheet=document.getElementById('sheet');
+  if(sheet&&typeof MutationObserver==='function'){
+    const watchDetail=new MutationObserver(()=>{if(activePilot()){paint(true);refreshOfficial().then(()=>paint()).catch(()=>{})}});
+    watchDetail.observe(sheet,{attributes:true,attributeFilter:['class']});
+  }
   setInterval(tick,4000);setTimeout(tick,900);
   window.__TW_PILOT_CHART_00878__={refresh:()=>{lastSignature='';tick()},code:CODE};
 })();

@@ -32,19 +32,100 @@
   function cashBox(){let b=document.getElementById('botCashFxV096');if(b)return b;b=document.createElement('section');b.id='botCashFxV096';b.className='botCashFx';b.innerHTML='<div class="botCashFxHead"><div class="botCashFxTitle">臺灣銀行｜現金買進・賣出</div><div class="botCashFxTime">讀取最新牌告…</div></div><div class="botCashFxGrid"><div class="botCashFxCell botCashFxHdr">幣別</div><div class="botCashFxCell botCashFxHdr botCashFxNum">現金買進</div><div class="botCashFxCell botCashFxHdr botCashFxNum">現金賣出</div></div><div class="botCashFxNote">銀行「買進」是銀行向你買外幣；你拿台幣買外幣現鈔時，主要看「現金賣出」。</div>';return b;}
   function parseBot(html){
     const doc=new DOMParser().parseFromString(html,'text/html'),rows=[];
-    const clean=v=>String(v??'').trim();
-    const valid=v=>/^\d+(?:\.\d+)?$/.test(v);
-    for(const tr of doc.querySelectorAll('table tbody tr')){
-      const text=(tr.textContent||'').replace(/\s+/g,' ').trim();
-      const m=text.match(/\(([A-Z]{3})\)/);if(!m||!CURRENCIES.includes(m[1]))continue;
-      const buy=clean(tr.querySelector('td[data-table="本行現金買入"]')?.textContent);
-      const sell=clean(tr.querySelector('td[data-table="本行現金賣出"]')?.textContent);
-      if(valid(buy)&&valid(sell))rows.push({code:m[1],buy,sell});
+    const number=v=>{
+      const s=String(v??'').trim();
+      return /^\d+(?:\.\d+)?$/.test(s)&&Number(s)>0?Number(s):null;
+    };
+    const tbody=doc.querySelector('table.table-striped tbody');
+    if(!tbody)return null;
+    const seen=new Set();
+    for(const tr of tbody.querySelectorAll('tr')){
+      const label=tr.querySelector('td[data-table="幣別"]')?.textContent||tr.textContent||'';
+      const code=label.match(/\(([A-Z]{3})\)/)?.[1];
+      if(!code||!CURRENCIES.includes(code)||seen.has(code))continue;
+      const read=name=>number(tr.querySelector('td[data-table="'+name+'"]')?.textContent);
+      const buy=read('本行現金買入'),sell=read('本行現金賣出');
+      const sightBuy=read('本行即期買入'),sightSell=read('本行即期賣出');
+      // Cash rates must have correct direction. Spot may legitimately be unavailable.
+      if(buy===null||sell===null||buy>sell)continue;
+      if(sightBuy!==null&&sightSell!==null&&sightBuy>sightSell)continue;
+      rows.push({code,buy,sell,sightBuy,sightSell});seen.add(code);
     }
-    const body=(doc.body?.textContent||'').replace(/\s+/g,' ');const tm=body.match(/牌價最新掛牌時間[：:]\s*([^取幣]+?)(?=幣別|$)/);
-    return {rows,time:tm?tm[1].trim():''};
+    if(rows.length<7||!seen.has('USD')||!seen.has('JPY'))return null;
+    const text=(doc.body?.textContent||'').replace(/\s+/g,' ');
+    const dateText=text.match(/牌價最新掛牌時間\s*[：:]\s*(\d{4}\/\d{2}\/\d{2}\s+\d{2}:\d{2})/)?.[1]||'';
+    // Never call a proxy retrieval timestamp a quote timestamp.
+    if(!dateText)return null;
+    const ms=Date.parse(dateText.replace(/(\d{4})\/(\d{2})\/(\d{2})\s+(\d{2}:\d{2})/,'$1-$2-$3T$4:00+08:00'));
+    if(!Number.isFinite(ms)||ms>Date.now()+300000||Date.now()-ms>7*86400000)return null;
+    return {rows,time:dateText,stamp:ms};
   }
-  async function loadBotCash(){const box=cashBox(),grid=box.querySelector('.botCashFxGrid'),time=box.querySelector('.botCashFxTime');const urls=[`https://api.allorigins.win/raw?url=${encodeURIComponent(BOT_URL)}`,`https://proxy.cors.dev/${BOT_URL}`];for(const u of urls){try{const ac=new AbortController(),t=setTimeout(()=>ac.abort(),8000);let r;try{r=await fetch(u,{cache:'no-store',signal:ac.signal});}finally{clearTimeout(t)}if(!r.ok)continue;const p=parseBot(await r.text());if(!p.rows.length)continue;grid.querySelectorAll('.botCashFxCell:not(.botCashFxHdr)').forEach(x=>x.remove());for(const x of p.rows){grid.insertAdjacentHTML('beforeend',`<div class="botCashFxCell botCashFxCode">${x.code}</div><div class="botCashFxCell botCashFxNum">${x.buy}</div><div class="botCashFxCell botCashFxNum">${x.sell}</div>`);}time.textContent=p.time?`掛牌 ${p.time}`:'臺銀最新牌告';return true;}catch{}}time.textContent='臺銀牌告暫時無法讀取';return false;}
+  const fmt=v=>v==null?'—':Number(v).toFixed(v<1?5:3).replace(/0+$/,'').replace(/\.$/,'');
+  let cashBusy=false,lastBot=null;
+  function renderBotRates(p,stale=false){
+    const box=cashBox(),grid=box.querySelector('.botCashFxGrid'),time=box.querySelector('.botCashFxTime');
+    if(!grid||!time)return;
+    const text=p.time+'（臺灣時間）'+(stale?'｜來源暫時無法更新，以下為先前資料':'');
+    if(time.textContent!==text)time.textContent=text;
+    grid.querySelectorAll('.botCashFxCell:not(.botCashFxHdr)').forEach(x=>x.remove());
+    const byCode=new Map(p.rows.map(x=>[x.code,x]));
+    for(const code of CURRENCIES){
+      const x=byCode.get(code);if(!x)continue;
+      for(const value of [code,fmt(x.buy),fmt(x.sell)]){
+        const c=document.createElement('div');c.className='botCashFxCell '+(value===code?'botCashFxCode':'botCashFxNum');
+        c.textContent=value;grid.appendChild(c);
+      }
+    }
+    const board=document.getElementById('fxBoardStrip');
+    const status=document.getElementById('fxStamp');
+    if(board){
+      const names={USD:'美元',JPY:'日圓',EUR:'歐元',CNY:'人民幣',KRW:'韓元',GBP:'英鎊',AUD:'澳幣',HKD:'港幣',SGD:'新加坡幣'};
+      // Bank spot SELL means TWD required to purchase one foreign currency, not an interbank midpoint.
+      const frag=document.createDocumentFragment();
+      for(const code of CURRENCIES){
+        const x=byCode.get(code),item=document.createElement('div');
+        item.className='fxItem';
+        const title=document.createElement('b'),price=document.createElement('strong'),note=document.createElement('small');
+        title.textContent=code+' '+names[code];
+        price.textContent=x?fmt(x.sightSell):'—';
+        note.textContent=x&&x.sightSell!=null?'臺銀即期賣出／1 '+code:'無即期牌告';
+        item.append(title,price,note);frag.appendChild(item);
+      }
+      board.replaceChildren(frag);
+    }
+    if(status)status.textContent='臺銀掛牌 '+p.time+(stale?'｜更新失敗':'');
+  }
+  async function loadBotCash(){
+    if(cashBusy)return false;cashBusy=true;
+    const time=cashBox().querySelector('.botCashFxTime');
+    const upstream=BOT_URL+'&_='+Date.now();
+    const urls=[
+      'https://proxy.cors.dev/'+upstream,
+      'https://api.allorigins.win/raw?url='+encodeURIComponent(upstream)
+    ];
+    try{
+      for(const u of urls){
+        try{
+          const ac=new AbortController(),t=setTimeout(()=>ac.abort(),7000);
+          let response;try{response=await fetch(u,{cache:'no-store',signal:ac.signal})}finally{clearTimeout(t)}
+          if(!response.ok)continue;
+          const next=parseBot(await response.text());
+          if(!next)continue;
+          if(lastBot&&next.stamp<lastBot.stamp)continue;
+          lastBot=next;renderBotRates(next);return true;
+        }catch{}
+      }
+      if(lastBot)renderBotRates(lastBot,true);
+      else{
+        if(time)time.textContent='臺銀官方牌告無法驗證，暫停顯示';
+        const status=document.getElementById('fxStamp');
+        if(status)status.textContent='官方牌告讀取失敗';
+        const board=document.getElementById('fxBoardStrip');
+        if(board)board.textContent='目前無法確認臺銀即期牌價，不顯示未驗證匯率';
+      }
+      return false;
+    }finally{cashBusy=false}
+  }
 
   function buildSplit(){
     installStyle();

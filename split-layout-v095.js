@@ -186,6 +186,22 @@
     s.onload=()=>{if(!document.querySelector('script[data-paper-reset]')){const r=document.createElement('script');r.src='./paper-trading-reset-v101.js?v=101b';r.dataset.paperReset='1';document.body.appendChild(r);}};
     document.body.appendChild(s);
   }
-  let tries=0;function boot(){if(buildSplit()){loadBotCash();setInterval(loadBotCash,60000);loadPaperTrading();return}if(++tries<80)setTimeout(boot,250)}
+  // FX runs independently from TWSE trading hours and quote polling.
+  // Revalidate as soon as Safari returns from background, without piling up requests.
+  let fxTimer=null,tries=0;
+  const refreshFx=()=>{if(document.visibilityState!=='hidden')loadBotCash().catch(()=>{})};
+  function boot(){
+    if(buildSplit()){
+      refreshFx();
+      if(!fxTimer){
+        fxTimer=setInterval(refreshFx,60000);
+        document.addEventListener('visibilitychange',refreshFx);
+        addEventListener('pageshow',refreshFx);
+        addEventListener('focus',refreshFx);
+      }
+      loadPaperTrading();return;
+    }
+    if(++tries<80)setTimeout(boot,250);
+  }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();

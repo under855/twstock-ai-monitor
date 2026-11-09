@@ -232,6 +232,17 @@ def main():
             print(f'WARN TWSE closing index unavailable: {e}', file=sys.stderr)
     symbols={**twse,**tpex}; trade_date=max(trade_date,max(row['tradeDate'] for row in twse.values())); now=datetime.datetime.now(datetime.timezone.utc).isoformat()
     payload={'generatedAt':now,'tradeDate':trade_date,'taiex':taiex,'counts':{'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},'symbols':symbols}
+    # Do not write a new generatedAt every five minutes if the exchange values did not change.
+    # Otherwise each identical refresh triggers a pointless Pages deployment and falsely looks like fresh market data.
+    if OUT.exists():
+        try:
+            old=json.loads(OUT.read_text(encoding='utf-8'))
+            compare=lambda value:{k:v for k,v in value.items() if k!='generatedAt'}
+            if compare(old)==compare(payload):
+                print(json.dumps({'ok':True,'unchanged':True,'tradeDate':trade_date},ensure_ascii=False))
+                return
+        except (ValueError, OSError):
+            pass
     write_json(OUT,payload)
     print(json.dumps({'ok':True,'tradeDate':trade_date,'taiex':taiex,'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},ensure_ascii=False))
 

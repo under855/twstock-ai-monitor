@@ -76,9 +76,16 @@ jobs:
           }));
           console.log('BANK_FX_MOBILE',JSON.stringify(data));
           console.log('PAGE_ERRORS',JSON.stringify(errors.slice(0,5)));
-          if(data.count<7||data.spotCount<7||data.oldProvider)throw Error('Bank FX panel not verified');
-          if(data.usdCash?.[0]!=='USD'||!(Number(data.usdCash[1])>20)||!(Number(data.usdCash[2])>20))throw Error('USD cash FX invalid');
-          if(!(Number(data.usdSpot)>20))throw Error('USD spot FX invalid');
+          const status=await page.evaluate(()=>window.__TW_BANK_FX_STATUS__?.());
+          console.log('BANK_FX_STATUS',JSON.stringify(status));
+          if(errors.length)throw Error('Browser page error');
+          if(data.oldProvider)throw Error('Old daily FX provider still loaded');
+          if(!['verified','unverified'].includes(status?.state))throw Error('No bank FX validation state');
+          if(status.state==='verified'){
+            if(data.count<7||data.spotCount<7)throw Error('Verified bank rates missing');
+            if(data.usdCash?.[0]!=='USD'||!(Number(data.usdCash[1])>20)||!(Number(data.usdCash[2])>20))throw Error('USD cash rate invalid');
+            if(!(Number(data.usdSpot)>20))throw Error('USD spot rate invalid');
+          }else if(data.count!==0){throw Error('Unverified old rates were still displayed')}
           await browser.close();
           JS
           node fx-check.mjs

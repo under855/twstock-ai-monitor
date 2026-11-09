@@ -117,13 +117,16 @@
     // fabricate a future 13:30 timestamp and overwrite real MIS quotes or prices.
     const p=tp();if(p.h*60+p.min<13*60+30)return {map,idx};
     const ti=j?.taiex||{},td=isoCompact(ti?.date);
-    if(td===today()&&num(ti?.close)!=null){
+    if(td===today()&&ti.source==='TWSE MI_INDEX'&&num(ti?.close)!=null){
       const tt=/^\d{2}:\d{2}:\d{2}$/.test(String(ti?.time||''))?String(ti.time):'13:33:00';
       const ms=stamp(td,tt);if(ms!=null)idx={date:td,price:num(ti.close),prev:num(ti.previousClose),change:num(ti.change),time:tt,stamp:ms,officialClose:ti.source==='TWSE MI_INDEX',source:ti.source==='TWSE MI_INDEX'?'TWSE 官方收盤':'官方備援資料'};
     }
     const obj=j?.symbols||{};
     for(const code of wanted){
-      const x=obj?.[code];if(!x)continue;const d=isoCompact(x.tradeDate);if(d!==today()||num(x.close)==null)continue;
+      const x=obj?.[code];if(!x)continue;const d=isoCompact(x.tradeDate);
+      // Only the exchange's finalized post-close report may mark a quote as official close.
+      const finalized=x?.source==='TWSE MI_INDEX'||x?.source==='TPEx dailyQuotes';
+      if(!finalized||d!==today()||num(x.close)==null)continue;
       const tt='13:30:00',ms=stamp(d,tt);if(ms==null)continue;
       map.set(code,{code,date:d,price:num(x.close),prev:num(x.change)==null?null:num(x.close)-num(x.change),change:num(x.change),open:num(x.open),high:num(x.high),low:num(x.low),volume:num(x.volume),tradeTime:tt,stamp:ms,volumeUnit:'shares',source:'官方收盤資料',officialClose:true,live:true});
     }

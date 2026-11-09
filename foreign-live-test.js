@@ -51,7 +51,20 @@
   const fmt=(v,d=2)=>Number(v).toLocaleString('zh-TW',{minimumFractionDigits:d,maximumFractionDigits:d});
   const cls=v=>Number(v)>0?'up':Number(v)<0?'down':'flat';let latest=null;
   async function loadLatest(){try{const r=await fetch('./data/latest.json?_='+Date.now(),{cache:'no-store'});if(!r.ok)return;const j=await r.json(),x=j?.taiex;if(x?.close!=null&&Number.isFinite(Number(x.close)))latest={date:String(x.date||''),price:Number(x.close),change:x.change==null?null:Number(x.change),time:String(x.time||''),officialClose:x.source==='TWSE MI_INDEX',source:x.source==='TWSE MI_INDEX'?'TWSE 官方收盤':String(x.source||'TWSE 最近交易日')}}catch{}}
-  function paint(){const live=window.__TW_LIVE_V091__?.taiex,today=twDay();const x=latest?.officialClose&&latest.date.replaceAll('-','')===today?latest:live&&String(live.date)===today&&Number.isFinite(Number(live.price))?{date:live.date,price:Number(live.price),change:live.change==null?null:Number(live.change),time:String(live.time||''),source:live.source||'TWSE MIS 盤中即時'}:latest;if(!x)return;const v=document.getElementById('taiex'),c=document.getElementById('taiexChg'),mt=document.getElementById('marketTime');if(v)v.textContent=fmt(x.price,2);if(c){const ch=Number.isFinite(x.change)?x.change:null;c.textContent=`${ch==null?'—':(ch>0?'+':'')+fmt(ch,2)}｜${x.source}${x.time?' '+x.time:''}`;c.className='s '+cls(ch)}if(mt&&String(x.date)!==today)mt.textContent=`最近交易日 ${String(x.date).replaceAll('-','/')}`}
+  function paint(){
+    const today=twDay(),live=window.__TW_LIVE_V091__?.taiex;
+    const liveToday=live&&String(live.date)===today&&Number.isFinite(Number(live.price));
+    const officialToday=latest?.officialClose&&latest.date.replaceAll('-','')===today;
+    const x=officialToday?latest:liveToday?{date:live.date,price:Number(live.price),change:live.change==null?null:Number(live.change),time:String(live.time||''),source:live.source||'TWSE MIS 盤中資料'}:latest;
+    if(!x)return;
+    const v=document.getElementById('taiex'),c=document.getElementById('taiexChg'),mt=document.getElementById('marketTime');
+    const change=Number.isFinite(x.change)?x.change:null;
+    const label=(change==null?'—':(change>0?'+':'')+fmt(change,2))+'｜'+x.source+(x.time?' '+x.time:'')+'｜資料日 '+String(x.date).replaceAll('-','/');
+    // A single index value may be rendered by both controllers; skip identical DOM writes.
+    if(v&&v.textContent!==fmt(x.price,2))v.textContent=fmt(x.price,2);
+    if(c){if(c.textContent!==label)c.textContent=label;const className='s '+cls(change);if(c.className!==className)c.className=className}
+    if(mt&&String(x.date).replaceAll('-','')!==today){const t='最近交易日 '+String(x.date).replaceAll('-','/');if(mt.textContent!==t)mt.textContent=t}
+  }
   async function run(){await loadLatest();paint()}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();setInterval(paint,4000);setInterval(run,30000);addEventListener('focus',run);document.addEventListener('visibilitychange',()=>{if(!document.hidden)run()});
 })();
 

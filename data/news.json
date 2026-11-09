@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T13:44:20.742802+00:00",
+  "generatedAt": "2026-11-09T14:40:35.537785+00:00",
   "stocks": {
     "0050": [
       {
@@ -13,6 +13,12 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFByeWI2Y1JxX3ppb2NRcFFqTHo2OW9KYmZnS3lCWFEwazdwX0ZTTnRuRjJ0aHJxakFZakZOQkRJUFBqM25VcFlnaFpwWk5WOHVWUFIzb0JpdTNkRHVfeElz0gFkQVVfeXFMTURzY3BsT1RfcUV4OExoTHlZUko5WlMwTnB5Z1l3alFfTVhRaUFyd3JsNG5FVnFqVDh3cUhYZGtuTTRnY2dycDFsSUYwWnowWmVPcjBtT04zMlZmRDRGTVB3WmZGbA?oc=5",
         "publisher": "自由財經",
         "time": 1794115521000
+      },
+      {
+        "title": "國安基金進場 法人點名台積電與0050直接受惠 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE0yM0xRN0ttU2oxMWJYbHFnMlZLeWRhRE84c0lNdlk5SUJSUDdBLWRsbDBidktCY21DbFV3dnNlTVp3d05LRzduTzlrMHRzZ0J0b2pyQkV3YWZXbEkxV1hV0gFkQVVfeXFMTjdCZi1JR2dmbHZKMkw3ZVgwVzFxaGV0SHA0dEF3ZUhWenFBOEdXaVlmVVFaZGtCeGNabkxKMmlYOTZPc3hkZmV6aUZwQmMzYUxjakNVRlpQR2tDeGtmLWJPSjlYVw?oc=5",
+        "publisher": "自由財經",
+        "time": 1794110286000
       },
       {
         "title": "焦點股》0050：跌破90元 買盤湧入 - 自由財經",
@@ -161,10 +167,16 @@
     ],
     "00878": [
       {
+        "title": "台股 ETF 配息報喜 00878、00982A 等股息及配發率創高 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9sS0lhZFpqaUgyUzQ4WTVoY0h2YXFnSVl3NFdxcDlWb1E5RXphY0thUVRTaVFMSUhxVU42bmpYQ3NOQ1FyTTVkeE90NVVFYjlhVlItT1RYem9BQdIBX0FVX3lxTE84SnNkZGxndU5lRXRZakdVUDlGd0g5dGgxZVEzTTlKbXpBM3g4RE5zdGhyc29tcXp4Zkk1WlRoTUFDRy1xUFVmMFpYZkNubmNRRHRJcVA5Z05CN1pBSlo4?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793952000000
+      },
+      {
         "title": "九檔台股 ETF 創高價 00878、0056等單日股價強彈 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5fQkU5OUJBLUpLLXVhbWpzTjMyWEhydng1b0JpcUxFSnhsNFhOUFN2cFQ0dVNhR21wc1hUUFBfZVExSkhud09GTVZxRE14Q1UtZ0pYaDdBUFJWUdIBX0FVX3lxTE4zd3BDQXBWUXZqQkdhalZGX3FrX0FoV0x6b2I5NS1hWHNRaFIyUjJSYUhpME9DaGpIVTBDM1d4MXJ4X0UwQmgzNUVxdUg5Q0pZc1V5b1RDcnVQNDc0elBJ?oc=5",
         "publisher": "經濟日報",
-        "time": 1794038400000
+        "time": 1793865600000
       },
       {
         "title": "國泰永續高股息-ETF配息狀況 - MoneyDJ",

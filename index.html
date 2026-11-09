@@ -203,7 +203,7 @@ function scoreStock(row,val,h,quote){
  const code=String(row?.Code||''),close=N(quote?.price)??N(row?.ClosingPrice),pe=N(val?.PEratio),y=N(val?.DividendYield),ch=N(quote?.change)??N(row?.Change);
  const quoteLabel=String(quote?.source||'');
  const oldSnapshot=/歷史備援快照|最近交易日 2026\/10\//.test(quoteLabel);
- const itemDate=quote?.date?String(quote.date).replace(/^(\\d{4})(\\d{2})(\\d{2})$/,'$1-$2-$3'):(quote?.time instanceof Date?quote.time.toISOString().slice(0,10):String(universeMap.get(code)?.tradeDate||'').replaceAll('/','-'));
+ const itemDate=quote?.date?String(quote.date).replace(/^(\d{4})(\d{2})(\d{2})$/,'$1-$2-$3'):(quote?.time instanceof Date?quote.time.toISOString().slice(0,10):String(universeMap.get(code)?.tradeDate||'').replaceAll('/','-'));
  const asOf=Date.parse(itemDate+'T00:00:00+08:00');
  const stale=Number.isFinite(asOf)&&asOf<Date.now()-14*86400000;
  if(stale)return {total:null,delta:null,trend:null,momentum:null,valuation:null,income:null,mode:'行情日期過期',available:0,confidence:'低',coverage:0,reasons:['價格來源超過14天，不能產生現行評分']};

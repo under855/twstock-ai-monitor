@@ -15,7 +15,7 @@ function marketTime(){const d=nowTW(),m=d.getHours()*60+d.getMinutes(),wd=d.getD
 function blank(){return{version:1,initialCash:INITIAL,cash:INITIAL,positions:{},trades:[],cashLedger:[{id:crypto.randomUUID?.()||String(Date.now()),time:new Date().toISOString(),type:'INIT',amount:INITIAL,balance:INITIAL,note:'虛擬帳戶初始資金'}],actions:[],createdAt:new Date().toISOString()}}
 function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&x.positions&&Array.isArray(x.trades))return x}catch{}return blank()}
 let acct=load();
-function save(){localStorage.setItem(KEY,JSON.stringify(acct));render()}
+function save(){localStorage.setItem(KEY,JSON.stringify(acct));try{render()}catch(e){console.warn('模擬交易畫面更新失敗，但帳務已成功儲存',e)}}
 function isETF(code,name=''){return /^00/.test(String(code))||/ETF|指數|高股息|台灣50|台50/.test(String(name))}
 function commission(gross){return Math.max(MIN_COMMISSION,Math.floor(gross*COMMISSION))}
 function taxFor(code,name,gross){return Math.floor(gross*(isETF(code,name)?ETF_TAX:STOCK_TAX))}
@@ -96,6 +96,7 @@ async function trade(side,code,shares,limitPriceText=''){
     // Strict, no fabricated liquidity: single-price fill only if visible top-of-book volume is sufficient.
     if(shares>best.lots*1000)throw Error('最佳'+(side==='BUY'?'賣':'買')+'價可見委託量不足（'+money(best.lots*1000)+' 股）。目前不支援拆單，這筆不成交。');
     const gross=Math.round(price*shares),fee=commission(gross);
+    const beforeLedger=JSON.stringify(acct);
     if(side==='BUY'){
       const total=gross+fee;
       if(total>acct.cash)throw Error('現金不足。需要 '+money(total)+' 元，可用 '+money(acct.cash)+' 元。');
@@ -108,7 +109,8 @@ async function trade(side,code,shares,limitPriceText=''){
       p.shares-=shares;p.cost=Math.max(0,p.cost-costOut);p.realized+=realized;p.avg=p.shares?p.cost/p.shares:0;p.name=name;if(p.shares===0){p.cost=0;p.avg=0}acct.positions[code]=p;
       acct.trades.unshift({id:crypto.randomUUID?.()||String(Date.now()),time:new Date().toISOString(),side,code,name,shares,price,gross,fee,tax,net,realized,limitPrice:limit,bookTime:new Date(book.stamp).toISOString(),quoteSource:book.source});
     }
-    save();return{price,name,fee,book};
+    try{save()}catch(error){acct=JSON.parse(beforeLedger);throw Error('交易未能儲存至本機，已取消此次模擬成交：'+(error?.message||error))}
+    return{price,name,fee,book};
   }finally{tradeBusy=false}
 }
 function applyCashDividend(code,perShare,payDate,note='現金股利'){

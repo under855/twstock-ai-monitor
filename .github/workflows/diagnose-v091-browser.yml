@@ -55,6 +55,7 @@ jobs:
         env:
           URL: https://under855.github.io/twstock-ai-monitor/
         run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); export CHROME
           cat > fx-check.mjs <<'JS'
           import { chromium } from 'playwright-core';
           const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});

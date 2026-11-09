@@ -1,0 +1,41 @@
+name: Verify critical system data integrity
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/system_data_audit.mjs'
+      - 'index.html'
+      - 'live-v091.js'
+      - 'foreign-live-test.js'
+      - 'split-layout-v095.js'
+      - 'paper-trading-v100.js'
+      - 'dividend-enhance.js'
+      - 'extras-v090.js'
+      - '.github/workflows/system-data-integrity.yml'
+  schedule:
+    - cron: '50 7 * * 1-5'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check loaded modules
+        run: |
+          for f in live-v091.js foreign-live-test.js split-layout-v095.js paper-trading-v100.js paper-trading-reset-v101.js pilot-chart-00878-v1.js extras-v090.js dividend-enhance.js sw.js; do
+            node --check "$f"
+          done
+      - name: Prepare browser checks
+        run: npm install --no-save playwright-core@latest
+      - name: Validate current production after deployment
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          sleep 15
+          node scripts/system_data_audit.mjs

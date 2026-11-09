@@ -94,6 +94,17 @@
       board.replaceChildren(frag);
     }
     if(status)status.textContent='臺銀掛牌 '+p.time+(stale?'｜更新失敗':'');
+    const summary=document.getElementById('fxBoard');
+    if(summary){
+      const parts=[];
+      for(const [code,name] of [['USD','美元'],['JPY','日圓']]){
+        const x=byCode.get(code);
+        parts.push(name+'即期賣出 '+(x?fmt(x.sightSell):'—'));
+      }
+      const note=document.createElement('div');note.className='muted small';
+      note.textContent=parts.join('｜')+'｜掛牌 '+p.time+(stale?'（更新失敗）':'');
+      summary.replaceChildren(note);
+    }
   }
   async function loadBotCash(){
     if(cashBusy)return false;cashBusy=true;
@@ -122,6 +133,7 @@
         if(status)status.textContent='官方牌告讀取失敗';
         const board=document.getElementById('fxBoardStrip');
         if(board)board.textContent='目前無法確認臺銀即期牌價，不顯示未驗證匯率';
+        const summary=document.getElementById('fxBoard');if(summary)summary.textContent='臺銀牌告未取得；請以官方網站為準';
       }
       return false;
     }finally{cashBusy=false}

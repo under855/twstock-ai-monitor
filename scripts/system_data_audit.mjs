@@ -48,11 +48,49 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   });
   console.log('RUNTIME_'+opt.name.toUpperCase(),JSON.stringify(d));
   assert(d.rows.length>0,'NO_STOCK_ROWS '+opt.name);
+  // The rendered stock prices and closing index must match the versioned exchange data file.
+  for(const row of d.rows){
+    const expected=latest.symbols[row.code];
+    if(expected&&expected.tradeDate===day){
+      const displayed=Number(String(row.price||'').replaceAll(',',''));
+      assert(Math.abs(displayed-expected.close)<.001,'STOCK_PRICE_DIFF '+opt.name+' '+row.code);
+      assert(row.meta.includes('官方收盤')||row.meta.includes('MIS'),'STOCK_SOURCE_NOT_IDENTIFIED '+row.code);
+    }
+  }
+  const indexNum=Number(String(d.index).replaceAll(',',''));
+  assert(Math.abs(indexNum-latest.taiex.close)<.011,'INDEX_PRICE_DIFF '+opt.name);
   assert(d.paper&&d.paperScript,'PAPER_TRADING_MISSING '+opt.name);
   assert(!d.oldFX,'OLD_FX_SOURCE '+opt.name);
   assert(['verified','unverified'].includes(d.fx?.state),'BANK_TIME_UNVERIFIED '+opt.name);
   if(d.fx.state==='unverified')assert(d.fxRows===0,'STALE_BANK_RATES_VISIBLE '+opt.name);
   if(d.fx.state==='verified')assert(d.fxRows>=7,'BANK_RATES_INCOMPLETE '+opt.name);
+  // Detail panel, chart pilot, research and trading controls must load without crashing.
+  const detailRow=page.locator('#watch article.row').filter({hasText:'00878'}).first();
+  await detailRow.click();await page.waitForTimeout(1400);
+  const detail=await page.evaluate(()=>({
+    open:document.getElementById('sheet')?.classList.contains('show'),
+    title:document.getElementById('dTitle')?.textContent,
+    price:document.getElementById('dPrice')?.textContent,
+    chart:!!document.getElementById('pilot00878canvas'),
+    news:!!document.getElementById('news'),
+    dividend:!!document.getElementById('dividendEvents')
+  }));
+  console.log('DETAIL_'+opt.name.toUpperCase(),JSON.stringify(detail));
+  assert(detail.open&&detail.title?.includes('00878'),'DETAIL_NAV_FAIL '+opt.name);
+  assert(detail.chart,'PILOT_CHART_MISSING '+opt.name);
+  assert(Number(String(detail.price||'').replaceAll(',',''))>0,'DETAIL_PRICE_MISSING '+opt.name);
+  await page.locator('#paperTradeBtn').click();
+  await page.waitForTimeout(250);
+  const trade=await page.evaluate(()=>({
+    open:document.getElementById('paperTradeModal')?.classList.contains('show'),
+    reset:!!document.getElementById('ptReset'),
+    cash:document.getElementById('ptSummary')?.textContent||'',
+    limit:!!document.getElementById('ptLimit'),
+    message:document.querySelector('#paperTradeModal .notice')?.textContent||''
+  }));
+  console.log('TRADING_'+opt.name.toUpperCase(),JSON.stringify(trade));
+  assert(trade.open&&trade.reset&&trade.limit,'PAPER_TRADE_FORM_MISSING '+opt.name);
+  assert(trade.cash.includes('1,000,000'),'INITIAL_CASH_NOT_1M '+opt.name);
   await ctx.close();
 }
 await browser.close();

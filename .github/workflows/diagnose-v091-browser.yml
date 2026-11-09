@@ -50,3 +50,34 @@ jobs:
 # Runtime smoke check for 2026-11-05 quote-cache repair
 
 # Verify source age and cache recovery 2026-11-05
+
+      - name: Verify official bank FX panel on mobile
+        env:
+          URL: https://under855.github.io/twstock-ai-monitor/
+        run: |
+          cat > fx-check.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const page=await browser.newPage({viewport:{width:390,height:844},timezoneId:'Asia/Taipei'});
+          const errors=[];
+          page.on('pageerror',error=>errors.push(error.message));
+          await page.goto(process.env.URL+'?fxqa='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+          await page.waitForTimeout(19000);
+          const data=await page.evaluate(()=>({
+            label:document.querySelector('.fxStripTitle')?.textContent,
+            bot:document.querySelector('#botCashFxV096')?.textContent?.slice(0,500),
+            count:document.querySelectorAll('#botCashFxV096 .botCashFxCode').length,
+            spotCount:document.querySelectorAll('#fxBoardStrip .fxItem').length,
+            usdCash:[...document.querySelectorAll('#botCashFxV096 .botCashFxCell')].map(x=>x.textContent?.trim()).slice(3,6),
+            usdSpot:document.querySelector('#fxBoardStrip .fxItem strong')?.textContent,
+            timestamp:document.querySelector('#fxStamp')?.textContent,
+            oldProvider:[...document.scripts].some(x=>x.textContent?.includes('open.er-api.com'))
+          }));
+          console.log('BANK_FX_MOBILE',JSON.stringify(data));
+          console.log('PAGE_ERRORS',JSON.stringify(errors.slice(0,5)));
+          if(data.count<7||data.spotCount<7||data.oldProvider)throw Error('Bank FX panel not verified');
+          if(data.usdCash?.[0]!=='USD'||!(Number(data.usdCash[1])>20)||!(Number(data.usdCash[2])>20))throw Error('USD cash FX invalid');
+          if(!(Number(data.usdSpot)>20))throw Error('USD spot FX invalid');
+          await browser.close();
+          JS
+          node fx-check.mjs

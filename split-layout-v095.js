@@ -182,7 +182,7 @@
 
   function loadPaperTrading(){
     if(document.querySelector('script[data-paper-trading]'))return;
-    const s=document.createElement('script');s.src='./paper-trading-v100.js?v=100book1';s.dataset.paperTrading='1';
+    const s=document.createElement('script');s.src='./paper-trading-v100.js?v=100book2';s.dataset.paperTrading='1';
     s.onload=()=>{if(!document.querySelector('script[data-paper-reset]')){const r=document.createElement('script');r.src='./paper-trading-reset-v101.js?v=101b';r.dataset.paperReset='1';document.body.appendChild(r);}};
     document.body.appendChild(s);
   }

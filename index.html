@@ -61,10 +61,10 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
   <section class="market">
     <div class="marketCard"><div class="l">台灣加權指數</div><div id="taiex" class="v">—</div><div id="taiexChg" class="s muted">讀取中</div></div>
     <div class="marketCard"><div class="l">資料狀態</div><div id="marketStatus" class="v" style="font-size:17px">讀取中</div><div id="marketTime" class="s muted">—</div></div>
-    <div class="marketCard marketChartCard"><div class="l">臺灣銀行官方外匯牌告｜以掛牌時間為準</div><div id="fxBoard" class="fxBoard"><div class="muted small">匯率載入中…</div></div><div id="fxNote" class="fxNote">幣別與報價均以臺灣銀行牌告為準；不同於市場中間價</div><canvas id="taiexChart" class="marketChart" width="620" height="90"></canvas><div class="marketChartMeta"><span>09:00</span><span id="taiexChartMsg">—</span><span>13:30</span></div></div>
+    <div class="marketCard marketChartCard"><div class="l">外匯匯率｜銀行現金與即期牌告</div><div id="fxBoard" class="fxBoard"><div class="muted small">匯率載入中…</div></div><div id="fxNote" class="fxNote">幣別與報價均以臺灣銀行牌告為準；不同於市場中間價</div><canvas id="taiexChart" class="marketChart" width="620" height="90"></canvas><div class="marketChartMeta"><span>09:00</span><span id="taiexChartMsg">—</span><span>13:30</span></div></div>
   </section>
 
-  <section id="fxStrip" class="fxStrip"><div class="fxStripTitle"><span>臺灣銀行即期賣出｜1 單位外幣換算新臺幣</span><span id="fxStamp">載入中…</span></div><div id="fxBoardStrip" style="display:contents"></div></section>
+  <section id="fxStrip" class="fxStrip"><div class="fxStripTitle"><span>臺灣銀行官方牌告｜現金與即期匯率</span><span id="fxStamp">載入中…</span></div><div id="fxBoardStrip" style="display:contents"></div></section>
 
   <div class="sectionTitle">我的監控牆</div>
   <main id="watch" class="watch"></main>
@@ -296,7 +296,7 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 <script src="./foreign-live-test.js?v=nasdaqpair3"></script>
 
 
-<script src="split-layout-v095.js?v=095fxquality2"></script>
+<script src="split-layout-v095.js?v=095fxquality3"></script>
 <script src="./pilot-chart-00878-v1.js?v=pilot00878b"></script>
 </body>
 </html>

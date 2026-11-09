@@ -26,36 +26,88 @@ function liveQuote(code){
   if(row?.dataset.liveState==='live'&&row.dataset.liveDate){const d=String(row.dataset.liveDate).replace(/\//g,'-');if(d===ymd()||d===ymd().replaceAll('-',''))return{price:Number(row.dataset.livePrice),live:true,date:row.dataset.liveDate,stamp:Number(row.dataset.liveStamp)||Date.now(),source:'TWSE MIS 盤中最新成交'};}
   return null;
 }
-async function ensureLive(code){
-  if(!marketTime())throw Error('台股目前已休市，虛擬交易暫停，下一個交易日開盤後才能買賣。');
-  try{active=code;if(typeof quote==='function')await quote(code,true)}catch{}
-  if(window.__TW_LIVE_V091__?.marketWindow===false)throw Error('目前不是台股交易時段，虛擬交易暫停。');
-  let q=liveQuote(code);
-  if(!q){await new Promise(r=>setTimeout(r,1800));try{if(typeof quote==='function')await quote(code,true)}catch{}q=liveQuote(code)}
-  if(!q||!Number.isFinite(Number(q.price))||Number(q.price)<=0)throw Error('目前沒有取得今天的即時成交價，為避免用舊價格交易，本筆不成交。');
-  return q;
+function priceNum(value){if(value==null)return null;const s=String(value).trim().replaceAll(',','');if(!/^\d+(?:\.\d+)?$/.test(s))return null;const n=Number(s);return Number.isFinite(n)&&n>0?n:null}
+function tickSize(price){
+  if(price<10)return .01;
+  if(price<50)return .05;
+  if(price<100)return .1;
+  if(price<500)return .5;
+  if(price<1000)return 1;
+  return 5;
+}
+function onTick(value){const step=tickSize(value);return Math.abs(value/step-Math.round(value/step))<0.00001}
+let depthPending=null;
+async function fetchOrderBook(code,market){
+  const exchange=market==='TPEx'?'otc':'tse';
+  const u='https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch='+encodeURIComponent(exchange+'_'+code+'.tw')+'&json=1&delay=0&_='+Date.now();
+  const paths=['https://proxy.cors.dev/'+u,'https://api.allorigins.win/raw?url='+encodeURIComponent(u)];
+  let lastError=null;
+  for(const path of paths){
+    const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),6000);
+    try{
+      const res=await fetch(path,{signal:controller.signal,cache:'no-store'});
+      if(!res.ok)throw Error('HTTP '+res.status);
+      const data=await res.json();
+      const m=(data?.msgArray||[]).find(x=>String(x?.c||'')===code&&String(x?.ex||'')===exchange);
+      if(!m||String(m.d||'')!==ymd().replaceAll('-',''))throw Error('無今日交易所報價');
+      const stamp=Number(m.tlong)>1e12?Number(m.tlong):Date.parse(ymd()+'T'+String(m.t||'')+'+08:00');
+      if(!Number.isFinite(stamp)||stamp>Date.now()+30000||Date.now()-stamp>90000)throw Error('買賣盤報價時間過期');
+      const prices=side=>String(m?.[side]||'').split('_').map(priceNum);
+      const volumes=side=>String(m?.[side]||'').split('_').map(x=>{const v=Number(x);return Number.isFinite(v)&&v>0?v:null});
+      const bids=prices('b'),asks=prices('a'),bidVolumes=volumes('g'),askVolumes=volumes('f');
+      // TWSE MIS bids use b/g; asks use a/f. Quantities are disclosed in exchange lots.
+      const bidLevels=bids.map((price,i)=>({price,lots:bidVolumes[i]})).filter(x=>x.price!==null&&x.lots!==null).sort((a,b)=>b.price-a.price);
+      const askLevels=asks.map((price,i)=>({price,lots:askVolumes[i]})).filter(x=>x.price!==null&&x.lots!==null).sort((a,b)=>a.price-b.price);
+      if(!bidLevels.length||!askLevels.length||bidLevels[0].price>=askLevels[0].price)throw Error('買賣五檔資料不足或異常');
+      return{bid:bidLevels[0],ask:askLevels[0],stamp,source:'TWSE MIS 五檔買賣報價'};
+    }catch(e){lastError=e}finally{clearTimeout(timeout)}
+  }
+  throw Error('無法確認目前有效的買賣五檔價格，為避免虛擬錯誤成交，交易暫停。'+(lastError?'（'+lastError.message+'）':''));
+}
+async function ensureLive(code,market){
+  if(!marketTime())throw Error('目前不是台股正常交易時間，虛擬交易暫停。');
+  return await fetchOrderBook(code,market);
 }
 function pos(code){return acct.positions[code]||{code,name:(typeof stockName==='function'?stockName(code,rowForCode?.(code)):code),shares:0,cost:0,avg:0,realized:0,dividends:0}}
 function addLedger(type,amount,note){acct.cash=Number((acct.cash+amount).toFixed(2));acct.cashLedger.unshift({id:crypto.randomUUID?.()||String(Date.now()+Math.random()),time:new Date().toISOString(),type,amount,balance:acct.cash,note})}
-async function trade(side,code,shares){
-  code=String(code||'').trim();shares=Math.floor(Number(shares));if(!code||!Number.isFinite(shares)||shares<=0)throw Error('請輸入正確的股票代號與股數。');
-  try{if(typeof loadFullUniverse==='function')await loadFullUniverse()}catch{}
-  const u=typeof universeMap!=='undefined'?universeMap.get(code):null;if(!u)throw Error('完整台股名冊找不到這個代號。');
-  if(!['TWSE','TPEx'].includes(String(u.market||'')))throw Error('第一版先支援上市、上櫃現股。');
-  const q=await ensureLive(code),price=Number(q.price),gross=Math.round(price*shares),fee=commission(gross),p=pos(code),name=u.name||p.name||code;
-  if(side==='BUY'){
-    const total=gross+fee;if(total>acct.cash)throw Error(`現金不足。需要 ${money(total)} 元，目前可用 ${money(acct.cash)} 元。`);
-    addLedger('BUY',-total,`買進 ${name} ${code} ${shares} 股 @ ${px(price)}；手續費 ${money(fee)}`);
-    p.cost+=total;p.shares+=shares;p.avg=p.shares?p.cost/p.shares:0;p.name=name;acct.positions[code]=p;
-    acct.trades.unshift({id:crypto.randomUUID?.()||String(Date.now()),time:new Date().toISOString(),side,code,name,shares,price,gross,fee,tax:0,net:total,quoteSource:q.source||'即時行情'});
-  }else{
-    if(shares>p.shares)throw Error(`持股不足。目前只有 ${money(p.shares)} 股。`);
-    const tax=taxFor(code,name,gross),net=gross-fee-tax,costOut=p.avg*shares,realized=net-costOut;
-    addLedger('SELL',net,`賣出 ${name} ${code} ${shares} 股 @ ${px(price)}；手續費 ${money(fee)}；交易稅 ${money(tax)}`);
-    p.shares-=shares;p.cost=Math.max(0,p.cost-costOut);p.realized+=realized;p.avg=p.shares?p.cost/p.shares:0;p.name=name;if(p.shares===0){p.cost=0;p.avg=0}acct.positions[code]=p;
-    acct.trades.unshift({id:crypto.randomUUID?.()||String(Date.now()),time:new Date().toISOString(),side,code,name,shares,price,gross,fee,tax,net,realized,quoteSource:q.source||'即時行情'});
-  }
-  save();return{price,name,fee};
+let tradeBusy=false;
+async function trade(side,code,shares,limitPriceText=''){
+  if(tradeBusy)throw Error('上一筆委託仍在驗證，請勿重複送出。');
+  tradeBusy=true;
+  try{
+    code=String(code||'').trim();shares=Number(shares);
+    if(!/^\d+$/.test(String(shares))||shares<=0)throw Error('請輸入正確的股票代號與股數。');
+    try{if(typeof loadFullUniverse==='function')await loadFullUniverse()}catch{}
+    const u=typeof universeMap!=='undefined'?universeMap.get(code):null;
+    if(!u)throw Error('完整台股名冊找不到此代號。');
+    if(!['TWSE','TPEx'].includes(String(u.market||'')))throw Error('第一版先支援上市、上櫃現股。');
+    if(!['BUY','SELL'].includes(side))throw Error('買賣方向不正確。');
+    const p=pos(code),name=u.name||p.name||code;
+    if(side==='SELL'&&shares>p.shares)throw Error('持股不足，目前持有 '+money(p.shares)+' 股。');
+    const book=await ensureLive(code,u.market),best=side==='BUY'?book.ask:book.bid,price=best.price;
+    const limitRaw=String(limitPriceText??'').trim();
+    const limit=limitRaw===''?null:priceNum(limitRaw);
+    if(limitRaw!==''&&(limit===null||!onTick(limit)))throw Error('委託價格格式或升降單位不正確，請輸入有效限價。');
+    if(limit!==null&&((side==='BUY'&&limit<price)||(side==='SELL'&&limit>price))){
+      throw Error('此限價尚未達到成交條件，目前最佳'+(side==='BUY'?'賣':'買')+'價 '+px(price)+' 元。本遊戲暫不掛單，這筆沒有成交。');
+    }
+    // Strict, no fabricated liquidity: single-price fill only if visible top-of-book volume is sufficient.
+    if(shares>best.lots*1000)throw Error('最佳'+(side==='BUY'?'賣':'買')+'價可見委託量不足（'+money(best.lots*1000)+' 股）。目前不支援拆單，這筆不成交。');
+    const gross=Math.round(price*shares),fee=commission(gross);
+    if(side==='BUY'){
+      const total=gross+fee;
+      if(total>acct.cash)throw Error('現金不足。需要 '+money(total)+' 元，可用 '+money(acct.cash)+' 元。');
+      addLedger('BUY',-total,'買進 '+name+' '+code+' '+shares+' 股 @ '+px(price)+'；手續費 '+money(fee));
+      p.cost+=total;p.shares+=shares;p.avg=p.shares?p.cost/p.shares:0;p.name=name;acct.positions[code]=p;
+      acct.trades.unshift({id:crypto.randomUUID?.()||String(Date.now()),time:new Date().toISOString(),side,code,name,shares,price,gross,fee,tax:0,net:total,limitPrice:limit,bookTime:new Date(book.stamp).toISOString(),quoteSource:book.source});
+    }else{
+      const tax=taxFor(code,name,gross),net=gross-fee-tax,costOut=p.avg*shares,realized=net-costOut;
+      addLedger('SELL',net,'賣出 '+name+' '+code+' '+shares+' 股 @ '+px(price)+'；手續費 '+money(fee)+'；交易稅 '+money(tax));
+      p.shares-=shares;p.cost=Math.max(0,p.cost-costOut);p.realized+=realized;p.avg=p.shares?p.cost/p.shares:0;p.name=name;if(p.shares===0){p.cost=0;p.avg=0}acct.positions[code]=p;
+      acct.trades.unshift({id:crypto.randomUUID?.()||String(Date.now()),time:new Date().toISOString(),side,code,name,shares,price,gross,fee,tax,net,realized,limitPrice:limit,bookTime:new Date(book.stamp).toISOString(),quoteSource:book.source});
+    }
+    save();return{price,name,fee,book};
+  }finally{tradeBusy=false}
 }
 function applyCashDividend(code,perShare,payDate,note='現金股利'){
   const p=pos(code),amt=Math.round(p.shares*Number(perShare||0));if(!p.shares||amt<=0)return false;addLedger('DIVIDEND',amt,`${p.name} ${code} ${note}：每股 ${perShare}，${p.shares} 股`);p.dividends+=amt;acct.positions[code]=p;acct.actions.unshift({time:new Date().toISOString(),effectiveDate:payDate||ymd(),type:'CASH_DIVIDEND',code,shares:p.shares,perShare:Number(perShare),amount:amt,note});save();return true;

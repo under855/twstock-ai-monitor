@@ -8,7 +8,8 @@ on:
       - 'scripts/update_latest.py'
       - '.github/workflows/update-latest.yml'
   schedule:
-    - cron: '*/5 * * * 1-5'
+    # 08:00–15:59 Taiwan local, weekdays. Final 13:30 official close is included.
+    - cron: '*/5 0-7 * * 1-5'
 
 permissions:
   contents: write

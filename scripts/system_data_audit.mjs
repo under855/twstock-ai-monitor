@@ -86,6 +86,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   assert(detail.open&&detail.title?.includes('00878'),'DETAIL_NAV_FAIL '+opt.name);
   assert(detail.chart,'PILOT_CHART_MISSING '+opt.name);
   assert(Number(String(detail.price||'').replaceAll(',',''))>0,'DETAIL_PRICE_MISSING '+opt.name);
+  await page.locator('#closeBtn').click();
   await page.locator('#paperTradeBtn').click();
   await page.waitForTimeout(250);
   const trade=await page.evaluate(()=>({

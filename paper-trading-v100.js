@@ -52,7 +52,7 @@ async function fetchOrderBook(code,market){
       const m=(data?.msgArray||[]).find(x=>String(x?.c||'')===code&&String(x?.ex||'')===exchange);
       if(!m||String(m.d||'')!==ymd().replaceAll('-',''))throw Error('無今日交易所報價');
       const stamp=Number(m.tlong)>1e12?Number(m.tlong):Date.parse(ymd()+'T'+String(m.t||'')+'+08:00');
-      if(!Number.isFinite(stamp)||stamp>Date.now()+30000||Date.now()-stamp>90000)throw Error('買賣盤報價時間過期');
+      if(!Number.isFinite(stamp)||stamp>Date.now()+30000||Date.now()-stamp>20000)throw Error('買賣盤報價時間過期');
       const prices=side=>String(m?.[side]||'').split('_').map(priceNum);
       const volumes=side=>String(m?.[side]||'').split('_').map(x=>{const v=Number(x);return Number.isFinite(v)&&v>0?v:null});
       const bids=prices('b'),asks=prices('a'),bidVolumes=volumes('g'),askVolumes=volumes('f');

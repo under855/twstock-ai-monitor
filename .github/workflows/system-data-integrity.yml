@@ -10,6 +10,8 @@ on:
       - 'foreign-live-test.js'
       - 'split-layout-v095.js'
       - 'paper-trading-v100.js'
+      - 'pilot-chart-00878-v1.js'
+      - 'paper-trading-reset-v101.js'
       - 'dividend-enhance.js'
       - 'extras-v090.js'
       - '.github/workflows/system-data-integrity.yml'

@@ -33,7 +33,7 @@ jobs:
           const storage=new Map();
           const doc={readyState:'loading',addEventListener(){},querySelectorAll(){return[]},getElementById(){return null}};
           const c={
-            Date:FixedDate,Intl,Number,String,Array,Object,Map,Math,JSON,Promise,Error,RegExp,
+            Date:FixedDate,Intl,Number,String,Array,Object,Map,Math,JSON,Promise,Error,RegExp,AbortController,
             setTimeout,clearTimeout,document:doc,window:{},crypto:{randomUUID:()=>String(Math.random())},
             localStorage:{getItem:key=>storage.get(key)||null,setItem:(key,value)=>storage.set(key,value)},
             universeMap:new Map([['2330',{market:'TWSE',name:'測試股'}],['00878',{market:'TWSE',name:'測試ETF'}]]),

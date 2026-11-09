@@ -146,6 +146,7 @@ const SNAPSHOT={
  '00919':{name:"群益台灣精選高息",price:32.75,change:0.33,open:32.71,high:32.82,low:32.4,volume:55901688.0}
 };
 const TAIEX_SNAPSHOT={date:SNAPSHOT_DATE,price:null,change:null};
+function snapshotIsRecent(){const day=Date.parse(SNAPSHOT_DATE.replaceAll('/','-')+'T00:00:00+08:00');return Number.isFinite(day)&&Date.now()-day>=0&&Date.now()-day<=7*86400000}
 const $=id=>document.getElementById(id);
 const N=v=>{if(v==null||v===''||v==='--'||v==='-')return null;const x=Number(String(v).replaceAll(',','').replace('%',''));return Number.isFinite(x)?x:null};
 const F=(v,d=2)=>{const x=N(v);return x==null?'—':x.toLocaleString('zh-TW',{maximumFractionDigits:d})};
@@ -192,7 +193,7 @@ function universeQuote(code){const u=universeMap.get(String(code));if(!u||u.clos
 function rowForCode(code){return allRows.find(x=>String(x.Code).trim()===String(code))||universeRow(code)||{Code:String(code),Name:stockName(String(code),{})}}
 
 function normalizeTpexRows(rows){return (Array.isArray(rows)?rows:[]).map(x=>({Code:String(x.SecuritiesCompanyCode||x.Code||'').trim(),Name:String(x.CompanyName||x.SecuritiesCompanyName||x.SecuritiesName||'').trim(),ClosingPrice:x.Close||x.ClosePrice||x.LatestPrice||'',Change:x.Change||x.ChangeAmount||'',OpeningPrice:x.Open||x.OpenPrice||'',HighestPrice:x.High||x.HighPrice||'',LowestPrice:x.Low||x.LowPrice||'',TradeVolume:x.TradingShares||x.TradeVolume||'',TradeDate:String(x.TradeDate||x.Date||'').trim()})).filter(x=>x.Code)}
-function seedRows(){return Object.entries(SNAPSHOT).map(([Code,x])=>({Code,Name:x.name,ClosingPrice:String(x.price),Change:String(x.change),OpeningPrice:String(x.open??''),HighestPrice:String(x.high),LowestPrice:String(x.low),TradeVolume:String(x.volume),TradeDate:SNAPSHOT_DATE}))}
+function seedRows(){if(!snapshotIsRecent())return [];return Object.entries(SNAPSHOT).map(([Code,x])=>({Code,Name:x.name,ClosingPrice:String(x.price),Change:String(x.change),OpeningPrice:String(x.open??''),HighestPrice:String(x.high),LowestPrice:String(x.low),TradeVolume:String(x.volume),TradeDate:SNAPSHOT_DATE}))}
 function seedVals(){return []} // Never invent current valuation data from fixed 2026-10 snapshots.
 async function twseHistory(code){const a=[];for(const date of monthKeys(3)){try{const j=await json(`https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=${date}&stockNo=${encodeURIComponent(code)}&response=json`,3500);if(j?.title){const m=String(j.title).match(new RegExp(code+'\\s+([^\\d]+?)\\s+(?:各日|每日|個股|$)'));if(m?.[1])nameCache[code]=m[1].trim()}(j?.data||[]).forEach(x=>{const c=N(x[6]);if(c!=null)a.push({date:roc(x[0]),open:N(x[3]),high:N(x[4]),low:N(x[5]),close:c,change:N(x[7]),volume:N(x[1])})})}catch{}}
  return a}
@@ -219,7 +220,7 @@ function scoreStock(row,val,h,quote){
 function cls(v){return v>0?'up':v<0?'down':'flat'} function scoreCls(s){return s==null?'flat':s>=65?'up':s<=42?'down':'flat'}
 function scoreValue(v){return v==null?'—':String(v)}
 function scoreDate(q,row){const d=q?.time||dateObj(row?.TradeDate)||null;return d?d.toLocaleDateString('zh-TW'):'最近交易日'}
-function snapshotQuote(code){const x=SNAPSHOT[code];if(!x)return null;const dt=dateObj(SNAPSHOT_DATE);return{price:x.price,change:x.change,prev:x.price-x.change,open:x.open??null,high:x.high,low:x.low,volume:x.volume,time:dt,source:`歷史備援快照 ${SNAPSHOT_DATE}（非最新行情）`}}
+function snapshotQuote(code){if(!snapshotIsRecent())return null;const x=SNAPSHOT[code];if(!x)return null;const dt=dateObj(SNAPSHOT_DATE);return{price:x.price,change:x.change,prev:x.price-x.change,open:x.open??null,high:x.high,low:x.low,volume:x.volume,time:dt,source:`歷史備援快照 ${SNAPSHOT_DATE}（非最新行情）`}}
 function marketWindowTaipeiNow(){
  const p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
  const g=t=>p.find(x=>x.type===t)?.value||'',wd=g('weekday'),mins=Number(g('hour'))*60+Number(g('minute'));

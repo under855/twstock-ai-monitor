@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-10T06:20:47.087508+00:00",
+  "generatedAt": "2026-11-10T07:42:33.147181+00:00",
   "stocks": {
     "0050": [
       {
@@ -7,12 +7,6 @@
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE81MFk2OGJnVkhTSTdXOGxtdDM3YVZfdl9xX0RBdFZBbGZFU0t6R0lmNE96Y0VxbFI4Z1VueER2X2tlS2gxVm5kRlZuZzZ2eTA?oc=5",
         "publisher": "鉅亨網",
         "time": 1794283311000
-      },
-      {
-        "title": "元大台灣50〈0050.TW〉 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9JQXVwR01LUHFHN2RVTFJtdFZnR2taRkpSY0kyT0RWWkRjdDBoZnlwRHJuSVVfWHd3ejQxcjFwRldRQ0UtWVo1azI0Umo1Vkx5NkNCNndnTENlYUpBRjlmWWlDYm9pelBTT1pV?oc=5",
-        "publisher": "MoneyDJ",
-        "time": 1793952000000
       },
       {
         "title": "台股反向、高息 ETF 熱 元大台灣 50 反 1 單周獲買超 5.4 萬張稱冠 | 基金天地 | 理財 - 經濟日報",
@@ -35,6 +29,12 @@
       {
         "title": "30歲北漂女想砸錢買一張0050當生日禮物 過來人給「這些建議」 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9lUFJSbFRBN0w1b09wb0pPSll2QWR2cGxSWmR6ZG5ZWXVMR0dUUGtLeS1pRVg4My16eHV2ZHZ1T0EzYVQzb1hpc05rZW8yLTI0S3Y0bkdnenFoVkFWSHdF0gFkQVVfeXFMTm9ubEVoS05TXzZkeFhlZ0VZZHZEMnZKVnYtQkJYZy04WFpOd0t6YkFCUlBhaG92OS1XSmlNejhxZHRMb3l0ZWI4M3J3ek5XZzdIQ1FDcmFOc1NMNGtaS1g1cF94WA?oc=5",
+        "publisher": "自由財經",
+        "time": 1791788400000
+      },
+      {
+        "title": "台股近來漲勢驚人 0050定期定額還能無腦買？掀網友熱議 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5ZdER0d0JKT3M3bFJLZXhuUkhJOHhDcERBaS1yOXEyODMtdlZtQVNsbTdjMW9UdW1NOWx4SlZ0VjZKSGlvWklGZW5NSkxsWXJhdDJPbmFiNndPZXBWaGRF?oc=5",
         "publisher": "自由財經",
         "time": 1791788400000
       }
@@ -95,12 +95,6 @@
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9HVy1YaDEyRFpiVHNsNmtUTUlWdUVlMEpKd3ZiRWQ1SWNnc3E1Q1YzOFFfdWNJUkQ3MjdCVm5LSzV0d1dtZFp0ZG1UczJGS2c?oc=5",
         "publisher": "鉅亨網",
         "time": 1792047600000
-      },
-      {
-        "title": "鈊象、宇峻Q3營收雙創高- 日報 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5hMDdxb2F3aE5PTFJ0S3FOeVl5Uk94ZXJHSHhyZ0dRQ2djQ1lmeFE3QnV4UjZUczBSeUxwRnVCTlBOYjlTMlZlRVRmVW5fTWlfWUN5XzRldlNub2pNeVl3?oc=5",
-        "publisher": "工商時報",
-        "time": 1791702000000
       }
     ],
     "2002": [
@@ -135,22 +129,22 @@
         "time": 1793959532000
       },
       {
-        "title": "市況保溫中鋼12月盤價小漲- 日報 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE8zQnJiUmdtQm43OTBSQTE1dnQ1WDhUWkhTTkp0T3phTHRyNVIzLXU4VElBNmxGMm14TTVSTXh6NldhdDd1NmlNQ25FNzhvRVJHR0FXNkFyNHAtUElxSUV3?oc=5",
-        "publisher": "工商時報",
-        "time": 1793905200000
-      },
-      {
         "title": "中鋼12月盤價小漲 穩定供應鏈購料成本擴大接單 - 鉅亨網",
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9GbXNtc1N2aXQ5MVU3TGl5amJKYUlQRDNzbkZOdDA3UWxfZ3huS3cwUUlsLW9qT2hXcXhpbmYxTmxEbnp5MjhGcGhwT3pYYVE?oc=5",
         "publisher": "鉅亨網",
         "time": 1793866217000
       },
       {
-        "title": "反映市場行情，中鋼12月月盤小幅調漲 - 新聞 - MoneyDJ",
+        "title": "反映市場行情，中鋼12月月盤小幅調漲- 新聞 - MoneyDJ",
         "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPRXlHS0N4STB6WV9Va085SWc5YUlaQ20xY0ZDRmpBTWRfeTlvcUFRVXRWeUc5QVFlMi12Rjk2Mm1rZnNXY25sbllZZmFsUTFmbEtmWDN6SDFOa1c1ZUxiZ2FDb3lQc0V2VTE0REJQeUFvRFIwdkV1VDR6M0tPb29hWkdwZzMtSEo2QmllY25QS1JmQQ?oc=5",
         "publisher": "MoneyDJ",
         "time": 1793860200000
+      },
+      {
+        "title": "外銷接單升溫、新台幣走貶 中鋼12月盤價全面小漲300元 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9ycFpNaVMzUWVpWmtHSmFQNVNqRGgxWG1iYjFkSEtPMGdBbjYzUjRPQ3dxUXVYNlRfdUhPN3NBVGNfaU92WEVRa3hLOXBPT1V1XzdUNEVlLU9xZ3JrbzhN0gFkQVVfeXFMTWQ5T2k2NFYxV2Z3SVhlU1FfNnp2V05WeVRYeEdta2toR2tXanJGcmdmUnFHNldqenUwY25SNWllZ1pNYy1jT2t3NGlqa3I2cUFBRXpzdDhOS0xJZUtmQllaTFVITQ?oc=5",
+        "publisher": "自由財經",
+        "time": 1793859783000
       }
     ],
     "00878": [
@@ -215,15 +209,15 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE51dGRDSnR6by1aVnN3dkJQV2hiMnRTT1g0RnRXSWRnaUZkVVNNWkt4ajFsTlozWGhhUHhaUmN0cy1QTVZ3bnJNTE94MWNRZUtZdkRtdlhLRzhiZktuV1JF?oc=5",
         "publisher": "工商時報",
         "time": 1791788400000
-      },
-      {
-        "title": "高股息ETF近三月強漲 0056、00919吸金10月淨流入破百億元 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBZVTZ1YXlPWWJfdl95dmlrMWtSaVI3SWM4ZV9vVlVNM2pKblVlZW9kdlF1WXBScXB3VWRYUVd4ZUtxN0s0dWtaX1VyRWZwSzc3MDYyMk1jVnZ0RnU2d1pN0gFkQVVfeXFMUG16TUlrSmc4U1h3ZzlxTkw0X3F5SnE1aHhNS1pzdzNScFpuLThseU53UWo0b0RETkI5VERZU1I2RDlUZnlYczlia2wyZnhHTU5MSUIzaVNwWmNHd3l6RURiVUFjSQ?oc=5",
-        "publisher": "自由財經",
-        "time": 1791702000000
       }
     ],
     "2330": [
+      {
+        "title": "台積電抵得住市場恐慌 外媒曝成長型股票首選 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5SLXFMbUd5NFNPdF9WS1hvTTJFdjlkNUlCRkZHLXFUQm1ZYUNXS2JMMVJ6bXo2YlZEa2g4aUJ4X09VYy1CZ0l2QktyYXgtOF83aHExS0hoZEwySmllczJv0gFkQVVfeXFMT05IbTVCM2FSU3hsb25Yd2o3Z28wSFJKTlpwUFdLT3lXOGV4MGlZNnRzdG45NW1JRDBleWZmR3dQSGtXcWpYVFJ0Szl4aEhmS3UyallCWnZrVnhBNmZhb0E5YmlfdA?oc=5",
+        "publisher": "自由財經",
+        "time": 1794295118000
+      },
       {
         "title": "台積電11張股票領逾7萬！股民哀怨價差快跌沒 網友羨慕炸鍋 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1ic1YtdjhlUEdfbGFmWlhHMndSc2VSNVB1Z2ktbzZrdm8yeWNpWWMxWUJKWTNvUGVfdVp6eE8tLUloZ3c3bHdWQ2R0Sk1DWUREUGtnVVJOWGVLVW5DSl9Z0gFkQVVfeXFMTjdBVXVDZmJJVmtmQVdZeEpoc28tVWhtVFBWNXI3cVk4RlZkU0tRcFRiRk5lMlR4UW5wXzlQbFFOel9seGxPTnFyQW1DYUd1TnhMSUk3djNTWlBVdk5ZYVFqM2RWXw?oc=5",
@@ -265,12 +259,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9QZ3Zla3J2Y3hzNE83VVVpN2FsRzI1elNlWnlpOGRoaUlYYTBfcGtrVTItWUFGU0xGVGx3bmRFcFViQy00YXVoR3J0TTBXWUU4cUQyaXpLSGM0R21yV0ow0gFkQVVfeXFMTng4b1RHd3dJbG0taTBiSjJtckZpaW50MkxwOE1vSzBjbTF1WEFOaHdZVXA3ZEI0MTVVZmNBcFpqTTBCQzl2M1NTQUhSN2FXX1ZXM2UxY2RCcy1jT244Uk1ZWU5LWQ?oc=5",
         "publisher": "自由財經",
         "time": 1791961200000
-      },
-      {
-        "title": "現在投資台積電多久可望翻倍 外媒算出報酬率在「這區間」 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBRSHMtSmFiMm9DU3lYNXNtRWVPUXJUQ2dJUHhSUDEzYUtXUU8zaTdYb1BxOS12bjJTZ3RnVFBpTkhCa3NyMWRJRFR6QjlOaXhOenVnZEVCdlhWTzhPUThF0gFkQVVfeXFMTmpqbDcwbU1CcTVpTGcyWDJoOExUMDdPS2VHWklfblg5SDRmUzF0MDJFbE16cHVTTFdfZjJjcXh3LWJ1NDVfR0JtcHlqZFNRT09LLWt4bFJteVhRNGRFMDY4YnpHNw?oc=5",
-        "publisher": "自由財經",
-        "time": 1791874800000
       }
     ]
   },

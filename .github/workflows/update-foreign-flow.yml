@@ -1,0 +1,44 @@
+name: Update official foreign investor flow
+on:
+  workflow_dispatch:
+  schedule:
+    # UTC. Taiwan 15:15 / 15:45 / 16:30 and 20:10 / 20:40 on trading weekdays.
+    # Initial reports may appear later; time of report is NOT the fetch time.
+    - cron: '15,45 7 * * 1-5'
+    - cron: '30 8 * * 1-5'
+    - cron: '10,40 12 * * 1-5'
+permissions:
+  contents: write
+concurrency:
+  group: official-foreign-flow
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate TWSE BFI82U and update official day file
+        run: python scripts/update_foreign_flow.py
+      - name: Commit only when official values actually changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add data/foreign-flow.json || true
+          if git diff --cached --quiet; then
+            echo 'No new verified official report.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Update verified official foreign institutional flow'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 3
+          done
+          echo 'Could not push official foreign flow after retries' >&2
+          exit 1

@@ -7,6 +7,7 @@ on:
       - 'scripts/system_data_audit.mjs'
       - 'scripts/verify_live_feed.mjs'
       - 'index.html'
+      - 'sw.js'
       - 'live-v091.js'
       - 'foreign-live-test.js'
       - 'split-layout-v095.js'

@@ -83,14 +83,18 @@
         const j=await getJson(endpoints[index],5500);
         if(!Array.isArray(j?.msgArray))throw Error('MIS payload missing');
         const ticker=j.msgArray.find(m=>String(m?.c||'')==='t00');
-        if(marketOpen()&&!ticker)throw Error('MIS index quote missing');
-        if(marketOpen()&&ticker){
-          const epoch=Number(ticker.tlong),ms=epoch>1e12?epoch:stamp(String(ticker.d||''),String(ticker.t||''));
-          if(!Number.isFinite(ms)||ms>Date.now()+30000||Date.now()-ms>90000){
-            throw Error('MIS index feed is stale; try next route');
+        let usable=j.msgArray;
+        if(marketOpen()){
+          if(!j.msgArray.some(m=>String(m?.d||'')===today()&&num(m?.trade?.z??m?.z)!=null))throw Error('MIS quote payload has no today prices');
+          if(ticker){
+            const epoch=Number(ticker.tlong),ms=epoch>1e12?epoch:stamp(String(ticker.d||''),String(ticker.t||''));
+            // A delayed index must not suppress independently valid stock quotes.
+            if(!Number.isFinite(ms)||ms>Date.now()+30000||Date.now()-ms>90000)
+              usable=j.msgArray.filter(m=>m!==ticker);
           }
+          if(!usable.length)throw Error('MIS only returned a stale index');
         }
-        proxyPreferred=index;misFailureCount=0;nextMisAttemptAt=0;lastMisReceivedAt=Date.now();lastError='';return j.msgArray;
+        proxyPreferred=index;misFailureCount=0;nextMisAttemptAt=0;lastMisReceivedAt=Date.now();lastError='';return usable;
       }catch(e){last=e}
     }
     misFailureCount++;
@@ -209,7 +213,7 @@
     const r=row(code);if(!r)return;
     if(!q?.live||q.date!==today()){maskRow(code);return}
     const signature=JSON.stringify([q.stamp,q.price,q.change,q.open,q.high,q.low,q.volume,q.source]);
-    if(r.dataset.liveState==='live'&&r.dataset.quoteSignature===signature)return;
+    if((r.dataset.liveState==='live'||r.dataset.liveState==='delayed')&&r.dataset.quoteSignature===signature)return;
     r.dataset.quoteSignature=signature;
     r.dataset.liveState='live';r.dataset.liveDate=q.date;r.dataset.liveStamp=String(q.stamp);r.dataset.livePrice=String(q.price);
     const p=r.querySelector('.price'),ch=r.querySelector('.chg'),d=r.querySelector('.dayline'),m=r.querySelector('.meta');
@@ -296,7 +300,7 @@
   function placeholder(code){return {code:String(code),price:'',change:'',prev:'',open:'',high:'',low:'',volume:'',date:today(),stamp:null,tradeTime:'',source:'今日資料載入中',live:false}}
   if(originalQuote)quote=async function(code,allowNetwork=true){const q=quotes.get(String(code));if(q?.date===today())return q;if(marketOpen())return universeQuote(code)||snapshotQuote(code)||placeholder(code);return originalQuote(code,allowNetwork)};
   if(originalRender)render=async function(allowNetwork=false){const x=await originalRender(marketOpen()?false:allowNetwork);if(marketOpen()||hasTodayData())paintAll();return x};
-  if(originalShow)show=async function(code,opts={}){code=String(code);const q=quotes.get(code);if(q?.date===today()||marketOpen())quoteCache[code]=q||universeQuote(code)||snapshotQuote(code)||placeholder(code);const x=await originalShow(code,opts);if(q?.date===today()||marketOpen()){paintDetail();poll(true)}return x};
+  if(originalShow)show=async function(code,opts={}){code=String(code);const q=quotes.get(code);if(q?.date===today()||marketOpen())quoteCache[code]=q||universeQuote(code)||snapshotQuote(code)||placeholder(code);const x=await originalShow(code,opts);if(q?.date===today()||marketOpen()){paintDetail();if(marketOpen())poll(false)}return x};
 
   function debug(){const stocks={};for(const code of watchCodes()){const q=quotes.get(code),a=series.get(code)||[],r=row(code);stocks[code]={date:q?.date||null,price:q?.price??null,tradeTime:q?.tradeTime||null,stamp:q?.stamp||null,freshness:quoteFreshness(q),source:q?.source||null,seriesPoints:a.length,seriesLastStamp:a.at(-1)?.stamp||null,domState:r?.dataset?.liveState||null,domDate:r?.dataset?.liveDate||null,domStamp:Number(r?.dataset?.liveStamp||0)||null,domPrice:r?.dataset?.livePrice||null}}window.__TW_LIVE_V091__={version:VERSION,intervalMs:INTERVAL,marketWindow:marketOpen(),cycle,lastPollAt,lastSuccessAt,lastMisReceivedAt,nextMisAttemptAt,failures:misFailureCount,lastError,taiex:taiex?{date:taiex.date,price:taiex.price,change:taiex.change,time:taiex.time,stamp:taiex.stamp,source:taiex.source}:null,stocks}}
 
@@ -306,7 +310,8 @@
     try{const codes=requestedCodes(),{map,idx}=parseBackup(await fetchBackup(),codes);let accepted=0;if(acceptIndex(idx))accepted++;for(const q of map.values())if(acceptQuote(q))accepted++;if(accepted){lastSuccessAt=Date.now();saveToday();paintAll();}return accepted>0}catch{return false}finally{backupBusy=false}
   }
   async function poll(force=false){
-    if((!marketOpen()&&!force)||busy||document.visibilityState==='hidden'||Date.now()<nextMisAttemptAt)return;
+    if((!marketOpen()&&!force)||busy||document.visibilityState==='hidden')return;
+    if(Date.now()<nextMisAttemptAt){paintAll();return;}
     busy=true;cycle++;lastPollAt=Date.now();
     try{
       const codes=requestedCodes(),{map,idx}=parse(await fetchMis(codes));let accepted=0;if(acceptIndex(idx))accepted++;for(const q of map.values()){if(acceptQuote(q))accepted++}if(accepted)lastSuccessAt=Date.now();saveToday();paintAll();

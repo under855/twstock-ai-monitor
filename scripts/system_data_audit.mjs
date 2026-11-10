@@ -33,6 +33,13 @@ assert(news&&typeof news==='object','NEWS_JSON_INVALID');
 assert(dividends&&typeof dividends==='object','DIVIDEND_JSON_INVALID');
 assert(fs.statSync('data/dividends.json').size>1000,'DIVIDEND_DATA_EMPTY');
 assert(fs.statSync('data/news.json').size>500,'NEWS_DATA_EMPTY');
+const flow=JSON.parse(fs.readFileSync('data/foreign-flow.json','utf8'));
+assert(flow.source==='TWSE BFI82U'&&flow.market==='TWSE','FOREIGN_FLOW_WRONG_SOURCE');
+assert(/^\d{4}-\d{2}-\d{2}$/.test(flow.date),'FOREIGN_FLOW_INVALID_DATE');
+assert(flow.date<=day,'FOREIGN_FLOW_FUTURE_DATE');
+assert([flow.buyTWD,flow.sellTWD,flow.netTWD].every(Number.isSafeInteger),'FOREIGN_FLOW_NON_INTEGER');
+assert(flow.buyTWD>=0&&flow.sellTWD>=0&&flow.netTWD===flow.buyTWD-flow.sellTWD,'FOREIGN_FLOW_NET_INCONSISTENT');
+console.log('FOREIGN_FLOW_OFFICIAL_PASS',flow.date,flow.netTWD);
 console.log('SECONDARY_DATA_JSON_PASS',Object.keys(news),Object.keys(dividends).slice(0,12));
 console.log('STATIC_DATA_PASS',day,latest.taiex.close,Object.keys(latest.symbols).length);
 const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
@@ -46,6 +53,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
     const text=id=>document.getElementById(id)?.textContent?.trim()||'';
     return {
       index:text('taiex'),indexLabel:text('taiexChg'),
+      foreignFlow:{net:text('foreignNet'),buy:text('foreignBuy'),sell:text('foreignSell'),date:text('foreignFlowDate')},
       breadth:{up:text('breadthUp'),down:text('breadthDown'),flat:text('breadthFlat'),meta:text('breadthMeta'),legacy:!!document.getElementById('marketStatus')},
       live:window.__TW_LIVE_V091__?{version:window.__TW_LIVE_V091__.version,intervalMs:window.__TW_LIVE_V091__.intervalMs,errors:window.__TW_LIVE_V091__.lastError||''}:null,
       rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent?.trim(),price:r.querySelector('.price')?.textContent?.trim(),meta:r.querySelector('.meta')?.textContent?.trim()})),
@@ -57,6 +65,12 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   });
   console.log('RUNTIME_'+opt.name.toUpperCase(),JSON.stringify(d));
   assert(d.rows.length>0,'NO_STOCK_ROWS '+opt.name);
+  const expectedFlow=(Math.abs(flow.netTWD)/1e8).toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2});
+  assert(d.foreignFlow.net.includes(expectedFlow),'FOREIGN_FLOW_NET_MISMATCH '+opt.name);
+  assert(d.foreignFlow.net.startsWith(flow.netTWD<0?'賣超':flow.netTWD>0?'買超':'買賣平衡'),'FOREIGN_FLOW_SIGN_MISMATCH '+opt.name);
+  assert(d.foreignFlow.date.includes(flow.date.replaceAll('-','/')),'FOREIGN_FLOW_SOURCE_DATE_MISSING '+opt.name);
+  assert(d.foreignFlow.date.includes('非即時'),'FOREIGN_FLOW_NOT_LABELED_AS_POST_CLOSE '+opt.name);
+  console.log('FOREIGN_FLOW_'+opt.name.toUpperCase(),JSON.stringify(d.foreignFlow));
   assert(!d.breadth.legacy,'REDUNDANT_STATUS_CARD_PRESENT '+opt.name);
   const breadthCodes=d.rows.map(x=>x.code);
   const breadthData=breadthCodes.map(code=>latest.symbols[code]).filter(x=>x&&Number.isFinite(x.change)&&Number.isFinite(x.close)&&x.close>0);

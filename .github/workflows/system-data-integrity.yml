@@ -6,6 +6,9 @@ on:
     paths:
       - 'scripts/system_data_audit.mjs'
       - 'scripts/verify_live_feed.mjs'
+      - 'foreign-flow-card.js'
+      - 'data/foreign-flow.json'
+      - 'scripts/update_foreign_flow.py'
       - 'index.html'
       - 'sw.js'
       - 'live-v091.js'
@@ -34,7 +37,7 @@ jobs:
           node-version: '22'
       - name: Syntax check loaded modules
         run: |
-          for f in live-v091.js foreign-live-test.js split-layout-v095.js paper-trading-v100.js paper-trading-reset-v101.js pilot-chart-00878-v1.js extras-v090.js dividend-enhance.js sw.js; do
+          for f in live-v091.js foreign-live-test.js split-layout-v095.js paper-trading-v100.js paper-trading-reset-v101.js pilot-chart-00878-v1.js extras-v090.js dividend-enhance.js foreign-flow-card.js sw.js; do
             node --check "$f"
           done
       - name: Verify delayed-source protection and MIS backoff

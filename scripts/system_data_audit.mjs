@@ -46,6 +46,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
     const text=id=>document.getElementById(id)?.textContent?.trim()||'';
     return {
       index:text('taiex'),indexLabel:text('taiexChg'),
+      breadth:{up:text('breadthUp'),down:text('breadthDown'),flat:text('breadthFlat'),meta:text('breadthMeta'),legacy:!!document.getElementById('marketStatus')},
       live:window.__TW_LIVE_V091__?{version:window.__TW_LIVE_V091__.version,intervalMs:window.__TW_LIVE_V091__.intervalMs,errors:window.__TW_LIVE_V091__.lastError||''}:null,
       rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent?.trim(),price:r.querySelector('.price')?.textContent?.trim(),meta:r.querySelector('.meta')?.textContent?.trim()})),
       fx:window.__TW_BANK_FX_STATUS__?.(),fxRows:document.querySelectorAll('#botCashFxV096 .botCashFxCode').length,
@@ -56,6 +57,19 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   });
   console.log('RUNTIME_'+opt.name.toUpperCase(),JSON.stringify(d));
   assert(d.rows.length>0,'NO_STOCK_ROWS '+opt.name);
+  assert(!d.breadth.legacy,'REDUNDANT_STATUS_CARD_PRESENT '+opt.name);
+  const breadthCodes=d.rows.map(x=>x.code);
+  const breadthData=breadthCodes.map(code=>latest.symbols[code]).filter(x=>x&&Number.isFinite(x.change)&&Number.isFinite(x.close)&&x.close>0);
+  const breadthLatest=breadthData.reduce((acc,x)=>x.tradeDate>acc?x.tradeDate:acc,'');
+  const eligible=breadthData.filter(x=>x.tradeDate===breadthLatest);
+  const expectedUp=eligible.filter(x=>x.change>0).length;
+  const expectedDown=eligible.filter(x=>x.change<0).length;
+  const expectedFlat=eligible.length-expectedUp-expectedDown;
+  assert.equal(Number(d.breadth.up),expectedUp,'WATCH_BREADTH_UP_MISMATCH '+opt.name);
+  assert.equal(Number(d.breadth.down),expectedDown,'WATCH_BREADTH_DOWN_MISMATCH '+opt.name);
+  assert.equal(Number(d.breadth.flat),expectedFlat,'WATCH_BREADTH_FLAT_MISMATCH '+opt.name);
+  assert(d.breadth.meta.includes(breadthLatest.replaceAll('-','/')),'WATCH_BREADTH_DATE_MISSING '+opt.name);
+  console.log('WATCH_BREADTH_'+opt.name.toUpperCase(),JSON.stringify({expectedUp,expectedDown,expectedFlat,date:breadthLatest,ui:d.breadth}));
   assert(d.live?.version==='0.9.6.1'&&d.live?.intervalMs===4000,'OUTDATED_QUOTE_ENGINE '+opt.name);
   // The rendered stock prices and closing index must match the versioned exchange data file.
   for(const row of d.rows){

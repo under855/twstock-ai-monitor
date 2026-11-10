@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-10T09:34:06.234769+00:00",
+  "generatedAt": "2026-11-10T10:37:06.270171+00:00",
   "stocks": {
     "0050": [
       {
@@ -29,12 +29,6 @@
       {
         "title": "30歲北漂女想砸錢買一張0050當生日禮物 過來人給「這些建議」 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9lUFJSbFRBN0w1b09wb0pPSll2QWR2cGxSWmR6ZG5ZWXVMR0dUUGtLeS1pRVg4My16eHV2ZHZ1T0EzYVQzb1hpc05rZW8yLTI0S3Y0bkdnenFoVkFWSHdF0gFkQVVfeXFMTm9ubEVoS05TXzZkeFhlZ0VZZHZEMnZKVnYtQkJYZy04WFpOd0t6YkFCUlBhaG92OS1XSmlNejhxZHRMb3l0ZWI4M3J3ek5XZzdIQ1FDcmFOc1NMNGtaS1g1cF94WA?oc=5",
-        "publisher": "自由財經",
-        "time": 1791788400000
-      },
-      {
-        "title": "台股近來漲勢驚人 0050定期定額還能無腦買？掀網友熱議 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5ZdER0d0JKT3M3bFJLZXhuUkhJOHhDcERBaS1yOXEyODMtdlZtQVNsbTdjMW9UdW1NOWx4SlZ0VjZKSGlvWklGZW5NSkxsWXJhdDJPbmFiNndPZXBWaGRF?oc=5",
         "publisher": "自由財經",
         "time": 1791788400000
       }
@@ -111,6 +105,12 @@
         "time": 1794301550000
       },
       {
+        "title": "中鋼營收／10月年增31％、連兩月突破300億元 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBQZkY1UzItc3otRmd0akdXYWJqWFhCYkVsbTJ3NHh1OExvZkFXbF9GZ3AtSzNEekpCdldXYzZIanBGRFM4WTBWQVh4LUg5RVlGNkE0V2xfMmhwQdIBX0FVX3lxTE5SelZxVWNJWjBxeTlXZVF5YVlqSU9lSHROUkFfVkRaM2Q0dUZTcUhoZzAyY3JldFFSZFZyTXFIblFYVFBkMjBFbGQyX3BxeGNLMlVwWlh6OHoxOWZ6emtv?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794299292000
+      },
+      {
         "title": "中鋼投資10多億布局低碳發電預計2年後完工| 地方 - 中央社 CNA",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1tNkRRbW9BMWJsUWI1TDJOS2lNdXExbnhhWFdMSnYtTkluRnYtdG5uSFF0MF9TNHBCS0J6dDVwTUxFYURqTEtiNUV6eXNpZFQ2U1BUWG1iMjZFN284dXhj?oc=5",
         "publisher": "中央社 CNA",
@@ -141,16 +141,10 @@
         "time": 1793959532000
       },
       {
-        "title": "反映市場行情，中鋼12月月盤小幅調漲- 新聞 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPRXlHS0N4STB6WV9Va085SWc5YUlaQ20xY0ZDRmpBTWRfeTlvcUFRVXRWeUc5QVFlMi12Rjk2Mm1rZnNXY25sbllZZmFsUTFmbEtmWDN6SDFOa1c1ZUxiZ2FDb3lQc0V2VTE0REJQeUFvRFIwdkV1VDR6M0tPb29hWkdwZzMtSEo2QmllY25QS1JmQQ?oc=5",
-        "publisher": "MoneyDJ",
-        "time": 1793860200000
-      },
-      {
-        "title": "中鋼9月稅前獲利月減19%，惟前3季明顯改善- 新聞 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOdXllSzRadG15UjJCUDdLb1Zad0hnOE5qNWx1bVpPUEltZ3NEMEhlS09yZGdoOUZDZFEtT3k2RVhLLTBEZ3RRR0Z4bHdYNHhEclhsdlZPbVhTdUJrNjl5NTNtOFR0ZmhyaHRVSTlERXI4TjRodG1XYVVzWFRoSG1faXBYQ2ZvWmxRa3RhazhWeGtXdw?oc=5",
-        "publisher": "MoneyDJ",
-        "time": 1793084400000
+        "title": "中鋼勒緊褲帶拚減碳 投資10.7億要做SOFC、CCU - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE52Sk5kUkppVlhWeXpBWHQ2QVV2NkxmbjhqR3NKQVpEMGoyTTZ6SFNCZjRSWkY0MlNOWnlwQkxMSzNmWU5KN3BsNkVjOHYyZzVIckRJalpjMUFCdmpFekNV0gFkQVVfeXFMUGZ5WDh3a19lLTNMYU02c0kzOHRaQVZEZXBZaG44V3R2OTFYMUJNWTJySDhJOFI1WG5UYXg3ejMyRkZ3SUdabWNfOGtWRVAzZzFvM0haelNPbUpMdWZVS3JyWmhUOQ?oc=5",
+        "publisher": "自由財經",
+        "time": 1793955982000
       }
     ],
     "00878": [
@@ -167,6 +161,12 @@
         "time": 1793619004000
       },
       {
+        "title": "國泰永續高股息11/17除息 預估配息1.25元續創新高 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1KdDlTWjNWTU9nQUpFN0R1a0hEbC1CLUlobkZ5UkJIdEJvamYxZmc3RUcxWFE2cm9xcW1NOW1TS2ZuZTZoc2dwRVMzelExQi1FLWJFcnJoU1BVZ9IBX0FVX3lxTE4ybXRFd24yZGNqU1RkVjhNbFF5ZTdva2lWa2ZVelZFUWZieTc5czVDYjJkbE03VjVrVHpiSGdxU25EbUhYN09oR2dsbVZKUnd6X0xBYWFjQl9KRy1mTnVJ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793613633000
+      },
+      {
         "title": "00878國泰永續高股息11/17除息預估配息1.25元續創新高| 證券 - 中央社 CNA",
         "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFAxTkRkTUg2M2hZYTFnWUFTMFlPbUNyME9WdFNFWTM2dHVxYjlKejBzY3BzajZkMUQ3eE1hNXcydmpUQXVYdTkwWm1COGJ3Yk13RTJqRFRUZTJ1Um5xQ2c?oc=5",
         "publisher": "中央社 CNA",
@@ -179,12 +179,6 @@
         "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1qNmhXc251NnZ2TzdEblhkN2F2R2tiaGo0dC1uSkVNRVotRkdCV3ctZGxIeWFtalBTeXVVMjA2NlNxajdKMDFKOWVnR2p5a21Vc1VIaGtSUXhuYkxa?oc=5",
         "publisher": "經濟日報",
         "time": 1794124800000
-      },
-      {
-        "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793952000000
       },
       {
         "title": "領錢了！台股本周21檔 ETF 發放股利共421億、00919配發207.8億最多 - 經濟日報",

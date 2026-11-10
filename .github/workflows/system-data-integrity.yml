@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/system_data_audit.mjs'
+      - 'scripts/verify_live_feed.mjs'
       - 'index.html'
       - 'live-v091.js'
       - 'foreign-live-test.js'
@@ -35,6 +36,8 @@ jobs:
           for f in live-v091.js foreign-live-test.js split-layout-v095.js paper-trading-v100.js paper-trading-reset-v101.js pilot-chart-00878-v1.js extras-v090.js dividend-enhance.js sw.js; do
             node --check "$f"
           done
+      - name: Verify delayed-source protection and MIS backoff
+        run: node scripts/verify_live_feed.mjs
       - name: Prepare browser checks
         run: npm install --no-save playwright-core@latest
       - name: Validate current production after deployment

@@ -33,9 +33,20 @@ const during=q.parseBackup({taiex:{date:'2026-11-10',close:10000,source:'TWSE MI
 assert.equal(during.map.size,0,'CLOSING_BACKUP_USED_DURING_MARKET');
 assert.equal(during.idx,null,'FUTURE_CLOSING_INDEX_DURING_MARKET');
 reply={msgArray:[{c:'0050',d:'20261110',t:'10:00:00',z:'100'}]};
-await assert.rejects(()=>q.fetchMis(['0050']),/MIS index quote missing/);
-assert.equal(requests,2,'MIS_FAILOVER_NOT_ATTEMPTED');
+const stocksOnly=await q.fetchMis(['0050']);
+assert.equal(stocksOnly.length,1,'STOCK_WITHOUT_INDEX_REJECTED');
+assert.equal(requests,1,'UNNECESSARY_RETRY_FOR_VALID_STOCK');
+reply={msgArray:[
+  {c:'t00',d:'20261110',t:'09:54:00',tlong:epoch-360000,z:'10000'},
+  {c:'0050',d:'20261110',t:'10:00:00',z:'100'}
+]};
+const filtered=await q.fetchMis(['0050']);
+assert.equal(filtered.length,1,'STALE_INDEX_NOT_DISCARDED');
+assert.equal(filtered[0].c,'0050','VALID_STOCK_LOST_WITH_STALE_INDEX');
+reply={msgArray:[{c:'t00',d:'20261109',t:'13:30:00',z:'10000'}]};
+await assert.rejects(()=>q.fetchMis(['0050']),/MIS quote payload has no today prices/);
+assert.equal(requests,4,'MIS_FAILOVER_NOT_ATTEMPTED');
 assert.equal(q.failureCount,1,'FAILURE_NOT_COUNTED');
 assert(q.retryAt>epoch,'NO_RETRY_BACKOFF');
-assert(q.lastError.includes('index quote missing'),'NO_ERROR_DIAGNOSTIC');
+assert(q.lastError.includes('no today prices'),'NO_ERROR_DIAGNOSTIC');
 console.log('LIVE_FEED_REGRESSION_PASS: 4s loop, per-stock freshness, no intraday closing data, strict index, failover, backoff');

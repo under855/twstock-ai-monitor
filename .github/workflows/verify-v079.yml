@@ -1,13 +1,9 @@
-name: Verify v079 live quotes
+name: Legacy v079 CORS probe (manual only)
 
+# v079 is no longer loaded by index.html. The current live engine is checked by
+# system-data-integrity.yml; do not run this obsolete proxy probe on PWA updates.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'hotfix-v079.js'
-      - 'sw.js'
-      - '.github/workflows/verify-v079.yml'
 
 permissions:
   contents: read

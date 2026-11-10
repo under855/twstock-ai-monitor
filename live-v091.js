@@ -290,7 +290,7 @@
         const r=row(code),state=quoteFreshness(q);
         if(marketOpen()&&state==='older'&&!q.officialClose&&r){
           r.dataset.liveState='delayed';
-          setText(r.querySelector('.meta'),'最後成交 '+(q.tradeTime||'—')+'｜此價非最新更新（資料延遲）');
+          setText(r.querySelector('.meta'),'最後成交 '+(q.tradeTime||'—')+'｜超過90秒未見新成交；請核對上方來源狀態');
         }
       }else if(marketOpen())maskRow(code);
     }

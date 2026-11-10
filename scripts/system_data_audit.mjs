@@ -46,6 +46,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
     const text=id=>document.getElementById(id)?.textContent?.trim()||'';
     return {
       index:text('taiex'),indexLabel:text('taiexChg'),
+      live:window.__TW_LIVE_V091__?{version:window.__TW_LIVE_V091__.version,intervalMs:window.__TW_LIVE_V091__.intervalMs,errors:window.__TW_LIVE_V091__.lastError||''}:null,
       rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent?.trim(),price:r.querySelector('.price')?.textContent?.trim(),meta:r.querySelector('.meta')?.textContent?.trim()})),
       fx:window.__TW_BANK_FX_STATUS__?.(),fxRows:document.querySelectorAll('#botCashFxV096 .botCashFxCode').length,
       oldFX:[...document.scripts].some(s=>s.textContent?.includes('open.er-api.com')),
@@ -55,6 +56,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   });
   console.log('RUNTIME_'+opt.name.toUpperCase(),JSON.stringify(d));
   assert(d.rows.length>0,'NO_STOCK_ROWS '+opt.name);
+  assert(d.live?.version==='0.9.6.1'&&d.live?.intervalMs===4000,'OUTDATED_QUOTE_ENGINE '+opt.name);
   // The rendered stock prices and closing index must match the versioned exchange data file.
   for(const row of d.rows){
     const expected=latest.symbols[row.code];

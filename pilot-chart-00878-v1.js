@@ -7,7 +7,8 @@
   style.textContent=[
     '#sheet.pilot-chart-view .cards>.card:first-child{display:block!important}',
     '#sheet.pilot-chart-view #bigChart,#sheet.pilot-chart-view #historyChart,#sheet.pilot-chart-view #detailChartTabs,#sheet.pilot-chart-view #chartMsg,#sheet.pilot-chart-view #historyChartMsg,#sheet.pilot-chart-view #detailChartDisplayTitle{display:none!important}',
-    '#pilot00878{font-family:inherit;color:#ecf4ff}',
+    '#pilot00878{display:none;font-family:inherit;color:#ecf4ff}',
+    '#sheet.pilot-chart-view #pilot00878{display:block}',
     '#pilot00878 .pilot-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;margin-bottom:8px}',
     '#pilot00878 .pilot-heading{font-size:15px;font-weight:800}',
     '#pilot00878 .pilot-sub{font-size:11px;color:#a5b9d0;margin-top:4px}',

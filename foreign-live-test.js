@@ -19,7 +19,7 @@
     for(const [symbol] of stocks){
       let pending=false;
       const run=async()=>{
-        if(pending)return;
+        if(pending||document.visibilityState==='hidden')return;
         pending=true;
         const controller=new AbortController();
         const timer=setTimeout(()=>controller.abort(),8000);
@@ -38,7 +38,10 @@
         }
       };
       run();
-      setInterval(run,10000);
+      // The Nasdaq relay is not a low-latency feed. Reduce proxy traffic and recheck on resume.
+      setInterval(run,60000);
+      addEventListener('focus',run);
+      document.addEventListener('visibilitychange',()=>{if(!document.hidden)run()});
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();

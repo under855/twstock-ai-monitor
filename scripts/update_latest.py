@@ -166,27 +166,67 @@ def fetch_twse(trade_date):
     return out
 
 def fetch_tpex_closing_table(day):
+    """Only accept a dated official TPEx table with verified column headers."""
     date = day.replace('-', '/')
-    url = f'https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes?date={date}&response=json'
-    report = get(url, timeout=25, attempts=2)
-    for table in report.get('tables', []):
-        if table.get('title') != '上櫃股票行情' or roc_to_iso(table.get('date')) != day:
-            continue
-        if table.get('fields', [])[:9] != ['代號','名稱','收盤','漲跌','開盤','最高','最低','均價','成交股數']:
-            continue
-        out = {
-            row[0].strip(): {
-                'symbol': row[0].strip(), 'name': row[1].strip(), 'market': 'TPEx',
-                'close': n(row[2]), 'change': n(row[3]), 'open': n(row[4]),
-                'high': n(row[5]), 'low': n(row[6]), 'volume': n(row[8]),
-                'tradeDate': day, 'source': 'TPEx dailyQuotes',
-            }
-            for row in table.get('data', [])
-            if len(row) >= 9 and re.fullmatch(r'(?:[1-9][0-9]{3}[A-Z]?|00[0-9A-Z]{2,4}|020[0-9]{3})', row[0].strip())
-        }
-        if len(out) >= 300:
-            return out
+    urls=[
+        'https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes?'+urllib.parse.urlencode({'date':date,'response':'json'}),
+        'https://www.tpex.org.tw/www/zh-tw/afterTrading/otc?'+urllib.parse.urlencode({'date':date,'response':'json'})
+    ]
+    for url in urls:
+        try:
+            report=get(url,timeout=9,attempts=1)
+            for table in report.get('tables', []):
+                fields=table.get('fields') or []
+                if len(fields)<9 or not str(fields[0]).strip().startswith('代號') or not str(fields[2]).strip().startswith('收盤'):
+                    continue
+                date_tokens=[table.get('date'),report.get('date')]
+                title=table.get('title') or ''
+                date_tokens.extend(re.findall(r'(?:20\d{2}|1\d{2})[/\-]\d{1,2}[/\-]\d{1,2}',title))
+                if day not in [roc_to_iso(x) for x in date_tokens]:
+                    continue
+                out={}
+                for row in table.get('data',[]):
+                    if len(row)<9:continue
+                    code=str(row[0]).strip()
+                    if not re.fullmatch(r'(?:[1-9][0-9]{3}[A-Z]?|00[0-9A-Z]{2,4}|020[0-9]{3})',code):continue
+                    closing=n(row[2])
+                    if closing is None or closing<=0:continue
+                    out[code]={'symbol':code,'name':str(row[1]).strip(),'market':'TPEx','close':closing,
+                        'change':n(row[3]),'open':n(row[4]),'high':n(row[5]),
+                        'low':n(row[6]),'volume':n(row[8]),
+                        'tradeDate':day,'source':'TPEx dailyQuotes'}
+                if len(out)>=300:
+                    print(f'TPEx verified dated official table {day}: {len(out)} securities')
+                    return out
+        except Exception as e:
+            print(f'WARN TPEx dated table unavailable: {type(e).__name__}: {e}',file=sys.stderr)
     return {}
+
+def fetch_tpex_mis_last_trade(code,day):
+    """Fallback only for selected watch symbols, clearly not official finalized close."""
+    url='https://mis.twse.com.tw/stock/api/getStockInfo.jsp?'+urllib.parse.urlencode({
+        'ex_ch':f'otc_{code}.tw','json':'1','delay':'0','_':int(time.time()*1000)})
+    try:
+        data=get(url,timeout=12,attempts=1)
+        m=next((q for q in data.get('msgArray',[]) if str(q.get('c'))==str(code)
+            and str(q.get('d'))==day.replace('-','')),None)
+        if not m:return None
+        price=n((m.get('trade') or {}).get('z')) or n(m.get('z'))
+        y=n(m.get('y'))
+        trade_time=str((m.get('trade') or {}).get('t') or m.get('t') or '')
+        if price is None or price<=0 or not re.fullmatch(r'\d{2}:\d{2}:\d{2}',trade_time):return None
+        hour=int(trade_time[:2])
+        if hour<9 or hour>13:return None
+        today=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).date().isoformat()
+        if day!=today:return None
+        return {'symbol':str(code),'name':str(m.get('nf') or m.get('n') or '鈊象'),
+                'market':'TPEx','close':price,'open':n(m.get('o')),
+                'high':n(m.get('h')),'low':n(m.get('l')),'volume':None,
+                'change':price-y if y is not None else None,
+                'tradeDate':day,'source':'TPEx MIS 最後成交（非官方收盤）','sourceTime':trade_time}
+    except Exception as e:
+        print(f'WARN TPEx MIS {code} unavailable: {e}',file=sys.stderr)
+    return None
 
 def fetch_tpex(trade_date):
     now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
@@ -240,6 +280,18 @@ def main():
             taiex = fetch_twse_closing_index(taipei.date().isoformat()) or taiex
         except Exception as e:
             print(f'WARN TWSE closing index unavailable: {e}', file=sys.stderr)
+    # The TPEx OpenAPI sometimes remains on yesterday after TWSE has finalized today's prices.
+    # Do not silently present stale 3293 as today's close. If its dated official table
+    # is still unavailable, accept only a date-validated MIS last trade with explicit label.
+    current_day=taipei.date().isoformat()
+    if taipei.weekday()<5 and (taipei.hour,taipei.minute)>=(13,30):
+        if tpex.get('3293',{}).get('tradeDate')!=current_day:
+            interim=fetch_tpex_mis_last_trade('3293',current_day)
+            if interim:
+                tpex['3293']=interim
+                print('WARN 3293 provisional MIS final trade, NOT an official TPEx closing record',file=sys.stderr)
+            else:
+                print('WARN 3293 remains on previous TPEx official trade day; do not label current',file=sys.stderr)
     symbols={**twse,**tpex}; trade_date=max(trade_date,max(row['tradeDate'] for row in twse.values())); now=datetime.datetime.now(datetime.timezone.utc).isoformat()
     payload={'generatedAt':now,'tradeDate':trade_date,'taiex':taiex,'counts':{'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},'symbols':symbols}
     # Do not write a new generatedAt every five minutes if the exchange values did not change.

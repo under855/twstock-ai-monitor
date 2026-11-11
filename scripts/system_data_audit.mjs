@@ -64,7 +64,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
       breadth:{up:text('breadthUp'),down:text('breadthDown'),flat:text('breadthFlat'),meta:text('breadthMeta'),legacy:!!document.getElementById('marketStatus')},
       live:window.__TW_LIVE_V091__?{version:window.__TW_LIVE_V091__.version,intervalMs:window.__TW_LIVE_V091__.intervalMs,marketWindow:window.__TW_LIVE_V091__.marketWindow,indexFreshness:window.__TW_LIVE_V091__.indexFreshness,indexAgeSeconds:window.__TW_LIVE_V091__.indexAgeSeconds,indexPrice:window.__TW_LIVE_V091__.taiex?.price||null,errors:window.__TW_LIVE_V091__.lastError||''}:null,
       rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent?.trim(),price:r.querySelector('.price')?.textContent?.trim(),meta:r.querySelector('.meta')?.textContent?.trim()})),
-      fx:window.__TW_BANK_FX_STATUS__?.(),fxRows:document.querySelectorAll('#botCashFxV096 .botCashFxCode').length,
+      fx:window.__TW_BANK_FX_STATUS__?.(),fxRows:document.querySelectorAll('#botCashFxV096 .botCashFxCode').length,fxCodes:[...document.querySelectorAll('#botCashFxV096 .botCashFxCode')].map(x=>x.textContent.trim()),
       oldFX:[...document.scripts].some(s=>s.textContent?.includes('open.er-api.com')),
       paper:!!document.getElementById('paperTradeBtn'),
       paperScript:[...document.scripts].some(s=>s.src.includes('paper-trading-v100.js'))
@@ -117,7 +117,8 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   assert(!d.oldFX,'OLD_FX_SOURCE '+opt.name);
   assert(['verified','unverified'].includes(d.fx?.state),'BANK_TIME_UNVERIFIED '+opt.name);
   if(d.fx.state==='unverified')assert(d.fxRows===0,'STALE_BANK_RATES_VISIBLE '+opt.name);
-  if(d.fx.state==='verified')assert(d.fxRows>=7,'BANK_RATES_INCOMPLETE '+opt.name);
+  if(d.fx.state==='unverified')assert.equal(d.fxCodes.length,0,'BANK_FX_UNVERIFIED_CODES_VISIBLE '+opt.name);
+  if(d.fx.state==='verified'){assert.equal(d.fxRows,6,'BANK_RATES_NOT_SIX '+opt.name);assert.deepEqual(d.fxCodes,['USD','JPY','EUR','GBP','SGD','CNY'],'BANK_FX_CURRENCIES_MISMATCH '+opt.name);}
   // Detail panel, chart pilot, research and trading controls must load without crashing.
   const detailRow=page.locator('#watch article.row').filter({hasText:'00878'}).first();
   await detailRow.click();await page.waitForTimeout(1400);

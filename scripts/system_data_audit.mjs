@@ -15,7 +15,14 @@ const day=String(latest.tradeDate||'');
 assert(/^\d{4}-\d{2}-\d{2}$/.test(day),'INVALID_TRADE_DATE');
 assert(Date.parse(day+'T00:00:00+08:00')<=Date.now(),'FUTURE_STOCK_DATE');
 assert(Date.parse(latest.generatedAt)<=Date.now()+60000,'FUTURE_BUILD_TIMESTAMP');
-assert(latest.taiex?.date<=day,'INDEX_DATE_AFTER_STOCK_DATE');
+assert(latest.taiex?.date<=day||(
+  latest.taiex?.source==='TWSE MIS live'&&
+  latest.taiex?.date===new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'})
+),'INVALID_INDEX_TRADE_DATE');
+if(latest.taiex?.source==='TWSE MIS live'){
+  assert(/^\d{2}:\d{2}:\d{2}$/.test(String(latest.taiex.time||'')),'INVALID_MIS_INDEX_TIME');
+  console.log('NOTE: intraday MIS index date may be newer than finalized stock rows; freshness is verified in UI, not inferred from cache generation time');
+}
 assert(latest.taiex?.close>5000,'INVALID_INDEX');
 for(const code of ['0050','00878','00919','2330','3711','3293','2002']){
   const v=latest.symbols[code];assert(v,'MISSING_STOCK '+code);

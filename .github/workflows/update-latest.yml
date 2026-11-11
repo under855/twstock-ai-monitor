@@ -10,6 +10,8 @@ on:
   schedule:
     # 08:00–15:59 Taiwan local, weekdays. Final 13:30 official close is included.
     - cron: '*/5 0-7 * * 1-5'
+    # TPEx official close may appear after 16:00 Taiwan time; retry without rewriting unchanged data.
+    - cron: '*/10 8-10 * * 1-5'
 
 permissions:
   contents: write

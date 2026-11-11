@@ -293,6 +293,26 @@ def main():
             else:
                 print('WARN 3293 remains on previous TPEx official trade day; do not label current',file=sys.stderr)
     symbols={**twse,**tpex}; trade_date=max(trade_date,max(row['tradeDate'] for row in twse.values())); now=datetime.datetime.now(datetime.timezone.utc).isoformat()
+    # Don't downgrade a previously verified current-day TPEx close to an older OpenAPI
+    # snapshot or provisional MIS print when the dated official endpoint temporarily times out.
+    if OUT.exists():
+        try:
+            prior=json.loads(OUT.read_text(encoding='utf-8')).get('symbols',{})
+            for code,old in prior.items():
+                if old.get('market')!='TPEx':continue
+                current=symbols.get(code)
+                if not current:
+                    symbols[code]=old
+                    continue
+                old_day=str(old.get('tradeDate') or '')
+                new_day=str(current.get('tradeDate') or '')
+                old_official=old.get('source')=='TPEx dailyQuotes'
+                new_official=current.get('source')=='TPEx dailyQuotes'
+                if old_day>new_day or (old_day==new_day and old_official and not new_official):
+                    symbols[code]=old
+            tpex={k:v for k,v in symbols.items() if v.get('market')=='TPEx'}
+        except (ValueError,OSError) as error:
+            print('WARN prior validated TPEx snapshot unavailable: '+str(error),file=sys.stderr)
     payload={'generatedAt':now,'tradeDate':trade_date,'taiex':taiex,'counts':{'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},'symbols':symbols}
     # Do not write a new generatedAt every five minutes if the exchange values did not change.
     # Otherwise each identical refresh triggers a pointless Pages deployment and falsely looks like fresh market data.

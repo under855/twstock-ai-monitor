@@ -95,7 +95,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   // The rendered stock prices and closing index must match the versioned exchange data file.
   for(const row of d.rows){
     const expected=latest.symbols[row.code];
-    if(expected&&expected.tradeDate===day){
+    if(!d.live.marketWindow&&expected&&expected.tradeDate===day){
       const displayed=Number(String(row.price||'').replaceAll(',',''));
       assert(Math.abs(displayed-expected.close)<.001,'STOCK_PRICE_DIFF '+opt.name+' '+row.code);
       assert(row.meta.includes('官方收盤')||row.meta.includes('MIS'),'STOCK_SOURCE_NOT_IDENTIFIED '+row.code);

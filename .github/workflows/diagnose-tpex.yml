@@ -47,3 +47,11 @@ jobs:
                     print('FOUND3293',str(row)[:800],flush=True);break
             except Exception as e: print('ERROR',repr(e),flush=True)
           PY
+          python - <<'PY'
+          import urllib.request,json,time
+          u='https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=otc_3293.tw&json=1&delay=0&_='+str(int(time.time()*1000))
+          try:
+            with urllib.request.urlopen(urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'}),timeout=12) as r:j=json.load(r)
+            print('MIS_3293',json.dumps((j.get('msgArray') or [None])[0],ensure_ascii=False)[:1100])
+          except Exception as e:print('MIS_ERROR',str(e))
+          PY

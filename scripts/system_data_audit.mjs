@@ -55,7 +55,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
       index:text('taiex'),indexLabel:text('taiexChg'),
       foreignFlow:{net:text('foreignNet'),buy:text('foreignBuy'),sell:text('foreignSell'),date:text('foreignFlowDate')},
       breadth:{up:text('breadthUp'),down:text('breadthDown'),flat:text('breadthFlat'),meta:text('breadthMeta'),legacy:!!document.getElementById('marketStatus')},
-      live:window.__TW_LIVE_V091__?{version:window.__TW_LIVE_V091__.version,intervalMs:window.__TW_LIVE_V091__.intervalMs,errors:window.__TW_LIVE_V091__.lastError||''}:null,
+      live:window.__TW_LIVE_V091__?{version:window.__TW_LIVE_V091__.version,intervalMs:window.__TW_LIVE_V091__.intervalMs,marketWindow:window.__TW_LIVE_V091__.marketWindow,indexFreshness:window.__TW_LIVE_V091__.indexFreshness,indexAgeSeconds:window.__TW_LIVE_V091__.indexAgeSeconds,indexPrice:window.__TW_LIVE_V091__.taiex?.price||null,errors:window.__TW_LIVE_V091__.lastError||''}:null,
       rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent?.trim(),price:r.querySelector('.price')?.textContent?.trim(),meta:r.querySelector('.meta')?.textContent?.trim()})),
       fx:window.__TW_BANK_FX_STATUS__?.(),fxRows:document.querySelectorAll('#botCashFxV096 .botCashFxCode').length,
       oldFX:[...document.scripts].some(s=>s.textContent?.includes('open.er-api.com')),
@@ -84,7 +84,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   assert.equal(Number(d.breadth.flat),expectedFlat,'WATCH_BREADTH_FLAT_MISMATCH '+opt.name);
   assert(d.breadth.meta.includes(breadthLatest.replaceAll('-','/')),'WATCH_BREADTH_DATE_MISSING '+opt.name);
   console.log('WATCH_BREADTH_'+opt.name.toUpperCase(),JSON.stringify({expectedUp,expectedDown,expectedFlat,date:breadthLatest,ui:d.breadth}));
-  assert(d.live?.version==='0.9.6.1'&&d.live?.intervalMs===4000,'OUTDATED_QUOTE_ENGINE '+opt.name);
+  assert(d.live?.version==='0.9.6.4'&&d.live?.intervalMs===4000,'OUTDATED_QUOTE_ENGINE '+opt.name);
   // The rendered stock prices and closing index must match the versioned exchange data file.
   for(const row of d.rows){
     const expected=latest.symbols[row.code];
@@ -95,7 +95,17 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
     }
   }
   const indexNum=Number(String(d.index).replaceAll(',',''));
-  assert(Math.abs(indexNum-latest.taiex.close)<.011,'INDEX_PRICE_DIFF '+opt.name);
+  if(d.live.marketWindow){
+    if(d.live.indexFreshness==='fresh'){
+      assert(Number.isFinite(indexNum)&&Math.abs(indexNum-Number(d.live.indexPrice))<.011,'LIVE_INDEX_MISMATCH '+opt.name);
+    }else{
+      assert(d.index==='—','STALE_INDEX_MUST_NOT_SHOW_AS_LIVE '+opt.name);
+      assert(/行情延遲|無法確認即時/.test(d.indexLabel),'MISSING_INDEX_DELAY_WARNING '+opt.name);
+    }
+  }else if(latest.taiex.source==='TWSE MI_INDEX'&&latest.taiex.time==='13:30:00'){
+    assert(Math.abs(indexNum-latest.taiex.close)<.011,'OFFICIAL_CLOSE_DIFF '+opt.name);
+  }
+  console.log('INDEX_FRESHNESS_'+opt.name.toUpperCase(),JSON.stringify({freshness:d.live.indexFreshness,ageSeconds:d.live.indexAgeSeconds,display:d.index,indexLabel:d.indexLabel}));
   assert(d.paper&&d.paperScript,'PAPER_TRADING_MISSING '+opt.name);
   assert(!d.oldFX,'OLD_FX_SOURCE '+opt.name);
   assert(['verified','unverified'].includes(d.fx?.state),'BANK_TIME_UNVERIFIED '+opt.name);

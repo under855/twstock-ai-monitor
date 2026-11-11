@@ -98,7 +98,12 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
     if(!d.live.marketWindow&&expected&&expected.tradeDate===day){
       const displayed=Number(String(row.price||'').replaceAll(',',''));
       assert(Math.abs(displayed-expected.close)<.001,'STOCK_PRICE_DIFF '+opt.name+' '+row.code);
-      assert(row.meta.includes('官方收盤')||row.meta.includes('MIS'),'STOCK_SOURCE_NOT_IDENTIFIED '+row.code);
+      if(expected.market==='TPEx'){
+        assert(row.meta.includes(expected.tradeDate.replaceAll('-','/')),'TPEX_SOURCE_DATE_MISSING '+row.code);
+        assert(expected.source==='TPEx dailyQuotes'?row.meta.includes('官方收盤'):row.meta.includes('非正式收盤')||row.meta.includes('最近交易日'),'TPEX_SOURCE_TYPE_MISMATCH '+row.code);
+      }else{
+        assert(row.meta.includes('官方收盤')||row.meta.includes('MIS'),'STOCK_SOURCE_NOT_IDENTIFIED '+row.code);
+      }
     }
   }
   const indexNum=Number(String(d.index).replaceAll(',',''));

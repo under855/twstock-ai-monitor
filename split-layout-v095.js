@@ -4,7 +4,7 @@
   const STYLE_ID='split-stock-fx-style-v096';
   const ROOT_ID='stockFxSplitV095';
   const BOT_URL='https://rate.bot.com.tw/xrt?Lang=zh-TW';
-  const CURRENCIES=['USD','JPY','EUR','CNY','KRW','GBP','AUD','HKD','SGD'];
+  const CURRENCIES=['USD','JPY','EUR','GBP','SGD','CNY'];
 
   function installStyle(){
     if(document.getElementById(STYLE_ID)) return;
@@ -65,7 +65,7 @@
       if(sightBuy!==null&&sightSell!==null&&sightBuy>sightSell)continue;
       rows.push({code,buy,sell,sightBuy,sightSell});seen.add(code);
     }
-    if(rows.length<7||!seen.has('USD')||!seen.has('JPY'))return null;
+    if(rows.length!==CURRENCIES.length||CURRENCIES.some(code=>!seen.has(code)))return null;
     const text=(doc.body?.textContent||'').replace(/\s+/g,' ');
     const dateText=text.match(/牌價最新掛牌時間\s*[：:]\s*(\d{4}\/\d{2}\/\d{2}\s+\d{2}:\d{2})/)?.[1]||'';
     // Never call a proxy retrieval timestamp a quote timestamp.
@@ -94,14 +94,18 @@
   }
   const retrievalStamp=()=>new Date().toLocaleTimeString('zh-TW',{timeZone:'Asia/Taipei',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
   let cashBusy=false,lastBot=null,lastFetchTime='',bankFxState='init';
+  let lastRenderedSignature='';
   function renderBotRates(p){
     const box=cashBox(),grid=box.querySelector('.botCashFxGrid'),time=box.querySelector('.botCashFxTime');
     if(!grid||!time)return;
     const business=bankBusinessWindow();
     time.textContent='銀行原始牌告 '+p.time+'｜本機讀取 '+lastFetchTime+(business?'｜非保證即時成交價':'｜非銀行營業時間');
-    grid.querySelectorAll('.botCashFxCell:not(.botCashFxHdr)').forEach(x=>x.remove());
+    const signature=JSON.stringify([p.time,p.rows.map(x=>[x.code,x.buy,x.sell,x.sightBuy,x.sightSell])]);
+    const unchanged=signature===lastRenderedSignature;
+    lastRenderedSignature=signature;
+    if(!unchanged)grid.querySelectorAll('.botCashFxCell:not(.botCashFxHdr)').forEach(x=>x.remove());
     const byCode=new Map(p.rows.map(x=>[x.code,x]));
-    for(const code of CURRENCIES){
+    if(!unchanged)for(const code of CURRENCIES){
       const x=byCode.get(code);if(!x)continue;
       const values=[code,fmt(x.buy),fmt(x.sell),fmt(x.sightBuy),fmt(x.sightSell)];
       for(let i=0;i<values.length;i++){
@@ -122,6 +126,7 @@
   function showUnverified(reason,oldTime=''){
     const box=cashBox(),grid=box.querySelector('.botCashFxGrid'),time=box.querySelector('.botCashFxTime');
     grid?.querySelectorAll('.botCashFxCell:not(.botCashFxHdr)').forEach(x=>x.remove());
+    lastRenderedSignature='';
     if(time)time.textContent='無法確認目前的臺銀牌告｜'+reason+(oldTime?'｜來源顯示 '+oldTime:'');
     const status=document.getElementById('fxStamp');
     if(status)status.textContent='目前匯率未通過時效驗證';

@@ -83,7 +83,17 @@ def fetch_live_taiex(fallback):
         iso=f'{d[:4]}-{d[4:6]}-{d[6:8]}'
         today=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).date().isoformat()
         if iso!=today: return fallback
-        return {'date':iso,'close':z,'change':(z-y) if y is not None else None,'previousClose':y,'time':str(m.get('t') or m.get('%') or ''),'source':'TWSE MIS live'}
+        quote_time=str(m.get('t') or m.get('%') or '')
+        try:
+            observed=int(float(m.get('tlong'))) if m.get('tlong') else int(datetime.datetime.strptime(d+quote_time,'%Y%m%d%H:%M:%S').replace(tzinfo=datetime.timezone(datetime.timedelta(hours=8))).timestamp()*1000)
+            age_ms=ts-observed
+        except (ValueError,TypeError,OverflowError):
+            print('WARN missing exchange index timestamp; ignore MIS snapshot',file=sys.stderr)
+            return fallback
+        if not -30000 <= age_ms <= 120000:
+            print(f'WARN MIS index snapshot stale by {age_ms/1000:.0f}s; do not write as current index',file=sys.stderr)
+            return fallback
+        return {'date':iso,'close':z,'change':(z-y) if y is not None else None,'previousClose':y,'time':quote_time,'source':'TWSE MIS live'}
     except Exception as e:
         print(f'WARN live TAIEX failed: {e}', file=sys.stderr)
         return fallback

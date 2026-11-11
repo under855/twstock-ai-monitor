@@ -51,7 +51,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
 <body>
 <div class="app">
   <header class="top">
-    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.6.7｜台股每 4 秒檢查・外資盤後統計・外匯</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
+    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.6.8｜台股每 4 秒檢查・外資盤後統計・外匯</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
     <div class="search"><input id="code" inputmode="text" autocomplete="off" placeholder="搜尋代號或名稱，例如 2610、華航"><button id="searchBtn" class="primary">搜尋</button></div>
     <div id="searchResults" class="searchResults"></div>
     <div class="toolbar"><span class="pill" id="clock">—</span><span class="pill">評分 100 分制</span><span class="pill" id="universePill">台股名冊：載入中…</span><span class="pill">行情：TWSE／TPEx</span><span class="pill" id="refreshPill">台股查詢：2 秒</span></div>
@@ -104,7 +104,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
   </section>
 </div>
 <script>
-const APP_VERSION='0.9.6.7';
+const APP_VERSION='0.9.6.8';
 const IS_WEB = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 window.addEventListener('DOMContentLoaded',()=>{
   if(!IS_WEB){
@@ -196,7 +196,7 @@ async function loadFullUniverse(force=false){
  })().finally(()=>{universeLoadPromise=null});return universeLoadPromise;
 }
 function universeRow(code){const u=universeMap.get(String(code));if(!u)return null;return {Code:u.code,Name:u.name,ClosingPrice:u.close,OpeningPrice:u.open,HighestPrice:u.high,LowestPrice:u.low,TradeVolume:u.volume,TradeDate:u.tradeDate,Market:u.market}}
-function universeQuote(code){const u=universeMap.get(String(code));if(!u||u.close==null)return null;const official=/^TWSE MI_INDEX$|^TPEx dailyQuotes$/.test(String(u.source||''));const label=u.market==='TPEx'?(official?'櫃買中心官方收盤':'上櫃最近交易日'):official?'證交所官方收盤':marketLabel(u.market)+'最近交易日';return {price:u.close,change:u.change,prev:u.change==null?null:u.close-u.change,open:u.open,high:u.high,low:u.low,volume:u.volume,time:dateObj(u.tradeDate),source:`${label} ${u.tradeDate||''}`.trim(),market:u.market}}
+function universeQuote(code){const u=universeMap.get(String(code));if(!u||u.close==null)return null;const official=/^TWSE MI_INDEX$|^TPEx dailyQuotes$/.test(String(u.source||''));const provisional=String(u.source||'').includes('MIS 最後成交');const label=u.market==='TPEx'?(official?'櫃買中心官方收盤':provisional?'上櫃最後成交（非正式收盤）':'上櫃最近交易日'):official?'證交所官方收盤':marketLabel(u.market)+'最近交易日';return {price:u.close,change:u.change,prev:u.change==null?null:u.close-u.change,open:u.open,high:u.high,low:u.low,volume:u.volume,time:dateObj(u.tradeDate),source:`${label} ${u.tradeDate||''}`.trim(),market:u.market}}
 function rowForCode(code){return allRows.find(x=>String(x.Code).trim()===String(code))||universeRow(code)||{Code:String(code),Name:stockName(String(code),{})}}
 
 function normalizeTpexRows(rows){return (Array.isArray(rows)?rows:[]).map(x=>({Code:String(x.SecuritiesCompanyCode||x.Code||'').trim(),Name:String(x.CompanyName||x.SecuritiesCompanyName||x.SecuritiesName||'').trim(),ClosingPrice:x.Close||x.ClosePrice||x.LatestPrice||'',Change:x.Change||x.ChangeAmount||'',OpeningPrice:x.Open||x.OpenPrice||'',HighestPrice:x.High||x.HighPrice||'',LowestPrice:x.Low||x.LowPrice||'',TradeVolume:x.TradingShares||x.TradeVolume||'',TradeDate:String(x.TradeDate||x.Date||'').trim()})).filter(x=>x.Code)}

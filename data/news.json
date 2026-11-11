@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-11T01:13:52.606161+00:00",
+  "generatedAt": "2026-11-11T02:13:08.261507+00:00",
   "stocks": {
     "0050": [
       {
@@ -41,12 +41,6 @@
     ],
     "3711": [
       {
-        "title": "日月光10月營收威風 業績連四月攻頂 先進封測躍集團投資重心 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5FNGxBNlZ4cDV5aUplUEYybzludGtXZ0hqWWE3UmphOG9Mb1dCUjZ0WFQ4LUxyNHZQYk1fMkM4VWRhRkpZQmhRdVZLT3lOSmJTd3JEdVJCNTJPUdIBX0FVX3lxTE9Iak5HbnoydjVUNmFfSVVQQWRXM3FaRkotLVFTSjF5c0tUc0RfZVJsVlQ1QmF0NjhhcVhWWm03MUIwczdtME9CcVJNeXl0cHZ6MUhVeVBCcWI5Ym1tTlhV?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794337076000
-      },
-      {
         "title": "日月光投控10月營收886億元 再創新高 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1TZDhjX1VKOE1LM3YxQktobGpGYjdMMVZyaU1hb3gwblNiZ0lxOXl5c0ZkOUE0amYxSGEtemotQ2s5ZDRDNjViY0RoS290UlRRdC1wVWptbmZUT2lMaUlj0gFkQVVfeXFMTk5OeEhkcFU5bFdlWXlGQ01xZElNSkNFQU8tbXZoV2wtS01BRnNBQzJLS05iREQxSDVUbFI2bElSYkRNcG5DcnBkNWR0Z3hJR2hHckllbmo4bS1fTWRJdC1rMWxPWQ?oc=5",
         "publisher": "自由財經",
@@ -69,6 +63,12 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFA4TnRodXduSk41d2dPc0k0N1lxUmFITVNwZ1ZxWWZBM2JlaGZuNzlJaTlqYVpDODBkNW9IVGp4LVg1N28zY0lkbjZCQlhRckV4LUJHSWU3amlPaFAtaVZ30gFkQVVfeXFMUE1fM0FOQlJOYXE3Q0dIRWZobzYyTDBLTS1RR3liQmhRT0ZLV0szbXpDRHd5djYwdld0MVFQZERnbERwZXRYUVdTOEJRQUNyVEpmUFAtWXdzVnZZNFNNQUFhZGZoWQ?oc=5",
         "publisher": "自由財經",
         "time": 1794277240000
+      },
+      {
+        "title": "封測雙雄跌出機會？三外資齊出手日月光目標價喊到8字頭- 日報 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBzMG1VdDRwc1BFdnp6azdBZF8wYnYtZXNqOFA5OWxTWGlqcVNiZU5uZEV1YndGeTNJSHBzd0FFTUNuTkFqMTJzdjBIbmFhN2QtZlJkNWJ2SWUtNEFyelZZ?oc=5",
+        "publisher": "工商時報",
+        "time": 1792566000000
       },
       {
         "title": "先進封裝續強 法人調高日月光投控獲利預估值及目標價 - 經濟日報",
@@ -200,10 +200,16 @@
         "title": "00878國泰永續高股息11/17除息預估配息1.25元續創新高| 證券 - 中央社 CNA",
         "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFAxTkRkTUg2M2hZYTFnWUFTMFlPbUNyME9WdFNFWTM2dHVxYjlKejBzY3BzajZkMUQ3eE1hNXcydmpUQXVYdTkwWm1COGJ3Yk13RTJqRFRUZTJ1Um5xQ2c?oc=5",
         "publisher": "中央社 CNA",
-        "time": 1793606400000
+        "time": 1793612880000
       }
     ],
     "00919": [
+      {
+        "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794211200000
+      },
       {
         "title": "領錢了！台股本周21檔 ETF 發放股利共421億、00919配發207.8億最多 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE8xOThxSWptVnBuU2FWYkp0djR0bW5nV2hTc3YwdDBITnBvc1ZMSjhSQ0l4VU4xSFRJUmFjNEF0dkJVaTJ2VmlaczhvdGVnaE5zUnhWVjNjRTVIQdIBX0FVX3lxTE1Xc0k5MVNTWVloYi1rTmIzUGI0Vmh6NzRvWF9fZ3lWMnU3VTdQOEppcXVOV2VzTmp2VjlxV1RXS1pXcWtWVHJrTjVTQ3dXdjhYLVc3NVduejNUSXVfcVA0?oc=5",
@@ -221,12 +227,6 @@
         "link": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxNWTBzcERwektRQXdWb3FLdTNUcjVFQTZuMVJPSFkwVkZxSEdJYVk5WVdwM3BhQm1fbjdvdFF5TjJiajNOalRBZWROeXcwUjBKVk0xSEl2eU5WSTRmRXVrRzhidHJnZkFSSmxHeDdyczR0WFRlWXc0VjcwcEF4cFZ3clN2alpsaDc5WXl0QWhfbVR5SklESlJuQ0puaUoyYnVWZWMybklTSkRSV0RBMVhGUFctT0F1SXByenR5WXFTdENYUUs2UUMwOUpDSHBBemllTVlPazdKMkt2NFFkcTFhOA?oc=5",
         "publisher": "鉅亨網",
         "time": 1793188872000
-      },
-      {
-        "title": "00919第14次填息只花20天！年化配息率13.77%再受關注 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5GRFRpS2hlWWNJT2VEd0JNOFhKZGlfY0dnenY0U1dGOFU2UTRINmcxRkx6S1RqLUpsNk51WXVva1R4Yk1mT3hRTGJFM1RwQkszZzlHbzN5RFc2UdIBX0FVX3lxTE9MdTd4YldkNFp1NHA2LUI5ZERNSEI3eXl0U016bkpocm12YXNfdlQzWTd1X0hxaU03RjNUVGhHSDJQN1JCSWUxOXo5a3ZmSEhkREEzTHZhT016SE44ZDRz?oc=5",
-        "publisher": "經濟日報",
-        "time": 1792134000000
       },
       {
         "title": "台股ETF配息時間表！421億股息大紅包 00919、00918、00981A等21檔配息、發放日、平均領息一次看 - 工商時報",
@@ -247,12 +247,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE84TTdVWjNIbGNCYzJIT0NjV3RLdGZPN1Zqck5JNzZXTV9ZeVNGQ2VocXVtLVN4MmNfQWtYSW9mdTZQQkEwLVYwZGF5ZDBPVURhSFVtRjN1LWsyZ9IBX0FVX3lxTE9wdXFjeUI1SXp3NFFaa3Q0cmNac1VEdzR1QUU1T3NsZE9hQno0emtDR0xQVnBBLUFWazM0T1V4ekVmOEstRGtPNGhuN3FrTy1zbEhPQWR6UTFRbG1nLUVr?oc=5",
         "publisher": "經濟日報",
         "time": 1794335887000
-      },
-      {
-        "title": "台積電抵得住AI市場恐慌 外媒直指股票首選 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5SLXFMbUd5NFNPdF9WS1hvTTJFdjlkNUlCRkZHLXFUQm1ZYUNXS2JMMVJ6bXo2YlZEa2g4aUJ4X09VYy1CZ0l2QktyYXgtOF83aHExS0hoZEwySmllczJv0gFkQVVfeXFMT05IbTVCM2FSU3hsb25Yd2o3Z28wSFJKTlpwUFdLT3lXOGV4MGlZNnRzdG45NW1JRDBleWZmR3dQSGtXcWpYVFJ0Szl4aEhmS3UyallCWnZrVnhBNmZhb0E5YmlfdA?oc=5",
-        "publisher": "自由財經",
-        "time": 1794295118000
       },
       {
         "title": "台積電市值從2.2兆上看6.5兆美元 外媒估這時候股價漲3倍 - 自由財經",
@@ -289,6 +283,12 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBRRERLWUx6MXktdllEeFMtaWxsTENla0lwMnFqX0FOOFEyQVBocWVoR2pyXzUxT2dwdzRidVEtcWRVREthZU5XOW1UYlh4eW1iZTJvZ1NCUmdfNTI2bk1N0gFkQVVfeXFMT3BOakJFWXVyeXVLN1Y4bVpQang0SU0wNWtZcURuNDZOWjAySWxZVUZ2YTNFNTNPc0xTOVU1NXlBWnAyT1drdzEyZjBvc2dlTm56QXFLMnRUbEs1M202V3lBa0tJQg?oc=5",
         "publisher": "自由財經",
         "time": 1792047600000
+      },
+      {
+        "title": "台積電面臨2.57兆元獲利變數 法說會後股價「波動幅度」預曝 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5HVTdsaFZWeVB6VjZxWEdxNGZXR3p3Mk1DNXplZ0ZqMlc0YXUwRElacXhTWmxYV3VlM2VrTW05UDhXWG5zTTEwbDVELXJGSlRYbXJlRG43ak1FSzgyQTU00gFkQVVfeXFMTVVyRklEbHN0cFJXbWdEVDZONE0wZGRfT1BmRnplMlFGNTVwdXE2MUJGSFRnSHB4X1VITndNQ3ZkQzFSMVFwYVhuU1FKT0FoaExGNGlCUThReXZPUkZUa2R5MVJDdQ?oc=5",
+        "publisher": "自由財經",
+        "time": 1791961200000
       }
     ]
   },

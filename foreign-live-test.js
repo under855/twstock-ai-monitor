@@ -47,29 +47,47 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
 
-/* TAIEX top-card: same-day MIS first; latest official retained close otherwise. */
+/* TAIEX last official close: show on holidays/after hours only.
+   During 08:55-13:35 the live controller exclusively owns the index surface.
+   A TWSE MIS midday snapshot inside data/latest.json is NOT an official closing price. */
 (() => {
   'use strict';
-  const twDay=()=>new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'}).replaceAll('-','');
+  const tw=()=>{
+    const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23'}).formatToParts(new Date());
+    const p=n=>parts.find(x=>x.type===n)?.value||'';
+    return {weekday:p('weekday'),minute:Number(p('hour'))*60+Number(p('minute'))};
+  };
+  const inTradingWindow=()=>{
+    const t=tw();
+    return !['Sat','Sun'].includes(t.weekday)&&t.minute>=8*60+55&&t.minute<=13*60+35;
+  };
   const fmt=(v,d=2)=>Number(v).toLocaleString('zh-TW',{minimumFractionDigits:d,maximumFractionDigits:d});
-  const cls=v=>Number(v)>0?'up':Number(v)<0?'down':'flat';let latest=null;
-  async function loadLatest(){try{const r=await fetch('./data/latest.json?_='+Date.now(),{cache:'no-store'});if(!r.ok)return;const j=await r.json(),x=j?.taiex;if(x?.close!=null&&Number.isFinite(Number(x.close)))latest={date:String(x.date||''),price:Number(x.close),change:x.change==null?null:Number(x.change),time:String(x.time||''),officialClose:x.source==='TWSE MI_INDEX',source:x.source==='TWSE MI_INDEX'?'TWSE 官方收盤':String(x.source||'TWSE 最近交易日')}}catch{}}
-  function paint(){
-    const today=twDay(),live=window.__TW_LIVE_V091__?.taiex;
-    const liveToday=live&&String(live.date)===today&&Number.isFinite(Number(live.price));
-    const officialToday=latest?.officialClose&&latest.date.replaceAll('-','')===today;
-    if(liveToday&&!officialToday)return; // Live controller owns the active-session index display.
-    const x=officialToday?latest:liveToday?{date:live.date,price:Number(live.price),change:live.change==null?null:Number(live.change),time:String(live.time||''),source:live.source||'TWSE MIS 盤中資料'}:latest;
-    if(!x)return;
-    const v=document.getElementById('taiex'),c=document.getElementById('taiexChg'),mt=document.getElementById('marketTime');
-    const change=Number.isFinite(x.change)?x.change:null;
-    const label=(change==null?'—':(change>0?'+':'')+fmt(change,2))+'｜'+x.source+(x.time?' '+x.time:'')+'｜資料日 '+String(x.date).replaceAll('-','/');
-    // A single index value may be rendered by both controllers; skip identical DOM writes.
-    if(v&&v.textContent!==fmt(x.price,2))v.textContent=fmt(x.price,2);
-    if(c){if(c.textContent!==label)c.textContent=label;const className='s '+cls(change);if(c.className!==className)c.className=className}
-    if(mt&&String(x.date).replaceAll('-','')!==today){const t='最近交易日 '+String(x.date).replaceAll('-','/');if(mt.textContent!==t)mt.textContent=t}
+  const cls=v=>Number(v)>0?'up':Number(v)<0?'down':'flat';
+  let latest=null;
+  async function loadLatest(){
+    try{
+      const r=await fetch('./data/latest.json?_='+Date.now(),{cache:'no-store'});
+      if(!r.ok)return;
+      const j=await r.json(),x=j?.taiex;
+      if(x?.source!=='TWSE MI_INDEX'||x?.time!=='13:30:00'||!Number.isFinite(Number(x.close))||!/^20\d{2}-\d{2}-\d{2}$/.test(String(x.date||'')))return;
+      latest={date:String(x.date),price:Number(x.close),change:x.change==null?null:Number(x.change),time:String(x.time),source:'TWSE 官方收盤'};
+    }catch{}
   }
-  async function run(){await loadLatest();paint()}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();setInterval(paint,4000);setInterval(run,30000);addEventListener('focus',run);document.addEventListener('visibilitychange',()=>{if(!document.hidden)run()});
+  function paint(){
+    // Never overwrite a newer tick (or a clear stale warning) with a delayed snapshot.
+    if(inTradingWindow()||!latest)return;
+    const live=window.__TW_LIVE_V091__?.taiex;
+    if(live?.source==='TWSE 官方收盤'&&String(live.date)===latest.date.replaceAll('-',''))return;
+    const v=document.getElementById('taiex'),c=document.getElementById('taiexChg');
+    const text=fmt(latest.price,2),change=Number.isFinite(latest.change)?latest.change:null;
+    const label=(change==null?'—':(change>0?'+':'')+fmt(change,2))+'｜'+latest.source+' '+latest.time+'｜資料日 '+latest.date.replaceAll('-','/');
+    if(v&&v.textContent!==text)v.textContent=text;
+    if(c){if(c.textContent!==label)c.textContent=label;const name='s '+cls(change);if(c.className!==name)c.className=name}
+  }
+  async function run(){await loadLatest();paint()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
+  setInterval(paint,4000);setInterval(run,60000);
+  addEventListener('focus',run);document.addEventListener('visibilitychange',()=>{if(!document.hidden)run()});
 })();
 
 /* Quote-first watchlist: display-only enhancement. */

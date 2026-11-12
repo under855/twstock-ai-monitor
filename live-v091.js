@@ -134,7 +134,7 @@
     const map=new Map();let idx=null;const wanted=new Set((codes||[]).map(String));
     // latest.json is a daily snapshot, not an intraday tick feed. During trading it must not
     // fabricate a future 13:30 timestamp and overwrite real MIS quotes or prices.
-    const p=tp();if(p.h*60+p.min<13*60+30)return {map,idx};
+    const p=tp();if(p.h*60+p.min<13*60+30&&isoCompact(j?.taiex?.date)===today())return {map,idx};
     const ti=j?.taiex||{},td=isoCompact(ti?.date);
     if(eligibleIndexDate(td)&&ti.source==='TWSE MI_INDEX'&&num(ti?.close)!=null){
       const tt=/^\d{2}:\d{2}:\d{2}$/.test(String(ti?.time||''))?String(ti.time):'13:33:00';

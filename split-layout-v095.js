@@ -91,7 +91,7 @@
   function isCurrentEnough(quote){
     if(!quote||!Number.isFinite(quote.stamp)||quote.stamp>Date.now()+30000)return false;
     const age=Date.now()-quote.stamp;
-    return bankBusinessWindow()?age<=MAX_BUSINESS_AGE_MS:age<=7*86400000;
+    return age<=7*86400000; // Unchanged official bank quote is not an error; show its issuance time.
   }
   const retrievalStamp=()=>new Date().toLocaleTimeString('zh-TW',{timeZone:'Asia/Taipei',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
   let cashBusy=false,lastBot=null,lastFetchTime='',bankFxState='init';
@@ -100,7 +100,7 @@
     const box=cashBox(),grid=box.querySelector('.botCashFxGrid'),time=box.querySelector('.botCashFxTime');
     if(!grid||!time)return;
     const business=bankBusinessWindow();
-    time.textContent='銀行原始牌告 '+p.time+'｜本機讀取 '+lastFetchTime+(business?'｜非保證即時成交價':'｜非銀行營業時間');
+    time.textContent='銀行原始牌告 '+p.time+'｜本機讀取 '+lastFetchTime+(business?(Date.now()-p.stamp>MAX_BUSINESS_AGE_MS?'｜銀行尚未發布較新版牌告':'｜非保證即時成交價'):'｜非銀行營業時間');
     const signature=JSON.stringify([p.time,p.rows.map(x=>[x.code,x.buy,x.sell,x.sightBuy,x.sightSell])]);
     const unchanged=signature===lastRenderedSignature&&grid.querySelectorAll('.botCashFxCell:not(.botCashFxHdr)').length===CURRENCIES.length*5;
     lastRenderedSignature=signature;
@@ -172,7 +172,7 @@
         lastBot=picked;lastFetchTime=retrievalStamp();renderBotRates(picked);window.__TW_UPDATE_HEALTH__?.('臺銀匯率',true);return true;
       }
       const newest=quotes.sort((a,b)=>b.stamp-a.stamp)[0];
-      showUnverified(bankBusinessWindow()?'銀行營業時段來源資料超過 2 分鐘或連線失敗':'無法取得有效牌告',newest?.time||lastBot?.time||'');window.__TW_UPDATE_HEALTH__?.('臺銀匯率',false);
+      showUnverified(bankBusinessWindow()?'無法取得有效銀行牌告':'無法取得有效牌告',newest?.time||lastBot?.time||'');window.__TW_UPDATE_HEALTH__?.('臺銀匯率',false);
       return false;
     }catch(error){showUnverified('連線失敗或資料格式無法解析');window.__TW_UPDATE_HEALTH__?.('臺銀匯率',false);return false;}finally{cashBusy=false}
   }

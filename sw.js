@@ -1,4 +1,4 @@
-const CACHE='tw-ai-monitor-v0971-quality';
+const CACHE='tw-ai-monitor-v0972-fx-shell';
 const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./dividend-enhance.js','./extras-v090.js','./live-v091.js','./foreign-live-test.js'];
 
 self.addEventListener('install',e=>e.waitUntil(

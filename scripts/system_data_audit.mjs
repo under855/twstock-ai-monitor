@@ -138,6 +138,41 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   if(d.fx.state==='unverified')assert(d.fxRows===0,'STALE_BANK_RATES_VISIBLE '+opt.name);
   if(d.fx.state==='unverified')assert.equal(d.fxCodes.length,0,'BANK_FX_UNVERIFIED_CODES_VISIBLE '+opt.name);
   if(d.fx.state==='verified'){assert.equal(d.fxRows,6,'BANK_RATES_NOT_SIX '+opt.name);assert.deepEqual(d.fxCodes,['USD','JPY','EUR','GBP','SGD','CNY'],'BANK_FX_CURRENCIES_MISMATCH '+opt.name);}
+  // Regression: force a synthetic current-session snapshot to prove that yesterday
+  // cannot be counted, a flat stock is counted, and disconnected sources produce no false totals.
+  const breadthRegression=await page.evaluate(()=>{
+    const previous=window.marketWindowTaipeiNow;
+    const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+    const get=k=>parts.find(x=>x.type===k)?.value||'';
+    const td=get('year')+get('month')+get('day');
+    const yesterday=new Date(Date.now()-86400000);
+    const olderParts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(yesterday);
+    const past=k=>olderParts.find(x=>x.type===k)?.value||'';
+    const yd=past('year')+past('month')+past('day');
+    const codes=watchlist().map(String);
+    const current=new Map([
+      [codes[0],{date:td,price:100,change:2,live:true}],
+      [codes[1],{date:td,price:200,change:-3,live:true}],
+      [codes[2],{date:td,price:300,change:0,live:true}],
+      [codes[3],{date:yd,price:50,change:5,live:true}]
+    ]);
+    const read=()=>['breadthUp','breadthDown','breadthFlat'].map(id=>document.getElementById(id)?.textContent);
+    try{
+      window.marketWindowTaipeiNow=()=>true;
+      updateWatchBreadth(current,{receivedAt:Date.now()});
+      const currentTotals=read(),currentLabel=document.getElementById('breadthMeta')?.textContent;
+      updateWatchBreadth(current,{receivedAt:Date.now()-180000});
+      const disconnected=read();
+      return {currentTotals,currentLabel,disconnected};
+    }finally{
+      window.marketWindowTaipeiNow=previous;
+      updateWatchBreadth();
+    }
+  });
+  assert.deepEqual(breadthRegression.currentTotals,['1','1','1'],'BREADTH_SYNTHETIC_MIS_COUNT_FAILURE '+opt.name);
+  assert(breadthRegression.currentLabel.includes('3/'),'BREADTH_INVALID_DATE_INCLUDED '+opt.name);
+  assert.deepEqual(breadthRegression.disconnected,['—','—','—'],'BREADTH_STALE_FEED_MUST_NOT_USE_CACHE '+opt.name);
+  console.log('BREADTH_REGRESSION_'+opt.name.toUpperCase(),JSON.stringify(breadthRegression));
   // Detail panel, chart pilot, research and trading controls must load without crashing.
   const detailRow=page.locator('#watch article.row').filter({hasText:'00878'}).first();
   await detailRow.click();await page.waitForTimeout(1400);

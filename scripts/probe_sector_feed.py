@@ -26,7 +26,11 @@ def extract(report, date):
             if direction=='+' and percent<0:raise ValueError('sign mismatch '+name)
             if not -50<=percent<=50:raise ValueError('outlier '+name)
             matched.append({'name':name.replace('類指數','').replace('指數',''),'percent':percent,'date':date})
-    if len(matched)<5:raise ValueError(f'insufficient categories: {len(matched)}')
+    if len(matched)<5:
+        print('DEBUG status',report.get('stat'),'tables',len(report.get('tables',[])))
+        for t in report.get('tables',[]):
+            print('DEBUG table',repr(t.get('title',''))[:160], 'data',len(t.get('data',[])),'sample',str(t.get('data',[])[:2])[:350])
+        raise ValueError(f'insufficient categories: {len(matched)}')
     if len({x['name'] for x in matched})!=len(matched):raise ValueError('duplicate categories')
     return matched
 def fetch(date):

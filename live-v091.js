@@ -77,10 +77,10 @@
     const u=`https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=${encodeURIComponent(channelList(codes).join('|'))}&json=1&delay=0&_=${now}`;
     const endpoints=[`https://proxy.cors.dev/${u}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`];
     let last=null;
-    for(let attempt=0;attempt<endpoints.length;attempt++){
+    for(let attempt=0;attempt<1;attempt++){
       const index=(proxyPreferred+attempt)%endpoints.length;
       try{
-        const j=await getJson(endpoints[index],5500);
+        const j=await getJson(endpoints[index],3400);
         if(!Array.isArray(j?.msgArray))throw Error('MIS payload missing');
         const ticker=j.msgArray.find(m=>String(m?.c||'')==='t00');
         let usable=j.msgArray;
@@ -98,6 +98,7 @@
       }catch(e){last=e}
     }
     misFailureCount++;
+    proxyPreferred=(proxyPreferred+1)%endpoints.length;
     nextMisAttemptAt=0;
     lastError=String(last?.message||last||'來源無法存取');
     window.__TW_UPDATE_HEALTH__?.('台股行情',false);throw last||Error('MIS unavailable');

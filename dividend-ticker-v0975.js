@@ -4,6 +4,7 @@
   const ROTATE_MS=6500;
   const RECENT_DAYS=120;
   const UPCOMING_DAYS=90;
+  const DISABLE_KEY='twDividendTickerDisabledV0975';
   const card=document.getElementById('dividendTickerCard');
   const track=document.getElementById('dividendTickerTrack');
   const updated=document.getElementById('dividendTickerUpdated');
@@ -89,6 +90,7 @@
     const market=document.querySelector('.market');
     if(market)market.style.gridTemplateColumns='1fr';
     window.__TW_DIVIDEND_TICKER_DISABLED__=true;
+    try{localStorage.setItem(DISABLE_KEY,'1')}catch{}
   }
   function fail(err){
     failures++;
@@ -99,7 +101,7 @@
   async function refresh(force=false){
     if(disabled||fetching||document.visibilityState==='hidden')return;
     const now=Date.now();
-    if(!force&&allEvents.length&&now-lastFetch<REFRESH_MS)return;
+    if(!force&&lastFetch&&now-lastFetch<REFRESH_MS)return;
     fetching=true;
     try{
       if(typeof window.__TW_DIVIDEND_FEED__!=='function')throw Error('股利資料讀取介面不存在');
@@ -121,7 +123,9 @@
     }catch(err){fail(err)}
   }
   const start=()=>{
-    try{check();setInterval(check,20000);
+    try{
+      try{if(localStorage.getItem(DISABLE_KEY)==='1'){disable();return}}catch{}
+      check();setInterval(check,20000);
       window.addEventListener('focus',check);
       document.addEventListener('visibilitychange',()=>{if(!document.hidden)check()});
       window.__TW_DIVIDEND_TICKER_STATUS__=()=>({disabled,failures,lastFetch,items:validEvents().length});

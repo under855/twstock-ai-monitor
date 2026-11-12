@@ -1,5 +1,5 @@
-const CACHE='tw-ai-monitor-v0974-source-cadence';
-const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./dividend-enhance.js','./extras-v090.js','./live-v091.js','./foreign-live-test.js','./split-layout-v095.js','./refresh-control-v0973.js'];
+const CACHE='tw-ai-monitor-v0975-dividend-ticker';
+const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./dividend-enhance.js','./extras-v090.js','./live-v091.js','./foreign-live-test.js','./split-layout-v095.js','./refresh-control-v0973.js','./dividend-ticker-v0975.js'];
 
 self.addEventListener('install',e=>e.waitUntil(
   caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())

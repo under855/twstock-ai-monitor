@@ -1,8 +1,8 @@
 (() => {
   'use strict';
-  const VERSION='0.9.7.3';
+  const VERSION='0.9.7.4';
   const INTERVAL=4000; // Four-second scheduler; outstanding requests are single-flight, official source timestamps govern freshness.
-  const BACKUP_INTERVAL=4000;
+  const BACKUP_INTERVAL=60000;
   const MAX_POINTS=600;
   const QKEY='tw_live091_quotes_';
   const SKEY='tw_live091_series_';
@@ -293,7 +293,7 @@
     if(marketOpen()){
       const retryDelay=Math.max(0,Math.ceil((nextMisAttemptAt-Date.now())/1000));
       const label=fresh?'盤中來源有效':'行情延遲／來源重試中';
-      setText(p,'每 '+INTERVAL/1000+' 秒檢查行情｜來源延遲時自動退避｜v'+VERSION);
+      setText(p,'每 '+INTERVAL/1000+' 秒檢查行情｜無有效資料時標示延遲｜v'+VERSION);
       if(b){setText(b,label+' v'+VERSION);setClass(b,'liveBadge '+(fresh?'ok':'warn'))}
       setText(s,label);
       setText(t,fresh?'證交所行情 '+(taiex?.time||'—')+'｜本機收到 '+hhmmss(lastMisReceivedAt):

@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.9.6.9';
+  const VERSION='0.9.7.0';
   const INTERVAL=4000; // Checking more frequently than the upstream feed increases throttling, not accuracy.
   const BACKUP_INTERVAL=60000;
   const MAX_POINTS=600;
@@ -303,7 +303,7 @@
     }
   }
   function paintAll(){
-    if(!marketOpen()&&!hasTodayData()){if(typeof updateWatchBreadth==='function')updateWatchBreadth();debug();return}
+    if(!marketOpen()&&!hasTodayData()){debug();return}
     paintIndex();
     for(const code of watchCodes()){
       const q=quotes.get(code);
@@ -316,7 +316,6 @@
         }
       }else if(marketOpen())maskRow(code);
     }
-    if(typeof updateWatchBreadth==='function')updateWatchBreadth(quotes,{receivedAt:lastMisReceivedAt});
     paintDetail();paintStatus();debug();
   }
 

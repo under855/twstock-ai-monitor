@@ -34,6 +34,13 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
   .sheet{inset:0;height:auto;min-height:0}
   .panel{max-height:94vh;max-height:calc(100svh - env(safe-area-inset-top));padding-bottom:calc(42px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
 }
+/* Individual watchlist price readability; scoped to avoid modifying index or FX. */
+#watch article.row .price{font-size:clamp(29px,2.55vw,36px);font-weight:950;line-height:1.15;font-variant-numeric:tabular-nums;letter-spacing:-.5px;overflow-wrap:anywhere}
+#watch article.row .chg{font-size:clamp(16px,1.35vw,19px);font-weight:850;line-height:1.3;margin-top:7px;font-variant-numeric:tabular-nums}
+#watch article.row .price.quote-up,#watch article.row .chg.quote-up{color:#ff4242!important}
+#watch article.row .price.quote-down,#watch article.row .chg.quote-down{color:#21c86b!important}
+#watch article.row .price.quote-flat,#watch article.row .chg.quote-flat{color:#eef4fb!important}
+@media(max-width:720px){#watch article.row .price{font-size:clamp(27px,7.4vw,32px)}#watch article.row .chg{font-size:clamp(15px,4.2vw,18px)}#watch article.row .p{min-width:0}}
 .taiexSectorHead{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:13px;color:var(--muted);font-size:10px}.taiexSectorHead span:first-child{font-weight:800;color:#d6e6f7}.taiexSectorHead span:last-child{text-align:right}.taiexSectorTape{overflow:hidden;white-space:nowrap;background:#10243b;border:1px solid rgba(111,147,186,.16);border-radius:9px;padding:10px 0;margin-top:7px;min-height:38px}.taiexSectorTrack{display:flex;align-items:center;width:max-content;color:#b8cde0;animation:taiexSectorSlide 48s linear infinite}.taiexSectorGroup{display:flex;gap:23px;flex:none;padding-right:23px}.taiexSectorItem{font-size:13px;flex:none}.taiexSectorItem strong{font-variant-numeric:tabular-nums;font-weight:850}.taiexSectorItem .up{color:var(--up)}.taiexSectorItem .down{color:var(--down)}.taiexSectorItem .flat{color:var(--neutral)}.taiexSectorTape:hover .taiexSectorTrack{animation-play-state:paused}@keyframes taiexSectorSlide{to{transform:translateX(-50%)}}@media(prefers-reduced-motion:reduce){.taiexSectorTrack{animation:none}}.taiexTurnoverRow{display:flex;justify-content:space-between;align-items:center;margin-top:11px;color:var(--muted);font-size:12px}.taiexTurnoverRow strong{color:var(--text);font-size:15px;font-variant-numeric:tabular-nums}
 .taiexChangeLine{display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 12px;margin-top:7px}.taiexCard .taiexChangeLine #taiexChg{font-size:clamp(13px,1.3vw,17px);margin:0}.taiexCard #taiexPercent{font-size:clamp(17px,1.65vw,22px);font-weight:850;margin:0}.taiexCard #taiex{text-align:center;color:var(--neutral)}.taiexCard #taiex.up{color:var(--up)}.taiexCard #taiex.down{color:var(--down)}.taiexCard .taiexChangeLine{justify-content:center;text-align:center}.taiexCard .taiexMetrics{text-align:center}.taiexMetrics{border-top:1px solid rgba(120,151,181,.22);margin-top:16px;padding-top:12px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.taiexMetrics div{min-width:0}.taiexMetrics small{font-size:11px;color:var(--muted);display:block}.taiexMetrics strong{font-size:clamp(12px,1.15vw,15px);font-weight:800;display:block;margin-top:5px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}@media(max-width:720px){.taiexCard #taiexPercent{font-size:19px}.taiexMetrics strong{font-size:13px}}</style>
 
@@ -101,7 +108,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
   </section>
 </div>
 <script>
-const APP_VERSION='0.9.7.7';
+const APP_VERSION='0.9.7.8';
 const IS_WEB = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 window.addEventListener('DOMContentLoaded',()=>{
   if(!IS_WEB){
@@ -333,6 +340,7 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 <script src="./live-v091.js?v=0976indexdate"></script>
 <script src="./crypto-live-test.js?v=0976crypto"></script>
 <script src="./taiex-sector-ticker.js?v=0977sectors"></script>
+<script src="./stock-price-visual.js?v=0978-price"></script>
 
 
 <script src="split-layout-v095.js?v=0974source"></script>

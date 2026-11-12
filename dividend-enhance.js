@@ -217,7 +217,7 @@
     const card=box.closest('.card'),title=card?.querySelector('h3');
     const etf=isEtfCode(code);
     if(title)title.textContent=etf?'近一年配股／配息（最近 3 次）':'配股／配息與填權息紀錄（最近 3 次）';
-    box.innerHTML='<div class="muted small">載入官方配股配息資料…</div>';
+    if(!box.querySelector('.event'))box.innerHTML='<div class="muted small">載入官方配股配息資料…</div>';
 
     const etfs=await loadEtfRows();
     let corp=[];
@@ -236,10 +236,8 @@
 
     const renderRows=h=>{
       if(active!==code)return;
-      box.innerHTML='';
-      for(const e of dated)box.insertAdjacentHTML('beforeend',eventHtml(e,dateMs(e.exDate)<=now?fillStatus(e,h||[]):null));
-      for(const e of distributions)box.insertAdjacentHTML('beforeend',eventHtml(e,null));
-      if(!box.innerHTML)box.innerHTML='<div class="muted small">目前官方資料中沒有可讀取的配股／配息紀錄。</div>';
+      const html=[...dated.map(e=>eventHtml(e,dateMs(e.exDate)<=now?fillStatus(e,h||[]):null)),...distributions.map(e=>eventHtml(e,null))].join('')||'<div class="muted small">目前官方資料中沒有可讀取的配股／配息紀錄。</div>';
+      if(box.innerHTML!==html)box.innerHTML=html;
     };
 
     const cached=historyCache[code]||[];
@@ -251,6 +249,13 @@
     }
   }
 
+  let dividendRefreshBusy=false;
+  window.__TW_DIVIDEND_REFRESH__=async()=>{
+    if(dividendRefreshBusy||!active||document.visibilityState==='hidden'||!document.getElementById('sheet')?.classList.contains('show'))return;
+    dividendRefreshBusy=true;
+    try{await renderDividendDetail(String(active));window.__TW_UPDATE_HEALTH__?.('配股配息',true)}
+    catch{window.__TW_UPDATE_HEALTH__?.('配股配息',false)}finally{dividendRefreshBusy=false}
+  };
   show=async function(code,opts={}){
     await baseShow(code,opts);
     renderDividendDetail(String(code)).catch(()=>{

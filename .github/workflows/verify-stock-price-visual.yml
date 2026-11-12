@@ -28,7 +28,7 @@ jobs:
             for(const width of [390,1280]){
               const page=await browser.newPage({viewport:{width,height:900},timezoneId:'Asia/Taipei'});
               const html=readFileSync('index.html','utf8');
-              const css=[...html.matchAll(/<style[^>]*>([\\s\\S]*?)<\\/style>/gi)].map(x=>x[1]).join('\\n');
+              const css=html.split('<style').slice(1).map(x=>x.slice(x.indexOf('>')+1).split('</style>')[0]).join(' ');
               await page.setContent('<html><head><style>'+css+'</style></head><body><div id="watch"></div></body></html>');
               await page.addScriptTag({content:readFileSync('stock-price-visual.js','utf8')});
               const result=await page.evaluate(async ()=>{

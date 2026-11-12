@@ -15,13 +15,15 @@ def extract(report, date):
     for table in report.get('tables',[]):
         title=str(table.get('title',''))
         if '價格指數(臺灣證券交易所)' not in title:continue
+        roc=f'{int(date[:4])-1911}年{int(date[4:6]):02d}月{int(date[6:8]):02d}日'
+        if roc not in title:raise ValueError('index table date mismatch '+title)
         for row in table.get('data',[]):
             if len(row)<5:continue
             name=str(row[0]).strip()
             if name not in CATEGORIES:continue
-            direction=str(row[2]).strip()
+            direction=re.sub(r'<[^>]*>','',str(row[2])).strip()
             points=numeric(row[3]);percent=numeric(row[4])
-            if percent is None or direction not in ('+','-','X',' '):continue
+            if percent is None or direction not in ('+','-','X',''):continue
             if direction=='-' and percent>0:percent=-percent
             if direction=='+' and percent<0:raise ValueError('sign mismatch '+name)
             if not -50<=percent<=50:raise ValueError('outlier '+name)

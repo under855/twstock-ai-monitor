@@ -34,7 +34,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
   .sheet{inset:0;height:auto;min-height:0}
   .panel{max-height:94vh;max-height:calc(100svh - env(safe-area-inset-top));padding-bottom:calc(42px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
 }
-</style>
+.taiexChangeLine{display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 12px;margin-top:7px}.taiexCard .taiexChangeLine #taiexChg{font-size:clamp(13px,1.3vw,17px);margin:0}.taiexCard #taiexPercent{font-size:clamp(17px,1.65vw,22px);font-weight:850;margin:0}.taiexMetrics{border-top:1px solid rgba(120,151,181,.22);margin-top:16px;padding-top:12px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.taiexMetrics div{min-width:0}.taiexMetrics small{font-size:11px;color:var(--muted);display:block}.taiexMetrics strong{font-size:clamp(12px,1.15vw,15px);font-weight:800;display:block;margin-top:5px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}@media(max-width:720px){.taiexCard #taiexPercent{font-size:19px}.taiexMetrics strong{font-size:13px}}</style>
 
 <style id="no-line-charts">
 .marketChart,.marketChartMeta,.spark,.sparkFallback{display:none!important}
@@ -61,7 +61,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
   </header>
 
   <section class="market">
-    <div class="marketCard taiexCard"><div class="l">台灣加權指數</div><div id="taiex" class="v">—</div><div id="taiexChg" class="s muted">讀取中</div></div>
+    <div class="marketCard taiexCard"><div class="l">台灣加權指數 TAIEX</div><div id="taiex" class="v">—</div><div class="taiexChangeLine"><span id="taiexChg" class="s muted">讀取中</span><span id="taiexPercent" class="s muted"></span></div><div class="taiexMetrics"><div><small>今日最高</small><strong id="taiexHigh">—</strong></div><div><small>今日最低</small><strong id="taiexLow">—</strong></div><div><small>成交金額</small><strong id="taiexTurnover">—</strong></div></div></div>
     <div class="marketCard dividendTickerCard" id="dividendTickerCard"><div class="dividendTickerHead"><strong>追蹤股利快訊</strong><span id="dividendTickerUpdated">公告資料</span></div><div class="dividendTickerWindow" id="dividendTickerWindow" aria-live="off"><div class="dividendTickerTrack" id="dividendTickerTrack"><div class="dividendTickerItem"><span class="dividendTickerStatus">正在整理追蹤標的的股利消息…</span></div></div></div><div class="dividendTickerFooter" id="dividendTickerFooter">只顯示追蹤股票與 ETF 的近期正式資料</div></div>
     <div class="marketCard marketChartCard"><div class="l">外匯匯率｜銀行現金與即期牌告</div><div id="fxBoard" class="fxBoard"><div class="muted small">匯率載入中…</div></div><div id="fxNote" class="fxNote">幣別與報價均以臺灣銀行牌告為準；不同於市場中間價</div><canvas id="taiexChart" class="marketChart" width="620" height="90"></canvas><div class="marketChartMeta"><span>09:00</span><span id="taiexChartMsg">—</span><span>13:30</span></div></div>
   </section>

@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.9.7.0';
+  const VERSION='0.9.7.1';
   const INTERVAL=4000; // Checking more frequently than the upstream feed increases throttling, not accuracy.
   const BACKUP_INTERVAL=60000;
   const MAX_POINTS=600;
@@ -302,8 +302,22 @@
       if(p)p.textContent=`今日收盤／最後成交｜v${VERSION}`;if(b){b.textContent=`今日資料 v${VERSION}`;b.className='liveBadge ok'}if(s)s.textContent='今日收盤／最後成交';if(t)t.textContent=`MIS 最後成交／指數 ${taiex?.time||''}`;
     }
   }
+  function paintQuality(){
+    const state=document.getElementById('qualityState'),details=document.getElementById('qualityDetails');if(!state||!details)return;
+    const indexState=intradayIndexState(taiex),retry=Math.max(0,Math.ceil((nextMisAttemptAt-Date.now())/1000));
+    if(marketOpen()){
+      const valid=indexState==='fresh'&&lastMisReceivedAt>0&&Date.now()-lastMisReceivedAt<=30000;
+      setText(state,valid?'盤中資料有效':'行情延遲／來源重試中');setClass(state,'v '+(valid?'down':'up'));
+      setText(details,valid?'指數來源 '+(taiex?.time||'—')+'｜每 4 秒檢查，非保證每次有新成交': '指數狀態：'+indexState+'｜'+(retry?'約 '+retry+' 秒後重試':'等待來源資料')+'｜不以舊價冒充即時');
+    }else{
+      const valid=taiex?.officialClose===true;
+      setText(state,valid?'官方收盤已確認':'非盤中｜等待官方收盤');setClass(state,'v '+(valid?'down':'flat'));
+      setText(details,valid?'交易所日期 '+(taiex?.date||'—')+'｜更新時間 '+(taiex?.time||'—'):'盤後資料可能延後公布；請核對下方各檔來源日期');
+    }
+  }
   function paintAll(){
-    if(!marketOpen()&&!hasTodayData()){debug();return}
+    paintQuality();
+    if(!marketOpen()&&!hasTodayData()){paintStatus();debug();return}
     paintIndex();
     for(const code of watchCodes()){
       const q=quotes.get(code);
@@ -320,9 +334,9 @@
   }
 
   function placeholder(code){return {code:String(code),price:'',change:'',prev:'',open:'',high:'',low:'',volume:'',date:today(),stamp:null,tradeTime:'',source:'今日資料載入中',live:false}}
-  if(originalQuote)quote=async function(code,allowNetwork=true){const q=quotes.get(String(code));if(q?.date===today())return q;if(marketOpen())return universeQuote(code)||snapshotQuote(code)||placeholder(code);return originalQuote(code,allowNetwork)};
+  if(originalQuote)quote=async function(code,allowNetwork=true){const q=quotes.get(String(code));if(q?.date===today())return q;if(marketOpen())return placeholder(code);return originalQuote(code,allowNetwork)};
   if(originalRender)render=async function(allowNetwork=false){const x=await originalRender(marketOpen()?false:allowNetwork);if(marketOpen()||hasTodayData())paintAll();return x};
-  if(originalShow)show=async function(code,opts={}){code=String(code);const q=quotes.get(code);if(q?.date===today()||marketOpen())quoteCache[code]=q||universeQuote(code)||snapshotQuote(code)||placeholder(code);const x=await originalShow(code,opts);if(q?.date===today()||marketOpen()){paintDetail();if(marketOpen())poll(false)}return x};
+  if(originalShow)show=async function(code,opts={}){code=String(code);const q=quotes.get(code);if(q?.date===today()||marketOpen())quoteCache[code]=q||placeholder(code);const x=await originalShow(code,opts);if(q?.date===today()||marketOpen()){paintDetail();if(marketOpen())poll(false)}return x};
 
   function debug(){const stocks={};for(const code of watchCodes()){const q=quotes.get(code),a=series.get(code)||[],r=row(code);stocks[code]={date:q?.date||null,price:q?.price??null,change:q?.change??null,tradeTime:q?.tradeTime||null,stamp:q?.stamp||null,freshness:quoteFreshness(q),source:q?.source||null,seriesPoints:a.length,seriesLastStamp:a.at(-1)?.stamp||null,domState:r?.dataset?.liveState||null,domDate:r?.dataset?.liveDate||null,domStamp:Number(r?.dataset?.liveStamp||0)||null,domPrice:r?.dataset?.livePrice||null}}window.__TW_LIVE_V091__={version:VERSION,intervalMs:INTERVAL,marketWindow:marketOpen(),indexFreshness:intradayIndexState(taiex),indexAgeSeconds:taiex?.stamp?Math.round((Date.now()-Number(taiex.stamp))/1000):null,cycle,lastPollAt,lastSuccessAt,lastMisReceivedAt,nextMisAttemptAt,failures:misFailureCount,lastError,taiex:taiex?{date:taiex.date,price:taiex.price,change:taiex.change,time:taiex.time,stamp:taiex.stamp,source:taiex.source}:null,stocks}}
 

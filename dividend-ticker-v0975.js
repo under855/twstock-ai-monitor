@@ -23,8 +23,9 @@
     return x.getUTCFullYear()===y&&x.getUTCMonth()===m-1&&x.getUTCDate()===d?ms:null;
   }
   const today=()=>{
-    const s=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-    return dateOf(s);
+    const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+    const get=k=>parts.find(p=>p.type===k)?.value||'';
+    return dateOf(get('year')+get('month')+get('day'));
   };
   function tracked(){
     if(typeof watchlist!=='function')return [];

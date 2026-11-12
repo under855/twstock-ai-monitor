@@ -354,6 +354,8 @@
       const codes=requestedCodes(),{map,idx}=parse(await fetchMis(codes));let accepted=0;if(acceptIndex(idx))accepted++;for(const q of map.values()){if(acceptQuote(q))accepted++}if(accepted)lastSuccessAt=Date.now();saveToday();paintAll();
     }catch(e){lastError=String(e?.message||e);if(!marketOpen())await pollBackup(false);paintAll();debug()}finally{busy=false}
   }
+  window.__TW_LIVE_REFRESH__=()=>poll(false);
+  window.__TW_BACKUP_REFRESH__=()=>pollBackup(true);
   function start(){
     loadToday();paintAll();poll(false);if(!marketOpen())pollBackup(false);
     // Always schedule polling: a page opened before 09:00 must start updating when trading begins.

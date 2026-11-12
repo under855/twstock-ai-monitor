@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.9.7.4';
+  const VERSION='0.9.7.6';
   const INTERVAL=4000; // Four-second scheduler; outstanding requests are single-flight, official source timestamps govern freshness.
   const BACKUP_INTERVAL=60000;
   const MAX_POINTS=600;
@@ -105,6 +105,14 @@
   }
 
   function isoCompact(v){return String(v||'').replaceAll('-','').replaceAll('/','');}
+  function eligibleIndexDate(d){
+    if(!/^20\d{6}$/.test(String(d||'')))return false;
+    const now=today();
+    if(String(d)>now)return false;
+    if(marketOpen())return String(d)===now;
+    const then=Date.parse(String(d).slice(0,4)+'-'+String(d).slice(4,6)+'-'+String(d).slice(6,8)+'T00:00:00+08:00');
+    return Number.isFinite(then)&&Date.now()-then<=14*86400000;
+  }
   function sourcePriority(src){return /MIS/.test(String(src||''))?2:1;}
   function newerOrEqual(oldv,newv){
     if(!oldv)return true;
@@ -113,8 +121,9 @@
     // Never let a future-dated cached quote block a genuinely newer incoming tick.
     if(os>Date.now()+30000)return true;
     if(ns>Date.now()+30000)return false;
+    if(newv.date!==oldv.date)return ns>os;
     if(Boolean(oldv.officialClose)!==Boolean(newv.officialClose))return Boolean(newv.officialClose);
-    if(newv.officialClose)return ['price','change','prev','open','high','low','volume'].some(key=>oldv[key]!==newv[key]);
+    if(newv.officialClose)return ['price','change','prev','open','high','low','volume','turnover'].some(key=>num(oldv[key])!==num(newv[key]));
     if(ns>os)return true;if(ns<os)return false;
     return sourcePriority(newv.source)>sourcePriority(oldv.source);
   }
@@ -127,7 +136,7 @@
     // fabricate a future 13:30 timestamp and overwrite real MIS quotes or prices.
     const p=tp();if(p.h*60+p.min<13*60+30)return {map,idx};
     const ti=j?.taiex||{},td=isoCompact(ti?.date);
-    if(td===today()&&ti.source==='TWSE MI_INDEX'&&num(ti?.close)!=null){
+    if(eligibleIndexDate(td)&&ti.source==='TWSE MI_INDEX'&&num(ti?.close)!=null){
       const tt=/^\d{2}:\d{2}:\d{2}$/.test(String(ti?.time||''))?String(ti.time):'13:33:00';
       const ms=stamp(td,tt);if(ms!=null)idx={date:td,price:num(ti.close),prev:num(ti.previousClose),change:num(ti.change),high:num(ti.high),low:num(ti.low),turnover:num(ti.turnover),time:tt,stamp:ms,officialClose:ti.source==='TWSE MI_INDEX',source:ti.source==='TWSE MI_INDEX'?'TWSE 官方收盤':'官方備援資料'};
     }
@@ -184,7 +193,7 @@
     a.sort((x,y)=>x.stamp-y.stamp);if(a.length>MAX_POINTS)a.splice(0,a.length-MAX_POINTS);series.set(q.code,a);return true;
   }
   function acceptIndex(x){
-    if(!x||!sameDay(x.stamp)||Number(x.stamp)>Date.now()+30000||!newerOrEqual(taiex,x))return false;
+    if(!x||!eligibleIndexDate(x.date)||Number(x.stamp)>Date.now()+30000||!newerOrEqual(taiex,x))return false;
     if(taiex?.date===x.date){
       // Preserve same-day verified intraday range when the official close has no range fields.
       if(num(x.high)==null&&num(taiex.high)!=null)x.high=taiex.high;
@@ -270,11 +279,12 @@
         return;
       }
     }
-    if(!taiex||taiex.date!==today()){paintIndexExtras(null,false);setText(v,'—');setClass(v,'v flat');return}
+    if(!taiex||!eligibleIndexDate(taiex.date)){paintIndexExtras(null,false);setText(v,'—');setClass(v,'v flat');return}
     paintIndexExtras(taiex,true);
     setText(v,fmt(taiex.price,2));setClass(v,'v '+(num(taiex.change)==null?'flat':cls(taiex.change)));
     if(c){
-      setText(c,(taiex.change>0?'+':'')+fmt(taiex.change,2)+'｜'+(taiex.officialClose?'TWSE 官方收盤':'TWSE MIS 指數')+' '+taiex.time);
+      const dateLabel=taiex.date===today()?'':('｜最近交易日 '+taiex.date.slice(0,4)+'/'+taiex.date.slice(4,6)+'/'+taiex.date.slice(6,8));
+      setText(c,(taiex.change>0?'+':'')+fmt(taiex.change,2)+'｜'+(taiex.officialClose?'TWSE 官方收盤':'TWSE MIS 最後指數')+' '+(taiex.time||'')+dateLabel);
       setClass(c,'s '+cls(taiex.change));
     }
   }
@@ -367,7 +377,7 @@
     if(backupBusy||(!force&&Date.now()-lastBackupAt<BACKUP_INTERVAL))return false;
     if(marketOpen())return false; // Never promote a post-close snapshot to intraday.
     backupBusy=true;lastBackupAt=Date.now();
-    try{const codes=requestedCodes(),{map,idx}=parseBackup(await fetchBackup(),codes);let accepted=0;if(acceptIndex(idx))accepted++;for(const q of map.values())if(acceptQuote(q))accepted++;if(accepted){lastSuccessAt=Date.now();saveToday();paintAll();}window.__TW_UPDATE_HEALTH__?.('盤後行情',true);return accepted>0}catch{window.__TW_UPDATE_HEALTH__?.('盤後行情',false);return false}finally{backupBusy=false}
+    try{const codes=requestedCodes(),{map,idx}=parseBackup(await fetchBackup(),codes);let accepted=0;if(acceptIndex(idx))accepted++;for(const q of map.values())if(acceptQuote(q))accepted++;if(accepted){lastSuccessAt=Date.now();saveToday();}paintAll();window.__TW_UPDATE_HEALTH__?.('盤後行情',!!idx);return accepted>0}catch{window.__TW_UPDATE_HEALTH__?.('盤後行情',false);return false}finally{backupBusy=false}
   }
   async function poll(force=false){
     if((!marketOpen()&&!force)||busy||document.visibilityState==='hidden')return;

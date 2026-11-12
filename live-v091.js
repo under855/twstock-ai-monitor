@@ -129,7 +129,7 @@
     const ti=j?.taiex||{},td=isoCompact(ti?.date);
     if(td===today()&&ti.source==='TWSE MI_INDEX'&&num(ti?.close)!=null){
       const tt=/^\d{2}:\d{2}:\d{2}$/.test(String(ti?.time||''))?String(ti.time):'13:33:00';
-      const ms=stamp(td,tt);if(ms!=null)idx={date:td,price:num(ti.close),prev:num(ti.previousClose),change:num(ti.change),time:tt,stamp:ms,officialClose:ti.source==='TWSE MI_INDEX',source:ti.source==='TWSE MI_INDEX'?'TWSE 官方收盤':'官方備援資料'};
+      const ms=stamp(td,tt);if(ms!=null)idx={date:td,price:num(ti.close),prev:num(ti.previousClose),change:num(ti.change),high:num(ti.high),low:num(ti.low),turnover:num(ti.turnover),time:tt,stamp:ms,officialClose:ti.source==='TWSE MI_INDEX',source:ti.source==='TWSE MI_INDEX'?'TWSE 官方收盤':'官方備援資料'};
     }
     const obj=j?.symbols||{};
     for(const code of wanted){
@@ -154,7 +154,7 @@
     if(String(m?.d||'')!==today())return null;
     const price=num(m?.z)??num(m?.trade?.z);if(price==null)return null;
     const time=String(m?.t||m?.trade?.t||''),ms=stamp(m.d,time)??num(m?.tlong);if(ms==null||!sameDay(ms))return null;
-    const prev=num(m?.y);return {date:String(m.d),price,prev,change:prev==null?null:price-prev,high:num(m?.h),low:num(m?.l),time,stamp:ms,source:'TWSE MIS 盤中即時'};
+    const prev=num(m?.y);return {date:String(m.d),price,prev,change:prev==null?null:price-prev,high:num(m?.h),low:num(m?.l),turnover:num(m?.tv),time,stamp:ms,source:'TWSE MIS 盤中即時'};
   }
   function parse(items){
     const map=new Map();let idx=null;
@@ -183,7 +183,16 @@
     const a=series.get(q.code)||[],last=a.at(-1);if(!last||Number(last.stamp)<q.stamp)a.push({stamp:q.stamp,close:q.price,source:q.source||'行情'});else if(Number(last.stamp)===q.stamp)last.close=q.price;
     a.sort((x,y)=>x.stamp-y.stamp);if(a.length>MAX_POINTS)a.splice(0,a.length-MAX_POINTS);series.set(q.code,a);return true;
   }
-  function acceptIndex(x){if(!x||!sameDay(x.stamp)||Number(x.stamp)>Date.now()+30000||!newerOrEqual(taiex,x))return false;taiex=x;return true}
+  function acceptIndex(x){
+    if(!x||!sameDay(x.stamp)||Number(x.stamp)>Date.now()+30000||!newerOrEqual(taiex,x))return false;
+    if(taiex?.date===x.date){
+      // Preserve same-day verified intraday range when the official close has no range fields.
+      if(num(x.high)==null&&num(taiex.high)!=null)x.high=taiex.high;
+      if(num(x.low)==null&&num(taiex.low)!=null)x.low=taiex.low;
+      if(num(x.turnover)==null&&num(taiex.turnover)!=null)x.turnover=taiex.turnover;
+    }
+    taiex=x;return true;
+  }
 
   function seedCurrent(){}
 
@@ -240,9 +249,8 @@
     if(p){setText(p,pct==null?'':(pct>0?'+':'')+pct.toFixed(2)+'%');setClass(p,'s '+(pct==null?'muted':cls(x.change)))}
     const validRange=usable&&num(x?.high)!=null&&num(x?.low)!=null&&num(x.high)>=num(x.low);
     setText(h,validRange?fmt(x.high,2):'—');setText(l,validRange?fmt(x.low,2):'—');
-    // Current index sources have no verified market-wide turnover field.
-    // Do not invent one or request additional feeds just to fill the card.
-    setText(t,'—');
+    const turnover=usable?num(x?.turnover):null;
+    setText(t,turnover!=null&&turnover>=0?(turnover/100000000).toLocaleString('zh-TW',{maximumFractionDigits:2})+' 億':'—');
   }
   function paintIndex(){
     const v=document.getElementById('taiex'),c=document.getElementById('taiexChg');
@@ -251,7 +259,7 @@
       if(state!=='fresh'){
         paintIndexExtras(taiex,false);
         // Do not present a 10:28 index snapshot as an 11:05 live quote.
-        setText(v,'—');
+        setText(v,'—');setClass(v,'v flat');
         if(c){
           const age=taiex?.stamp?Math.max(0,Math.floor((Date.now()-Number(taiex.stamp))/60000)):null;
           const note=taiex?.date===today()&&Number.isFinite(age)
@@ -262,9 +270,9 @@
         return;
       }
     }
-    if(!taiex||taiex.date!==today()){paintIndexExtras(null,false);return}
+    if(!taiex||taiex.date!==today()){paintIndexExtras(null,false);setText(v,'—');setClass(v,'v flat');return}
     paintIndexExtras(taiex,true);
-    setText(v,fmt(taiex.price,2));
+    setText(v,fmt(taiex.price,2));setClass(v,'v '+(num(taiex.change)==null?'flat':cls(taiex.change)));
     if(c){
       setText(c,(taiex.change>0?'+':'')+fmt(taiex.change,2)+'｜'+(taiex.officialClose?'TWSE 官方收盤':'TWSE MIS 指數')+' '+taiex.time);
       setClass(c,'s '+cls(taiex.change));
@@ -353,7 +361,7 @@
   if(originalRender)render=async function(allowNetwork=false){const x=await originalRender(marketOpen()?false:allowNetwork);if(marketOpen()||hasTodayData())paintAll();return x};
   if(originalShow)show=async function(code,opts={}){code=String(code);const q=quotes.get(code);if(q?.date===today()||marketOpen())quoteCache[code]=q||placeholder(code);const x=await originalShow(code,opts);if(q?.date===today()||marketOpen()){paintDetail();if(marketOpen())poll(false)}return x};
 
-  function debug(){const stocks={};for(const code of watchCodes()){const q=quotes.get(code),a=series.get(code)||[],r=row(code);stocks[code]={date:q?.date||null,price:q?.price??null,change:q?.change??null,tradeTime:q?.tradeTime||null,stamp:q?.stamp||null,freshness:quoteFreshness(q),source:q?.source||null,seriesPoints:a.length,seriesLastStamp:a.at(-1)?.stamp||null,domState:r?.dataset?.liveState||null,domDate:r?.dataset?.liveDate||null,domStamp:Number(r?.dataset?.liveStamp||0)||null,domPrice:r?.dataset?.livePrice||null}}window.__TW_LIVE_V091__={version:VERSION,intervalMs:INTERVAL,marketWindow:marketOpen(),indexFreshness:intradayIndexState(taiex),indexAgeSeconds:taiex?.stamp?Math.round((Date.now()-Number(taiex.stamp))/1000):null,cycle,lastPollAt,lastSuccessAt,lastMisReceivedAt,nextMisAttemptAt,failures:misFailureCount,lastError,taiex:taiex?{date:taiex.date,price:taiex.price,change:taiex.change,time:taiex.time,stamp:taiex.stamp,source:taiex.source}:null,stocks}}
+  function debug(){const stocks={};for(const code of watchCodes()){const q=quotes.get(code),a=series.get(code)||[],r=row(code);stocks[code]={date:q?.date||null,price:q?.price??null,change:q?.change??null,tradeTime:q?.tradeTime||null,stamp:q?.stamp||null,freshness:quoteFreshness(q),source:q?.source||null,seriesPoints:a.length,seriesLastStamp:a.at(-1)?.stamp||null,domState:r?.dataset?.liveState||null,domDate:r?.dataset?.liveDate||null,domStamp:Number(r?.dataset?.liveStamp||0)||null,domPrice:r?.dataset?.livePrice||null}}window.__TW_LIVE_V091__={version:VERSION,intervalMs:INTERVAL,marketWindow:marketOpen(),indexFreshness:intradayIndexState(taiex),indexAgeSeconds:taiex?.stamp?Math.round((Date.now()-Number(taiex.stamp))/1000):null,cycle,lastPollAt,lastSuccessAt,lastMisReceivedAt,nextMisAttemptAt,failures:misFailureCount,lastError,taiex:taiex?{date:taiex.date,price:taiex.price,change:taiex.change,high:taiex.high,low:taiex.low,turnover:taiex.turnover,time:taiex.time,stamp:taiex.stamp,source:taiex.source}:null,stocks}}
 
   async function pollBackup(force=false){
     if(backupBusy||(!force&&Date.now()-lastBackupAt<BACKUP_INTERVAL))return false;

@@ -76,7 +76,7 @@
   }
   const fmt=v=>v==null?'—':Number(v).toFixed(v<1?5:3).replace(/0+$/,'').replace(/\.$/,'');
   const MAX_BUSINESS_AGE_MS=120000;
-  const FX_CHECK_INTERVAL=4000;
+  const FX_CHECK_INTERVAL=60000; // Bank publishes on its own schedule; check once per minute.
   function taipeiNow(){
     const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23'}).formatToParts(new Date());
     const get=key=>parts.find(x=>x.type===key)?.value||'';

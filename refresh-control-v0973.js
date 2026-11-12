@@ -24,12 +24,15 @@ async function recover(name){
   const el=statusElement();if(el)el.textContent=name+' 連續失敗 3 次｜自動重新取得資料';
   try{
     // Soft recovery preserves the DOM and avoids a visible full-page reload.
-    if(name==='臺銀匯率')window.__TW_FX_REFRESH__?.();
-    else if(name==='台股行情')window.__TW_LIVE_REFRESH__?.();
-    else if(name==='盤後行情')window.__TW_BACKUP_REFRESH__?.();
-    else if(name==='新聞')window.__TW_NEWS_REFRESH__?.();
-    else if(name.startsWith('美股 '))window.__TW_US_REFRESH__?.(name.slice(3));
-    else if(name==='配股配息')window.__TW_DIVIDEND_REFRESH__?.();
+    // Defer until the failed request releases its single-flight lock.
+    setTimeout(()=>{
+      if(name==='臺銀匯率')window.__TW_FX_REFRESH__?.();
+      else if(name==='台股行情')window.__TW_LIVE_REFRESH__?.();
+      else if(name==='盤後行情')window.__TW_BACKUP_REFRESH__?.();
+      else if(name==='新聞')window.__TW_NEWS_REFRESH__?.();
+      else if(name.startsWith('美股 '))window.__TW_US_REFRESH__?.(name.slice(3));
+      else if(name==='配股配息')window.__TW_DIVIDEND_REFRESH__?.();
+    },250);
     if('serviceWorker'in navigator)navigator.serviceWorker.getRegistration().then(r=>r?.update()).catch(()=>{});
   }catch{}finally{recovering=false}
 }

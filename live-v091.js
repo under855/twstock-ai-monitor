@@ -154,7 +154,7 @@
     if(String(m?.d||'')!==today())return null;
     const price=num(m?.z)??num(m?.trade?.z);if(price==null)return null;
     const time=String(m?.t||m?.trade?.t||''),ms=stamp(m.d,time)??num(m?.tlong);if(ms==null||!sameDay(ms))return null;
-    const prev=num(m?.y);return {date:String(m.d),price,prev,change:prev==null?null:price-prev,high:num(m?.h),low:num(m?.l),turnover:num(m?.tv),time,stamp:ms,source:'TWSE MIS 盤中即時'};
+    const prev=num(m?.y);return {date:String(m.d),price,prev,change:prev==null?null:price-prev,high:num(m?.h),low:num(m?.l),time,stamp:ms,source:'TWSE MIS 盤中即時'};
   }
   function parse(items){
     const map=new Map();let idx=null;

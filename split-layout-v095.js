@@ -76,6 +76,7 @@
   }
   const fmt=v=>v==null?'—':Number(v).toFixed(v<1?5:3).replace(/0+$/,'').replace(/\.$/,'');
   const MAX_BUSINESS_AGE_MS=120000;
+  const FX_CHECK_INTERVAL=4000;
   function taipeiNow(){
     const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23'}).formatToParts(new Date());
     const get=key=>parts.find(x=>x.type===key)?.value||'';
@@ -101,7 +102,7 @@
     const business=bankBusinessWindow();
     time.textContent='銀行原始牌告 '+p.time+'｜本機讀取 '+lastFetchTime+(business?'｜非保證即時成交價':'｜非銀行營業時間');
     const signature=JSON.stringify([p.time,p.rows.map(x=>[x.code,x.buy,x.sell,x.sightBuy,x.sightSell])]);
-    const unchanged=signature===lastRenderedSignature;
+    const unchanged=signature===lastRenderedSignature&&grid.querySelectorAll('.botCashFxCell:not(.botCashFxHdr)').length===CURRENCIES.length*5;
     lastRenderedSignature=signature;
     if(!unchanged)grid.querySelectorAll('.botCashFxCell:not(.botCashFxHdr)').forEach(x=>x.remove());
     const byCode=new Map(p.rows.map(x=>[x.code,x]));
@@ -125,9 +126,9 @@
   }
   function showUnverified(reason,oldTime=''){
     const box=cashBox(),grid=box.querySelector('.botCashFxGrid'),time=box.querySelector('.botCashFxTime');
-    grid?.querySelectorAll('.botCashFxCell:not(.botCashFxHdr)').forEach(x=>x.remove());
-    lastRenderedSignature='';
-    if(time)time.textContent='無法確認目前的臺銀牌告｜'+reason+(oldTime?'｜來源顯示 '+oldTime:'');
+    // Preserve previously verified values with their original timestamp; do not flash empty values.
+    // A failure is explicitly marked as unverified and never passed off as a live rate.
+    if(time)time.textContent='更新失敗｜'+reason+(oldTime?'｜來源顯示 '+oldTime:'')+(lastBot?'｜最後已驗證 '+lastBot.time+'（非即時）':'');
     const status=document.getElementById('fxStamp');
     if(status)status.textContent='目前匯率未通過時效驗證';
     const board=document.getElementById('fxBoardStrip');if(board)board.replaceChildren();
@@ -158,22 +159,22 @@
       const picked=fresh[0];
       if(picked){
         if(lastBot&&picked.stamp<lastBot.stamp&&isCurrentEnough(lastBot)){
-          showUnverified('不同通道的牌告時間倒退，已停止採用',picked.time);
+          showUnverified('不同通道的牌告時間倒退，已停止採用',picked.time);window.__TW_UPDATE_HEALTH__?.('臺銀匯率',false);
           return false;
         }
         if(fresh.length>=2&&fresh[0].stamp===fresh[1].stamp){
           const rows=arr=>JSON.stringify(arr.rows.map(x=>[x.code,x.buy,x.sell,x.sightBuy,x.sightSell]));
           if(rows(fresh[0])!==rows(fresh[1])){
-            showUnverified('兩個來源同一時間的匯率不一致');
+            showUnverified('兩個來源同一時間的匯率不一致');window.__TW_UPDATE_HEALTH__?.('臺銀匯率',false);
             return false;
           }
         }
-        lastBot=picked;lastFetchTime=retrievalStamp();renderBotRates(picked);return true;
+        lastBot=picked;lastFetchTime=retrievalStamp();renderBotRates(picked);window.__TW_UPDATE_HEALTH__?.('臺銀匯率',true);return true;
       }
       const newest=quotes.sort((a,b)=>b.stamp-a.stamp)[0];
-      showUnverified(bankBusinessWindow()?'銀行營業時段來源資料超過 2 分鐘或連線失敗':'無法取得有效牌告',newest?.time||lastBot?.time||'');
+      showUnverified(bankBusinessWindow()?'銀行營業時段來源資料超過 2 分鐘或連線失敗':'無法取得有效牌告',newest?.time||lastBot?.time||'');window.__TW_UPDATE_HEALTH__?.('臺銀匯率',false);
       return false;
-    }catch(error){showUnverified('連線失敗或資料格式無法解析');return false;}finally{cashBusy=false}
+    }catch(error){showUnverified('連線失敗或資料格式無法解析');window.__TW_UPDATE_HEALTH__?.('臺銀匯率',false);return false;}finally{cashBusy=false}
   }
   window.__TW_BANK_FX_STATUS__=()=>({state:bankFxState,quoteTime:lastBot?.time||null,receivedAt:lastFetchTime||null,bankWindow:bankBusinessWindow()});
 
@@ -199,7 +200,7 @@
     if(buildSplit()){
       refreshFx();
       if(!fxTimer){
-        fxTimer=setInterval(refreshFx,60000);
+        fxTimer=setInterval(refreshFx,FX_CHECK_INTERVAL);
         document.addEventListener('visibilitychange',refreshFx);
         addEventListener('pageshow',refreshFx);
         addEventListener('focus',refreshFx);

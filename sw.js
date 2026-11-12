@@ -1,5 +1,5 @@
-const CACHE='tw-ai-monitor-v0970-layout';
-const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./dividend-enhance.js','./extras-v090.js','./live-v091.js','./foreign-live-test.js','./foreign-flow-card.js'];
+const CACHE='tw-ai-monitor-v0971-quality';
+const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./dividend-enhance.js','./extras-v090.js','./live-v091.js','./foreign-live-test.js'];
 
 self.addEventListener('install',e=>e.waitUntil(
   caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())

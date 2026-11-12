@@ -1,6 +1,10 @@
 (() => {
 'use strict';
 const INTERVAL=4000;
+const NEWS_INTERVAL=5*60*1000;
+const DIVIDEND_INTERVAL=6*60*60*1000;
+const checkedAt=new Map();
+function due(key,period){const now=Date.now();if(now-(checkedAt.get(key)||0)<period)return false;checkedAt.set(key,now);return true}
 const stats=new Map();
 let recovering=false;
 let newsBusy=false;
@@ -8,13 +12,13 @@ let newsBusy=false;
 function statusElement(){
   const bar=document.querySelector('.toolbar');if(!bar)return null;
   let el=document.getElementById('dataSyncStatus');
-  if(!el){el=document.createElement('span');el.className='pill';el.id='dataSyncStatus';el.textContent='各資料每 4 秒檢查';bar.appendChild(el)}
+  if(!el){el=document.createElement('span');el.className='pill';el.id='dataSyncStatus';el.textContent='依資料來源週期檢查';bar.appendChild(el)}
   return el;
 }
 function updateDisplay(){
   const el=statusElement();if(!el)return;
   const failures=[...stats].filter(([,v])=>v.failures>0);
-  const text=failures.length?'更新失敗：'+failures.map(([name,v])=>name+' '+v.failures+'/3').join('、')+'｜4 秒後再試':'各資料每 4 秒檢查｜正常';
+  const text=failures.length?'更新失敗：'+failures.map(([name,v])=>name+' '+v.failures+'/3').join('、')+'｜依來源週期重試':'依來源週期檢查｜正常';
   if(el.textContent!==text)el.textContent=text;
   el.title='資料未改變時保留原畫面；各來源只依官方發布時間判斷時效。';
 }
@@ -67,11 +71,11 @@ function checkVisible(){
   if(document.visibilityState==='hidden')return;
   statusElement();
   if(visibleDetail()){
-    refreshNews();
-    if(typeof window.__TW_DIVIDEND_REFRESH__==='function')window.__TW_DIVIDEND_REFRESH__();
+    const symbol=String(active);
+    if(due('news:'+symbol,NEWS_INTERVAL))refreshNews();
+    if(due('dividend:'+symbol,DIVIDEND_INTERVAL)&&typeof window.__TW_DIVIDEND_REFRESH__==='function')window.__TW_DIVIDEND_REFRESH__();
   }
-  // All visible data sources register their own 4-second fetch cycle.
-  // This heartbeat runs validation and displays a single non-intrusive status.
+  // Four-second heartbeat only; data network fetches respect per-source intervals.
   updateDisplay();
 }
 setInterval(checkVisible,INTERVAL);

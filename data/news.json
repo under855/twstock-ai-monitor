@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-12T20:01:16.548936+00:00",
+  "generatedAt": "2026-11-12T20:57:17.401665+00:00",
   "stocks": {
     "0050": [
       {
@@ -13,12 +13,6 @@
         "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9JQXVwR01LUHFHN2RVTFJtdFZnR2taRkpSY0kyT0RWWkRjdDBoZnlwRHJuSVVfWHd3ejQxcjFwRldRQ0UtWVo1azI0Umo1Vkx5NkNCNndnTENlYUpBRjlmWWlDYm9pelBTT1pV?oc=5",
         "publisher": "MoneyDJ",
         "time": 1793952000000
-      },
-      {
-        "title": "台股反向、高息 ETF 熱 元大台灣 50 反 1 單周獲買超 5.4 萬張稱冠 | 基金天地 | 理財 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBCUkdPZDlXZFk1cC1mTzhnOVNVWVlNclJmR2tFZTljR2lCU2JRbDRST0UxWEY2LVhlT3dFVHFRbjd1NkNzd3dXNDZkaDlCd01xRC1MY2d4QnZIUQ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1792998000000
       },
       {
         "title": "元大台灣 50 逢低布局 - 經濟日報",
@@ -155,6 +149,12 @@
         "time": 1794475808000
       },
       {
+        "title": "九檔台股 ETF 創高價 00878、0056等單日股價強彈 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5fQkU5OUJBLUpLLXVhbWpzTjMyWEhydng1b0JpcUxFSnhsNFhOUFN2cFQ0dVNhR21wc1hUUFBfZVExSkhud09GTVZxRE14Q1UtZ0pYaDdBUFJWUdIBX0FVX3lxTE4zd3BDQXBWUXZqQkdhalZGX3FrX0FoV0x6b2I5NS1hWHNRaFIyUjJSYUhpME9DaGpIVTBDM1d4MXJ4X0UwQmgzNUVxdUg5Q0pZc1V5b1RDcnVQNDc0elBJ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794384000000
+      },
+      {
         "title": "193萬投資人笑了！台股狂飆3,186點、ETF 00878及00881配息同飆新高 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1NMWVKNkZzOWxuY0xnS1NjVzEwY0lodnRac3VBRWg2aFNvSExTMnpLYlVOdWFWWGJzYXhnY0REWWhqeThaMU5QcFF2Xy1SNEkyVzNFMGRTdjc1QdIBX0FVX3lxTFB5dkZHSHlKUTFvQ0NObUZBWnNHQXJDVDF2Zm1JMXViMWl5cWdhWnRkZWxNLWdiWE1ZQVliUDRzbmdiUFNFMktiQlBlRGxzOUNSQThMbEY5bC1CaXptRlJz?oc=5",
         "publisher": "經濟日報",
@@ -165,12 +165,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9fXzdKRXNIVVpfc3d4YjlEaGVVdTQyOUJ6QllzclQ4M0poQzVoYWhIbjl4S0NreXJ1c05ZRmlnTExlZXZVZDlGS1J0WWc1dUZqOTQ4WXRGSndacVlkUmRz0gFkQVVfeXFMUFctQnlERC0yRmNsY3o3ODVZNUtMcnplSkdwdXljaFg3NmNvekVzdXFWeDVWb1l2bWk1bDJLQTlYTUMtcS16XzhmMkhPYkFkajRRZXNZdW9xY0o2YXkxZ2paS2Q4Qg?oc=5",
         "publisher": "自由財經",
         "time": 1794296903000
-      },
-      {
-        "title": "九檔台股 ETF 創高價 00878、0056等單日股價強彈 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5fQkU5OUJBLUpLLXVhbWpzTjMyWEhydng1b0JpcUxFSnhsNFhOUFN2cFQ0dVNhR21wc1hUUFBfZVExSkhud09GTVZxRE14Q1UtZ0pYaDdBUFJWUdIBX0FVX3lxTE4zd3BDQXBWUXZqQkdhalZGX3FrX0FoV0x6b2I5NS1hWHNRaFIyUjJSYUhpME9DaGpIVTBDM1d4MXJ4X0UwQmgzNUVxdUg5Q0pZc1V5b1RDcnVQNDc0elBJ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794211200000
       },
       {
         "title": "00878績效逆襲 0050！Q4配息創高還能存嗎？成分股與除息攻略一次看 - 鉅亨網",

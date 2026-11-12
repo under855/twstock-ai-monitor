@@ -42,7 +42,7 @@
       runners.set(symbol,run);
       run();
       // The Nasdaq relay is not a low-latency feed. Reduce proxy traffic and recheck on resume.
-      setInterval(run,4000);
+      setInterval(run,60000); // Third-party Nasdaq relay cannot promise four-second updates.
       addEventListener('focus',run);
       document.addEventListener('visibilitychange',()=>{if(!document.hidden)run()});
     }

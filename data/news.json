@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-12T06:43:23.448002+00:00",
+  "generatedAt": "2026-11-12T07:59:17.861429+00:00",
   "stocks": {
     "0050": [
       {
@@ -57,12 +57,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5PYnRpOU9TZEdVTW42TjNjYVJDVDEydkhVa01ZTXhLcEJHSHM5ZnNRWUctQUZFTEtVMmtWaDc3Z0hUUkNxU3RZZHNOeTZmUUI5cTgzRjRwNTNUZ9IBX0FVX3lxTFBkYUN5dS1UT0JmT1Y0MU1qc3VfOUVKdk9qZ0MwcGV2cmlQX29FdGpMaHZsejhUQ0NoR2J5N0xsS0Z1c0hPTDFnN251Y0JkLVBSckhvdnAxalk1NjFObk5N?oc=5",
         "publisher": "經濟日報",
         "time": 1792134000000
-      },
-      {
-        "title": "日月光投控9月、Q3、前三季營收大三喜- 日報 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5lRGVZMU56aV9FZ0VZOTVUcHZMbFptYXhNR2cwWU1hY3BWOG8wMEFQb2NIeEVCdFJrbHNNMHhWYjZ0a3RjZDdGbWpZY2cwQVhlVlhNMlMyTUZGeUc0UEFV?oc=5",
-        "publisher": "工商時報",
-        "time": 1791874800000
       }
     ],
     "3293": [
@@ -209,12 +203,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5UVFFzdmpoaGFCdEtaWDJSV1c0SXpYdDBIOEdwcWJ5MFZObERpNk1BVzA0V0Z5aGVUUjhVa0lXd19iaDRTUUYtODJBd1M0aVlnZjFDZG9PdkZ3QdIBX0FVX3lxTFBSRlpoRjNwczlycXdmbjR6M3lRWnQ3Y3puNEVvbEZFWnFVLUhIRnMzbV9lU0Z6TXVBbVdteUMyOVR6U1FhNXl2NGx1TjhyQWlwUkZrWXI4UWhZaEZBUThv?oc=5",
         "publisher": "經濟日報",
         "time": 1791961200000
-      },
-      {
-        "title": "台股ETF配息時間表！421億股息大紅包 00919、00918、00981A等21檔配息、發放日、平均領息一次看 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFA4eldYVlhyOG0yQlhZcDNNSHlMREV6ZGxsZWh6b3RGeFc1Y25wcUgzNTl3aGlPelYxNGJwdlNfTkk1VUQza1YtLWdwWXhaRmIyb1BkUGlHeDFIbGloUFVr?oc=5",
-        "publisher": "工商時報",
-        "time": 1791874800000
       }
     ],
     "2330": [
@@ -255,16 +243,16 @@
         "time": 1792393200000
       },
       {
+        "title": "統欣生技22週年慶消費滿額抽台積電股票- 商情 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE00MVI1Z2lyM3dhRkNWR0ZXZ09nQm1GWUxOdm0td2htZnZGaldPZWYzSFRib0VQSG16c2tlNXA3MXpHa1lJZlB1TlRYSXJhWkdVNlJVS3Q4TE10cVhNVWhv?oc=5",
+        "publisher": "工商時報",
+        "time": 1792134000000
+      },
+      {
         "title": "台積電開法說股價會噴還跌？外媒有「1意外發現」 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBRRERLWUx6MXktdllEeFMtaWxsTENla0lwMnFqX0FOOFEyQVBocWVoR2pyXzUxT2dwdzRidVEtcWRVREthZU5XOW1UYlh4eW1iZTJvZ1NCUmdfNTI2bk1N0gFkQVVfeXFMT3BOakJFWXVyeXVLN1Y4bVpQang0SU0wNWtZcURuNDZOWjAySWxZVUZ2YTNFNTNPc0xTOVU1NXlBWnAyT1drdzEyZjBvc2dlTm56QXFLMnRUbEs1M202V3lBa0tJQg?oc=5",
         "publisher": "自由財經",
         "time": 1792047600000
-      },
-      {
-        "title": "台積電面臨2.57兆元獲利變數 法說會後股價「波動幅度」預曝 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5HVTdsaFZWeVB6VjZxWEdxNGZXR3p3Mk1DNXplZ0ZqMlc0YXUwRElacXhTWmxYV3VlM2VrTW05UDhXWG5zTTEwbDVELXJGSlRYbXJlRG43ak1FSzgyQTU00gFkQVVfeXFMTVVyRklEbHN0cFJXbWdEVDZONE0wZGRfT1BmRnplMlFGNTVwdXE2MUJGSFRnSHB4X1VITndNQ3ZkQzFSMVFwYVhuU1FKT0FoaExGNGlCUThReXZPUkZUa2R5MVJDdQ?oc=5",
-        "publisher": "自由財經",
-        "time": 1791961200000
       }
     ]
   },

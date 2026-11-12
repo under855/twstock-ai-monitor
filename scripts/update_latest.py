@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json, urllib.request, urllib.parse, datetime, pathlib, re, sys, time
+from probe_sector_feed import extract as extract_sector_indices
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / 'data' / 'latest.json'
@@ -103,8 +104,8 @@ def fetch_twse_closing_report(day):
     url = f'https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date={date}&type=ALLBUT0999&response=json'
     return get(url, timeout=10, attempts=1)
 
-def fetch_twse_closing_index(day):
-    for table in fetch_twse_closing_report(day).get('tables', []):
+def fetch_twse_closing_index(day, report=None):
+    for table in (report if report is not None else fetch_twse_closing_report(day)).get('tables', []):
         title = table.get('title', '')
         if '價格指數(臺灣證券交易所)' not in title or roc_to_iso(title.split()[0]) != day:
             continue
@@ -276,10 +277,18 @@ def main():
     daily_index=fetch_taiex(trade_date,market_rows)
     taiex=fetch_live_taiex(daily_index); twse=fetch_twse(trade_date); tpex=fetch_tpex(trade_date)
     taipei = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
+    sector_indices=None
     if taipei.weekday() < 5 and (taipei.hour, taipei.minute) >= (13, 30):
         try:
-            official_index = fetch_twse_closing_index(taipei.date().isoformat())
+            official_day=taipei.date().isoformat()
+            official_report=fetch_twse_closing_report(official_day)
+            official_index = fetch_twse_closing_index(official_day,official_report)
             if official_index:
+                try:
+                    verified=extract_sector_indices(official_report,official_day.replace('-',''))
+                    sector_indices={'date':official_day,'source':'TWSE MI_INDEX','items':verified}
+                except Exception as sector_error:
+                    print('WARN sector validation rejected: '+str(sector_error),file=sys.stderr)
                 # Trading value is the same-day TWSE FMTQIK figure (TWD).
                 if daily_index.get('date') == official_index['date']:
                     official_index['turnover'] = daily_index.get('turnover')
@@ -324,7 +333,17 @@ def main():
             tpex={k:v for k,v in symbols.items() if v.get('market')=='TPEx'}
         except (ValueError,OSError) as error:
             print('WARN prior validated TPEx snapshot unavailable: '+str(error),file=sys.stderr)
-    payload={'generatedAt':now,'tradeDate':trade_date,'taiex':taiex,'counts':{'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},'symbols':symbols}
+    if sector_indices is None and OUT.exists():
+        try:
+            previous_sectors=json.loads(OUT.read_text(encoding='utf-8')).get('sectorIndices')
+            if previous_sectors and previous_sectors.get('source')=='TWSE MI_INDEX':
+                old_day=str(previous_sectors.get('date') or '')
+                age=(taipei.date()-datetime.date.fromisoformat(old_day)).days
+                if 0<=age<=14 and len(previous_sectors.get('items') or [])>=5:
+                    sector_indices=previous_sectors
+        except (ValueError,TypeError,KeyError,OSError) as e:
+            print('WARN previously verified sectors invalid: '+str(e),file=sys.stderr)
+    payload={'generatedAt':now,'tradeDate':trade_date,'taiex':taiex,'sectorIndices':sector_indices,'counts':{'TWSE':len(twse),'TPEx':len(tpex),'total':len(symbols)},'symbols':symbols}
     # Do not write a new generatedAt every five minutes if the exchange values did not change.
     # Otherwise each identical refresh triggers a pointless Pages deployment and falsely looks like fresh market data.
     if OUT.exists():

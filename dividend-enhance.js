@@ -249,6 +249,11 @@
     }
   }
 
+  window.__TW_DIVIDEND_FEED__=async()=>{
+    const [etf,corporate]=await Promise.all([loadEtfRows(),loadCorporateEvents()]);
+    if(!Array.isArray(etf)||!Array.isArray(corporate))throw new Error('股利資料格式不正確');
+    return dedupeEvents([...etf,...corporate]);
+  };
   let dividendRefreshBusy=false;
   window.__TW_DIVIDEND_REFRESH__=async()=>{
     etfCache.loaded=false;eventCache.loaded=false;

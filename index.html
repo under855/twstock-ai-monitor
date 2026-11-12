@@ -267,7 +267,9 @@ function updateWatchBreadth(liveQuotes=null,liveStatus=null){
    for(const el of [up,down,flat])set(el,'—');
    set(meta,'尚無監控股票');return;
  }
- const taipeiDate=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ const tp=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+ const part=key=>tp.find(p=>p.type===key)?.value||'';
+ const taipeiDate=part('year')+'-'+part('month')+'-'+part('day');
  const currentSession=marketWindowTaipeiNow();
  let valid=[],label='';
  if(currentSession){

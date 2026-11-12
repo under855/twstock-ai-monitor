@@ -68,7 +68,7 @@ def fetch_taiex(trade_date, rows=None):
     if matched is None:
         matched=rows[-1]
     if len(matched)<6: raise RuntimeError('FMTQIK row missing TAIEX columns')
-    return {'date':roc_to_iso(matched[0]),'close':n(matched[4]),'change':n(matched[5]),'source':'TWSE FMTQIK'}
+    return {'date':roc_to_iso(matched[0]),'close':n(matched[4]),'change':n(matched[5]),'turnover':n(matched[2]),'source':'TWSE FMTQIK'}
 
 def fetch_live_taiex(fallback):
     try:
@@ -93,7 +93,7 @@ def fetch_live_taiex(fallback):
         if not -30000 <= age_ms <= 120000:
             print(f'WARN MIS index snapshot stale by {age_ms/1000:.0f}s; do not write as current index',file=sys.stderr)
             return fallback
-        return {'date':iso,'close':z,'change':(z-y) if y is not None else None,'previousClose':y,'time':quote_time,'source':'TWSE MIS live'}
+        return {'date':iso,'close':z,'change':(z-y) if y is not None else None,'previousClose':y,'high':n(m.get('h')),'low':n(m.get('l')),'time':quote_time,'source':'TWSE MIS live'}
     except Exception as e:
         print(f'WARN live TAIEX failed: {e}', file=sys.stderr)
         return fallback
@@ -273,13 +273,24 @@ def write_json(path,payload):
 
 def main():
     market_rows=fmtqik_rows(); trade_date=latest_trade_date(market_rows)
-    taiex=fetch_live_taiex(fetch_taiex(trade_date,market_rows)); twse=fetch_twse(trade_date); tpex=fetch_tpex(trade_date)
+    daily_index=fetch_taiex(trade_date,market_rows)
+    taiex=fetch_live_taiex(daily_index); twse=fetch_twse(trade_date); tpex=fetch_tpex(trade_date)
     taipei = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
     if taipei.weekday() < 5 and (taipei.hour, taipei.minute) >= (13, 30):
         try:
-            taiex = fetch_twse_closing_index(taipei.date().isoformat()) or taiex
+            official_index = fetch_twse_closing_index(taipei.date().isoformat())
+            if official_index:
+                # Trading value is the same-day TWSE FMTQIK figure (TWD).
+                if daily_index.get('date') == official_index['date']:
+                    official_index['turnover'] = daily_index.get('turnover')
+                if taiex.get('date') == official_index['date']:
+                    official_index['high'] = taiex.get('high')
+                    official_index['low'] = taiex.get('low')
+                taiex = official_index
         except Exception as e:
             print(f'WARN TWSE closing index unavailable: {e}', file=sys.stderr)
+    if taiex.get('date') == daily_index.get('date') and taiex.get('source') != 'TWSE FMTQIK':
+        taiex.setdefault('turnover',daily_index.get('turnover'))
     # The TPEx OpenAPI sometimes remains on yesterday after TWSE has finalized today's prices.
     # Do not silently present stale 3293 as today's close. If its dated official table
     # is still unavailable, accept only a date-validated MIS last trade with explicit label.

@@ -47,11 +47,12 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
 @media(max-width:900px){.fxStrip{grid-template-columns:repeat(5,1fr)}}
 @media(max-width:720px){.row{grid-template-columns:minmax(105px,1fr) minmax(90px,.8fr) 58px 24px;grid-template-areas:"name price score open" "day day day day" "meta meta meta meta"}.fxStrip{grid-template-columns:repeat(3,1fr)}}
 </style>
+<style id="fx-immediate-shell">.botCashFx{margin:12px 0;border:1px solid #233c59;border-radius:16px;background:#0c1725;padding:12px;overflow:hidden}.botCashFxHead{display:flex;justify-content:space-between;gap:10px;align-items:end;margin-bottom:9px}.botCashFxTitle{font-size:15px;font-weight:900}.botCashFxTime{font-size:11px;color:#91a8c2;text-align:right}.botCashFxGrid{display:grid;grid-template-columns:1fr repeat(4,minmax(0,1fr));gap:1px;background:#233c59;border:1px solid #233c59;border-radius:10px;overflow:hidden}.botCashFxCell{background:#101f31;padding:8px 7px;font-size:12px}.botCashFxHdr{font-weight:850;color:#a9cbff}.botCashFxCode{font-weight:900}.botCashFxNum{font-variant-numeric:tabular-nums;text-align:right}.botCashFxNote{font-size:10px;color:#91a8c2;margin-top:8px;line-height:1.45}.fxStrip{display:none!important}@media(max-width:560px){.botCashFxCell{padding:6px 3px;font-size:10px}.botCashFxHdr{font-size:9px}.botCashFxTime{font-size:10px}}</style>
 </head>
 <body>
 <div class="app">
   <header class="top">
-    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.7.1｜台股每 4 秒檢查・資料時效監控・外匯</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
+    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.7.2｜台股每 4 秒檢查・資料時效監控・外匯</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
     <div class="search"><input id="code" inputmode="text" autocomplete="off" placeholder="搜尋代號或名稱，例如 2610、華航"><button id="searchBtn" class="primary">搜尋</button></div>
     <div id="searchResults" class="searchResults"></div>
     <div class="toolbar"><span class="pill" id="clock">—</span><span class="pill">評分 100 分制</span><span class="pill" id="universePill">台股名冊：載入中…</span><span class="pill">行情：TWSE／TPEx</span><span class="pill" id="refreshPill">台股每 4 秒檢查</span></div>
@@ -65,6 +66,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
   </section>
 
   <section id="fxStrip" class="fxStrip"><div class="fxStripTitle"><span>臺灣銀行官方牌告｜現金與即期匯率</span><span id="fxStamp">載入中…</span></div><div id="fxBoardStrip" style="display:contents"></div></section>
+  <section id="botCashFxV096" class="botCashFx"><div class="botCashFxHead"><div class="botCashFxTitle">臺灣銀行｜官方外幣牌告</div><div class="botCashFxTime">正在取得臺銀牌告…</div></div><div class="botCashFxGrid"><div class="botCashFxCell botCashFxHdr">幣別</div><div class="botCashFxCell botCashFxHdr botCashFxNum">現金買進</div><div class="botCashFxCell botCashFxHdr botCashFxNum">現金賣出</div><div class="botCashFxCell botCashFxHdr botCashFxNum">即期買進</div><div class="botCashFxCell botCashFxHdr botCashFxNum">即期賣出</div><div class="botCashFxCell botCashFxCode">USD</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxCode">JPY</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxCode">EUR</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxCode">GBP</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxCode">SGD</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxCode">CNY</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div><div class="botCashFxCell botCashFxNum">—</div></div><div class="botCashFxNote">銀行立場：購買外幣現鈔請看「現金賣出」，購買外幣並存入外幣帳戶請看「即期賣出」。<a href="https://rate.bot.com.tw/xrt?Lang=zh-TW" target="_blank" rel="noopener noreferrer"> 臺灣銀行官方牌告</a></div></section>
 
   <div class="sectionTitle">我的監控牆</div>
   <main id="watch" class="watch"></main>
@@ -97,7 +99,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
   </section>
 </div>
 <script>
-const APP_VERSION='0.9.7.1';
+const APP_VERSION='0.9.7.2';
 const IS_WEB = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 window.addEventListener('DOMContentLoaded',()=>{
   if(!IS_WEB){
@@ -329,7 +331,7 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 <script src="./foreign-live-test.js?v=0971quality"></script>
 
 
-<script src="split-layout-v095.js?v=096fxsix1"></script>
+<script src="split-layout-v095.js?v=0972immediate"></script>
 <script src="./pilot-chart-00878-v1.js?v=096latency1"></script>
 
 </body>

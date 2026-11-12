@@ -146,7 +146,7 @@
     ];
     try{
       const settled=await Promise.allSettled(urls.map(async u=>{
-        const ac=new AbortController(),timer=setTimeout(()=>ac.abort(),6500);
+        const ac=new AbortController(),timer=setTimeout(()=>ac.abort(),3400);
         try{
           const response=await fetch(u,{cache:'no-store',signal:ac.signal,headers:{'Cache-Control':'no-cache'}});
           if(!response.ok)throw Error('HTTP '+response.status);

@@ -173,7 +173,7 @@
       const newest=quotes.sort((a,b)=>b.stamp-a.stamp)[0];
       showUnverified(bankBusinessWindow()?'銀行營業時段來源資料超過 2 分鐘或連線失敗':'無法取得有效牌告',newest?.time||lastBot?.time||'');
       return false;
-    }finally{cashBusy=false}
+    }catch(error){showUnverified('連線失敗或資料格式無法解析');return false;}finally{cashBusy=false}
   }
   window.__TW_BANK_FX_STATUS__=()=>({state:bankFxState,quoteTime:lastBot?.time||null,receivedAt:lastFetchTime||null,bankWindow:bankBusinessWindow()});
 
@@ -206,7 +206,7 @@
       }
       loadPaperTrading();return;
     }
-    if(++tries<80)setTimeout(boot,250);
+    if(++tries<80)setTimeout(boot,250);else showUnverified('畫面初始化失敗');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();

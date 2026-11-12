@@ -2,7 +2,7 @@
   'use strict';
   // Binance public Spot trade stream: event-driven, not a delayed stock quote.
   // This probe only tests the real-time transport. It never validates TW/US/JP quote accuracy.
-  const ENDPOINT='wss://stream.binance.com:9443/ws/btcusdt@trade';
+  const ENDPOINT='wss://stream.binance.com:443/ws/btcusdt@trade';
   const CHECK_MS=4000, STALE_MS=15000, FUTURE_TOLERANCE_MS=5000;
   let socket=null, reconnectTimer=null, reconnectAttempt=0;
   let lastReceived=0, lastEventTime=0, lastTradeId=null, receivedCount=0;

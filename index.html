@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="台股監控台">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>台股 AI 監控台 v0.9.6 Web</title>
+<title>台股 AI 監控台 v0.9.7.5 Web</title>
 <style>
 :root{--bg:#060d18;--panel:#0d1929;--panel2:#11233a;--line:#213954;--text:#edf5ff;--muted:#93a9c2;--accent:#78adff;--up:#ff6b6b;--down:#63d49a;--warn:#ffd166;--neutral:#d2dceb;--shadow:0 12px 28px rgba(0,0,0,.22)}
 *{box-sizing:border-box}html{background:var(--bg)}body{margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;background:radial-gradient(circle at 50% -10%,#13325a 0,#07111f 35%,#050b13 72%);min-height:100vh}
@@ -48,11 +48,12 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
 @media(max-width:720px){.row{grid-template-columns:minmax(105px,1fr) minmax(90px,.8fr) 58px 24px;grid-template-areas:"name price score open" "day day day day" "meta meta meta meta"}.fxStrip{grid-template-columns:repeat(3,1fr)}}
 </style>
 <style id="fx-immediate-shell">.botCashFx{margin:12px 0;border:1px solid #233c59;border-radius:16px;background:#0c1725;padding:12px;overflow:hidden}.botCashFxHead{display:flex;justify-content:space-between;gap:10px;align-items:end;margin-bottom:9px}.botCashFxTitle{font-size:15px;font-weight:900}.botCashFxTime{font-size:11px;color:#91a8c2;text-align:right}.botCashFxGrid{display:grid;grid-template-columns:1fr repeat(4,minmax(0,1fr));gap:1px;background:#233c59;border:1px solid #233c59;border-radius:10px;overflow:hidden}.botCashFxCell{background:#101f31;padding:8px 7px;font-size:12px}.botCashFxHdr{font-weight:850;color:#a9cbff}.botCashFxCode{font-weight:900}.botCashFxNum{font-variant-numeric:tabular-nums;text-align:right}.botCashFxNote{font-size:10px;color:#91a8c2;margin-top:8px;line-height:1.45}.fxStrip{display:none!important}@media(max-width:560px){.botCashFxCell{padding:6px 3px;font-size:10px}.botCashFxHdr{font-size:9px}.botCashFxTime{font-size:10px}}</style>
+<style id="dividend-ticker-style">.dividendTickerCard{min-width:0;display:flex;flex-direction:column;justify-content:center;padding:14px 17px}.dividendTickerHead{display:flex;justify-content:space-between;align-items:center;gap:8px}.dividendTickerHead strong{font-size:14px}.dividendTickerHead span,.dividendTickerFooter{font-size:10px;color:var(--muted)}.dividendTickerWindow{overflow:hidden;height:74px;margin:11px 0 8px}.dividendTickerTrack{transform:translateY(0);transition:transform .55s ease;will-change:transform}.dividendTickerItem{height:74px;display:flex;flex-direction:column;justify-content:center;gap:6px}.dividendTickerItem .tickerName{font-size:14px;font-weight:850;color:#edf5ff}.dividendTickerItem .tickerDetail{font-size:12px;color:#b8cce3;line-height:1.3}.dividendTickerItem .tickerSource{font-size:10px;color:var(--muted)}.dividendTickerStatus{font-size:12px;color:var(--muted)}@media(prefers-reduced-motion:reduce){.dividendTickerTrack{transition:none}}@media(max-width:720px){.dividendTickerCard{grid-column:1/-1}}</style>
 </head>
 <body>
 <div class="app">
   <header class="top">
-    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.7.4｜依來源週期更新檢查・資料時效監控・外匯</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
+    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.7.5｜依來源週期更新檢查・資料時效監控・外匯</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
     <div class="search"><input id="code" inputmode="text" autocomplete="off" placeholder="搜尋代號或名稱，例如 2610、華航"><button id="searchBtn" class="primary">搜尋</button></div>
     <div id="searchResults" class="searchResults"></div>
     <div class="toolbar"><span class="pill" id="clock">—</span><span class="pill">評分 100 分制</span><span class="pill" id="universePill">台股名冊：載入中…</span><span class="pill">行情：TWSE／TPEx</span><span class="pill" id="refreshPill">台股每 4 秒檢查</span></div>
@@ -61,7 +62,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
 
   <section class="market">
     <div class="marketCard taiexCard"><div class="l">台灣加權指數</div><div id="taiex" class="v">—</div><div id="taiexChg" class="s muted">讀取中</div></div>
-    <div class="marketCard dataQualityCard" id="dataQualityCard"><div class="l">行情資料品質</div><div class="v" id="qualityState" style="font-size:19px">檢查中</div><div class="s muted" id="qualityDetails">盤中每 4 秒檢查；以交易所時間判斷資料時效</div></div>
+    <div class="marketCard dividendTickerCard" id="dividendTickerCard"><div class="dividendTickerHead"><strong>追蹤股利快訊</strong><span id="dividendTickerUpdated">公告資料</span></div><div class="dividendTickerWindow" id="dividendTickerWindow" aria-live="off"><div class="dividendTickerTrack" id="dividendTickerTrack"><div class="dividendTickerItem"><span class="dividendTickerStatus">正在整理追蹤標的的股利消息…</span></div></div></div><div class="dividendTickerFooter" id="dividendTickerFooter">只顯示追蹤股票與 ETF 的近期正式資料</div></div>
     <div class="marketCard marketChartCard"><div class="l">外匯匯率｜銀行現金與即期牌告</div><div id="fxBoard" class="fxBoard"><div class="muted small">匯率載入中…</div></div><div id="fxNote" class="fxNote">幣別與報價均以臺灣銀行牌告為準；不同於市場中間價</div><canvas id="taiexChart" class="marketChart" width="620" height="90"></canvas><div class="marketChartMeta"><span>09:00</span><span id="taiexChartMsg">—</span><span>13:30</span></div></div>
   </section>
 
@@ -99,7 +100,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
   </section>
 </div>
 <script>
-const APP_VERSION='0.9.7.4';
+const APP_VERSION='0.9.7.5';
 const IS_WEB = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 window.addEventListener('DOMContentLoaded',()=>{
   if(!IS_WEB){
@@ -326,7 +327,7 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 </script>
 
 <script src="./refresh-control-v0973.js?v=0974source"></script>
-<script src="./dividend-enhance.js?v=0973-div4sec"></script>
+<script src="./dividend-enhance.js?v=0975-feed"></script>
 <script src="./extras-v090.js?v=0973-no-flicker"></script>
 <script src="./live-v091.js?v=0974source"></script>
 <script src="./foreign-live-test.js?v=0974source"></script>
@@ -334,6 +335,7 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 
 <script src="split-layout-v095.js?v=0974source"></script>
 <script src="./pilot-chart-00878-v1.js?v=096latency1"></script>
+<script src="./dividend-ticker-v0975.js?v=0975a"></script>
 
 </body>
 </html>

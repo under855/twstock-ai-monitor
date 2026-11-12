@@ -154,7 +154,7 @@
     if(String(m?.d||'')!==today())return null;
     const price=num(m?.z)??num(m?.trade?.z);if(price==null)return null;
     const time=String(m?.t||m?.trade?.t||''),ms=stamp(m.d,time)??num(m?.tlong);if(ms==null||!sameDay(ms))return null;
-    const prev=num(m?.y);return {date:String(m.d),price,prev,change:prev==null?null:price-prev,time,stamp:ms,source:'TWSE MIS 盤中即時'};
+    const prev=num(m?.y);return {date:String(m.d),price,prev,change:prev==null?null:price-prev,high:num(m?.h),low:num(m?.l),time,stamp:ms,source:'TWSE MIS 盤中即時'};
   }
   function parse(items){
     const map=new Map();let idx=null;
@@ -232,11 +232,24 @@
     if(age < -30000)return 'future';
     return age<=120000?'fresh':'stale';
   }
+  function paintIndexExtras(x,usable){
+    const p=document.getElementById('taiexPercent');
+    const h=document.getElementById('taiexHigh'),l=document.getElementById('taiexLow'),t=document.getElementById('taiexTurnover');
+    const prev=num(x?.prev)??(num(x?.price)!=null&&num(x?.change)!=null?num(x.price)-num(x.change):null);
+    const pct=usable&&prev>0&&num(x?.change)!=null?100*num(x.change)/prev:null;
+    if(p){setText(p,pct==null?'':(pct>0?'+':'')+pct.toFixed(2)+'%');setClass(p,'s '+(pct==null?'muted':cls(x.change)))}
+    const validRange=usable&&num(x?.high)!=null&&num(x?.low)!=null&&num(x.high)>=num(x.low);
+    setText(h,validRange?fmt(x.high,2):'—');setText(l,validRange?fmt(x.low,2):'—');
+    // Current index sources have no verified market-wide turnover field.
+    // Do not invent one or request additional feeds just to fill the card.
+    setText(t,'—');
+  }
   function paintIndex(){
     const v=document.getElementById('taiex'),c=document.getElementById('taiexChg');
     if(marketOpen()){
       const state=intradayIndexState(taiex);
       if(state!=='fresh'){
+        paintIndexExtras(taiex,false);
         // Do not present a 10:28 index snapshot as an 11:05 live quote.
         setText(v,'—');
         if(c){
@@ -249,7 +262,8 @@
         return;
       }
     }
-    if(!taiex||taiex.date!==today())return;
+    if(!taiex||taiex.date!==today()){paintIndexExtras(null,false);return}
+    paintIndexExtras(taiex,true);
     setText(v,fmt(taiex.price,2));
     if(c){
       setText(c,(taiex.change>0?'+':'')+fmt(taiex.change,2)+'｜'+(taiex.officialClose?'TWSE 官方收盤':'TWSE MIS 指數')+' '+taiex.time);

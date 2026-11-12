@@ -292,7 +292,7 @@ def main():
                 print('WARN 3293 provisional MIS final trade, NOT an official TPEx closing record',file=sys.stderr)
             else:
                 print('WARN 3293 remains on previous TPEx official trade day; do not label current',file=sys.stderr)
-    symbols={**twse,**tpex}; trade_date=max(trade_date,max(row['tradeDate'] for row in twse.values())); now=datetime.datetime.now(datetime.timezone.utc).isoformat()
+    symbols={**twse,**tpex}; trade_date=max([trade_date]+[row['tradeDate'] for row in symbols.values() if row.get('tradeDate')]); now=datetime.datetime.now(datetime.timezone.utc).isoformat()
     # Don't downgrade a previously verified current-day TPEx close to an older OpenAPI
     # snapshot or provisional MIS print when the dated official endpoint temporarily times out.
     if OUT.exists():

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-12T09:53:08.444458+00:00",
+  "generatedAt": "2026-11-12T10:52:54.763918+00:00",
   "stocks": {
     "0050": [
       {
@@ -93,6 +93,12 @@
         "time": 1794423600000
       },
       {
+        "title": "大陸華北鋼廠限產 支撐亞洲鋼價 中鋼、中鴻等台廠迎轉單 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBGR3ZDS0paeUUtX1otdFU3TW1FNnFqLU1LdEdpOUw3OEhVcjVnODh5UVVyWmMwUjRWdEphenMwM09tNlIwT2NZSTFhaVB2WjNuWFFEbHBFa0xpT1HSAWBBVV95cUxPY2pLWFhFeXJ5S3BvWFhjdlNRWHh4dWRJUW1GU0xwc1RqVVpJUWo1VmdaZF9jVjV3UHJjWUw3WVBqMGZpS3oxZUpUZ2JGcWJIVGhxalc0bUhMeDYxcnpmQ0I?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794420000000
+      },
+      {
         "title": "中鋼10月營收 年增逾3成 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5GaUNUZEZQTHZFWTMwMFdLMkNTZW11ODU0dWd4ODhRRlNoQ2hJbHZreDdFUTlCT2FUUzIyUGdUQVR1WW5CX1hrZVdJaWZBaGliVVozY3RwbjNXamtldHRV?oc=5",
         "publisher": "工商時報",
@@ -127,20 +133,14 @@
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5zQkJrd1Z0eEJwLTI4MElkYldqTFU3N0x5Wk1DRDZsTkhTNUpHeFl3OUhXbUU1YUw5NXhfZUVpOFRHWG5kWjY3MjVwQ29aOUU?oc=5",
         "publisher": "鉅亨網",
         "time": 1793961071000
-      },
-      {
-        "title": "中鋼9月稅前獲利月減19%，惟前3季明顯改善- 新聞 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOdXllSzRadG15UjJCUDdLb1Zad0hnOE5qNWx1bVpPUEltZ3NEMEhlS09yZGdoOUZDZFEtT3k2RVhLLTBEZ3RRR0Z4bHdYNHhEclhsdlZPbVhTdUJrNjl5NTNtOFR0ZmhyaHRVSTlERXI4TjRodG1XYVVzWFRoSG1faXBYQ2ZvWmxRa3RhazhWeGtXdw?oc=5",
-        "publisher": "MoneyDJ",
-        "time": 1793084400000
       }
     ],
     "00878": [
       {
-        "title": "00878配息出爐！11月16日最後買進日 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBLUGRMVXBfN2VSdDVBVElyUlNRblVjeUs5SS1kWFlxVGVQRnJoaENnTnV2UkdfY1RTRlV0MVRwUUhIRl9UN0FzbmI2WXhVZnhDSE9NNUwxVXdMUdIBX0FVX3lxTE05NU1CdHpVaUh5OWRFTWNEcF8wMjUyYjFlWGNrWGdybnNGRVo4UjUtcV85UjVrekZXd1A5U0RSVHprdjFpWVd1Q3kySFJvLVBZSmQ4dkZSSm80QzdBZzlR?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794475808000
+        "title": "00878定期定額戶數突破33萬 近5年含息報酬率181％ - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5EakVJZWNKVmJtRzB5RjgxN3hsRmY2clY1LVRVQVFtZE5MSXhRdWszb0d2VnI3UnJYQUE0S2w4ZFgzemE1RjdLaTh6U0pvWW13eEdfNTcxWW9xcDNXTUVB0gFkQVVfeXFMTURZbk9GOEJCR3hKQlMyY2xiRjZsYWFpMENMQmNBd2Q3T1ZOM3VrcEVqQWhpQnlvQlRaV2ptbVhwWmZ3Ymh6d3ZXOUV5VXdZWG82UUVuNjZBMEZkeEl1eHZGNzIzMA?oc=5",
+        "publisher": "自由財經",
+        "time": 1794476751000
       },
       {
         "title": "8月台股 ETF 配息一次看 00878、00929、00891等配息飆新高 - 經濟日報",
@@ -255,10 +255,10 @@
         "time": 1792393200000
       },
       {
-        "title": "台積電開法說股價會噴還跌？外媒有「1意外發現」 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBRRERLWUx6MXktdllEeFMtaWxsTENla0lwMnFqX0FOOFEyQVBocWVoR2pyXzUxT2dwdzRidVEtcWRVREthZU5XOW1UYlh4eW1iZTJvZ1NCUmdfNTI2bk1N0gFkQVVfeXFMT3BOakJFWXVyeXVLN1Y4bVpQang0SU0wNWtZcURuNDZOWjAySWxZVUZ2YTNFNTNPc0xTOVU1NXlBWnAyT1drdzEyZjBvc2dlTm56QXFLMnRUbEs1M202V3lBa0tJQg?oc=5",
-        "publisher": "自由財經",
-        "time": 1792047600000
+        "title": "統欣生技22週年慶消費滿額抽台積電股票- 商情 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE00MVI1Z2lyM3dhRkNWR0ZXZ09nQm1GWUxOdm0td2htZnZGaldPZWYzSFRib0VQSG16c2tlNXA3MXpHa1lJZlB1TlRYSXJhWkdVNlJVS3Q4TE10cVhNVWhv?oc=5",
+        "publisher": "工商時報",
+        "time": 1792134000000
       }
     ]
   },

@@ -4,9 +4,7 @@ const INTERVAL=4000;
 const stats=new Map();
 let recovering=false;
 let newsBusy=false;
-let lastNewsKey='';
-let lastNewsMarkup='';
-let lastDividendKey='';
+
 function statusElement(){
   const bar=document.querySelector('.toolbar');if(!bar)return null;
   let el=document.getElementById('dataSyncStatus');
@@ -30,6 +28,7 @@ async function recover(name){
     else if(name==='台股行情')window.__TW_LIVE_REFRESH__?.();
     else if(name==='盤後行情')window.__TW_BACKUP_REFRESH__?.();
     else if(name==='新聞')window.__TW_NEWS_REFRESH__?.();
+    else if(name.startsWith('美股 '))window.__TW_US_REFRESH__?.(name.slice(3));
     else if(name==='配股配息')window.__TW_DIVIDEND_REFRESH__?.();
     if('serviceWorker'in navigator)navigator.serviceWorker.getRegistration().then(r=>r?.update()).catch(()=>{});
   }catch{}finally{recovering=false}
@@ -50,14 +49,11 @@ async function refreshNews(){
   const code=String(active),name=typeof stockName==='function'?stockName(code,typeof rowForCode==='function'?rowForCode(code):{}):code;
   const box=document.getElementById('news'),state=document.getElementById('newsState');
   if(!box||!state)return;
-  newsBusy=true;const previous=box.innerHTML,oldStatus=state.textContent;
+  newsBusy=true;const previous=box.innerHTML;
   try{
     await news(code,name);
     if(String(active)!==code)return;
-    const changed=box.innerHTML!==previous;
-    lastNewsKey=code;lastNewsMarkup=box.innerHTML;
-    window.__TW_UPDATE_HEALTH__?.('新聞',true);
-    if(!changed&&box.innerHTML!==previous)box.innerHTML=previous;
+    window.__TW_UPDATE_HEALTH__?.('新聞',box.querySelector('.event')!==null);
   }catch{
     if(String(active)===code){box.innerHTML=previous;state.textContent='更新失敗｜保留最後已取得新聞';}
     window.__TW_UPDATE_HEALTH__?.('新聞',false);

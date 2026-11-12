@@ -1,4 +1,4 @@
-const CACHE='tw-ai-monitor-v096-fxsix1';
+const CACHE='tw-ai-monitor-v096-breadth9';
 const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./dividend-enhance.js','./extras-v090.js','./live-v091.js','./foreign-live-test.js','./foreign-flow-card.js'];
 
 self.addEventListener('install',e=>e.waitUntil(

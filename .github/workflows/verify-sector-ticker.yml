@@ -1,0 +1,59 @@
+name: Verify sector ticker in published browser
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-sector-ticker.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright-core@latest
+      - name: Validate real data and sector marquee on desktop and phone
+        run: |
+          cat > sector-browser-qa.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          import assert from 'node:assert/strict';
+          const executablePath=process.env.CHROME || '/usr/bin/google-chrome';
+          const browser=await chromium.launch({executablePath,headless:true,args:['--no-sandbox']});
+          try{
+            for(const width of [390,1280]){
+              const page=await browser.newPage({viewport:{width,height:850},timezoneId:'Asia/Taipei',locale:'zh-TW'});
+              await page.goto('https://under855.github.io/twstock-ai-monitor/?sectorQA='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+              await page.waitForFunction(()=>document.querySelectorAll('#taiexSectorTrack .taiexSectorItem').length>=18,{timeout:20000});
+              const result=await page.evaluate(()=>{
+                const elements=[...document.querySelectorAll('#taiexSectorTrack .taiexSectorGroup:first-child .taiexSectorItem')];
+                const track=document.getElementById('taiexSectorTrack');
+                return {sectorDate:document.getElementById('taiexSectorDate')?.textContent,
+                  names:elements.map(el=>el.textContent.trim()),
+                  classes:elements.map(el=>el.querySelector('strong')?.className),
+                  totalItems:document.querySelectorAll('#taiexSectorTrack .taiexSectorItem').length,
+                  animation:getComputedStyle(track).animationName,
+                  percent:document.getElementById('taiexPercent')?.textContent,
+                  turnover:document.getElementById('taiexTurnover')?.textContent,
+                  index:document.getElementById('taiex')?.textContent};
+              });
+              console.log('SECTOR_BROWSER',width,JSON.stringify(result));
+              assert.match(result.sectorDate,/2026\/11\/12/);
+              assert.equal(result.names.length,9);
+              assert.equal(result.totalItems,18);
+              assert.ok(result.names.some(x=>x.includes('半導體 -2.66%')));
+              assert.ok(result.names.some(x=>x.includes('食品 +1.00%')));
+              assert.ok(result.classes.includes('up')&&result.classes.includes('down'));
+              assert.equal(result.animation,'taiexSectorSlide');
+              assert.ok(!result.names.some(x=>x.includes('NaN')));
+              await page.close();
+            }
+          } finally{await browser.close()}
+          JS
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node sector-browser-qa.mjs

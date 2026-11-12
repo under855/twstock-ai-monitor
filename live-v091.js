@@ -1,8 +1,8 @@
 (() => {
   'use strict';
-  const VERSION='0.9.7.1';
+  const VERSION='0.9.7.3';
   const INTERVAL=4000; // Checking more frequently than the upstream feed increases throttling, not accuracy.
-  const BACKUP_INTERVAL=60000;
+  const BACKUP_INTERVAL=4000;
   const MAX_POINTS=600;
   const QKEY='tw_live091_quotes_';
   const SKEY='tw_live091_series_';
@@ -73,7 +73,7 @@
   // Do not depend on one public CORS gateway. Requests are sequential and the outer poll is single-flight.
   let proxyPreferred=0,misFailureCount=0,nextMisAttemptAt=0;
   async function fetchMis(codes){
-    const now=Date.now();if(now<nextMisAttemptAt)throw Error('MIS retry backoff');
+    const now=Date.now();// Next 4-second cycle retries; no long backoff after a source failure.
     const u=`https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=${encodeURIComponent(channelList(codes).join('|'))}&json=1&delay=0&_=${now}`;
     const endpoints=[`https://proxy.cors.dev/${u}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`];
     let last=null;
@@ -94,13 +94,13 @@
           }
           if(!usable.length)throw Error('MIS only returned a stale index');
         }
-        proxyPreferred=index;misFailureCount=0;nextMisAttemptAt=0;lastMisReceivedAt=Date.now();lastError='';return usable;
+        proxyPreferred=index;misFailureCount=0;nextMisAttemptAt=0;lastMisReceivedAt=Date.now();lastError='';window.__TW_UPDATE_HEALTH__?.('台股行情',true);return usable;
       }catch(e){last=e}
     }
     misFailureCount++;
-    nextMisAttemptAt=Date.now()+Math.min(60000,7000*Math.pow(2,Math.min(misFailureCount-1,4)));
+    nextMisAttemptAt=0;
     lastError=String(last?.message||last||'來源無法存取');
-    throw last||Error('MIS unavailable');
+    window.__TW_UPDATE_HEALTH__?.('台股行情',false);throw last||Error('MIS unavailable');
   }
 
   function isoCompact(v){return String(v||'').replaceAll('-','').replaceAll('/','');}
@@ -344,11 +344,11 @@
     if(backupBusy||(!force&&Date.now()-lastBackupAt<BACKUP_INTERVAL))return false;
     if(marketOpen())return false; // Never promote a post-close snapshot to intraday.
     backupBusy=true;lastBackupAt=Date.now();
-    try{const codes=requestedCodes(),{map,idx}=parseBackup(await fetchBackup(),codes);let accepted=0;if(acceptIndex(idx))accepted++;for(const q of map.values())if(acceptQuote(q))accepted++;if(accepted){lastSuccessAt=Date.now();saveToday();paintAll();}return accepted>0}catch{return false}finally{backupBusy=false}
+    try{const codes=requestedCodes(),{map,idx}=parseBackup(await fetchBackup(),codes);let accepted=0;if(acceptIndex(idx))accepted++;for(const q of map.values())if(acceptQuote(q))accepted++;if(accepted){lastSuccessAt=Date.now();saveToday();paintAll();}window.__TW_UPDATE_HEALTH__?.('盤後行情',true);return accepted>0}catch{window.__TW_UPDATE_HEALTH__?.('盤後行情',false);return false}finally{backupBusy=false}
   }
   async function poll(force=false){
     if((!marketOpen()&&!force)||busy||document.visibilityState==='hidden')return;
-    if(Date.now()<nextMisAttemptAt){paintAll();return;}
+    // Every 4 seconds attempt when the preceding request has settled.
     busy=true;cycle++;lastPollAt=Date.now();
     try{
       const codes=requestedCodes(),{map,idx}=parse(await fetchMis(codes));let accepted=0;if(acceptIndex(idx))accepted++;for(const q of map.values()){if(acceptQuote(q))accepted++}if(accepted)lastSuccessAt=Date.now();saveToday();paintAll();

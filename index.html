@@ -283,8 +283,10 @@ function updateWatchBreadth(liveQuotes=null,liveStatus=null){
          &&price!=null&&price>0&&change!=null&&!q?.officialClose;
      }).map(({code,q})=>({code,change:N(q.change)}));
    }
-   label='盤中 '+taipeiDate.replaceAll('-','/')+'｜即時來源已確認 '+valid.length+'/'+codes.length+' 檔'
-     +(connected?'（未取得的股票不計入）':'｜行情連線未確認，暫不統計');
+   const aging=connected&&liveQuotes instanceof Map
+     ?valid.filter(({code})=>{const t=Number(liveQuotes.get(code)?.stamp);return !Number.isFinite(t)||Date.now()-t>90000}).length:0;
+   label='盤中 '+taipeiDate.replaceAll('-','/')+'｜當日成交價 '+valid.length+'/'+codes.length+' 檔'
+     +(connected?(aging?'｜其中 '+aging+' 檔成交時間超過90秒':'')+'（未取得者不計）':'｜行情連線未確認，暫不統計');
  }else{
    // After-hours statistics use one identical official trading date, never mixed-date rows.
    const candidates=codes.map(code=>({code,q:universeMap.get(code)})).filter(({q})=>{

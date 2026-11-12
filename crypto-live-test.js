@@ -30,7 +30,6 @@
     if(metrics.textContent!==label)metrics.textContent=label;
   }
   function report(ok){
-    if(lastReported===ok)return;
     lastReported=ok;
     window.__TW_UPDATE_HEALTH__?.('即時驗證 BTC/USDT',ok);
   }

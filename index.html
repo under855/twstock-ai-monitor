@@ -51,7 +51,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
 <body>
 <div class="app">
   <header class="top">
-    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.6.8｜台股每 4 秒檢查・外資盤後統計・外匯</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
+    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.6.9｜台股每 4 秒檢查・外資盤後統計・外匯</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
     <div class="search"><input id="code" inputmode="text" autocomplete="off" placeholder="搜尋代號或名稱，例如 2610、華航"><button id="searchBtn" class="primary">搜尋</button></div>
     <div id="searchResults" class="searchResults"></div>
     <div class="toolbar"><span class="pill" id="clock">—</span><span class="pill">評分 100 分制</span><span class="pill" id="universePill">台股名冊：載入中…</span><span class="pill">行情：TWSE／TPEx</span><span class="pill" id="refreshPill">台股查詢：2 秒</span></div>
@@ -104,7 +104,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
   </section>
 </div>
 <script>
-const APP_VERSION='0.9.6.8';
+const APP_VERSION='0.9.6.9';
 const IS_WEB = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 window.addEventListener('DOMContentLoaded',()=>{
   if(!IS_WEB){
@@ -258,27 +258,50 @@ function buildAnalysis(code,row,val,h,q,s){
  return `<b class="${scoreCls(s.total)}">${tone}，目前 ${s.total}/100。</b><br>資料覆蓋率 ${s.coverage}%｜可信度 ${s.confidence}。<ul style="margin:8px 0 8px 18px;padding:0">${items}</ul><span class="muted">權重：趨勢 36%、短期動能 34%、估值 18%、殖利率 12%；缺少的項目不會用 50 分補值。分數代表目前資料下的相對強弱，不代表明日上漲機率。</span>`
 }
 async function news(code,name){const box=$('news'),state=$('newsState');box.innerHTML='';state.textContent='載入近期新聞…';const query=encodeURIComponent(`${name||code} ${code} 股票`);const rss=`https://news.google.com/rss/search?q=${query}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant`;const proxy=`https://api.allorigins.win/raw?url=${encodeURIComponent(rss)}`;try{const r=await fetch(proxy,{cache:'no-store'});if(!r.ok)throw Error('news');const text=await r.text(),xml=new DOMParser().parseFromString(text,'text/xml'),items=[...xml.querySelectorAll('item')].slice(0,6);if(!items.length)throw Error('empty');state.textContent='';items.forEach(it=>{const title=it.querySelector('title')?.textContent||'新聞',link=it.querySelector('link')?.textContent||'#',date=it.querySelector('pubDate')?.textContent,d=document.createElement('div');d.className='event';d.innerHTML=`<div class="tag">新聞</div><a target="_blank" rel="noopener" href="${link.replaceAll('"','&quot;')}">${title.replaceAll('<','&lt;')}</a>${date?`<div class="date">${new Date(date).toLocaleString('zh-TW')}</div>`:''}`;box.appendChild(d)})}catch{state.innerHTML=`新聞來源暫時無法直接讀取。<br><a style="color:#a9cbff" target="_blank" rel="noopener" href="https://news.google.com/search?q=${query}&hl=zh-TW&gl=TW&ceid=TW%3Azh-Hant">開啟 ${name||code} 的近期新聞搜尋</a>`}}
-function updateWatchBreadth(){
+function updateWatchBreadth(liveQuotes=null,liveStatus=null){
  const up=$('breadthUp'),down=$('breadthDown'),flat=$('breadthFlat'),meta=$('breadthMeta');
  if(!up||!down||!flat||!meta)return;
- const codes=[...new Set(watchlist().map(String))];
- const valid=codes.map(code=>universeMap.get(code)).filter(x=>{
-   const change=N(x?.change),price=N(x?.close),date=String(x?.tradeDate||'').replaceAll('-','/');
-   return change!=null&&price!=null&&price>0&&/^\d{4}\/\d{2}\/\d{2}$/.test(date);
- });
- const latest=valid.reduce((d,x)=>String(x.tradeDate).replaceAll('-','/')>d?String(x.tradeDate).replaceAll('-','/'):d,'');
- const sameDate=valid.filter(x=>String(x.tradeDate).replaceAll('-','/')===latest);
- if(!latest||!sameDate.length){
-   up.textContent=down.textContent=flat.textContent='—';
-   meta.textContent=codes.length?'官方交易日資料尚未載入｜暫不統計':'尚無監控股票';
-   return;
- }
- const gains=sameDate.filter(x=>N(x.change)>0).length;
- const losses=sameDate.filter(x=>N(x.change)<0).length;
- const even=sameDate.length-gains-losses;
  const set=(el,value)=>{const v=String(value);if(el.textContent!==v)el.textContent=v};
- set(up,gains);set(down,losses);set(flat,even);
- set(meta,'最近官方交易日 '+latest+'｜已核對 '+sameDate.length+'/'+codes.length+' 檔'+(sameDate.length<codes.length?'（其餘未納入）':''));
+ const codes=[...new Set(watchlist().map(String))];
+ if(!codes.length){
+   for(const el of [up,down,flat])set(el,'—');
+   set(meta,'尚無監控股票');return;
+ }
+ const taipeiDate=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ const currentSession=marketWindowTaipeiNow();
+ let valid=[],label='';
+ if(currentSession){
+   // Do not mix yesterday's static close with today's live ticks.
+   // An upstream HTTP response is different from an exchange trade timestamp.
+   const connected=!!liveStatus&&Number.isFinite(liveStatus.receivedAt)&&Date.now()-liveStatus.receivedAt<=90000;
+   if(connected&&liveQuotes instanceof Map){
+     valid=codes.map(code=>({code,q:liveQuotes.get(code)})).filter(({q})=>{
+       const price=N(q?.price),change=N(q?.change),date=String(q?.date||'');
+       return q?.live===true&&date===taipeiDate.replaceAll('-','')
+         &&price!=null&&price>0&&change!=null&&!q?.officialClose;
+     }).map(({code,q})=>({code,change:N(q.change)}));
+   }
+   label='盤中 '+taipeiDate.replaceAll('-','/')+'｜即時來源已確認 '+valid.length+'/'+codes.length+' 檔'
+     +(connected?'（未取得的股票不計入）':'｜行情連線未確認，暫不統計');
+ }else{
+   // After-hours statistics use one identical official trading date, never mixed-date rows.
+   const candidates=codes.map(code=>({code,q:universeMap.get(code)})).filter(({q})=>{
+     const date=String(q?.tradeDate||'').replaceAll('/','-');
+     return /^\d{4}-\d{2}-\d{2}$/.test(date)&&N(q?.close)!=null&&N(q.close)>0&&N(q?.change)!=null
+       &&date<=taipeiDate&&!/歷史備援快照/.test(String(q?.source||''));
+   });
+   const date=candidates.reduce((v,{q})=>String(q.tradeDate).replaceAll('/','-')>v?String(q.tradeDate).replaceAll('/','-'):v,'');
+   valid=candidates.filter(({q})=>String(q.tradeDate).replaceAll('/','-')===date).map(({code,q})=>({code,change:N(q.change)}));
+   label=date?'盤後 '+date.replaceAll('-','/')+'｜同日資料 '+valid.length+'/'+codes.length+' 檔（未同日者不計入）':'官方交易日資料尚未載入';
+ }
+ if(!valid.length){
+   for(const el of [up,down,flat])set(el,'—');
+   set(meta,label);return;
+ }
+ set(up,valid.filter(q=>q.change>0).length);
+ set(down,valid.filter(q=>q.change<0).length);
+ set(flat,valid.filter(q=>q.change===0).length);
+ set(meta,label);
 }
 async function render(allowNetwork=false){const list=watchlist();const wc=$('watchCount');if(wc)wc.textContent=list.length;$('watch').innerHTML=list.length?'':'<div class="empty">尚未加入監控標的</div>';for(const code of list){const row=rowForCode(code),val=allVals.find(x=>String(x.Code).trim()===code)||{},h=allowNetwork?await history(code):(historyCache[code]||[]),q=await quote(code,allowNetwork),s=scoreStock(row,val,h,q),ch=q.change,name=stockName(code,row);const div=document.createElement('article');div.className='row';div.innerHTML=`<div class="n"><div class="name">${name}</div><div class="sym">${code}</div></div><div class="p"><div class="price">${F(q.price)}</div><div class="chg ${cls(ch)}">${ch>0?'+':''}${F(ch)}</div></div>${h.length?'<canvas class="spark" width="420" height="50"></canvas>':`<div class="sparkFallback">歷史線圖<br>未取得</div>`}<div class="score"><div class="scoreNum ${scoreCls(s.total)}">${scoreValue(s.total)}</div><div class="scoreLabel">${s.total==null?'資料不足':s.mode}</div></div><div class="open">›</div><div class="dayline">${q.time?.toLocaleDateString('zh-TW')||'日期未確認'}　開 ${F(q.open??row.OpeningPrice)}　高 ${F(q.high??row.HighestPrice)}　低 ${F(q.low??row.LowestPrice)}　收 ${F(q.price??row.ClosingPrice)}　量 ${F(q.volume??row.TradeVolume,0)}</div><div class="meta"><span>${q.source}</span><span>漲跌 ${ch>0?'+':''}${F(ch)}</span></div>`;div.onclick=()=>show(code);$('watch').appendChild(div);if(h.length)draw(div.querySelector('canvas'),h,true,q.price)}updateWatchBreadth()}
 

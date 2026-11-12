@@ -53,11 +53,13 @@
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function safeUrl(u){try{const x=new URL(String(u||''));return /^https?:$/.test(x.protocol)?x.href:'#';}catch{return '#';}}
   function renderNewsItems(items,state,box){
-    box.innerHTML='';if(!items.length){state.textContent='最近一個月暫無可讀取新聞。';return false;}state.textContent='';
+    if(!items.length){if(!box.children.length)state.textContent='最近一個月暫無可讀取新聞。';return false;}
+    const next=document.createElement('div');state.textContent='';
     for(const it of items.slice(0,4)){
       const d=document.createElement('div');d.className='event';const publisher=it.publisher?`｜${esc(it.publisher)}`:'',date=it.time?new Date(it.time).toLocaleString('zh-TW'):'';
-      d.innerHTML=`<div class="tag">新聞${publisher}</div><a target="_blank" rel="noopener" href="${esc(safeUrl(it.link))}">${esc(it.title||'新聞')}</a>${date?`<div class="date">${esc(date)}</div>`:''}`;box.appendChild(d);
+      d.innerHTML=`<div class="tag">新聞${publisher}</div><a target="_blank" rel="noopener" href="${esc(safeUrl(it.link))}">${esc(it.title||'新聞')}</a>${date?`<div class="date">${esc(date)}</div>`:''}`;next.appendChild(d);
     }
+    if(box.innerHTML!==next.innerHTML)box.replaceChildren(...next.childNodes);
     return true;
   }
   async function fetchJson(url,timeout=8000){
@@ -122,7 +124,7 @@
     if(typeof news!=='function')return false;
     news=async function(code,name){
       const box=document.getElementById('news'),state=document.getElementById('newsState');if(!box||!state)return;
-      box.innerHTML='';state.textContent='載入可信來源近期新聞…';
+      if(!box.children.length)state.textContent='載入可信來源近期新聞…';
       const cached=await cachedSiteNews(code);
       if(cached.length){cached.sort((a,b)=>(b.time||0)-(a.time||0));renderNewsItems(cached,state,box);return}
       const settled=await Promise.allSettled(NEWS_FEEDS.map(fetchPublisherFeed)),seen=new Set(),items=[];
@@ -131,6 +133,7 @@
       if(items.length<4){for(const it of await trustedGoogleFallback(code,name)){const k=normNews(it.title);if(!k||seen.has(k))continue;seen.add(k);items.push(it)}}
       items.sort((a,b)=>(b.time||0)-(a.time||0));
       if(renderNewsItems(items,state,box))return;
+      if(box.children.length){state.textContent='更新失敗｜保留已取得的新聞';return;}
       const q=encodeURIComponent(`${name||code} ${code} 股票`);state.innerHTML=`鉅亨網、MoneyDJ、中央社目前沒有讀到近一個月直接相關標題。<br><a style="color:#a9cbff" target="_blank" rel="noopener" href="https://news.google.com/search?q=${q}&hl=zh-TW&gl=TW&ceid=TW%3Azh-Hant">開啟可信來源新聞搜尋</a>`;
     };
     return true;

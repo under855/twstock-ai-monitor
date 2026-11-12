@@ -61,7 +61,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
     return {
       index:text('taiex'),indexLabel:text('taiexChg'),
       foreignFlow:{net:text('foreignNet'),buy:text('foreignBuy'),sell:text('foreignSell'),date:text('foreignFlowDate')},
-      layout:{breadthGone:!document.getElementById('breadthUp')&&!document.querySelector('.watchBreadthCard'),indexFontPx:parseFloat(getComputedStyle(document.getElementById('taiex')).fontSize),indexCardWidth:document.querySelector('.taiexCard')?.getBoundingClientRect().width||0,foreignWidth:document.querySelector('.foreignFlowCard')?.getBoundingClientRect().width||0},
+      layout:{breadthGone:!document.getElementById('breadthUp')&&!document.querySelector('.watchBreadthCard'),indexFontPx:parseFloat(getComputedStyle(document.getElementById('taiex')).fontSize),indexCardWidth:document.querySelector('.taiexCard')?.getBoundingClientRect().width||0,foreignWidth:document.querySelector('.foreignFlowCard')?.getBoundingClientRect().width||0,visibleCards:[...document.querySelectorAll('.market>.marketCard')].filter(x=>getComputedStyle(x).display!=='none').length},
       live:window.__TW_LIVE_V091__?{version:window.__TW_LIVE_V091__.version,intervalMs:window.__TW_LIVE_V091__.intervalMs,marketWindow:window.__TW_LIVE_V091__.marketWindow,receivedAt:window.__TW_LIVE_V091__.lastMisReceivedAt,stocks:window.__TW_LIVE_V091__.stocks,indexFreshness:window.__TW_LIVE_V091__.indexFreshness,indexAgeSeconds:window.__TW_LIVE_V091__.indexAgeSeconds,indexPrice:window.__TW_LIVE_V091__.taiex?.price||null,errors:window.__TW_LIVE_V091__.lastError||''}:null,
       rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent?.trim(),price:r.querySelector('.price')?.textContent?.trim(),meta:r.querySelector('.meta')?.textContent?.trim()})),
       fx:window.__TW_BANK_FX_STATUS__?.(),fxRows:document.querySelectorAll('#botCashFxV096 .botCashFxCode').length,fxCodes:[...document.querySelectorAll('#botCashFxV096 .botCashFxCode')].map(x=>x.textContent.trim()),
@@ -81,6 +81,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   assert(d.layout.breadthGone,'BREADTH_PANEL_STILL_VISIBLE '+opt.name);
   assert(d.layout.indexFontPx>=38,'TAIEX_FONT_TOO_SMALL '+opt.name);
   assert(d.layout.indexCardWidth>0&&d.layout.foreignWidth>0,'MARKET_CARD_MISSING '+opt.name);
+  assert.equal(d.layout.visibleCards,2,'UNUSED_TOP_MARKET_SLOT '+opt.name);
   console.log('TOP_MARKET_LAYOUT_'+opt.name.toUpperCase(),JSON.stringify(d.layout));
   assert(d.live?.version==='0.9.7.0'&&d.live?.intervalMs===4000,'OUTDATED_QUOTE_ENGINE '+opt.name);
   // The rendered stock prices and closing index must match the versioned exchange data file.

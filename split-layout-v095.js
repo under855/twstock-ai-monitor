@@ -176,6 +176,7 @@
       return false;
     }catch(error){showUnverified('連線失敗或資料格式無法解析');window.__TW_UPDATE_HEALTH__?.('臺銀匯率',false);return false;}finally{cashBusy=false}
   }
+  window.__TW_FX_REFRESH__=()=>{if(document.visibilityState!=='hidden')loadBotCash().catch(()=>{})};
   window.__TW_BANK_FX_STATUS__=()=>({state:bankFxState,quoteTime:lastBot?.time||null,receivedAt:lastFetchTime||null,bankWindow:bankBusinessWindow()});
 
   function buildSplit(){

@@ -62,7 +62,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
       index:text('taiex'),indexLabel:text('taiexChg'),
       foreignFlow:{net:text('foreignNet'),buy:text('foreignBuy'),sell:text('foreignSell'),date:text('foreignFlowDate')},
       breadth:{up:text('breadthUp'),down:text('breadthDown'),flat:text('breadthFlat'),meta:text('breadthMeta'),legacy:!!document.getElementById('marketStatus')},
-      live:window.__TW_LIVE_V091__?{version:window.__TW_LIVE_V091__.version,intervalMs:window.__TW_LIVE_V091__.intervalMs,marketWindow:window.__TW_LIVE_V091__.marketWindow,indexFreshness:window.__TW_LIVE_V091__.indexFreshness,indexAgeSeconds:window.__TW_LIVE_V091__.indexAgeSeconds,indexPrice:window.__TW_LIVE_V091__.taiex?.price||null,errors:window.__TW_LIVE_V091__.lastError||''}:null,
+      live:window.__TW_LIVE_V091__?{version:window.__TW_LIVE_V091__.version,intervalMs:window.__TW_LIVE_V091__.intervalMs,marketWindow:window.__TW_LIVE_V091__.marketWindow,receivedAt:window.__TW_LIVE_V091__.lastMisReceivedAt,stocks:window.__TW_LIVE_V091__.stocks,indexFreshness:window.__TW_LIVE_V091__.indexFreshness,indexAgeSeconds:window.__TW_LIVE_V091__.indexAgeSeconds,indexPrice:window.__TW_LIVE_V091__.taiex?.price||null,errors:window.__TW_LIVE_V091__.lastError||''}:null,
       rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent?.trim(),price:r.querySelector('.price')?.textContent?.trim(),meta:r.querySelector('.meta')?.textContent?.trim()})),
       fx:window.__TW_BANK_FX_STATUS__?.(),fxRows:document.querySelectorAll('#botCashFxV096 .botCashFxCode').length,fxCodes:[...document.querySelectorAll('#botCashFxV096 .botCashFxCode')].map(x=>x.textContent.trim()),
       oldFX:[...document.scripts].some(s=>s.textContent?.includes('open.er-api.com')),
@@ -80,18 +80,32 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   console.log('FOREIGN_FLOW_'+opt.name.toUpperCase(),JSON.stringify(d.foreignFlow));
   assert(!d.breadth.legacy,'REDUNDANT_STATUS_CARD_PRESENT '+opt.name);
   const breadthCodes=d.rows.map(x=>x.code);
-  const breadthData=breadthCodes.map(code=>latest.symbols[code]).filter(x=>x&&Number.isFinite(x.change)&&Number.isFinite(x.close)&&x.close>0);
-  const breadthLatest=breadthData.reduce((acc,x)=>x.tradeDate>acc?x.tradeDate:acc,'');
-  const eligible=breadthData.filter(x=>x.tradeDate===breadthLatest);
-  const expectedUp=eligible.filter(x=>x.change>0).length;
-  const expectedDown=eligible.filter(x=>x.change<0).length;
-  const expectedFlat=eligible.length-expectedUp-expectedDown;
-  assert.equal(Number(d.breadth.up),expectedUp,'WATCH_BREADTH_UP_MISMATCH '+opt.name);
-  assert.equal(Number(d.breadth.down),expectedDown,'WATCH_BREADTH_DOWN_MISMATCH '+opt.name);
-  assert.equal(Number(d.breadth.flat),expectedFlat,'WATCH_BREADTH_FLAT_MISMATCH '+opt.name);
-  assert(d.breadth.meta.includes(breadthLatest.replaceAll('-','/')),'WATCH_BREADTH_DATE_MISSING '+opt.name);
-  console.log('WATCH_BREADTH_'+opt.name.toUpperCase(),JSON.stringify({expectedUp,expectedDown,expectedFlat,date:breadthLatest,ui:d.breadth}));
-  assert(d.live?.version==='0.9.6.4'&&d.live?.intervalMs===4000,'OUTDATED_QUOTE_ENGINE '+opt.name);
+  if(d.live?.marketWindow){
+    assert(d.breadth.meta.includes('盤中'),'BREADTH_SHOULD_USE_INTRADAY '+opt.name);
+    const sessionDay=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'})
+      .formatToParts(new Date()).filter(x=>['year','month','day'].includes(x.type));
+    const get=k=>sessionDay.find(x=>x.type===k)?.value||'';
+    const dd=get('year')+get('month')+get('day');
+    const connected=Number.isFinite(d.live.receivedAt)&&Date.now()-d.live.receivedAt<=90000;
+    const live=connected?breadthCodes.map(code=>d.live.stocks?.[code]).filter(x=>x?.date===dd
+      &&Number.isFinite(x?.price)&&x.price>0&&Number.isFinite(x?.change)):[];
+    const actual=[d.breadth.up,d.breadth.down,d.breadth.flat];
+    if(live.length){
+      assert.deepEqual(actual.map(Number),[
+        live.filter(x=>x.change>0).length,live.filter(x=>x.change<0).length,live.filter(x=>x.change===0).length
+      ],'BREADTH_INTRADAY_COUNT_MISMATCH '+opt.name);
+    }else assert(actual.every(x=>x==='—'),'BREADTH_MUST_NOT_USE_YESTERDAY '+opt.name);
+  }else{
+    const breadthData=breadthCodes.map(code=>latest.symbols[code]).filter(x=>x&&Number.isFinite(x.change)&&Number.isFinite(x.close)&&x.close>0);
+    const breadthLatest=breadthData.reduce((acc,x)=>x.tradeDate>acc?x.tradeDate:acc,'');
+    const eligible=breadthData.filter(x=>x.tradeDate===breadthLatest);
+    assert.equal(Number(d.breadth.up),eligible.filter(x=>x.change>0).length,'WATCH_BREADTH_UP_MISMATCH '+opt.name);
+    assert.equal(Number(d.breadth.down),eligible.filter(x=>x.change<0).length,'WATCH_BREADTH_DOWN_MISMATCH '+opt.name);
+    assert.equal(Number(d.breadth.flat),eligible.filter(x=>x.change===0).length,'WATCH_BREADTH_FLAT_MISMATCH '+opt.name);
+    assert(d.breadth.meta.includes(breadthLatest.replaceAll('-','/')),'WATCH_BREADTH_DATE_MISSING '+opt.name);
+  }
+  console.log('WATCH_BREADTH_'+opt.name.toUpperCase(),JSON.stringify(d.breadth));
+  assert(d.live?.version==='0.9.6.9'&&d.live?.intervalMs===4000,'OUTDATED_QUOTE_ENGINE '+opt.name);
   // The rendered stock prices and closing index must match the versioned exchange data file.
   for(const row of d.rows){
     const expected=latest.symbols[row.code];

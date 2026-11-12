@@ -251,6 +251,7 @@
 
   let dividendRefreshBusy=false;
   window.__TW_DIVIDEND_REFRESH__=async()=>{
+    etfCache.loaded=false;eventCache.loaded=false;
     if(dividendRefreshBusy||!active||document.visibilityState==='hidden'||!document.getElementById('sheet')?.classList.contains('show'))return;
     dividendRefreshBusy=true;
     try{await renderDividendDetail(String(active));window.__TW_UPDATE_HEALTH__?.('配股配息',true)}

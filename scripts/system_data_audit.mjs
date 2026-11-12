@@ -61,7 +61,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
     return {
       index:text('taiex'),indexLabel:text('taiexChg'),
       foreignFlow:{net:text('foreignNet'),buy:text('foreignBuy'),sell:text('foreignSell'),date:text('foreignFlowDate')},
-      breadth:{up:text('breadthUp'),down:text('breadthDown'),flat:text('breadthFlat'),meta:text('breadthMeta'),legacy:!!document.getElementById('marketStatus')},
+      layout:{breadthGone:!document.getElementById('breadthUp')&&!document.querySelector('.watchBreadthCard'),indexFontPx:parseFloat(getComputedStyle(document.getElementById('taiex')).fontSize),indexCardWidth:document.querySelector('.taiexCard')?.getBoundingClientRect().width||0,foreignWidth:document.querySelector('.foreignFlowCard')?.getBoundingClientRect().width||0},
       live:window.__TW_LIVE_V091__?{version:window.__TW_LIVE_V091__.version,intervalMs:window.__TW_LIVE_V091__.intervalMs,marketWindow:window.__TW_LIVE_V091__.marketWindow,receivedAt:window.__TW_LIVE_V091__.lastMisReceivedAt,stocks:window.__TW_LIVE_V091__.stocks,indexFreshness:window.__TW_LIVE_V091__.indexFreshness,indexAgeSeconds:window.__TW_LIVE_V091__.indexAgeSeconds,indexPrice:window.__TW_LIVE_V091__.taiex?.price||null,errors:window.__TW_LIVE_V091__.lastError||''}:null,
       rows:[...document.querySelectorAll('#watch article.row')].map(r=>({code:r.querySelector('.sym')?.textContent?.trim(),price:r.querySelector('.price')?.textContent?.trim(),meta:r.querySelector('.meta')?.textContent?.trim()})),
       fx:window.__TW_BANK_FX_STATUS__?.(),fxRows:document.querySelectorAll('#botCashFxV096 .botCashFxCode').length,fxCodes:[...document.querySelectorAll('#botCashFxV096 .botCashFxCode')].map(x=>x.textContent.trim()),
@@ -78,34 +78,11 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   assert(d.foreignFlow.date.includes(flow.date.replaceAll('-','/')),'FOREIGN_FLOW_SOURCE_DATE_MISSING '+opt.name);
   assert(d.foreignFlow.date.includes('非即時'),'FOREIGN_FLOW_NOT_LABELED_AS_POST_CLOSE '+opt.name);
   console.log('FOREIGN_FLOW_'+opt.name.toUpperCase(),JSON.stringify(d.foreignFlow));
-  assert(!d.breadth.legacy,'REDUNDANT_STATUS_CARD_PRESENT '+opt.name);
-  const breadthCodes=d.rows.map(x=>x.code);
-  if(d.live?.marketWindow){
-    assert(d.breadth.meta.includes('盤中'),'BREADTH_SHOULD_USE_INTRADAY '+opt.name);
-    const sessionDay=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'})
-      .formatToParts(new Date()).filter(x=>['year','month','day'].includes(x.type));
-    const get=k=>sessionDay.find(x=>x.type===k)?.value||'';
-    const dd=get('year')+get('month')+get('day');
-    const connected=Number.isFinite(d.live.receivedAt)&&Date.now()-d.live.receivedAt<=90000;
-    const live=connected?breadthCodes.map(code=>d.live.stocks?.[code]).filter(x=>x?.date===dd
-      &&Number.isFinite(x?.price)&&x.price>0&&Number.isFinite(x?.change)):[];
-    const actual=[d.breadth.up,d.breadth.down,d.breadth.flat];
-    if(live.length){
-      assert.deepEqual(actual.map(Number),[
-        live.filter(x=>x.change>0).length,live.filter(x=>x.change<0).length,live.filter(x=>x.change===0).length
-      ],'BREADTH_INTRADAY_COUNT_MISMATCH '+opt.name);
-    }else assert(actual.every(x=>x==='—'),'BREADTH_MUST_NOT_USE_YESTERDAY '+opt.name);
-  }else{
-    const breadthData=breadthCodes.map(code=>latest.symbols[code]).filter(x=>x&&Number.isFinite(x.change)&&Number.isFinite(x.close)&&x.close>0);
-    const breadthLatest=breadthData.reduce((acc,x)=>x.tradeDate>acc?x.tradeDate:acc,'');
-    const eligible=breadthData.filter(x=>x.tradeDate===breadthLatest);
-    assert.equal(Number(d.breadth.up),eligible.filter(x=>x.change>0).length,'WATCH_BREADTH_UP_MISMATCH '+opt.name);
-    assert.equal(Number(d.breadth.down),eligible.filter(x=>x.change<0).length,'WATCH_BREADTH_DOWN_MISMATCH '+opt.name);
-    assert.equal(Number(d.breadth.flat),eligible.filter(x=>x.change===0).length,'WATCH_BREADTH_FLAT_MISMATCH '+opt.name);
-    assert(d.breadth.meta.includes(breadthLatest.replaceAll('-','/')),'WATCH_BREADTH_DATE_MISSING '+opt.name);
-  }
-  console.log('WATCH_BREADTH_'+opt.name.toUpperCase(),JSON.stringify(d.breadth));
-  assert(d.live?.version==='0.9.6.9'&&d.live?.intervalMs===4000,'OUTDATED_QUOTE_ENGINE '+opt.name);
+  assert(d.layout.breadthGone,'BREADTH_PANEL_STILL_VISIBLE '+opt.name);
+  assert(d.layout.indexFontPx>=38,'TAIEX_FONT_TOO_SMALL '+opt.name);
+  assert(d.layout.indexCardWidth>0&&d.layout.foreignWidth>0,'MARKET_CARD_MISSING '+opt.name);
+  console.log('TOP_MARKET_LAYOUT_'+opt.name.toUpperCase(),JSON.stringify(d.layout));
+  assert(d.live?.version==='0.9.7.0'&&d.live?.intervalMs===4000,'OUTDATED_QUOTE_ENGINE '+opt.name);
   // The rendered stock prices and closing index must match the versioned exchange data file.
   for(const row of d.rows){
     const expected=latest.symbols[row.code];
@@ -138,41 +115,6 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   if(d.fx.state==='unverified')assert(d.fxRows===0,'STALE_BANK_RATES_VISIBLE '+opt.name);
   if(d.fx.state==='unverified')assert.equal(d.fxCodes.length,0,'BANK_FX_UNVERIFIED_CODES_VISIBLE '+opt.name);
   if(d.fx.state==='verified'){assert.equal(d.fxRows,6,'BANK_RATES_NOT_SIX '+opt.name);assert.deepEqual(d.fxCodes,['USD','JPY','EUR','GBP','SGD','CNY'],'BANK_FX_CURRENCIES_MISMATCH '+opt.name);}
-  // Regression: force a synthetic current-session snapshot to prove that yesterday
-  // cannot be counted, a flat stock is counted, and disconnected sources produce no false totals.
-  const breadthRegression=await page.evaluate(()=>{
-    const previous=window.marketWindowTaipeiNow;
-    const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
-    const get=k=>parts.find(x=>x.type===k)?.value||'';
-    const td=get('year')+get('month')+get('day');
-    const yesterday=new Date(Date.now()-86400000);
-    const olderParts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(yesterday);
-    const past=k=>olderParts.find(x=>x.type===k)?.value||'';
-    const yd=past('year')+past('month')+past('day');
-    const codes=watchlist().map(String);
-    const current=new Map([
-      [codes[0],{date:td,price:100,change:2,live:true}],
-      [codes[1],{date:td,price:200,change:-3,live:true}],
-      [codes[2],{date:td,price:300,change:0,live:true}],
-      [codes[3],{date:yd,price:50,change:5,live:true}]
-    ]);
-    const read=()=>['breadthUp','breadthDown','breadthFlat'].map(id=>document.getElementById(id)?.textContent);
-    try{
-      window.marketWindowTaipeiNow=()=>true;
-      updateWatchBreadth(current,{receivedAt:Date.now()});
-      const currentTotals=read(),currentLabel=document.getElementById('breadthMeta')?.textContent;
-      updateWatchBreadth(current,{receivedAt:Date.now()-180000});
-      const disconnected=read();
-      return {currentTotals,currentLabel,disconnected};
-    }finally{
-      window.marketWindowTaipeiNow=previous;
-      updateWatchBreadth();
-    }
-  });
-  assert.deepEqual(breadthRegression.currentTotals,['1','1','1'],'BREADTH_SYNTHETIC_MIS_COUNT_FAILURE '+opt.name);
-  assert(breadthRegression.currentLabel.includes('3/'),'BREADTH_INVALID_DATE_INCLUDED '+opt.name);
-  assert.deepEqual(breadthRegression.disconnected,['—','—','—'],'BREADTH_STALE_FEED_MUST_NOT_USE_CACHE '+opt.name);
-  console.log('BREADTH_REGRESSION_'+opt.name.toUpperCase(),JSON.stringify(breadthRegression));
   // Detail panel, chart pilot, research and trading controls must load without crashing.
   const detailRow=page.locator('#watch article.row').filter({hasText:'00878'}).first();
   await detailRow.click();await page.waitForTimeout(1400);

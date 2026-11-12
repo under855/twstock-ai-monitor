@@ -29,21 +29,17 @@ jobs:
               await page.goto('https://under855.github.io/twstock-ai-monitor/?stockColorQa='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
               const result=await page.evaluate(async ()=>{
                 const watch=document.getElementById('watch');
-                const fixture=document.createElement('article');fixture.className='row';
-                fixture.innerHTML='<div class="p"><div class="price">100.00</div><div class="chg">+3.50</div></div>';
-                watch.appendChild(fixture);
-                await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-                const p=fixture.querySelector('.price'),c=fixture.querySelector('.chg');
-                const snap=()=>({price:getComputedStyle(p).color,change:getComputedStyle(c).color,font:parseFloat(getComputedStyle(p).fontSize),changeFont:parseFloat(getComputedStyle(c).fontSize)});
-                const up=snap();
-                c.textContent='-2.50';
-                await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-                const down=snap();
-                c.textContent='0.00';
-                await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-                const flat=snap();
-                fixture.remove();
-                return {up,down,flat};
+                const sample=async text=>{
+                  const fixture=document.createElement('article');fixture.className='row';
+                  fixture.innerHTML='<div class="p"><div class="price">100.00</div><div class="chg"></div></div>';
+                  fixture.querySelector('.chg').textContent=text;
+                  watch.appendChild(fixture);
+                  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+                  const p=fixture.querySelector('.price'),c=fixture.querySelector('.chg');
+                  const result={price:getComputedStyle(p).color,change:getComputedStyle(c).color,font:parseFloat(getComputedStyle(p).fontSize),changeFont:parseFloat(getComputedStyle(c).fontSize)};
+                  fixture.remove();return result;
+                };
+                return {up:await sample('+3.50'),down:await sample('-2.50'),flat:await sample('0.00')};
               });
               console.log('STOCK_VISUAL',width,JSON.stringify(result));
               assert.equal(result.up.price,'rgb(255, 66, 66)');

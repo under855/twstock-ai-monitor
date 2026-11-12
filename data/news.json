@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-12T05:40:59.821634+00:00",
+  "generatedAt": "2026-11-12T06:43:23.448002+00:00",
   "stocks": {
     "0050": [
       {
@@ -99,10 +99,22 @@
         "time": 1794423600000
       },
       {
+        "title": "中鋼10月營收 年增逾3成 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5GaUNUZEZQTHZFWTMwMFdLMkNTZW11ODU0dWd4ODhRRlNoQ2hJbHZreDdFUTlCT2FUUzIyUGdUQVR1WW5CX1hrZVdJaWZBaGliVVozY3RwbjNXamtldHRV?oc=5",
+        "publisher": "工商時報",
+        "time": 1794337200000
+      },
+      {
         "title": "中鋼10月營收320.4億元創29個月新高 兩大動能支撐鋼市穩健發展 - 鉅亨網",
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBTQ2ZOMnc2eUNfX3E0bEpqSTFTdkhzOFQya0Q4NWNIWXhSR2RKTE1rZTZiWXA2UnBpNTJsc1gyNUR0b2Q4djd3WlVKSDVPSG8?oc=5",
         "publisher": "鉅亨網",
         "time": 1794301550000
+      },
+      {
+        "title": "中鋼營收／10月年增31％、連兩月突破300億元 | 集中市場 | 證券 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBQZkY1UzItc3otRmd0akdXYWJqWFhCYkVsbTJ3NHh1OExvZkFXbF9GZ3AtSzNEekpCdldXYzZIanBGRFM4WTBWQVh4LUg5RVlGNkE0V2xfMmhwQQ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794299292000
       },
       {
         "title": "中鋼投資10多億布局低碳發電預計2年後完工| 地方 - 中央社 CNA",
@@ -126,18 +138,6 @@
         "title": "中鋼9月稅前獲利月減19%，惟前3季明顯改善- 新聞 - MoneyDJ",
         "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOdXllSzRadG15UjJCUDdLb1Zad0hnOE5qNWx1bVpPUEltZ3NEMEhlS09yZGdoOUZDZFEtT3k2RVhLLTBEZ3RRR0Z4bHdYNHhEclhsdlZPbVhTdUJrNjl5NTNtOFR0ZmhyaHRVSTlERXI4TjRodG1XYVVzWFRoSG1faXBYQ2ZvWmxRa3RhazhWeGtXdw?oc=5",
         "publisher": "MoneyDJ",
-        "time": 1793084400000
-      },
-      {
-        "title": "中鋼9月稅前盈餘月減19% 前三季賺43億元 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1fS2Ffb0k1SUtmMVFBX3hNaWpsbm5NZFJIeDZfcGtFYWdyMXFKNk5yM1VTVHUzeW5DUFhMMDhsTUNtR1ZSOFJtWGRyV0lRb0U?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1793084400000
-      },
-      {
-        "title": "中鋼前三季賺43億元 9月營業利益月減4成 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE16Y1BJRWpsdTZXSVhrdlFJRWV4NjVfbWpHWHZqN1J1M2E3ZjB4T2RrMTFQS2YtRzVnT0VPcnJlODJkNXN1Y0FEeVRabTJQRUlqZUFrZEIzTTlLU1k1RFVn0gFkQVVfeXFMUEVMRlhaRzI0czBLTzJ4RVJKU3dVc3o4MFg4b2RmVGFUMTVyVXprMVNNS3NYNTdFZW4tMnN0Y1ZCNms1NUVZZi05YVhGQWNiOWtvMUl2VmJwdjVmX3B5QnIxUWkwSA?oc=5",
-        "publisher": "自由財經",
         "time": 1793084400000
       }
     ],
@@ -255,16 +255,16 @@
         "time": 1792393200000
       },
       {
-        "title": "統欣生技22週年慶消費滿額抽台積電股票- 商情 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE00MVI1Z2lyM3dhRkNWR0ZXZ09nQm1GWUxOdm0td2htZnZGaldPZWYzSFRib0VQSG16c2tlNXA3MXpHa1lJZlB1TlRYSXJhWkdVNlJVS3Q4TE10cVhNVWhv?oc=5",
-        "publisher": "工商時報",
-        "time": 1792134000000
-      },
-      {
         "title": "台積電開法說股價會噴還跌？外媒有「1意外發現」 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBRRERLWUx6MXktdllEeFMtaWxsTENla0lwMnFqX0FOOFEyQVBocWVoR2pyXzUxT2dwdzRidVEtcWRVREthZU5XOW1UYlh4eW1iZTJvZ1NCUmdfNTI2bk1N0gFkQVVfeXFMT3BOakJFWXVyeXVLN1Y4bVpQang0SU0wNWtZcURuNDZOWjAySWxZVUZ2YTNFNTNPc0xTOVU1NXlBWnAyT1drdzEyZjBvc2dlTm56QXFLMnRUbEs1M202V3lBa0tJQg?oc=5",
         "publisher": "自由財經",
         "time": 1792047600000
+      },
+      {
+        "title": "台積電面臨2.57兆元獲利變數 法說會後股價「波動幅度」預曝 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5HVTdsaFZWeVB6VjZxWEdxNGZXR3p3Mk1DNXplZ0ZqMlc0YXUwRElacXhTWmxYV3VlM2VrTW05UDhXWG5zTTEwbDVELXJGSlRYbXJlRG43ak1FSzgyQTU00gFkQVVfeXFMTVVyRklEbHN0cFJXbWdEVDZONE0wZGRfT1BmRnplMlFGNTVwdXE2MUJGSFRnSHB4X1VITndNQ3ZkQzFSMVFwYVhuU1FKT0FoaExGNGlCUThReXZPUkZUa2R5MVJDdQ?oc=5",
+        "publisher": "自由財經",
+        "time": 1791961200000
       }
     ]
   },

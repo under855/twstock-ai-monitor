@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const VERSION='0.9.7.3';
-  const INTERVAL=4000; // Checking more frequently than the upstream feed increases throttling, not accuracy.
+  const INTERVAL=4000; // Four-second scheduler; outstanding requests are single-flight, official source timestamps govern freshness.
   const BACKUP_INTERVAL=4000;
   const MAX_POINTS=600;
   const QKEY='tw_live091_quotes_';

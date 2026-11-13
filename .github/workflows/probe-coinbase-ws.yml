@@ -1,0 +1,40 @@
+name: Probe Coinbase public WebSocket before switching
+on:
+  push:
+    paths: ['.github/workflows/probe-coinbase-ws.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright-core@latest
+      - name: Test Coinbase price stream in browser
+        run: |
+          cat > probe.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const page=await b.newPage({timezoneId:'Asia/Taipei'});
+          await page.goto('https://under855.github.io/twstock-ai-monitor/',{waitUntil:'domcontentloaded',timeout:60000});
+          const result=await page.evaluate(()=>new Promise(resolve=>{
+            const ws=new WebSocket('wss://ws-feed.exchange.coinbase.com');
+            const info={opened:false,types:[],prices:[],errors:[],latencies:[]};
+            const end=()=>{try{ws.close()}catch{}resolve(info)};
+            const timer=setTimeout(end,15000);
+            ws.onopen=()=>{info.opened=true;ws.send(JSON.stringify({type:'subscribe',product_ids:['BTC-USD'],channels:['ticker','heartbeat']}))};
+            ws.onmessage=e=>{let d;try{d=JSON.parse(e.data)}catch{return};if(info.types.length<10)info.types.push(d.type);if(d.type==='ticker'&&Number(d.price)>0){info.prices.push({price:d.price,time:d.time});if(d.time)info.latencies.push(Date.now()-Date.parse(d.time));if(info.prices.length>=3){clearTimeout(timer);end()}}};
+            ws.onerror=()=>{info.errors.push('websocket error')};
+            ws.onclose=e=>{info.errors.push('closed '+e.code);if(!info.prices.length){clearTimeout(timer);end()}};
+          }));
+          console.log('COINBASE_PROBE',JSON.stringify(result));
+          await b.close();
+          if(!result.opened||result.prices.length<1)process.exit(1);
+          JS
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); export CHROME
+          node probe.mjs

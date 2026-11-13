@@ -10,10 +10,9 @@ let recovering=false;
 let newsBusy=false;
 
 function statusElement(){
-  const bar=document.querySelector('.toolbar');if(!bar)return null;
-  let el=document.getElementById('dataSyncStatus');
-  if(!el){el=document.createElement('span');el.className='pill';el.id='dataSyncStatus';el.textContent='依資料來源週期檢查';bar.appendChild(el)}
-  return el;
+  // Keep the health checks and soft recovery running, without adding a redundant
+  // monitoring pill beside the existing top clock and exchange status.
+  return null;
 }
 function updateDisplay(){
   const el=statusElement();if(!el)return;

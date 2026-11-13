@@ -107,8 +107,9 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
     <div class="notice">分數沿用 v0.2 的可追溯規則：趨勢 36%、短期動能 34%、估值 18%、殖利率 12%。它是分析輔助，不是明日漲跌機率。</div>
   </section>
 </div>
+<script src="./shared-latest-v0984.js?v=0984-single-flight"></script>
 <script>
-const APP_VERSION='0.9.8.3';
+const APP_VERSION='0.9.8.4';
 const IS_WEB = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 window.addEventListener('DOMContentLoaded',()=>{
   if(!IS_WEB){
@@ -164,7 +165,7 @@ const F=(v,d=2)=>{const x=N(v);return x==null?'—':x.toLocaleString('zh-TW',{ma
 let allRows=[],allVals=[],allEx=[],active=null,historyCache={},quoteCache={},nameCache={...NAMES},lastRemoteOk=null,memoryWatch=[...DEFAULTS],universeMap=new Map(),universeReady=false,universeLoadPromise=null,universeMeta={count:0,TWSE:0,TPEx:0,ESB:0,source:''};
 function watchlist(){try{const v=JSON.parse(localStorage.getItem('twAiWatchV3')||'null');if(Array.isArray(v)){memoryWatch=v;return v}}catch{}return memoryWatch}
 function saveWatch(a){memoryWatch=[...new Set(a)].slice(0,20);try{localStorage.setItem('twAiWatchV3',JSON.stringify(memoryWatch))}catch{}return memoryWatch}
-async function json(url,ms=5000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(url,{cache:'no-store',signal:c.signal});if(!r.ok)throw Error('HTTP '+r.status);return await r.json()}finally{clearTimeout(t)}}
+async function json(url,ms=5000){if(String(url).split('?')[0]==='./data/latest.json'&&typeof window.__TW_LATEST_JSON__==='function')return window.__TW_LATEST_JSON__();const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(url,{cache:'no-store',signal:c.signal});if(!r.ok)throw Error('HTTP '+r.status);return await r.json()}finally{clearTimeout(t)}}
 async function jsonPublic(url,ms=6000){try{return await json(url,ms)}catch(e){const proxy='https://api.allorigins.win/raw?url='+encodeURIComponent(url);return await json(proxy,ms+2500)}}
 function roc(s){const m=String(s||'').match(/^(\d{2,3})[\/.-](\d{1,2})[\/.-](\d{1,2})$/);return m?`${+m[1]+1911}/${String(+m[2]).padStart(2,'0')}/${String(+m[3]).padStart(2,'0')}`:s}
 function dateObj(s){if(!s)return null;let x=String(s).replace(/年|月/g,'/').replace(/日/g,'').trim();x=roc(x);const d=new Date(x.replaceAll('/','-')+'T00:00:00');return Number.isNaN(d.getTime())?null:d}

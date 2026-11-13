@@ -1,0 +1,40 @@
+name: Diagnose active watchlist display (read-only)
+on:
+  push:
+    paths: ['.github/workflows/diagnose-current-watchlist.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright-core@latest
+      - name: Inspect live page errors and watchlist layout
+        run: |
+          cat > diag.mjs <<'JS'
+          import {chromium} from 'playwright-core';
+          const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          for(const width of [390,1280]){
+            const page=await browser.newPage({viewport:{width,height:844},locale:'zh-TW',timezoneId:'Asia/Taipei'});
+            const errors=[];page.on('pageerror',e=>errors.push('pageerror:'+e.message));page.on('console',m=>{if(m.type()==='error')errors.push('console:'+m.text())});
+            page.on('requestfailed',r=>errors.push('network:'+r.url().slice(0,100)+' '+r.failure()?.errorText));
+            await page.goto('https://under855.github.io/twstock-ai-monitor/?runtimeCheck='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+            for(const ms of [3000,8000]){
+              await page.waitForTimeout(ms===3000?3000:5000);
+              const state=await page.evaluate(()=>{
+                const rows=[...document.querySelectorAll('#watch article.row')].slice(0,5);
+                return {scripts:[...document.scripts].map(s=>s.src.split('/').at(-1)).filter(s=>/stock-price|live-v091/.test(s)),counts:document.querySelectorAll('#watch article.row').length,rootWidth:document.documentElement.scrollWidth,viewport:innerWidth,refresh:document.getElementById('refreshPill')?.textContent,rows:rows.map(r=>{const p=r.querySelector('.price'),c=r.querySelector('.chg');return {symbol:r.querySelector('.sym')?.textContent,price:p?.textContent,change:c?.textContent,priceColor:p?getComputedStyle(p).color:'',font:p?getComputedStyle(p).fontSize:'',changeColor:c?getComputedStyle(c).color:'',rowWidth:r.getBoundingClientRect().width,priceWidth:p?.getBoundingClientRect().width,priceScroll:p?.scrollWidth,changedMarkup:c?.outerHTML.slice(0,160)}})};
+              });console.log('RUNTIME',width,ms,JSON.stringify({state,errors:errors.slice(0,8)}));
+            }
+            await page.close();
+          }
+          await browser.close();
+          JS
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser); export CHROME
+          node diag.mjs

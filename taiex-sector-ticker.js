@@ -63,9 +63,7 @@
     if(pending||document.visibilityState==='hidden')return;
     pending=true;
     try{
-      const r=await fetch(SOURCE+'?_='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(8000)});
-      if(!r.ok)throw Error('HTTP '+r.status);
-      const data=parse(await r.json());
+      const data=parse(await window.__TW_LATEST_JSON__());
       if(data)show(data);
       else if(!signature)show(null);
     }catch{

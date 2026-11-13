@@ -1,0 +1,50 @@
+name: Verify TAIEX fallback when live endpoints fail
+on:
+  push:
+    paths: ['.github/workflows/verify-taiex-fallback.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright-core@latest
+      - name: Confirm market index shows dated snapshot with MIS unavailable
+        run: |
+          cat > fallback.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          import assert from 'node:assert/strict';
+          const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          try{
+            for(const width of [390,1280]){
+              const ctx=await browser.newContext({viewport:{width,height:844},timezoneId:'Asia/Taipei',serviceWorkers:'block'});
+              const p=await ctx.newPage();const errors=[];
+              p.on('pageerror',e=>errors.push(e.message));
+              await p.route(/(mis\.twse\.com|proxy\.cors\.dev|allorigins\.win).*getStockInfo/i,route=>route.abort());
+              // All MIS-related CORS proxy calls are blocked. The dated existing file must rescue the index.
+              await p.route('https://proxy.cors.dev/**',route=>route.abort());
+              await p.route('https://api.allorigins.win/**',route=>route.abort());
+              await p.goto('https://under855.github.io/twstock-ai-monitor/?fallbackQA='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+              await p.waitForFunction(()=>{
+                const v=document.getElementById('taiex')?.textContent?.trim()||'';
+                return v!==''&&v!=='—'&&document.getElementById('taiexChg')?.textContent?.includes('非即時');
+              },{timeout:20000});
+              const val=await p.evaluate(()=>({index:document.getElementById('taiex')?.textContent,detail:document.getElementById('taiexChg')?.textContent,percent:document.getElementById('taiexPercent')?.textContent,rows:document.querySelectorAll('#watch .row').length,body:document.body.innerText.length,version:[...document.scripts].map(x=>x.src).find(x=>x.includes('live-v091'))}));
+              console.log('FALLBACK_QA',width,JSON.stringify({val,errors}));
+              assert.ok(Number(val.index.replaceAll(',',''))>10000);
+              assert.match(val.detail,/非即時/);
+              assert.match(val.detail,/\d{2}:\d{2}:\d{2}/);
+              assert.ok(val.rows>0);
+              assert.deepEqual(errors,[]);
+              await ctx.close();
+            }
+          }finally{await browser.close()}
+          JS
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser);export CHROME
+          node fallback.mjs

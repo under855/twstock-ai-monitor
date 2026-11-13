@@ -1,0 +1,75 @@
+name: Probe Taiwan national standard time transport (read-only)
+on:
+  push:
+    paths:
+      - '.github/workflows/probe-national-time.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright-core@latest
+      - name: Probe five official NTP servers, HTTPS and browser access
+        run: |
+          python - <<'PY'
+          import socket,struct,time,datetime,json
+          hosts=['time.stdtime.gov.tw','tick.stdtime.gov.tw','watch.stdtime.gov.tw','clock.stdtime.gov.tw','tock.stdtime.gov.tw']
+          results={}
+          for host in hosts:
+              attempts=[]
+              for k in range(3):
+                  start=time.time()
+                  try:
+                      addr=socket.getaddrinfo(host,123,type=socket.SOCK_DGRAM)[0][4]
+                      sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM);sock.settimeout(2.5)
+                      sock.sendto(b'\x1b'+47*b'\0',addr)
+                      packet,_=sock.recvfrom(1024)
+                      end=time.time()
+                      if len(packet)<48:raise ValueError('short response')
+                      sec,frac=struct.unpack('!II',packet[40:48])
+                      server_time=sec-2208988800+frac/(2**32)
+                      offset=(server_time-(start+end)/2)
+                      attempts.append({'ok':True,'ms':round((end-start)*1000,1),'offset_ms':round(offset*1000,1),'stratum':packet[1]})
+                  except Exception as e:attempts.append({'ok':False,'error':type(e).__name__+':'+str(e)[:80]})
+                  finally:
+                      try:sock.close()
+                      except:pass
+                  time.sleep(.15)
+              results[host]=attempts
+          print('OFFICIAL_NTP_RESULTS',json.dumps(results,ensure_ascii=False))
+          print('OFFICIAL_NTP_SUMMARY',json.dumps({host:{'success':sum(x['ok'] for x in samples),'attempts':len(samples)} for host,samples in results.items()}))
+          PY
+          cat > browser.mjs <<'JS'
+          import {chromium} from 'playwright-core';
+          const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          try{
+            const page=await browser.newPage({timezoneId:'Asia/Taipei'});
+            await page.goto('https://under855.github.io/twstock-ai-monitor/',{waitUntil:'domcontentloaded',timeout:45000});
+            const result=await page.evaluate(async()=>{
+              const results=[];
+              for(const url of ['https://www.stdtime.gov.tw/','https://www.stdtime.gov.tw/chrono/index_2_2.html']){
+                for(let i=0;i<3;i++){
+                  const start=performance.now();
+                  const ac=new AbortController(),timer=setTimeout(()=>ac.abort(),4500);
+                  try{
+                    const r=await fetch(url+'?probe='+Date.now()+i,{cache:'no-store',signal:ac.signal});
+                    const date=r.headers.get('Date');
+                    results.push({url,status:r.status,ms:Math.round(performance.now()-start),date,readable:r.type!=='opaque'});
+                  }catch(e){results.push({url,ok:false,ms:Math.round(performance.now()-start),error:String(e)})}
+                  finally{clearTimeout(timer)}
+                }
+              }
+              return results;
+            });
+            console.log('BROWSER_STD_TIME_RESULTS',JSON.stringify(result));
+          }finally{await browser.close()}
+          JS
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser);export CHROME
+          node browser.mjs

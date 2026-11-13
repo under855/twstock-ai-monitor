@@ -34,7 +34,6 @@ async function recover(name){
       else if(name==='台股行情')window.__TW_LIVE_REFRESH__?.();
       else if(name==='盤後行情')window.__TW_BACKUP_REFRESH__?.();
       else if(name==='新聞')window.__TW_NEWS_REFRESH__?.();
-      else if(name==='即時驗證 BTC-USD')window.__TW_CRYPTO_REFRESH__?.();
       else if(name==='配股配息')window.__TW_DIVIDEND_REFRESH__?.();
     },250);
     if('serviceWorker'in navigator)navigator.serviceWorker.getRegistration().then(r=>r?.update()).catch(()=>{});

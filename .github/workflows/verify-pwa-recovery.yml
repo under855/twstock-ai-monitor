@@ -1,0 +1,48 @@
+name: Verify PWA blank-screen recovery
+on:
+  push:
+    paths: ['.github/workflows/verify-pwa-recovery.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright-core@latest
+      - name: Verify repair page, preserve user storage and reload app
+        run: |
+          cat > recovery-check.mjs <<'JS'
+          import {chromium} from 'playwright-core';
+          import assert from 'node:assert/strict';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          for(const w of [390,1280]){
+            const ctx=await b.newContext({viewport:{width:w,height:850},isMobile:w===390,hasTouch:w===390,timezoneId:'Asia/Taipei',serviceWorkers:'allow'});
+            const page=await ctx.newPage(),errors=[];
+            page.on('pageerror',e=>errors.push(e.message));
+            await page.goto('https://under855.github.io/twstock-ai-monitor/?testRecover='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+            await page.waitForTimeout(1000);
+            await page.evaluate(()=>localStorage.setItem('__recovery_sentinel','do-not-delete'));
+            await page.goto('https://under855.github.io/twstock-ai-monitor/recovery.html?recoveryQA='+Date.now(),{waitUntil:'domcontentloaded'});
+            assert.equal(await page.locator('#reset').count(),1);
+            await page.locator('#reset').click();
+            await page.waitForURL(/index\.html\?cache_recovery=/,{timeout:20000});
+            await page.waitForFunction(()=>document.getElementById('watch')&&document.getElementById('taiex'),{timeout:20000});
+            await page.waitForTimeout(3000);
+            const result=await page.evaluate(()=>({sentinel:localStorage.getItem('__recovery_sentinel'),watch:document.querySelectorAll('#watch .row').length,index:document.getElementById('taiex')?.textContent,bodyLength:document.body?.innerText.length,sw:navigator.serviceWorker?.controller?.scriptURL}));
+            console.log('RECOVERY_TEST',w,JSON.stringify({result,errors}));
+            assert.equal(result.sentinel,'do-not-delete');
+            assert.ok(result.bodyLength>500);
+            assert.ok(result.watch>0);
+            assert.equal(errors.length,0);
+            await ctx.close();
+          }
+          await b.close();
+          JS
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser);export CHROME
+          node recovery-check.mjs

@@ -326,7 +326,7 @@
   }
   loadTaiexMisSeries();
   async function latestOfficialTradeDate(){
-    try{const j=await fetchJson(`./data/latest.json?_=${Date.now()}`,5000),d=String(j?.taiex?.date||'').replaceAll('/','-');if(/^\d{4}-\d{2}-\d{2}$/.test(d))return d}catch{}return twIsoDay();
+    try{const j=await window.__TW_LATEST_JSON__(),d=String(j?.taiex?.date||'').replaceAll('/','-');if(/^\d{4}-\d{2}-\d{2}$/.test(d))return d}catch{}return twIsoDay();
   }
   async function twseIndexFullSession(dateIso){
     try{const compact=String(dateIso||'').replaceAll('-',''),j=await officialJson(`https://www.twse.com.tw/exchangeReport/MI_5MINS_INDEX?response=json&date=${compact}`,12000),date=String(j?.date||compact),rows=Array.isArray(j?.data)?j.data:[],day=`${date.slice(0,4)}-${date.slice(4,6)}-${date.slice(6,8)}`,out=[];for(const r of rows){const hm=String(r?.[0]||'');const close=offNum(r?.[1]);if(!/^\d{2}:\d{2}:\d{2}$/.test(hm)||close==null||hm<'09:00:00'||hm>'13:30:00')continue;const ms=Date.parse(`${day}T${hm}+08:00`);if(Number.isFinite(ms))out.push({time:new Date(ms),close,official:true,source:'TWSE 每5秒指數官方資料'})}return out}catch{return []}

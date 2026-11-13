@@ -1,0 +1,51 @@
+name: Validate Coinbase replacement on production
+on:
+  push:
+    paths: ['.github/workflows/validate-coinbase-production.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright-core@latest
+      - name: Verify Coinbase data, no Binance calls, and unchanged stock display
+        run: |
+          cat > verify.mjs <<'JS'
+          import {chromium} from 'playwright-core';
+          import assert from 'node:assert/strict';
+          const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          try{
+            for(const width of [390,1280]){
+              const p=await browser.newPage({viewport:{width,height:820},timezoneId:'Asia/Taipei'});
+              const errors=[];const sockets=[];
+              p.on('pageerror',e=>errors.push(e.message));
+              p.on('websocket',w=>sockets.push(w.url()));
+              await p.goto('https://under855.github.io/twstock-ai-monitor/?coinbaseCheck='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+              await p.waitForFunction(()=>document.getElementById('cryptoStatus')?.textContent==='即時正常',{timeout:20000});
+              const value=await p.evaluate(()=>{
+                const rows=[...document.querySelectorAll('#watch .row')];
+                return {status:document.getElementById('cryptoStatus')?.textContent,
+                  metrics:document.getElementById('cryptoMetrics')?.textContent,
+                  card:document.getElementById('cryptoValidation')?.textContent.slice(0,120),
+                  rows:rows.length,stockStyles:rows.slice(0,5).map(x=>{const p=x.querySelector('.price');return {price:p?.textContent,color:p?getComputedStyle(p).color:'',font:p?getComputedStyle(p).fontSize:''}})};
+              });
+              console.log('COINBASE_PROD',width,JSON.stringify({value,sockets,errors}));
+              assert.equal(value.status,'即時正常');
+              assert.ok(value.metrics.includes('有效成交：'));
+              assert.ok(sockets.includes('wss://ws-feed.exchange.coinbase.com'));
+              assert.ok(!sockets.some(x=>x.includes('binance')));
+              assert.ok(value.rows>0);
+              assert.equal(errors.length,0);
+              await p.close();
+            }
+          }finally{await browser.close()}
+          JS
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser);export CHROME
+          node verify.mjs

@@ -1,0 +1,59 @@
+name: Verify shared official snapshot downloads
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-shared-latest.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright-core@latest
+      - name: Verify no duplicate fetch, stock visibility and 60s refresh
+        run: |
+          cat > check-shared.mjs <<'JS'
+          import {chromium} from 'playwright-core';
+          import assert from 'node:assert/strict';
+          const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          try{
+            for(const width of [390,1280]){
+              const context=await browser.newContext({viewport:{width,height:850},timezoneId:'Asia/Taipei',serviceWorkers:'block'});
+              const page=await context.newPage(),requests=[],errors=[];
+              page.on('request',req=>{if(req.url().includes('/data/latest.json'))requests.push(req.url())});
+              page.on('pageerror',e=>errors.push(e.message));
+              await page.goto('https://under855.github.io/twstock-ai-monitor/?sharedQA='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+              await page.waitForFunction(()=>document.querySelectorAll('#watch article.row').length>0&&document.getElementById('taiexSectorTrack')?.querySelectorAll('.taiexSectorItem').length>=10,{timeout:20000});
+              await page.waitForTimeout(6000);
+              const check=async label=>{
+                const val=await page.evaluate(()=>({stats:window.__TW_LATEST_FETCH_STATS__?.(),rows:document.querySelectorAll('#watch article.row').length,sectorCount:document.querySelectorAll('#taiexSectorTrack .taiexSectorItem').length,sectorDate:document.getElementById('taiexSectorDate')?.textContent,index:document.getElementById('taiex')?.textContent,version:document.querySelector('script[src*="shared-latest"]')?.src}));
+                console.log('SHARED_CHECK',width,label,JSON.stringify({val,networkCount:requests.length,errors}));
+                assert.ok(val.rows>0);
+                assert.ok(val.sectorCount>=10);
+                assert.ok(val.version.includes('shared-latest-v0984.js'));
+                assert.ok(val.stats.cacheHits>=1);
+                assert.equal(requests.length,val.stats.networkRequests);
+                assert.deepEqual(errors,[]);
+                return val;
+              };
+              let val=await check('initial');
+              assert.equal(requests.length,1,'Multiple consumers must share one initial request');
+              if(width===390){
+                await page.waitForTimeout(63000);
+                val=await check('after-minute');
+                assert.ok(requests.length>=2,'Data must refresh after cache expiry');
+                assert.ok(requests.length<=3,'Too many repeated requests in 69 seconds');
+              }
+              await context.close();
+            }
+          }finally{await browser.close()}
+          JS
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser);export CHROME
+          node check-shared.mjs

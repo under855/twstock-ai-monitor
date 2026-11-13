@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>台股監控台｜安全恢復</title>
+<style>html{color-scheme:dark;font:16px system-ui,-apple-system,sans-serif;background:#071321;color:#e5effb}body{max-width:560px;margin:10vh auto;padding:24px;line-height:1.8}.box{background:#11233b;border:1px solid #28496a;border-radius:16px;padding:24px}button{background:#2868a8;color:white;border:0;border-radius:9px;padding:12px 20px;font-size:16px;cursor:pointer}small{color:#a5bcd2;display:block;margin:12px 0}a{color:#a9d7ff}</style></head>
+<body><div class="box"><h2>台股監控台｜安全恢復</h2><p>重新整理網站程式與離線快取，不會清除你儲存在這個瀏覽器內的追蹤清單、虛擬交易或其他設定。</p><p id="result">按下按鈕後會自動重新開啟監控台。</p><button id="reset">修復快取並重新開啟</button><small>如果瀏覽器阻擋修復，請用 Safari 或 Chrome 直接開啟這個頁面。</small><a href="./index.html">直接返回監控台</a></div>
+<script>
+document.getElementById('reset').addEventListener('click',async()=>{
+ const b=document.getElementById('reset'),msg=document.getElementById('result');b.disabled=true;msg.textContent='正在重建網站快取…';
+ try{
+  if('serviceWorker'in navigator){
+   const registrations=await navigator.serviceWorker.getRegistrations();
+   for(const r of registrations){
+    if(r.scope.startsWith(new URL('./',location.href).href))await r.unregister();
+   }
+  }
+  if('caches'in window){
+   const keys=await caches.keys();
+   await Promise.all(keys.filter(k=>k.startsWith('tw-ai-monitor-')).map(k=>caches.delete(k)));
+  }
+  msg.textContent='快取處理完成，正在重新開啟…';
+ }catch(e){msg.textContent='快取處理部分受限；正在嘗試直接重新開啟…'}
+ location.replace('./index.html?cache_recovery='+Date.now());
+});
+</script></body></html>

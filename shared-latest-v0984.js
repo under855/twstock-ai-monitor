@@ -1,8 +1,9 @@
 (() => {
   'use strict';
   // One per-tab fetch for the shared official snapshot. This is NOT a live quote.
-  // A fulfilled result is reused for up to 60 seconds, never indefinitely.
-  const MAX_AGE_MS=60000;
+  // A fulfilled result is reused for up to 50 seconds, never indefinitely.
+  // Slightly shorter than the consumers' 60s cadence to avoid a 120s refresh gap.
+  const MAX_AGE_MS=50000;
   let value=null, fetchedAt=0, pending=null;
   let networkRequests=0, hits=0;
   window.__TW_LATEST_JSON__=function(){

@@ -129,7 +129,7 @@
     return sourcePriority(newv.source)>sourcePriority(oldv.source);
   }
   async function fetchBackup(){
-    return await getJson(`./data/latest.json?_=${Date.now()}`,7000);
+    return await window.__TW_LATEST_JSON__();
   }
   function parseBackup(j,codes){
     const map=new Map();let idx=null;const wanted=new Set((codes||[]).map(String));

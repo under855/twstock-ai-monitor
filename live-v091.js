@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.9.7.6';
+  const VERSION='0.9.8.1';
   const INTERVAL=4000; // Four-second scheduler; outstanding requests are single-flight, official source timestamps govern freshness.
   const BACKUP_INTERVAL=60000;
   const MAX_POINTS=600;
@@ -12,6 +12,7 @@
   const seeded=new Set();
   const seeding=new Set();
   let taiex=null;
+  let lastIndexSnapshot=null, indexSnapshotBusy=false, lastIndexSnapshotPoll=0;
   let busy=false;
   let cycle=0;
   let lastPollAt=0;
@@ -261,20 +262,51 @@
     const turnover=usable?num(x?.turnover):null;
     setText(t,turnover!=null&&turnover>=0?(turnover/100000000).toLocaleString('zh-TW',{maximumFractionDigits:2})+' 億':'—');
   }
+  function latestIndexForDisplay(){
+    const live=taiex?.date===today()&&num(taiex.price)!=null?taiex:null;
+    const backup=lastIndexSnapshot?.date===today()&&num(lastIndexSnapshot.price)!=null?lastIndexSnapshot:null;
+    if(!live)return backup;
+    if(!backup)return live;
+    return Number(backup.stamp)>Number(live.stamp)?backup:live;
+  }
+  async function pollIndexSnapshot(){
+    if(indexSnapshotBusy||document.visibilityState==='hidden'||Date.now()-lastIndexSnapshotPoll<60000)return;
+    indexSnapshotBusy=true;lastIndexSnapshotPoll=Date.now();
+    try{
+      // Same versioned official-data file already used by the app, not a new data provider.
+      const j=await fetchBackup(),x=j?.taiex||{},d=isoCompact(x.date);
+      const t=String(x.time||''),ms=stamp(d,t),now=Date.now();
+      if(d!==today()||num(x.close)==null||ms==null||ms>now+30000||now-ms>6*3600000)return;
+      // MI_INDEX is official close; MIS live is time-stamped but NOT a verified fresh tick.
+      if(x.source!=='TWSE MIS live'&&x.source!=='TWSE MI_INDEX')return;
+      const previous=num(x.previousClose)??(num(x.change)!=null?num(x.close)-num(x.change):null);
+      const item={date:d,price:num(x.close),change:num(x.change),prev:previous,
+        time:t,stamp:ms,turnover:num(x.turnover),source:x.source,officialClose:x.source==='TWSE MI_INDEX'};
+      if(!lastIndexSnapshot||ms>=Number(lastIndexSnapshot.stamp))lastIndexSnapshot=item;
+      paintIndex();
+    }catch{/* Preserve last known dated value; never turn a fetch error into a fake tick. */}
+    finally{indexSnapshotBusy=false}
+  }
   function paintIndex(){
     const v=document.getElementById('taiex'),c=document.getElementById('taiexChg');
     if(marketOpen()){
       const state=intradayIndexState(taiex);
       if(state!=='fresh'){
-        paintIndexExtras(taiex,false);
-        // Do not present a 10:28 index snapshot as an 11:05 live quote.
-        setText(v,'—');setClass(v,'v flat');
-        if(c){
-          const age=taiex?.stamp?Math.max(0,Math.floor((Date.now()-Number(taiex.stamp))/60000)):null;
-          const note=taiex?.date===today()&&Number.isFinite(age)
-            ?'行情延遲 '+age+' 分鐘｜最後指數 '+fmt(taiex.price,2)+'（'+(taiex.time||hhmmss(taiex.stamp))+'），非即時'
-            :'目前無法確認即時加權指數｜資料暫停顯示';
-          setText(c,note);setClass(c,'s down');
+        // The last known same-day quote is informational, NOT a real-time quote.
+        const last=latestIndexForDisplay();
+        if(last){
+          paintIndexExtras(last,true);
+          setText(v,fmt(last.price,2));
+          setClass(v,'v '+cls(last.change));
+          if(c){
+            const mins=Math.max(0,Math.floor((Date.now()-Number(last.stamp))/60000));
+            const source=last.officialClose?'正式收盤':'最後已取得行情';
+            setText(c,(num(last.change)>0?'+':'')+fmt(last.change,2)+'｜'+source+' '+last.time+'｜延遲約 '+mins+' 分鐘・非即時');
+            setClass(c,'s muted');
+          }
+        }else{
+          paintIndexExtras(null,false);setText(v,'—');setClass(v,'v flat');
+          if(c){setText(c,'即時行情暫時無法確認｜正在取得最近一筆資料');setClass(c,'s muted')}
         }
         return;
       }
@@ -390,13 +422,14 @@
   window.__TW_LIVE_REFRESH__=()=>poll(false);
   window.__TW_BACKUP_REFRESH__=()=>pollBackup(true);
   function start(){
-    loadToday();paintAll();poll(false);if(!marketOpen())pollBackup(false);
+    loadToday();paintAll();poll(false);pollIndexSnapshot();if(!marketOpen())pollBackup(false);
     // Always schedule polling: a page opened before 09:00 must start updating when trading begins.
     // The poll function itself skips requests outside the TW market window.
     setInterval(()=>poll(false),INTERVAL);
     setInterval(()=>{if(!marketOpen())pollBackup(false)},BACKUP_INTERVAL);
+    setInterval(pollIndexSnapshot,60000);
     if(!marketOpen()){const p=document.getElementById('refreshPill');if(p&&!hasTodayData())setText(p,`休市／檢查今日最終資料｜v${VERSION}`);debug()}
-    const resume=()=>{if(document.visibilityState==='hidden')return;if(Date.now()-lastVisibleAt<2000)return;lastVisibleAt=Date.now();if(marketOpen())poll(false);else pollBackup(false)};
+    const resume=()=>{if(document.visibilityState==='hidden')return;if(Date.now()-lastVisibleAt<2000)return;lastVisibleAt=Date.now();if(marketOpen())poll(false);else pollBackup(false);pollIndexSnapshot()};
     addEventListener('focus',resume);document.addEventListener('visibilitychange',resume);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();

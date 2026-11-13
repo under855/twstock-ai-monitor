@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-13T17:33:36.243176+00:00",
+  "generatedAt": "2026-11-13T18:29:04.793134+00:00",
   "stocks": {
     "0050": [
       {
@@ -117,15 +117,15 @@
         "time": 1794299292000
       },
       {
-        "title": "中鋼9月稅前獲利月減19%，惟前3季明顯改善- 新聞 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOdXllSzRadG15UjJCUDdLb1Zad0hnOE5qNWx1bVpPUEltZ3NEMEhlS09yZGdoOUZDZFEtT3k2RVhLLTBEZ3RRR0Z4bHdYNHhEclhsdlZPbVhTdUJrNjl5NTNtOFR0ZmhyaHRVSTlERXI4TjRodG1XYVVzWFRoSG1faXBYQ2ZvWmxRa3RhazhWeGtXdw?oc=5",
-        "publisher": "MoneyDJ",
-        "time": 1793084400000
-      },
-      {
         "title": "外銷比重增影響毛利 中鋼9月稅前淨利月減19% - 中央社 CNA",
         "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE5ELVctQTlzYnV2UWNkOUxzTmVtNEpUdl93OHhXa3QyS1lUaHIyNjBOUUhzUW9aRjlVZTBxdWpVNGttWE9LOWZsWThha0U4M19pb1F4cDNheDIzOVd0MVE?oc=5",
         "publisher": "中央社 CNA",
+        "time": 1793084400000
+      },
+      {
+        "title": "中鋼9月稅前獲利月減19%，惟前3季明顯改善- 新聞 - MoneyDJ",
+        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOdXllSzRadG15UjJCUDdLb1Zad0hnOE5qNWx1bVpPUEltZ3NEMEhlS09yZGdoOUZDZFEtT3k2RVhLLTBEZ3RRR0Z4bHdYNHhEclhsdlZPbVhTdUJrNjl5NTNtOFR0ZmhyaHRVSTlERXI4TjRodG1XYVVzWFRoSG1faXBYQ2ZvWmxRa3RhazhWeGtXdw?oc=5",
+        "publisher": "MoneyDJ",
         "time": 1793084400000
       },
       {
@@ -255,12 +255,6 @@
         "time": 1794562027000
       },
       {
-        "title": "台積電美國新廠續賺 前三季獲利539.86億元創高 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBndVRaTnJoYW9sN2pEanpuRnFZdGM3b1Z2Mm04eE1XMlUxTkxpNXowRXVEeE9hNHRrb3p0bzhVVEhDbjhzczU3ZmtwQzVSS3VuenlWU3VfVVE4Z9IBX0FVX3lxTE1lc3VBMjBSVVVJbXZHVmxNVkZGaDhUOW1rbHFjR181UW43LTlPYlNLSTFkLUpGSmx0YUQxbk5KQ3hPWFFfTTRraFQwdVQ0cFJWckVKbnAyb3JxREFPMHU0?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794557480000
-      },
-      {
         "title": "焦點股》台積電：無懼黃仁勳辭職 勁揚逾2％ - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9kR2hiYnNoS1plNU5zclZoNkJiSlhDLTR4UkIwZFZFaVZZSUZkQUNWYnhNY3ZRSnZXX2prNlJzYURRY2R6ZW9SM2JTZ3VoRWFlcU9fY3hMSTZraGE1R0ow0gFkQVVfeXFMT29WVktvOUZfRWFCck1maGJvUFFTLXkwYzI2cUU0c1lwN2xuWTBmMm5iZXRnajZ4aHczS0x3N1RQbmZNLXYtbXNuMUZSSndvTldzbFdocmRaSVkybHBkZHRrU29VYQ?oc=5",
         "publisher": "自由財經",
@@ -271,6 +265,12 @@
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1JSGhGZFhoaXJuMlk0clZ2SGd2U2JTNDlPQ3ZsdGRuaG15T3prUHpfVEd0dzl2ODBRbHV4dHZGU2xPU245WlBZTnFNSFY5SGM?oc=5",
         "publisher": "鉅亨網",
         "time": 1794529504000
+      },
+      {
+        "title": "台積電ADR跌1.9% 台指期反彈548點 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5vYzZmSHo1aDRGR0hVWklldEw1NTBQX3Vkc2tXd2gwNE1yeHI4ekR6TzZmanppSUtIUUlXTVpMc01CME15NXI1eS1TMjJpQWF3T1Jmc3ZyWWMzUmJM0gFiQVVfeXFMTXMxMWZheG1NQ2c0aUY1UERQMWxlZUFKSFpFV1JRUlRCTERxNHY3SHVJcEhhMFNSaWpudl9XQnVjeUp2THpJakhWeWpIREZkX0dXWXQ0SzNvTXlGSWVZbHk5dXc?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794526116000
       }
     ]
   },

@@ -1,0 +1,42 @@
+name: Emergency blank-screen diagnosis
+on:
+  push:
+    paths: ['.github/workflows/emergency-blank-screen.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright-core@latest
+      - name: Test initial load, reload, navigation and PWA
+        run: |
+          cat > blank.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const b=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          for(const mobile of [true,false]){
+            const ctx=await b.newContext({viewport:mobile?{width:390,height:844}:{width:1280,height:900},isMobile:mobile,hasTouch:mobile,serviceWorkers:'allow',timezoneId:'Asia/Taipei',locale:'zh-TW'});
+            const p=await ctx.newPage();
+            const errors=[],responses=[];
+            p.on('pageerror',e=>errors.push('PAGE:'+e.message));
+            p.on('console',m=>{if(m.type()==='error')errors.push('CONSOLE:'+m.text().slice(0,300))});
+            p.on('requestfailed',r=>errors.push('REQUEST:'+r.url().slice(0,140)+':'+r.failure()?.errorText));
+            p.on('response',r=>{if(/(index\.html|stock-price-visual|crypto-live-test|live-v091|latest\.json|sw\.js)/.test(r.url()))responses.push({u:r.url().split('?')[0].slice(-90),status:r.status()})});
+            for(let round=1;round<=2;round++){
+              try{const response=round===1?await p.goto('https://under855.github.io/twstock-ai-monitor/?emergency='+Date.now(),{waitUntil:'domcontentloaded',timeout:45000}):await p.reload({waitUntil:'domcontentloaded',timeout:45000});await p.waitForTimeout(4500);
+                const o=await p.evaluate(()=>({title:document.title,ready:document.readyState,body:document.body?.innerText?.slice(0,450),bodyLength:document.body?.innerText?.length,bodyDisplay:getComputedStyle(document.body).display,children:document.body?.children.length,watchRows:document.querySelectorAll('#watch .row').length,crypto:document.getElementById('cryptoStatus')?.textContent,app:document.getElementById('app')?.textContent?.slice(0,70),index:document.getElementById('taiex')?.textContent,serviceWorker:navigator.serviceWorker?.controller?.scriptURL,visibleHeight:document.documentElement.scrollHeight,viewport:innerWidth}));
+                console.log('BLANK_CHECK',JSON.stringify({mobile,round,status:response?.status(),result:o,errors:errors.slice(-12),responses:responses.slice(-12)}));
+              }catch(e){console.log('NAVIGATION_ERROR',mobile,round,String(e))}
+            }
+            await ctx.close();
+          }
+          await b.close();
+          JS
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser);export CHROME
+          node blank.mjs

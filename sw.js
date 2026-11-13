@@ -1,5 +1,5 @@
-const CACHE='tw-ai-monitor-v0982-no-crypto-probe';
-const CORE=['./index.html','./manifest.webmanifest','./icon.svg','./refresh-control-v0973.js','./dividend-enhance.js','./extras-v090.js','./live-v091.js','./taiex-sector-ticker.js','./stock-price-visual.js','./split-layout-v095.js','./pilot-chart-00878-v1.js','./dividend-ticker-v0975.js'];
+const CACHE='tw-ai-monitor-v0984-shared-latest';
+const CORE=['./index.html','./manifest.webmanifest','./icon.svg','./refresh-control-v0973.js','./dividend-enhance.js','./extras-v090.js','./live-v091.js','./shared-latest-v0984.js','./taiex-sector-ticker.js','./stock-price-visual.js','./split-layout-v095.js','./pilot-chart-00878-v1.js','./dividend-ticker-v0975.js'];
 self.addEventListener('install',event=>event.waitUntil((async()=>{
   const c=await caches.open(CACHE);
   // A single temporarily unavailable optional script must not block SW activation.

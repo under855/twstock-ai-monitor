@@ -37,7 +37,7 @@ jobs:
                 console.log('SHARED_CHECK',width,label,JSON.stringify({val,networkCount:requests.length,errors}));
                 assert.ok(val.rows>0);
                 assert.ok(val.sectorCount>=10);
-                assert.ok(val.version.includes('shared-latest-v0984.js'));
+                assert.ok(val.version.includes('shared-latest-v0984.js?v=0985-ttl'));
                 assert.ok(val.stats.cacheHits>=1);
                 assert.equal(requests.length,val.stats.networkRequests);
                 assert.deepEqual(errors,[]);
@@ -49,7 +49,7 @@ jobs:
                 await page.waitForTimeout(63000);
                 val=await check('after-minute');
                 assert.ok(requests.length>=2,'Data must refresh after cache expiry');
-                assert.ok(requests.length<=3,'Too many repeated requests in 69 seconds');
+                assert.ok(requests.length<=2,'Too many repeated requests in 69 seconds');
               }
               await context.close();
             }

@@ -37,9 +37,9 @@ jobs:
                   rows:rows.length,stockStyles:rows.slice(0,5).map(x=>{const p=x.querySelector('.price');return {price:p?.textContent,color:p?getComputedStyle(p).color:'',font:p?getComputedStyle(p).fontSize:''}})};
               });
               console.log('COINBASE_PROD',width,JSON.stringify({value,sockets,errors}));
-              if(value.status!=='即時正常')console.log('NOT_HEALTHY',value.status);
+              assert.equal(value.status,'即時正常');
               assert.ok(value.metrics.includes('有效成交：'));
-              assert.ok(sockets.includes('wss://ws-feed.exchange.coinbase.com'));
+              assert.ok(sockets.some(x=>x.startsWith('wss://ws-feed.exchange.coinbase.com')));
               assert.ok(!sockets.some(x=>x.includes('binance')));
               assert.ok(value.rows>0);
               assert.equal(errors.length,0);

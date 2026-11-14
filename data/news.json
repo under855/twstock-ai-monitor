@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-14T09:15:11.547682+00:00",
+  "generatedAt": "2026-11-14T10:12:45.922364+00:00",
   "stocks": {
     "0050": [
       {
@@ -93,24 +93,6 @@
         "time": 1794423600000
       },
       {
-        "title": "中鋼10月營收 年增逾3成 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5GaUNUZEZQTHZFWTMwMFdLMkNTZW11ODU0dWd4ODhRRlNoQ2hJbHZreDdFUTlCT2FUUzIyUGdUQVR1WW5CX1hrZVdJaWZBaGliVVozY3RwbjNXamtldHRV?oc=5",
-        "publisher": "工商時報",
-        "time": 1794337200000
-      },
-      {
-        "title": "中鋼10月營收增30% - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9JSTJYRm45aEM2UkhHRDlHckNLUG93Zi1IRWpWZlhWSU42VEpteFRnSXdRWGw4M1d3MjczX3gtVVBaczNELUpBZk1LTmQ2akFNWGR6XzlqUjE3d9IBX0FVX3lxTE5lOGpBUlZFOVJFRXF3dmIyWlFkWjVxZnZuUVRmSjNtdlUzdkhPd0t6QnNrdE5jNW9heVFhZTBTV09xblVuOW9QTzdlRnNIcWhNZ2dQSGIzRFNHOE51Wmlj?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794329638000
-      },
-      {
-        "title": "中鋼10月營收320.4億元創29個月新高 兩大動能支撐鋼市穩健發展 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBTQ2ZOMnc2eUNfX3E0bEpqSTFTdkhzOFQya0Q4NWNIWXhSR2RKTE1rZTZiWXA2UnBpNTJsc1gyNUR0b2Q4djd3WlVKSDVPSG8?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1794301550000
-      },
-      {
         "title": "中鋼投資10多億布局低碳發電預計2年後完工| 地方 - 中央社 CNA",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1tNkRRbW9BMWJsUWI1TDJOS2lNdXExbnhhWFdMSnYtTkluRnYtdG5uSFF0MF9TNHBCS0J6dDVwTUxFYURqTEtiNUV6eXNpZFQ2U1BUWG1iMjZFN284dXhj?oc=5",
         "publisher": "中央社 CNA",
@@ -127,6 +109,24 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9aYXg1VDFLYkdBcDhLV1BkRGpKRURVVlJvdGE4a0ZuRjVGTTJ1U1FTUU5zZW5PaFJUY1F6OWhhTU93b2dZVUdiNjg0ckZORTd2a1BjeUZJY1l0N2dQY09R?oc=5",
         "publisher": "工商時報",
         "time": 1793692800000
+      },
+      {
+        "title": "中鋼營運溫和復甦- 日報 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9QcjJZRW82TVBCSzVmUzBla2RiLVhsak5QS0FtTTNuNFltQ0ZXa3JIVTNFV21QczRXcUlGTFpXa3J2UEpVREFZUUZqcXpzWHJZSlVwdXpSb2xRNFRxWlBF?oc=5",
+        "publisher": "工商時報",
+        "time": 1793516400000
+      },
+      {
+        "title": "中鋼前三季賺43億元 9月營業利益月減4成 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE16Y1BJRWpsdTZXSVhrdlFJRWV4NjVfbWpHWHZqN1J1M2E3ZjB4T2RrMTFQS2YtRzVnT0VPcnJlODJkNXN1Y0FEeVRabTJQRUlqZUFrZEIzTTlLU1k1RFVn0gFkQVVfeXFMUEVMRlhaRzI0czBLTzJ4RVJKU3dVc3o4MFg4b2RmVGFUMTVyVXprMVNNS3NYNTdFZW4tMnN0Y1ZCNms1NUVZZi05YVhGQWNiOWtvMUl2VmJwdjVmX3B5QnIxUWkwSA?oc=5",
+        "publisher": "自由財經",
+        "time": 1793084400000
+      },
+      {
+        "title": "中鋼9月稅前盈餘月減19% 前三季賺43億元 - 鉅亨網",
+        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1fS2Ffb0k1SUtmMVFBX3hNaWpsbm5NZFJIeDZfcGtFYWdyMXFKNk5yM1VTVHUzeW5DUFhMMDhsTUNtR1ZSOFJtWGRyV0lRb0U?oc=5",
+        "publisher": "鉅亨網",
+        "time": 1793084400000
       }
     ],
     "00878": [
@@ -249,10 +249,10 @@
         "time": 1792652400000
       },
       {
-        "title": "統欣生技22週年慶消費滿額抽台積電股票- 商情 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE00MVI1Z2lyM3dhRkNWR0ZXZ09nQm1GWUxOdm0td2htZnZGaldPZWYzSFRib0VQSG16c2tlNXA3MXpHa1lJZlB1TlRYSXJhWkdVNlJVS3Q4TE10cVhNVWhv?oc=5",
-        "publisher": "工商時報",
-        "time": 1792134000000
+        "title": "韓歌手Haru愛台灣娛樂文化領薪想買台積電股票| 娛樂 - 中央社 CNA",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5ybGQyNUppeDUyalNPa0dLd1VrMXpUT2pTQUFPOWhINlYyenNFVnVTS1JLSlNsc0phSmhSdTZNeDBBbXhIWlp4MEJFQldpR20wclBVVVV1Z3NrdVc1TUpv?oc=5",
+        "publisher": "中央社 CNA",
+        "time": 1792393200000
       }
     ]
   },

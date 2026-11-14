@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.9.8.1';
+  const VERSION='0.9.8.6';
   const INTERVAL=4000; // Four-second scheduler; outstanding requests are single-flight, official source timestamps govern freshness.
   const BACKUP_INTERVAL=60000;
   const MAX_POINTS=600;
@@ -8,6 +8,8 @@
   const SKEY='tw_live091_series_';
   const IKEY='tw_live091_index_';
   const quotes=new Map();
+  // A masked quote may reappear only after its exchange timestamp advances.
+  const resumeAfter=new Map();
   const series=new Map();
   const seeded=new Set();
   const seeding=new Set();
@@ -218,20 +220,33 @@
   }
   function row(code){return [...document.querySelectorAll('#watch article.row')].find(x=>x.querySelector('.sym')?.textContent?.trim()===String(code))||null}
   function canvasFor(r){let c=r?.querySelector('canvas.spark');if(c)return c;const f=r?.querySelector('.sparkFallback');if(!f)return null;c=document.createElement('canvas');c.className='spark';f.replaceWith(c);return c}
-  function maskRow(code){
+  function maskRow(code,reason='行情暫時無法確認'){
     const r=row(code);if(!r)return;
-    // A missing tick must not turn the card into a blinking empty placeholder.
-    if(r.dataset.liveState==='live'||r.dataset.liveState==='delayed'){
-      r.dataset.liveState='delayed';setText(r.querySelector('.meta'),'最後已取得行情｜來源延遲，等待新成交');return;
-    }
-    if(r.dataset.liveState==='waiting')return;
-    r.dataset.liveState='waiting';
-    const fallback=universeQuote(code)||snapshotQuote(code);
-    setText(r.querySelector('.meta'),fallback?`${fallback.source}｜非即時`:'行情暫時無法讀取');
+    const q=quotes.get(code);
+    if(marketOpen()&&!resumeAfter.has(code))resumeAfter.set(code,Number(q?.stamp)||0);
+    r.dataset.liveState='invalid';r.dataset.livePrice='';delete r.dataset.quoteSignature;
+    setText(r.querySelector('.price'),'—');
+    const ch=r.querySelector('.chg');if(ch){setText(ch,'—');setClass(ch,'chg flat')}
+    setText(r.querySelector('.dayline'),'—');
+    setText(r.querySelector('.meta'),reason+'｜等待新有效行情');
+    setText(r.querySelector('.scoreNum'),'—');
+    setText(r.querySelector('.scoreLabel'),'行情無效，暫停即時評分');
+  }
+  function quoteProblem(code,q){
+    if(!marketOpen())return '';
+    if(lastError)return '資料來源連線或回應異常：'+lastError.slice(0,90);
+    if(!q?.live||q.date!==today()||num(q.price)==null)return '尚未取得今日有效行情';
+    const age=Date.now()-Number(q.stamp);
+    if(!Number.isFinite(age)||age < -30000)return '行情時間戳記異常';
+    if(age>90000)return '行情超過90秒未更新';
+    if(resumeAfter.has(code)&&Number(q.stamp)<=resumeAfter.get(code))return '等待新成交行情確認恢復';
+    return '';
   }
   function paintRow(code,q){
     const r=row(code);if(!r)return;
-    if(!q?.live||q.date!==today()){maskRow(code);return}
+    const problem=quoteProblem(code,q);
+    if(problem){maskRow(code,problem);return}
+    resumeAfter.delete(code);
     const signature=JSON.stringify([q.stamp,q.price,q.change,q.open,q.high,q.low,q.volume,q.source]);
     if((r.dataset.liveState==='live'||r.dataset.liveState==='delayed')&&r.dataset.quoteSignature===signature)return;
     r.dataset.quoteSignature=signature;
@@ -295,13 +310,13 @@
         // The last known same-day quote is informational, NOT a real-time quote.
         const last=latestIndexForDisplay();
         if(last){
-          paintIndexExtras(last,true);
-          setText(v,fmt(last.price,2));
-          setClass(v,'v '+cls(last.change));
+          paintIndexExtras(null,false);
+          setText(v,'—');
+          setClass(v,'v flat');
           if(c){
             const mins=Math.max(0,Math.floor((Date.now()-Number(last.stamp))/60000));
             const source=last.officialClose?'正式收盤':'最後已取得行情';
-            setText(c,(num(last.change)>0?'+':'')+fmt(last.change,2)+'｜'+source+' '+last.time+'｜延遲約 '+mins+' 分鐘・非即時');
+            setText(c,'行情延遲，暫停顯示｜'+source+' '+last.time+'｜已延遲約 '+mins+' 分鐘');
             setClass(c,'s muted');
           }
         }else{
@@ -326,7 +341,12 @@
       const q=quotes.get(code),set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v},big=document.getElementById('bigChart'),title=big?.closest('.card')?.querySelector('h3');
       const drawRetained=()=>typeof window.__TW_DRAW_DETAIL_TODAY__==='function'&&window.__TW_DRAW_DETAIL_TODAY__(code,big);
       window.__TW_SYNC_DETAIL_FROM_MAIN__?.(code);
-      if(!q?.live||q.date!==today()){
+      const problem=quoteProblem(code,q);
+      if(problem){
+        ['dPrice','dOpen','dRange','dVolume','dChange'].forEach(id=>set(id,'—'));
+        set('dTime',problem+'｜等待新有效行情');
+      }
+      if(problem||!q?.live||q.date!==today()){
         if(title)title.textContent='盤中／最近交易日走勢';
         if(drawRetained()){
           const sd=window.__TW_DETAIL_SESSION_DATE__?.(code)||'';set('chartMsg',sd?`${sd.replaceAll('-','/')} 最近交易日走勢`:'最近交易日走勢');
@@ -386,14 +406,12 @@
     paintIndex();
     for(const code of watchCodes()){
       const q=quotes.get(code);
-      if(q?.date===today()){
-        paintRow(code,q);
-        const r=row(code),state=quoteFreshness(q);
-        if(marketOpen()&&state==='older'&&!q.officialClose&&r){
-          r.dataset.liveState='delayed';
-          setText(r.querySelector('.meta'),'最後成交 '+(q.tradeTime||'—')+'｜超過90秒未見新成交；請核對上方來源狀態');
-        }
-      }else if(marketOpen())maskRow(code);
+      if(marketOpen()){
+        const problem=quoteProblem(code,q);
+        if(problem){maskRow(code,problem);continue}
+      }
+      if(q?.date===today())paintRow(code,q);
+      else if(marketOpen())maskRow(code,'尚未取得今日有效行情');
     }
     paintDetail();paintStatus();debug();
   }
@@ -403,7 +421,7 @@
   if(originalRender)render=async function(allowNetwork=false){const x=await originalRender(marketOpen()?false:allowNetwork);if(marketOpen()||hasTodayData())paintAll();return x};
   if(originalShow)show=async function(code,opts={}){code=String(code);const q=quotes.get(code);if(q?.date===today()||marketOpen())quoteCache[code]=q||placeholder(code);const x=await originalShow(code,opts);if(q?.date===today()||marketOpen()){paintDetail();if(marketOpen())poll(false)}return x};
 
-  function debug(){const stocks={};for(const code of watchCodes()){const q=quotes.get(code),a=series.get(code)||[],r=row(code);stocks[code]={date:q?.date||null,price:q?.price??null,change:q?.change??null,tradeTime:q?.tradeTime||null,stamp:q?.stamp||null,freshness:quoteFreshness(q),source:q?.source||null,seriesPoints:a.length,seriesLastStamp:a.at(-1)?.stamp||null,domState:r?.dataset?.liveState||null,domDate:r?.dataset?.liveDate||null,domStamp:Number(r?.dataset?.liveStamp||0)||null,domPrice:r?.dataset?.livePrice||null}}window.__TW_LIVE_V091__={version:VERSION,intervalMs:INTERVAL,marketWindow:marketOpen(),indexFreshness:intradayIndexState(taiex),indexAgeSeconds:taiex?.stamp?Math.round((Date.now()-Number(taiex.stamp))/1000):null,cycle,lastPollAt,lastSuccessAt,lastMisReceivedAt,nextMisAttemptAt,failures:misFailureCount,lastError,taiex:taiex?{date:taiex.date,price:taiex.price,change:taiex.change,high:taiex.high,low:taiex.low,turnover:taiex.turnover,time:taiex.time,stamp:taiex.stamp,source:taiex.source}:null,stocks}}
+  function debug(){const stocks={};for(const code of watchCodes()){const q=quotes.get(code),a=series.get(code)||[],r=row(code);stocks[code]={date:q?.date||null,price:q?.price??null,change:q?.change??null,tradeTime:q?.tradeTime||null,stamp:q?.stamp||null,freshness:quoteFreshness(q),source:q?.source||null,seriesPoints:a.length,seriesLastStamp:a.at(-1)?.stamp||null,domState:r?.dataset?.liveState||null,domDate:r?.dataset?.liveDate||null,domStamp:Number(r?.dataset?.liveStamp||0)||null,domPrice:r?.dataset?.livePrice||null,invalidReason:r?.dataset?.liveState==='invalid'?r.querySelector('.meta')?.textContent:null}}window.__TW_LIVE_V091__={version:VERSION,intervalMs:INTERVAL,marketWindow:marketOpen(),indexFreshness:intradayIndexState(taiex),indexAgeSeconds:taiex?.stamp?Math.round((Date.now()-Number(taiex.stamp))/1000):null,cycle,lastPollAt,lastSuccessAt,lastMisReceivedAt,nextMisAttemptAt,failures:misFailureCount,lastError,taiex:taiex?{date:taiex.date,price:taiex.price,change:taiex.change,high:taiex.high,low:taiex.low,turnover:taiex.turnover,time:taiex.time,stamp:taiex.stamp,source:taiex.source}:null,stocks}}
 
   async function pollBackup(force=false){
     if(backupBusy||(!force&&Date.now()-lastBackupAt<BACKUP_INTERVAL))return false;

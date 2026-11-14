@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-13T23:31:54.676183+00:00",
+  "generatedAt": "2026-11-14T00:17:50.636370+00:00",
   "stocks": {
     "0050": [
       {
@@ -129,6 +129,12 @@
         "time": 1794299292000
       },
       {
+        "title": "中鋼鋼板供不應求 今年訂單滿載、明年首季接單看旺 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1JR2FKYUdTUkpJb2N5VlZpajdlRDc3b1czYVc1dWxnNG04TDNXQ2Uwd0hYYTh0RUE5THRNVGFzQUhJSWJqbTBNTzVUNnZDZ1JhUVVsTDFfeFUxQdIBX0FVX3lxTE1TUWh1XzBaTG51ZlFleGdJU0hiS3N3X0hRTVZpUF9sbG1JbHJjNFNzYkQ2LTlYSDIwUndvQUtycWcyUFJQSzI0aG1BY2NpRTlZTWkyY3h3aUVnMjVUS1lR?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793779200000
+      },
+      {
         "title": "外銷比重增影響毛利 中鋼9月稅前淨利月減19% - 中央社 CNA",
         "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE5ELVctQTlzYnV2UWNkOUxzTmVtNEpUdl93OHhXa3QyS1lUaHIyNjBOUUhzUW9aRjlVZTBxdWpVNGttWE9LOWZsWThha0U4M19pb1F4cDNheDIzOVd0MVE?oc=5",
         "publisher": "中央社 CNA",
@@ -138,12 +144,6 @@
         "title": "中鋼9月稅前獲利月減19%，惟前3季明顯改善- 新聞 - MoneyDJ",
         "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOdXllSzRadG15UjJCUDdLb1Zad0hnOE5qNWx1bVpPUEltZ3NEMEhlS09yZGdoOUZDZFEtT3k2RVhLLTBEZ3RRR0Z4bHdYNHhEclhsdlZPbVhTdUJrNjl5NTNtOFR0ZmhyaHRVSTlERXI4TjRodG1XYVVzWFRoSG1faXBYQ2ZvWmxRa3RhazhWeGtXdw?oc=5",
         "publisher": "MoneyDJ",
-        "time": 1793084400000
-      },
-      {
-        "title": "中鋼前三季賺43億元 9月營業利益月減4成 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE16Y1BJRWpsdTZXSVhrdlFJRWV4NjVfbWpHWHZqN1J1M2E3ZjB4T2RrMTFQS2YtRzVnT0VPcnJlODJkNXN1Y0FEeVRabTJQRUlqZUFrZEIzTTlLU1k1RFVn0gFkQVVfeXFMUEVMRlhaRzI0czBLTzJ4RVJKU3dVc3o4MFg4b2RmVGFUMTVyVXprMVNNS3NYNTdFZW4tMnN0Y1ZCNms1NUVZZi05YVhGQWNiOWtvMUl2VmJwdjVmX3B5QnIxUWkwSA?oc=5",
-        "publisher": "自由財經",
         "time": 1793084400000
       }
     ],
@@ -179,12 +179,6 @@
         "time": 1794384000000
       },
       {
-        "title": "台股 ETF 配息報喜 00878、00982A 等股息及配發率創高 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9sS0lhZFpqaUgyUzQ4WTVoY0h2YXFnSVl3NFdxcDlWb1E5RXphY0thUVRTaVFMSUhxVU42bmpYQ3NOQ1FyTTVkeE90NVVFYjlhVlItT1RYem9BQdIBX0FVX3lxTE84SnNkZGxndU5lRXRZakdVUDlGd0g5dGgxZVEzTTlKbXpBM3g4RE5zdGhyc29tcXp4Zkk1WlRoTUFDRy1xUFVmMFpYZkNubmNRRHRJcVA5Z05CN1pBSlo4?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793692800000
-      },
-      {
         "title": "國泰永續高股息-ETF配息狀況 - MoneyDJ",
         "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE41UWthZmowZVNaYjRPLWhIRlNQNVZKZzZGeEhlaGdrdXQ1UjFiU3pLdDlzR3RrQzd0NnI5N2tMaDRXMkp3N1h4S2hRd1ZDMzdiVzllRnJrSWI2elVCSWswd1dRMjgyeU9kSTlySkVCV2xEdUtVN0FTSGdrVmw?oc=5",
         "publisher": "MoneyDJ",
@@ -194,6 +188,12 @@
         "title": "國泰永續高股息11/17除息 預估配息1.25元續創新高 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1KdDlTWjNWTU9nQUpFN0R1a0hEbC1CLUlobkZ5UkJIdEJvamYxZmc3RUcxWFE2cm9xcW1NOW1TS2ZuZTZoc2dwRVMzelExQi1FLWJFcnJoU1BVZ9IBX0FVX3lxTE4ybXRFd24yZGNqU1RkVjhNbFF5ZTdva2lWa2ZVelZFUWZieTc5czVDYjJkbE03VjVrVHpiSGdxU25EbUhYN09oR2dsbVZKUnd6X0xBYWFjQl9KRy1mTnVJ?oc=5",
         "publisher": "經濟日報",
+        "time": 1793606400000
+      },
+      {
+        "title": "00878國泰永續高股息11/17除息預估配息1.25元續創新高| 證券 - 中央社 CNA",
+        "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFAxTkRkTUg2M2hZYTFnWUFTMFlPbUNyME9WdFNFWTM2dHVxYjlKejBzY3BzajZkMUQ3eE1hNXcydmpUQXVYdTkwWm1COGJ3Yk13RTJqRFRUZTJ1Um5xQ2c?oc=5",
+        "publisher": "中央社 CNA",
         "time": 1793606400000
       }
     ],

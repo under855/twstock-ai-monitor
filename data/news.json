@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-14T18:03:49.649425+00:00",
+  "generatedAt": "2026-11-14T18:52:45.458219+00:00",
   "stocks": {
     "0050": [
       {
@@ -21,9 +21,9 @@
         "time": 1794551623000
       },
       {
-        "title": "元大台灣50〈0050.TW〉 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9JQXVwR01LUHFHN2RVTFJtdFZnR2taRkpSY0kyT0RWWkRjdDBoZnlwRHJuSVVfWHd3ejQxcjFwRldRQ0UtWVo1azI0Umo1Vkx5NkNCNndnTENlYUpBRjlmWWlDYm9pelBTT1pV?oc=5",
-        "publisher": "MoneyDJ",
+        "title": "焦點股》0050：跌破90元 買盤湧入 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBwdG9faUVLOFFIdGNaSWNqUlh2cmdTUU5Jdi1lb2tCTWdnSUQwc1ZEU3V3d3YzVldWaTVJekxLNnE0cWxlbzdFcWdRdmR5aWlqX05xaDBXdTVaSGdmQk9j0gFkQVVfeXFMUGJMRE9LRU5xcTN1T1BFWGhXQVhLWmF2QW9FQ1BVZDRuaVl4RjI5UVFYMUsxSUxoTDJFbHdTd1pSM0o2TW4wa3FCemdtWUhWSW5mdnJRZGI4cDdXbEhhc25nbnkxaA?oc=5",
+        "publisher": "自由財經",
         "time": 1793952000000
       }
     ],
@@ -105,6 +105,12 @@
         "time": 1794510000000
       },
       {
+        "title": "鋼鐵業遇雙重考驗中鋼董事長提解方國產國用鞏固本土市場基本盤- 日報 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBrQUF5R3o5cVpmWkI3ckJRalduQWd2SE1FZGh3b05ZZjlBQ3RBOXo1N2dlZGViX25CWEN4M0YwZFF2Sk1aVDRQbXdIeHplNFhyei1reXJJLVpSakxqMEhJ?oc=5",
+        "publisher": "工商時報",
+        "time": 1794423600000
+      },
+      {
         "title": "中鋼12月盤價平盤機率高- 日報 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5RYW12OVc4aFVTb0xMN2x2NkJ4VnFKR04xQS1JeEFnSXlaaHJHWG92VXhqMHZGa25YMFBIRmxaMEV0MWdhTzB5RndJREJDZGdRVmhCOUZfVG9WbC0wQTFN?oc=5",
         "publisher": "工商時報",
@@ -115,12 +121,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1JR2FKYUdTUkpJb2N5VlZpajdlRDc3b1czYVc1dWxnNG04TDNXQ2Uwd0hYYTh0RUE5THRNVGFzQUhJSWJqbTBNTzVUNnZDZ1JhUVVsTDFfeFUxQdIBX0FVX3lxTE1TUWh1XzBaTG51ZlFleGdJU0hiS3N3X0hRTVZpUF9sbG1JbHJjNFNzYkQ2LTlYSDIwUndvQUtycWcyUFJQSzI0aG1BY2NpRTlZTWkyY3h3aUVnMjVUS1lR?oc=5",
         "publisher": "經濟日報",
         "time": 1793779200000
-      },
-      {
-        "title": "中鋼10月出貨比9月少 公司卻說修正很正常！理由在哪？法人揭Q4展望 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9aYXg1VDFLYkdBcDhLV1BkRGpKRURVVlJvdGE4a0ZuRjVGTTJ1U1FTUU5zZW5PaFJUY1F6OWhhTU93b2dZVUdiNjg0ckZORTd2a1BjeUZJY1l0N2dQY09R?oc=5",
-        "publisher": "工商時報",
-        "time": 1793692800000
       },
       {
         "title": "中鋼營運溫和復甦- 日報 - 工商時報",
@@ -135,16 +135,16 @@
         "time": 1793257200000
       },
       {
-        "title": "中鋼9月稅前盈餘月減19% 前三季賺43億元 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1fS2Ffb0k1SUtmMVFBX3hNaWpsbm5NZFJIeDZfcGtFYWdyMXFKNk5yM1VTVHUzeW5DUFhMMDhsTUNtR1ZSOFJtWGRyV0lRb0U?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1793084400000
+        "title": "中鋼布局高再生料鋼材助攻低碳轉型- 商情 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5EVU5LSVVnamlZaFB4X2ZKWHd4V0d0UWtWR2FhdXhnRkltemxxNHJDODl5N1JHS0puZDk3X0FkYy1ReFJMdUF5N21qVFIxSjhEYllJYVAwZktHc3JUbWNN?oc=5",
+        "publisher": "工商時報",
+        "time": 1793170800000
       },
       {
-        "title": "中鋼9月稅前獲利月減19%，惟前3季明顯改善- 新聞 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOdXllSzRadG15UjJCUDdLb1Zad0hnOE5qNWx1bVpPUEltZ3NEMEhlS09yZGdoOUZDZFEtT3k2RVhLLTBEZ3RRR0Z4bHdYNHhEclhsdlZPbVhTdUJrNjl5NTNtOFR0ZmhyaHRVSTlERXI4TjRodG1XYVVzWFRoSG1faXBYQ2ZvWmxRa3RhazhWeGtXdw?oc=5",
-        "publisher": "MoneyDJ",
-        "time": 1793084400000
+        "title": "中鋼報喜 前三季轉盈 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1QaEE2YWNaZHlab2VSMXIyVFNPTHJaU21yU3U3ZHN0ajRRR1ZiRjQteXRiZTUycU5vbzRDZ3JPc0d1dmd1aDBwWlR3WXJQakFNUGkxVkJyWEEwQdIBX0FVX3lxTE0zX0t5cXBVb2NnLTk1WDZlcFVOeXh3VzhXT0IyVU42bFNSWmt6WURwNS00OUFRZFZ0ejdEZGpzZ25hU0JYa0s2OUhZOUsydERKVzIyWk10X0FOMFdoUk9j?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793170800000
       }
     ],
     "00878": [

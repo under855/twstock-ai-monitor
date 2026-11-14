@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-14T06:14:43.293933+00:00",
+  "generatedAt": "2026-11-14T07:24:38.632823+00:00",
   "stocks": {
     "0050": [
       {
@@ -77,12 +77,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBqdGRjeFlJVXZtOEFnQmluNnpKUktWeDRhV1F2eC1EVy1VNmhaZVNkSTFBdFhRbDJRaWY5Qk5HZnp2eTdsY2U4NWZhVnU2S3IzUWJYRVV2X0dla2xaWUNB0gFkQVVfeXFMUHVPekhFMzlpQXVWWlpQUmxpTXh6d3dVWFNPSkR1d09zdHByR0kwczdhVk9qb2FZbVpmMnl1cEp2ZTNfWUtQNHhqOGxpTTNOVXd6SmtzZThTVGJmNGkzZlQ2VEd2RA?oc=5",
         "publisher": "自由財經",
         "time": 1792911600000
-      },
-      {
-        "title": "鈊象(3293) 美國32州博弈授權紅利發酵！毛利率衝上98%！ - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9HVy1YaDEyRFpiVHNsNmtUTUlWdUVlMEpKd3ZiRWQ1SWNnc3E1Q1YzOFFfdWNJUkQ3MjdCVm5LSzV0d1dtZFp0ZG1UczJGS2c?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1792047600000
       }
     ],
     "2002": [
@@ -203,18 +197,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE8xOThxSWptVnBuU2FWYkp0djR0bW5nV2hTc3YwdDBITnBvc1ZMSjhSQ0l4VU4xSFRJUmFjNEF0dkJVaTJ2VmlaczhvdGVnaE5zUnhWVjNjRTVIQdIBX0FVX3lxTE1Xc0k5MVNTWVloYi1rTmIzUGI0Vmh6NzRvWF9fZ3lWMnU3VTdQOEppcXVOV2VzTmp2VjlxV1RXS1pXcWtWVHJrTjVTQ3dXdjhYLVc3NVduejNUSXVfcVA0?oc=5",
         "publisher": "經濟日報",
         "time": 1794384000000
-      },
-      {
-        "title": "312億元台股ETF股利今發放00919配發金額最多- 新聞 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQM0xQeVh2TVFTZzNSSlByblFialEwUjBjeFZESVhzUG5idTR1dERnYXNCNW1YU0dLY3YwNm1tMTN4RlliRnE0ZlZXX0pQT2RjVkRHWFc1Nk1GTUtZd0ZHeGdkcndXOVQ3NW9uQTI1ODdaLUJ2UmVoTmZKdUhRbHB4dkZ3RUVjbUlPQ1R5bUx1Y2lGQQ?oc=5",
-        "publisher": "MoneyDJ",
-        "time": 1792047600000
-      },
-      {
-        "title": "312億元台股ETF股利今發放 00919配發金額最多 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPLXBDbmhXa2wzdkFxOVBrSHFUc2dHZE1nRE84anR3MUs0THRyNVlQMlpOUHRGQnpDem9hbVFoQlhhVXRDWTFET1RmVkNrc2twcGdvSk1MQUxHX1JpdFFZOEE1ZEhJUmZiWmRjUmtSWW1SNnFramtrUEQxZF9ybXR3RUQ2dlBmTnBhbzFJ?oc=5",
-        "publisher": "MoneyDJ",
-        "time": 1792047600000
       }
     ],
     "2330": [
@@ -269,12 +251,12 @@
     ]
   },
   "refreshStatus": {
-    "0050": "fresh",
-    "3711": "fresh",
-    "3293": "fresh",
-    "2002": "fresh",
-    "00878": "fresh",
-    "00919": "fresh",
-    "2330": "fresh"
+    "0050": "retained-previous",
+    "3711": "retained-previous",
+    "3293": "retained-previous",
+    "2002": "retained-previous",
+    "00878": "retained-previous",
+    "00919": "retained-previous",
+    "2330": "retained-previous"
   }
 }

@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.9.8.2';
+  const VERSION='0.9.8.6';
   const INTERVAL=4000; // Four-second scheduler; outstanding requests are single-flight, official source timestamps govern freshness.
   const BACKUP_INTERVAL=60000;
   const MAX_POINTS=600;

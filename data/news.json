@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-14T12:08:58.709782+00:00",
+  "generatedAt": "2026-11-14T12:59:23.663257+00:00",
   "stocks": {
     "0050": [
       {
@@ -19,18 +19,6 @@
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBTMWNZZFgzdFdteFhzSl8wYmFpZkQ5TEt5VzZRSzRvMnBhVzdkU19WSExFb08tWHVZOWFtQkZiVFI0LVlzalZSR2tpV1hVT00?oc=5",
         "publisher": "鉅亨網",
         "time": 1794551623000
-      },
-      {
-        "title": "焦點股》0050：跌破90元 買盤湧入 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBwdG9faUVLOFFIdGNaSWNqUlh2cmdTUU5Jdi1lb2tCTWdnSUQwc1ZEU3V3d3YzVldWaTVJekxLNnE0cWxlbzdFcWdRdmR5aWlqX05xaDBXdTVaSGdmQk9j0gFkQVVfeXFMUGJMRE9LRU5xcTN1T1BFWGhXQVhLWmF2QW9FQ1BVZDRuaVl4RjI5UVFYMUsxSUxoTDJFbHdTd1pSM0o2TW4wa3FCemdtWUhWSW5mdnJRZGI4cDdXbEhhc25nbnkxaA?oc=5",
-        "publisher": "自由財經",
-        "time": 1793952000000
-      },
-      {
-        "title": "元大台灣 50 逢低布局 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFA2aGx6ajJnUjBZR0dSMGUzNW5wdmVuRGFHMzRCaW9WQzBLOTBBUW9nRzAxWFF1aXVNWTV5eUFFSVpBTEdSUTI2NU1rLVoxR1BOa2pwMFktb1RVZ9IBX0FVX3lxTFBPQXFZbkdjRndJZ2dHYXBQN2lrOFZsSHdoejI0aEp5enFZWXBUZ1RsVzdMeEhYeXBOWEJkaDB4MzZuQW1Bb3luMXdFSDYybW16QXdZTXFsVzlSYW8zTDJ3?oc=5",
-        "publisher": "經濟日報",
-        "time": 1792825200000
       }
     ],
     "3711": [
@@ -137,6 +125,12 @@
     ],
     "00878": [
       {
+        "title": "8月台股 ETF 配息一次看 00878、00929、00891等配息飆新高 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1uaUFsaXgyRUh3aUI1OWVDQV81WEpVMjg0dFUtQmFOdkpidnNXdDY5SHhpM1p2RTM3OWl5QjQ2d21hdHEwWl9saGg3QTZETF80WjBabWZWcm1DQdIBX0FVX3lxTE9TcnRVa0psdHE1dHlNQTZyN0xyRTEzZGMzRHRyblp4Qk1Hb0dwTDhEYTNod3AtZ1Ytb3lKdERwLUNwRHNzeGdyLUtWSU8tTWpOc1JybHdPbW1qWXhuLTRN?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794556800000
+      },
+      {
         "title": "00878配息1.25元創新高！最後買進日、入帳日一次看- 理財 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9tcExMUTdvR3MzX1haWHpQU1hES2JocHh3d0lTQzFmbGpxZDc5Q2Rqc0FuSWRPM3B6aFJIVEltY3ZqUEV5UDllYUNBb1ItSjhpaUYzY3hRc3g4U1oyb0E4?oc=5",
         "publisher": "工商時報",
@@ -153,12 +147,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBLUGRMVXBfN2VSdDVBVElyUlNRblVjeUs5SS1kWFlxVGVQRnJoaENnTnV2UkdfY1RTRlV0MVRwUUhIRl9UN0FzbmI2WXhVZnhDSE9NNUwxVXdMUdIBX0FVX3lxTE05NU1CdHpVaUh5OWRFTWNEcF8wMjUyYjFlWGNrWGdybnNGRVo4UjUtcV85UjVrekZXd1A5U0RSVHprdjFpWVd1Q3kySFJvLVBZSmQ4dkZSSm80QzdBZzlR?oc=5",
         "publisher": "經濟日報",
         "time": 1794475808000
-      },
-      {
-        "title": "8月台股 ETF 配息一次看 00878、00929、00891等配息飆新高 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1uaUFsaXgyRUh3aUI1OWVDQV81WEpVMjg0dFUtQmFOdkpidnNXdDY5SHhpM1p2RTM3OWl5QjQ2d21hdHEwWl9saGg3QTZETF80WjBabWZWcm1DQdIBX0FVX3lxTE9TcnRVa0psdHE1dHlNQTZyN0xyRTEzZGMzRHRyblp4Qk1Hb0dwTDhEYTNod3AtZ1Ytb3lKdERwLUNwRHNzeGdyLUtWSU8tTWpOc1JybHdPbW1qWXhuLTRN?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794470400000
       },
       {
         "title": "九檔台股 ETF 創高價 00878、0056等單日股價強彈 - 經濟日報",

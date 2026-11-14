@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-14T23:06:21.566843+00:00",
+  "generatedAt": "2026-11-14T23:43:30.048724+00:00",
   "stocks": {
     "0050": [
       {
@@ -111,10 +111,10 @@
         "time": 1793779200000
       },
       {
-        "title": "中鋼營運溫和復甦- 日報 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9QcjJZRW82TVBCSzVmUzBla2RiLVhsak5QS0FtTTNuNFltQ0ZXa3JIVTNFV21QczRXcUlGTFpXa3J2UEpVREFZUUZqcXpzWHJZSlVwdXpSb2xRNFRxWlBF?oc=5",
+        "title": "中鋼10月出貨比9月少 公司卻說修正很正常！理由在哪？法人揭Q4展望 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9aYXg1VDFLYkdBcDhLV1BkRGpKRURVVlJvdGE4a0ZuRjVGTTJ1U1FTUU5zZW5PaFJUY1F6OWhhTU93b2dZVUdiNjg0ckZORTd2a1BjeUZJY1l0N2dQY09R?oc=5",
         "publisher": "工商時報",
-        "time": 1793516400000
+        "time": 1793692800000
       },
       {
         "title": "中鋼揪伴 攻無稀土馬達 - 經濟日報",
@@ -123,15 +123,15 @@
         "time": 1793257200000
       },
       {
-        "title": "中鋼報喜 前三季轉盈 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1QaEE2YWNaZHlab2VSMXIyVFNPTHJaU21yU3U3ZHN0ajRRR1ZiRjQteXRiZTUycU5vbzRDZ3JPc0d1dmd1aDBwWlR3WXJQakFNUGkxVkJyWEEwQdIBX0FVX3lxTE0zX0t5cXBVb2NnLTk1WDZlcFVOeXh3VzhXT0IyVU42bFNSWmt6WURwNS00OUFRZFZ0ejdEZGpzZ25hU0JYa0s2OUhZOUsydERKVzIyWk10X0FOMFdoUk9j?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793170800000
-      },
-      {
         "title": "中鋼9月稅前盈餘月減19% 前三季賺43億元 - 鉅亨網",
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1fS2Ffb0k1SUtmMVFBX3hNaWpsbm5NZFJIeDZfcGtFYWdyMXFKNk5yM1VTVHUzeW5DUFhMMDhsTUNtR1ZSOFJtWGRyV0lRb0U?oc=5",
         "publisher": "鉅亨網",
+        "time": 1793084400000
+      },
+      {
+        "title": "中鋼9月稅前獲利月減19%，惟前3季明顯改善- 新聞 - MoneyDJ",
+        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOdXllSzRadG15UjJCUDdLb1Zad0hnOE5qNWx1bVpPUEltZ3NEMEhlS09yZGdoOUZDZFEtT3k2RVhLLTBEZ3RRR0Z4bHdYNHhEclhsdlZPbVhTdUJrNjl5NTNtOFR0ZmhyaHRVSTlERXI4TjRodG1XYVVzWFRoSG1faXBYQ2ZvWmxRa3RhazhWeGtXdw?oc=5",
+        "publisher": "MoneyDJ",
         "time": 1793084400000
       }
     ],
@@ -187,6 +187,12 @@
     ],
     "00919": [
       {
+        "title": "小摩：00919 等四檔高股息 ETF 年底前將調整成分股 三檔個股最受惠 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE0yRXN2ZjF3Y195dERPWDdVZklnbDBxcWkzbmo0dlFNc0twMDFYNFQ5b0U1cXZSeU1FSkY4ZFdhVXU3ZHJPcnF0UkJBN3Bxa3VNVERsV1JrMTNCQdIBX0FVX3lxTE53TUxqZ1lrc1oxbV9LTVlVQmJlM0tDMVVXRG5qbjl4U0h5WGgzTlVwYWtFQnNRY2E2VDlmTGNrc0JJOXYyUGNGNmtDTEtjeXpuOGU5S3FsN0xRU2liaEpB?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794556800000
+      },
+      {
         "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
         "publisher": "經濟日報",
@@ -205,7 +211,7 @@
         "time": 1794384000000
       },
       {
-        "title": "群益台灣精選高息ETF基金 的總覽 | 鉅亨網 - 鉅亨網",
+        "title": "群益台灣精選高息ETF基金 的總覽 | 鉅亨網 - 基金老司機 - 鉅亨網",
         "link": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxNWTBzcERwektRQXdWb3FLdTNUcjVFQTZuMVJPSFkwVkZxSEdJYVk5WVdwM3BhQm1fbjdvdFF5TjJiajNOalRBZWROeXcwUjBKVk0xSEl2eU5WSTRmRXVrRzhidHJnZkFSSmxHeDdyczR0WFRlWXc0VjcwcEF4cFZ3clN2alpsaDc5WXl0QWhfbVR5SklESlJuQ0puaUoyYnVWZWMybklTSkRSV0RBMVhGUFctT0F1SXByenR5WXFTdENYUUs2UUMwOUpDSHBBemllTVlPazdKMkt2NFFkcTFhOA?oc=5",
         "publisher": "鉅亨網",
         "time": 1793188872000

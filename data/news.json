@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-14T18:52:45.458219+00:00",
+  "generatedAt": "2026-11-14T19:35:10.600123+00:00",
   "stocks": {
     "0050": [
       {
@@ -73,6 +73,12 @@
     ],
     "3293": [
       {
+        "title": "鈊象追價買盤強勁- 日報 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9CUWN3d0lYZEh2RzJ3Qjl6ems0SkZKdWpZQmJxUlFZY0xhNDNKU0UzLUFXQWg0RjFrRUdYV0NEOUJmYkRpeTFNMjg1MEx4TXdpcHQybUNNTEE5ME4zaGxv?oc=5",
+        "publisher": "工商時報",
+        "time": 1794682800000
+      },
+      {
         "title": "鈊象財報／前三季 EPS 賺35.24元 擴大美國市場布局 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE44MmR1Tm8xSFEtUVZuOVF6ODIzTGQxbVAzc3pHemViWGhGRi1ObnNjTXd3Q0xueXdLWDNiM2FWV3ZEMTJHbThuUnozS2o3MFZVTGNLNWhwcTNOMkXSAWBBVV95cUxOVXBGX0E3ZDBVWVFEdE5jdXdYdXZtNTVObEdYOG52TzJpVzA2RDU5cEZXN3VHV3JTbXdsaVZoQjI5ZktFY29ESlVWT1dmQi1SOGZITVl5dm41c1hzSWVoZ1g?oc=5",
         "publisher": "經濟日報",
@@ -89,12 +95,6 @@
         "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE41RTV3Vk9SYmJ6SFZJRGNHcHNhMGdWUWdlUkxlN01oeTRxZk1CdUFmQVg0WUV5N0ZzRUlaaFlPVk1GSTZwUHh3WmdGc01LTGVoVnZxeUJ5S0MtR0XSAWBBVV95cUxQVkgyRG80eTM2ZWVTeWZEZ3VzV294SFZHQU9aelBxTG1jVlM3bF9PMzd4TXEzZXVMU3gtT3JFN3N0X1doanNVWWpuSEtqTGZCQ1BhVEc0a0JfRmp6Q3h6WDg?oc=5",
         "publisher": "經濟日報",
         "time": 1792998000000
-      },
-      {
-        "title": "灰熊狙擊遊戲股王鈊象 內資送暖喊目標價上看千元 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBqdGRjeFlJVXZtOEFnQmluNnpKUktWeDRhV1F2eC1EVy1VNmhaZVNkSTFBdFhRbDJRaWY5Qk5HZnp2eTdsY2U4NWZhVnU2S3IzUWJYRVV2X0dla2xaWUNB0gFkQVVfeXFMUHVPekhFMzlpQXVWWlpQUmxpTXh6d3dVWFNPSkR1d09zdHByR0kwczdhVk9qb2FZbVpmMnl1cEp2ZTNfWUtQNHhqOGxpTTNOVXd6SmtzZThTVGJmNGkzZlQ2VEd2RA?oc=5",
-        "publisher": "自由財經",
-        "time": 1792911600000
       }
     ],
     "2002": [
@@ -135,16 +135,16 @@
         "time": 1793257200000
       },
       {
-        "title": "中鋼布局高再生料鋼材助攻低碳轉型- 商情 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5EVU5LSVVnamlZaFB4X2ZKWHd4V0d0UWtWR2FhdXhnRkltemxxNHJDODl5N1JHS0puZDk3X0FkYy1ReFJMdUF5N21qVFIxSjhEYllJYVAwZktHc3JUbWNN?oc=5",
-        "publisher": "工商時報",
-        "time": 1793170800000
-      },
-      {
         "title": "中鋼報喜 前三季轉盈 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1QaEE2YWNaZHlab2VSMXIyVFNPTHJaU21yU3U3ZHN0ajRRR1ZiRjQteXRiZTUycU5vbzRDZ3JPc0d1dmd1aDBwWlR3WXJQakFNUGkxVkJyWEEwQdIBX0FVX3lxTE0zX0t5cXBVb2NnLTk1WDZlcFVOeXh3VzhXT0IyVU42bFNSWmt6WURwNS00OUFRZFZ0ejdEZGpzZ25hU0JYa0s2OUhZOUsydERKVzIyWk10X0FOMFdoUk9j?oc=5",
         "publisher": "經濟日報",
         "time": 1793170800000
+      },
+      {
+        "title": "中鋼9月稅前盈餘月減19% 前三季賺43億元 - 鉅亨網",
+        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1fS2Ffb0k1SUtmMVFBX3hNaWpsbm5NZFJIeDZfcGtFYWdyMXFKNk5yM1VTVHUzeW5DUFhMMDhsTUNtR1ZSOFJtWGRyV0lRb0U?oc=5",
+        "publisher": "鉅亨網",
+        "time": 1793084400000
       }
     ],
     "00878": [

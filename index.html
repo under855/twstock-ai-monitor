@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="台股監控台">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>台股 AI 監控台 v0.9.8.2 Web</title>
+<title>台股 AI 監控台 v0.9.8.6 Web</title>
 <style>
 :root{--bg:#060d18;--panel:#0d1929;--panel2:#11233a;--line:#213954;--text:#edf5ff;--muted:#93a9c2;--accent:#78adff;--up:#ff6b6b;--down:#63d49a;--warn:#ffd166;--neutral:#d2dceb;--shadow:0 12px 28px rgba(0,0,0,.22)}
 *{box-sizing:border-box}html{background:var(--bg)}body{margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;background:radial-gradient(circle at 50% -10%,#13325a 0,#07111f 35%,#050b13 72%);min-height:100vh}
@@ -109,7 +109,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
 </div>
 <script src="./shared-latest-v0984.js?v=0985-ttl"></script>
 <script>
-const APP_VERSION='0.9.8.5';
+const APP_VERSION='0.9.8.6';
 const IS_WEB = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 window.addEventListener('DOMContentLoaded',()=>{
   if(!IS_WEB){
@@ -338,7 +338,7 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 <script src="./refresh-control-v0973.js?v=0983-no-extra-monitor"></script>
 <script src="./dividend-enhance.js?v=0975-feed"></script>
 <script src="./extras-v090.js?v=0973-no-flicker"></script>
-<script src="./live-v091.js?v=0982-quote-safety"></script>
+<script src="./live-v091.js?v=0986-quote-safety"></script>
 <!-- Independent WebSocket probe suspended: unreliable across client networks. -->
 <script src="./taiex-sector-ticker.js?v=0977sectors"></script>
 <script src="./stock-price-visual.js?v=0978-price"></script>

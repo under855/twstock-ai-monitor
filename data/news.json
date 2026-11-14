@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-14T07:24:38.632823+00:00",
+  "generatedAt": "2026-11-14T08:19:55.555728+00:00",
   "stocks": {
     "0050": [
       {
@@ -197,6 +197,12 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE8xOThxSWptVnBuU2FWYkp0djR0bW5nV2hTc3YwdDBITnBvc1ZMSjhSQ0l4VU4xSFRJUmFjNEF0dkJVaTJ2VmlaczhvdGVnaE5zUnhWVjNjRTVIQdIBX0FVX3lxTE1Xc0k5MVNTWVloYi1rTmIzUGI0Vmh6NzRvWF9fZ3lWMnU3VTdQOEppcXVOV2VzTmp2VjlxV1RXS1pXcWtWVHJrTjVTQ3dXdjhYLVc3NVduejNUSXVfcVA0?oc=5",
         "publisher": "經濟日報",
         "time": 1794384000000
+      },
+      {
+        "title": "百萬存股族等到了！00919花20天完成填息 年化配息率13.77％ - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFB3Z1U5MTl2dmd0d1lscmxCZjNVS243RXJxLVRodC1UZmRlMkNzZEY3eG1LQ3JYbElrZC01c3AteVdTbVhEOGdwUm0taHFuNUNZT2tSNzZpTGxrZVFtMGRN?oc=5",
+        "publisher": "工商時報",
+        "time": 1792134000000
       }
     ],
     "2330": [
@@ -251,12 +257,12 @@
     ]
   },
   "refreshStatus": {
-    "0050": "retained-previous",
-    "3711": "retained-previous",
-    "3293": "retained-previous",
-    "2002": "retained-previous",
-    "00878": "retained-previous",
-    "00919": "retained-previous",
-    "2330": "retained-previous"
+    "0050": "fresh",
+    "3711": "fresh",
+    "3293": "fresh",
+    "2002": "fresh",
+    "00878": "fresh",
+    "00919": "fresh",
+    "2330": "fresh"
   }
 }

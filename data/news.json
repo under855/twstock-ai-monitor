@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-14T01:34:25.919511+00:00",
+  "generatedAt": "2026-11-14T02:29:07.638457+00:00",
   "stocks": {
     "0050": [
       {
@@ -19,12 +19,6 @@
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBTMWNZZFgzdFdteFhzSl8wYmFpZkQ5TEt5VzZRSzRvMnBhVzdkU19WSExFb08tWHVZOWFtQkZiVFI0LVlzalZSR2tpV1hVT00?oc=5",
         "publisher": "鉅亨網",
         "time": 1794551623000
-      },
-      {
-        "title": "元大台灣50〈0050.TW〉 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9JQXVwR01LUHFHN2RVTFJtdFZnR2taRkpSY0kyT0RWWkRjdDBoZnlwRHJuSVVfWHd3ejQxcjFwRldRQ0UtWVo1azI0Umo1Vkx5NkNCNndnTENlYUpBRjlmWWlDYm9pelBTT1pV?oc=5",
-        "publisher": "MoneyDJ",
-        "time": 1793952000000
       }
     ],
     "3711": [
@@ -187,6 +181,12 @@
     ],
     "00919": [
       {
+        "title": "小摩：00919 等四檔高股息 ETF 年底前將調整成分股 三檔個股最受惠 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE0yRXN2ZjF3Y195dERPWDdVZklnbDBxcWkzbmo0dlFNc0twMDFYNFQ5b0U1cXZSeU1FSkY4ZFdhVXU3ZHJPcnF0UkJBN3Bxa3VNVERsV1JrMTNCQdIBX0FVX3lxTE53TUxqZ1lrc1oxbV9LTVlVQmJlM0tDMVVXRG5qbjl4U0h5WGgzTlVwYWtFQnNRY2E2VDlmTGNrc0JJOXYyUGNGNmtDTEtjeXpuOGU5S3FsN0xRU2liaEpB?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794470400000
+      },
+      {
         "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
         "publisher": "經濟日報",
@@ -255,9 +255,9 @@
         "time": 1792652400000
       },
       {
-        "title": "看好台積電還會漲！外媒喊「頂級投資標的」 曝下一波上漲行情 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5fLWZTRE1oTDgzdWZGUHFVWWh6dU5GSU5xNTZ0dEZ5THFvam5Od2FkRHNiV3JzdHlPRUJ1QUVvTUZJOGxMbzRUVE5iUk53SGM0bDVGaW0yejFpeURKcUI40gFkQVVfeXFMT1lFRkM5M0tZcjctNVBkWUVGakc0LUVZLXhiYUF1eUIzWjF0OXNyeUxlYnNYQVhHSkdnekljaC1HUmszS0RYMkNCRzJ5YVdHSG5LZjUySERJMkRPRklVaFlYSmdydQ?oc=5",
-        "publisher": "自由財經",
+        "title": "韓歌手Haru愛台灣娛樂文化領薪想買台積電股票| 娛樂 - 中央社 CNA",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5ybGQyNUppeDUyalNPa0dLd1VrMXpUT2pTQUFPOWhINlYyenNFVnVTS1JLSlNsc0phSmhSdTZNeDBBbXhIWlp4MEJFQldpR20wclBVVVV1Z3NrdVc1TUpv?oc=5",
+        "publisher": "中央社 CNA",
         "time": 1792393200000
       },
       {

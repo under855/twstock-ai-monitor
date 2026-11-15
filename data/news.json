@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-15T03:32:16.718610+00:00",
+  "generatedAt": "2026-11-15T04:37:02.301835+00:00",
   "stocks": {
     "0050": [
       {
@@ -7,12 +7,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE55N3BBaHh2U3U1WV9Rd3g3bmdqd3RVbkh0ZF9CdnpJcnBnblAzWkVqLTlGY2wtdDA3c2x1VmpNR1VBX2hIOGh2NEN6VVRXUkxlYlBkM0d5SW1sQdIBX0FVX3lxTE9rN2Z0aFphQVZhbmhSazlOX3hBdnI1YzZ3U016dGFiWFVoMHJBdk1xZDA3RG1zdzktY1dFV19zdHZhLUZvWGZBaEs1UmJrNVhicVJXZ1JacDBibXVyRG9z?oc=5",
         "publisher": "經濟日報",
         "time": 1794586358000
-      },
-      {
-        "title": "0050 10月定期定額突破130億元年增127% 0056同步締新猷 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBCOFFkQ2JGT3ZRRGhaZHozZF9zR2piMVkyZ2l3bVA4ZTNidXNDdTMwOWRLRUtVSE95R1BEd0Q2aENWZWhyTnNCY21RRkswcVE?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1794554208000
       },
       {
         "title": "不只0050與高股息！從10大熱門ETF排行，一次看懂最新存股風向與績效表現 - 鉅亨網",
@@ -95,12 +89,6 @@
         "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE41RTV3Vk9SYmJ6SFZJRGNHcHNhMGdWUWdlUkxlN01oeTRxZk1CdUFmQVg0WUV5N0ZzRUlaaFlPVk1GSTZwUHh3WmdGc01LTGVoVnZxeUJ5S0MtR0XSAWBBVV95cUxQVkgyRG80eTM2ZWVTeWZEZ3VzV294SFZHQU9aelBxTG1jVlM3bF9PMzd4TXEzZXVMU3gtT3JFN3N0X1doanNVWWpuSEtqTGZCQ1BhVEc0a0JfRmp6Q3h6WDg?oc=5",
         "publisher": "經濟日報",
         "time": 1792998000000
-      },
-      {
-        "title": "灰熊狙擊遊戲股王鈊象 內資送暖喊目標價上看千元 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBqdGRjeFlJVXZtOEFnQmluNnpKUktWeDRhV1F2eC1EVy1VNmhaZVNkSTFBdFhRbDJRaWY5Qk5HZnp2eTdsY2U4NWZhVnU2S3IzUWJYRVV2X0dla2xaWUNB0gFkQVVfeXFMUHVPekhFMzlpQXVWWlpQUmxpTXh6d3dVWFNPSkR1d09zdHByR0kwczdhVk9qb2FZbVpmMnl1cEp2ZTNfWUtQNHhqOGxpTTNOVXd6SmtzZThTVGJmNGkzZlQ2VEd2RA?oc=5",
-        "publisher": "自由財經",
-        "time": 1792911600000
       }
     ],
     "2002": [
@@ -155,12 +143,6 @@
     ],
     "00878": [
       {
-        "title": "九檔台股 ETF 創高價 00878、0056等單日股價強彈 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5fQkU5OUJBLUpLLXVhbWpzTjMyWEhydng1b0JpcUxFSnhsNFhOUFN2cFQ0dVNhR21wc1hUUFBfZVExSkhud09GTVZxRE14Q1UtZ0pYaDdBUFJWUdIBX0FVX3lxTE4zd3BDQXBWUXZqQkdhalZGX3FrX0FoV0x6b2I5NS1hWHNRaFIyUjJSYUhpME9DaGpIVTBDM1d4MXJ4X0UwQmgzNUVxdUg5Q0pZc1V5b1RDcnVQNDc0elBJ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794556800000
-      },
-      {
         "title": "00878配息1.25元創新高！最後買進日、入帳日一次看- 理財 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9tcExMUTdvR3MzX1haWHpQU1hES2JocHh3d0lTQzFmbGpxZDc5Q2Rqc0FuSWRPM3B6aFJIVEltY3ZqUEV5UDllYUNBb1ItSjhpaUYzY3hRc3g4U1oyb0E4?oc=5",
         "publisher": "工商時報",
@@ -177,6 +159,12 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBLUGRMVXBfN2VSdDVBVElyUlNRblVjeUs5SS1kWFlxVGVQRnJoaENnTnV2UkdfY1RTRlV0MVRwUUhIRl9UN0FzbmI2WXhVZnhDSE9NNUwxVXdMUdIBX0FVX3lxTE05NU1CdHpVaUh5OWRFTWNEcF8wMjUyYjFlWGNrWGdybnNGRVo4UjUtcV85UjVrekZXd1A5U0RSVHprdjFpWVd1Q3kySFJvLVBZSmQ4dkZSSm80QzdBZzlR?oc=5",
         "publisher": "經濟日報",
         "time": 1794475808000
+      },
+      {
+        "title": "九檔台股 ETF 創高價 00878、0056等單日股價強彈 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5fQkU5OUJBLUpLLXVhbWpzTjMyWEhydng1b0JpcUxFSnhsNFhOUFN2cFQ0dVNhR21wc1hUUFBfZVExSkhud09GTVZxRE14Q1UtZ0pYaDdBUFJWUdIBX0FVX3lxTE4zd3BDQXBWUXZqQkdhalZGX3FrX0FoV0x6b2I5NS1hWHNRaFIyUjJSYUhpME9DaGpIVTBDM1d4MXJ4X0UwQmgzNUVxdUg5Q0pZc1V5b1RDcnVQNDc0elBJ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794384000000
       },
       {
         "title": "國泰永續高股息-ETF配息狀況 - MoneyDJ",
@@ -217,14 +205,14 @@
         "time": 1794556800000
       },
       {
-        "title": "26檔 ETF 台股創高後仍賺錢！00919領軍 價量齊揚前十都有「一特色」 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFByRHVzNVdCTEswdG9fNS0wcDJOTlhXQ0JEeHhzVTVELUlGZnpkbWZKZkF2dV9PYVhGV0VUZmdsTmx4Wl9ENzMtb1BxX2lpMzNVWG1LY1dPbTJnQdIBX0FVX3lxTE5OZXdsX2ZISVZrVE5KdE0zTzdseVJJQWdOUGNpcmt0Z251MjBQa29RdGRYSndIZ3NHc2x6dEhtQWFYanBOMkQ4S2kzMVJxVHFrb3ZPX2JnTWRDRHFxYWxB?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794556800000
-      },
-      {
         "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794384000000
+      },
+      {
+        "title": "26檔 ETF 台股創高後仍賺錢！00919領軍 價量齊揚前十都有「一特色」 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFByRHVzNVdCTEswdG9fNS0wcDJOTlhXQ0JEeHhzVTVELUlGZnpkbWZKZkF2dV9PYVhGV0VUZmdsTmx4Wl9ENzMtb1BxX2lpMzNVWG1LY1dPbTJnQdIBX0FVX3lxTE5OZXdsX2ZISVZrVE5KdE0zTzdseVJJQWdOUGNpcmt0Z251MjBQa29RdGRYSndIZ3NHc2x6dEhtQWFYanBOMkQ4S2kzMVJxVHFrb3ZPX2JnTWRDRHFxYWxB?oc=5",
         "publisher": "經濟日報",
         "time": 1794384000000
       },

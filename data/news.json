@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-15T08:43:11.318021+00:00",
+  "generatedAt": "2026-11-15T09:29:01.072816+00:00",
   "stocks": {
     "0050": [
       {
@@ -93,22 +93,10 @@
     ],
     "2002": [
       {
-        "title": "中鋼、允強利多加持- 日報 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1zbkZZakpvRFhLY3MxX1h5UzFwQlk1a1FTVGwyeUJ5VW45bFVWUjRmeFNMRlFCTUV1V2RkamNuMm8yUW5Lb290ZlhUZ1NQYnZUWjJWOE81aW1vSWhYTXk0?oc=5",
-        "publisher": "工商時報",
-        "time": 1794510000000
-      },
-      {
         "title": "鋼鐵業遇雙重考驗中鋼董事長提解方國產國用鞏固本土市場基本盤- 日報 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBrQUF5R3o5cVpmWkI3ckJRalduQWd2SE1FZGh3b05ZZjlBQ3RBOXo1N2dlZGViX25CWEN4M0YwZFF2Sk1aVDRQbXdIeHplNFhyei1reXJJLVpSakxqMEhJ?oc=5",
         "publisher": "工商時報",
         "time": 1794423600000
-      },
-      {
-        "title": "中鋼12月盤價平盤機率高- 日報 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5RYW12OVc4aFVTb0xMN2x2NkJ4VnFKR04xQS1JeEFnSXlaaHJHWG92VXhqMHZGa25YMFBIRmxaMEV0MWdhTzB5RndJREJDZGdRVmhCOUZfVG9WbC0wQTFN?oc=5",
-        "publisher": "工商時報",
-        "time": 1793779200000
       },
       {
         "title": "中鋼鋼板供不應求 今年訂單滿載、明年首季接單看旺 - 經濟日報",
@@ -139,9 +127,27 @@
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1fS2Ffb0k1SUtmMVFBX3hNaWpsbm5NZFJIeDZfcGtFYWdyMXFKNk5yM1VTVHUzeW5DUFhMMDhsTUNtR1ZSOFJtWGRyV0lRb0U?oc=5",
         "publisher": "鉅亨網",
         "time": 1793084400000
+      },
+      {
+        "title": "中鋼9月稅前獲利月減19%，惟前3季明顯改善- 新聞 - MoneyDJ",
+        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOdXllSzRadG15UjJCUDdLb1Zad0hnOE5qNWx1bVpPUEltZ3NEMEhlS09yZGdoOUZDZFEtT3k2RVhLLTBEZ3RRR0Z4bHdYNHhEclhsdlZPbVhTdUJrNjl5NTNtOFR0ZmhyaHRVSTlERXI4TjRodG1XYVVzWFRoSG1faXBYQ2ZvWmxRa3RhazhWeGtXdw?oc=5",
+        "publisher": "MoneyDJ",
+        "time": 1793084400000
+      },
+      {
+        "title": "印度內需「硬啦」! 鋼鐵第4季復甦 中鋼股價越墊越高 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBtbGhSSUF5b1dOcm9iZGdJNktKR1o5clB5Szh0WWZVdWx1MnNhd1hFbGJIYTN2OTByTkEyUi1wUVloLWVOS3ZDc3BFbHY1dVQ1eVRpeGs5NDREZ9IBX0FVX3lxTE94dnZ1SXpLMFJTSFh5U0VIREotdEk0a19oTFBUU0xnUHFWeGxBMGlqR2JCclRJTWRVZ0I1Z2c2Z3dEU280czdZQjBoRnVpUy1WelNYc3JBMXNSNXQ3LU0w?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793084400000
       }
     ],
     "00878": [
+      {
+        "title": "九檔台股 ETF 創高價 00878、0056等單日股價強彈 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5fQkU5OUJBLUpLLXVhbWpzTjMyWEhydng1b0JpcUxFSnhsNFhOUFN2cFQ0dVNhR21wc1hUUFBfZVExSkhud09GTVZxRE14Q1UtZ0pYaDdBUFJWUdIBX0FVX3lxTE4zd3BDQXBWUXZqQkdhalZGX3FrX0FoV0x6b2I5NS1hWHNRaFIyUjJSYUhpME9DaGpIVTBDM1d4MXJ4X0UwQmgzNUVxdUg5Q0pZc1V5b1RDcnVQNDc0elBJ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794556800000
+      },
       {
         "title": "00878配息1.25元創新高！最後買進日、入帳日一次看- 理財 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9tcExMUTdvR3MzX1haWHpQU1hES2JocHh3d0lTQzFmbGpxZDc5Q2Rqc0FuSWRPM3B6aFJIVEltY3ZqUEV5UDllYUNBb1ItSjhpaUYzY3hRc3g4U1oyb0E4?oc=5",
@@ -159,12 +165,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBLUGRMVXBfN2VSdDVBVElyUlNRblVjeUs5SS1kWFlxVGVQRnJoaENnTnV2UkdfY1RTRlV0MVRwUUhIRl9UN0FzbmI2WXhVZnhDSE9NNUwxVXdMUdIBX0FVX3lxTE05NU1CdHpVaUh5OWRFTWNEcF8wMjUyYjFlWGNrWGdybnNGRVo4UjUtcV85UjVrekZXd1A5U0RSVHprdjFpWVd1Q3kySFJvLVBZSmQ4dkZSSm80QzdBZzlR?oc=5",
         "publisher": "經濟日報",
         "time": 1794475808000
-      },
-      {
-        "title": "九檔台股 ETF 創高價 00878、0056等單日股價強彈 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5fQkU5OUJBLUpLLXVhbWpzTjMyWEhydng1b0JpcUxFSnhsNFhOUFN2cFQ0dVNhR21wc1hUUFBfZVExSkhud09GTVZxRE14Q1UtZ0pYaDdBUFJWUdIBX0FVX3lxTE4zd3BDQXBWUXZqQkdhalZGX3FrX0FoV0x6b2I5NS1hWHNRaFIyUjJSYUhpME9DaGpIVTBDM1d4MXJ4X0UwQmgzNUVxdUg5Q0pZc1V5b1RDcnVQNDc0elBJ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794384000000
       },
       {
         "title": "國泰永續高股息-ETF配息狀況 - MoneyDJ",
@@ -199,20 +199,14 @@
         "time": 1794700233000
       },
       {
-        "title": "小摩：00919 等四檔高股息 ETF 年底前將調整成分股 三檔個股最受惠 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE0yRXN2ZjF3Y195dERPWDdVZklnbDBxcWkzbmo0dlFNc0twMDFYNFQ5b0U1cXZSeU1FSkY4ZFdhVXU3ZHJPcnF0UkJBN3Bxa3VNVERsV1JrMTNCQdIBX0FVX3lxTE53TUxqZ1lrc1oxbV9LTVlVQmJlM0tDMVVXRG5qbjl4U0h5WGgzTlVwYWtFQnNRY2E2VDlmTGNrc0JJOXYyUGNGNmtDTEtjeXpuOGU5S3FsN0xRU2liaEpB?oc=5",
+        "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
         "publisher": "經濟日報",
-        "time": 1794556800000
+        "time": 1794384000000
       },
       {
         "title": "26檔 ETF 台股創高後仍賺錢！00919領軍 價量齊揚前十都有「一特色」 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFByRHVzNVdCTEswdG9fNS0wcDJOTlhXQ0JEeHhzVTVELUlGZnpkbWZKZkF2dV9PYVhGV0VUZmdsTmx4Wl9ENzMtb1BxX2lpMzNVWG1LY1dPbTJnQdIBX0FVX3lxTE5OZXdsX2ZISVZrVE5KdE0zTzdseVJJQWdOUGNpcmt0Z251MjBQa29RdGRYSndIZ3NHc2x6dEhtQWFYanBOMkQ4S2kzMVJxVHFrb3ZPX2JnTWRDRHFxYWxB?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794556800000
-      },
-      {
-        "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
         "publisher": "經濟日報",
         "time": 1794384000000
       },
@@ -221,6 +215,12 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE8xOThxSWptVnBuU2FWYkp0djR0bW5nV2hTc3YwdDBITnBvc1ZMSjhSQ0l4VU4xSFRJUmFjNEF0dkJVaTJ2VmlaczhvdGVnaE5zUnhWVjNjRTVIQdIBX0FVX3lxTE1Xc0k5MVNTWVloYi1rTmIzUGI0Vmh6NzRvWF9fZ3lWMnU3VTdQOEppcXVOV2VzTmp2VjlxV1RXS1pXcWtWVHJrTjVTQ3dXdjhYLVc3NVduejNUSXVfcVA0?oc=5",
         "publisher": "經濟日報",
         "time": 1794384000000
+      },
+      {
+        "title": "小摩：00919 等四檔高股息 ETF 年底前將調整成分股 三檔個股最受惠 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE0yRXN2ZjF3Y195dERPWDdVZklnbDBxcWkzbmo0dlFNc0twMDFYNFQ5b0U1cXZSeU1FSkY4ZFdhVXU3ZHJPcnF0UkJBN3Bxa3VNVERsV1JrMTNCQdIBX0FVX3lxTE53TUxqZ1lrc1oxbV9LTVlVQmJlM0tDMVVXRG5qbjl4U0h5WGgzTlVwYWtFQnNRY2E2VDlmTGNrc0JJOXYyUGNGNmtDTEtjeXpuOGU5S3FsN0xRU2liaEpB?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794144995000
       },
       {
         "title": "群益台灣精選高息ETF基金 的總覽 | 鉅亨網 - 基金老司機 - 鉅亨網",
@@ -261,6 +261,12 @@
         "time": 1792911600000
       },
       {
+        "title": "台積電「2,500元以下隨便買」？股市獅公喊價3,875元！示警台股融資過熱、拆解熱門AI股去留- 證券 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9TU0NTLVZrU1liTkUzZE1EbTdhY3JmWldFVjZyT1Q2bVlMYjJmUDBiSUZJYW1maFpFOHE3N29NaG10RmVXazdLOVVmTG5kVG4xTVRWRnJzZEgzTzZKZjBZ?oc=5",
+        "publisher": "工商時報",
+        "time": 1792911600000
+      },
+      {
         "title": "台積電繳超強財報股價卻下跌？外媒給出答案 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9GYXBhLVdodmk2M2RxYnAwVURzNk1NaGRfakd5MENlaVFqZWZyeGEwbThzX1VkV3JldUxVRU5SWmhHTUMyVW1XOFM2eTZtdExTOVM1YmFfUExNRG9Jd1ZB0gFkQVVfeXFMUDBaeWdoZFVyNjBmeEZhaUFUdUs2Um5hVVhCSHpNMVhwR1N5WVBJbVh3YmRvNWtYVS1TWjdEekNUakh4ZGxFSW5OUkszeEpwZFd5NUd4Z0hQMjJ3Wk5qVGktRnEwYg?oc=5",
         "publisher": "自由財經",
@@ -271,12 +277,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBKdWRKZDFuVHFBOHZ1NERQSGZNZ20tMVAyaG9Gd3REQkRXZDdNcmxiNThvZlVLRk12d0Jwd1J5Qmc4V0EwSjY2d2pQUXlVOURKX1Y1SnRFT0xuRWFHX1dn0gFkQVVfeXFMUEdLU0NiRGZySzZkRno1NGdpRkhkRDZ6UlpPVGlBYi1zdUJvb0xqaTRiVEVuRk5RbWJpY3hBRE5PRHRBOFZscUdKSWNnT0dBMmVEcEV4VjlUNVNxTFIwNW1FSHVWeg?oc=5",
         "publisher": "自由財經",
         "time": 1792652400000
-      },
-      {
-        "title": "韓歌手Haru愛台灣娛樂文化領薪想買台積電股票| 娛樂 - 中央社 CNA",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5ybGQyNUppeDUyalNPa0dLd1VrMXpUT2pTQUFPOWhINlYyenNFVnVTS1JLSlNsc0phSmhSdTZNeDBBbXhIWlp4MEJFQldpR20wclBVVVV1Z3NrdVc1TUpv?oc=5",
-        "publisher": "中央社 CNA",
-        "time": 1792393200000
       }
     ]
   },

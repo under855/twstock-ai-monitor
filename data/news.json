@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-15T02:32:52.368064+00:00",
+  "generatedAt": "2026-11-15T03:32:16.718610+00:00",
   "stocks": {
     "0050": [
       {
@@ -19,6 +19,12 @@
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBTMWNZZFgzdFdteFhzSl8wYmFpZkQ5TEt5VzZRSzRvMnBhVzdkU19WSExFb08tWHVZOWFtQkZiVFI0LVlzalZSR2tpV1hVT00?oc=5",
         "publisher": "鉅亨網",
         "time": 1794551623000
+      },
+      {
+        "title": "焦點股》0050：跌破90元 買盤湧入 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBwdG9faUVLOFFIdGNaSWNqUlh2cmdTUU5Jdi1lb2tCTWdnSUQwc1ZEU3V3d3YzVldWaTVJekxLNnE0cWxlbzdFcWdRdmR5aWlqX05xaDBXdTVaSGdmQk9j0gFkQVVfeXFMUGJMRE9LRU5xcTN1T1BFWGhXQVhLWmF2QW9FQ1BVZDRuaVl4RjI5UVFYMUsxSUxoTDJFbHdTd1pSM0o2TW4wa3FCemdtWUhWSW5mdnJRZGI4cDdXbEhhc25nbnkxaA?oc=5",
+        "publisher": "自由財經",
+        "time": 1793952000000
       }
     ],
     "3711": [
@@ -89,6 +95,12 @@
         "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE41RTV3Vk9SYmJ6SFZJRGNHcHNhMGdWUWdlUkxlN01oeTRxZk1CdUFmQVg0WUV5N0ZzRUlaaFlPVk1GSTZwUHh3WmdGc01LTGVoVnZxeUJ5S0MtR0XSAWBBVV95cUxQVkgyRG80eTM2ZWVTeWZEZ3VzV294SFZHQU9aelBxTG1jVlM3bF9PMzd4TXEzZXVMU3gtT3JFN3N0X1doanNVWWpuSEtqTGZCQ1BhVEc0a0JfRmp6Q3h6WDg?oc=5",
         "publisher": "經濟日報",
         "time": 1792998000000
+      },
+      {
+        "title": "灰熊狙擊遊戲股王鈊象 內資送暖喊目標價上看千元 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBqdGRjeFlJVXZtOEFnQmluNnpKUktWeDRhV1F2eC1EVy1VNmhaZVNkSTFBdFhRbDJRaWY5Qk5HZnp2eTdsY2U4NWZhVnU2S3IzUWJYRVV2X0dla2xaWUNB0gFkQVVfeXFMUHVPekhFMzlpQXVWWlpQUmxpTXh6d3dVWFNPSkR1d09zdHByR0kwczdhVk9qb2FZbVpmMnl1cEp2ZTNfWUtQNHhqOGxpTTNOVXd6SmtzZThTVGJmNGkzZlQ2VEd2RA?oc=5",
+        "publisher": "自由財經",
+        "time": 1792911600000
       }
     ],
     "2002": [
@@ -143,6 +155,12 @@
     ],
     "00878": [
       {
+        "title": "九檔台股 ETF 創高價 00878、0056等單日股價強彈 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5fQkU5OUJBLUpLLXVhbWpzTjMyWEhydng1b0JpcUxFSnhsNFhOUFN2cFQ0dVNhR21wc1hUUFBfZVExSkhud09GTVZxRE14Q1UtZ0pYaDdBUFJWUdIBX0FVX3lxTE4zd3BDQXBWUXZqQkdhalZGX3FrX0FoV0x6b2I5NS1hWHNRaFIyUjJSYUhpME9DaGpIVTBDM1d4MXJ4X0UwQmgzNUVxdUg5Q0pZc1V5b1RDcnVQNDc0elBJ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794556800000
+      },
+      {
         "title": "00878配息1.25元創新高！最後買進日、入帳日一次看- 理財 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9tcExMUTdvR3MzX1haWHpQU1hES2JocHh3d0lTQzFmbGpxZDc5Q2Rqc0FuSWRPM3B6aFJIVEltY3ZqUEV5UDllYUNBb1ItSjhpaUYzY3hRc3g4U1oyb0E4?oc=5",
         "publisher": "工商時報",
@@ -159,12 +177,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBLUGRMVXBfN2VSdDVBVElyUlNRblVjeUs5SS1kWFlxVGVQRnJoaENnTnV2UkdfY1RTRlV0MVRwUUhIRl9UN0FzbmI2WXhVZnhDSE9NNUwxVXdMUdIBX0FVX3lxTE05NU1CdHpVaUh5OWRFTWNEcF8wMjUyYjFlWGNrWGdybnNGRVo4UjUtcV85UjVrekZXd1A5U0RSVHprdjFpWVd1Q3kySFJvLVBZSmQ4dkZSSm80QzdBZzlR?oc=5",
         "publisher": "經濟日報",
         "time": 1794475808000
-      },
-      {
-        "title": "九檔台股 ETF 創高價 00878、0056等單日股價強彈 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5fQkU5OUJBLUpLLXVhbWpzTjMyWEhydng1b0JpcUxFSnhsNFhOUFN2cFQ0dVNhR21wc1hUUFBfZVExSkhud09GTVZxRE14Q1UtZ0pYaDdBUFJWUdIBX0FVX3lxTE4zd3BDQXBWUXZqQkdhalZGX3FrX0FoV0x6b2I5NS1hWHNRaFIyUjJSYUhpME9DaGpIVTBDM1d4MXJ4X0UwQmgzNUVxdUg5Q0pZc1V5b1RDcnVQNDc0elBJ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794384000000
       },
       {
         "title": "國泰永續高股息-ETF配息狀況 - MoneyDJ",
@@ -199,14 +211,20 @@
         "time": 1794700233000
       },
       {
-        "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
+        "title": "小摩：00919 等四檔高股息 ETF 年底前將調整成分股 三檔個股最受惠 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE0yRXN2ZjF3Y195dERPWDdVZklnbDBxcWkzbmo0dlFNc0twMDFYNFQ5b0U1cXZSeU1FSkY4ZFdhVXU3ZHJPcnF0UkJBN3Bxa3VNVERsV1JrMTNCQdIBX0FVX3lxTE53TUxqZ1lrc1oxbV9LTVlVQmJlM0tDMVVXRG5qbjl4U0h5WGgzTlVwYWtFQnNRY2E2VDlmTGNrc0JJOXYyUGNGNmtDTEtjeXpuOGU5S3FsN0xRU2liaEpB?oc=5",
         "publisher": "經濟日報",
-        "time": 1794384000000
+        "time": 1794556800000
       },
       {
         "title": "26檔 ETF 台股創高後仍賺錢！00919領軍 價量齊揚前十都有「一特色」 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFByRHVzNVdCTEswdG9fNS0wcDJOTlhXQ0JEeHhzVTVELUlGZnpkbWZKZkF2dV9PYVhGV0VUZmdsTmx4Wl9ENzMtb1BxX2lpMzNVWG1LY1dPbTJnQdIBX0FVX3lxTE5OZXdsX2ZISVZrVE5KdE0zTzdseVJJQWdOUGNpcmt0Z251MjBQa29RdGRYSndIZ3NHc2x6dEhtQWFYanBOMkQ4S2kzMVJxVHFrb3ZPX2JnTWRDRHFxYWxB?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794556800000
+      },
+      {
+        "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
         "publisher": "經濟日報",
         "time": 1794384000000
       },
@@ -230,6 +248,12 @@
       }
     ],
     "2330": [
+      {
+        "title": "華爾街變心了？輝達失寵 3檔個股受惠、台積電入榜 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9CSERDNkhzQ21keGk2UG9STjhsZG1DU1FIdXF3ZWRic3haWTU2Q3NuOVJnYTJTUHRTdXAtc0hTOXNQbGUyMHNFVEFMeU9rS2lOdlNqWG1BRTU1Y1B5TDdB0gFkQVVfeXFMTmxnNUtSRDRDMjNETHQ0TjJHdnJqYXlGNTVLUk4wSDd0M3VSbWxfZzAwVDhtSUNNdXJCcElBQ0JSd2w5V0Q5THhDZFdTdGZHOFdJZzlheXR0SmR6QlR2cmhOSjNsUA?oc=5",
+        "publisher": "自由財經",
+        "time": 1794563852000
+      },
       {
         "title": "台積電加入 AI 閉環投資 認購 Anthropic、OpenAI 股票 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE84TTdVWjNIbGNCYzJIT0NjV3RLdGZPN1Zqck5JNzZXTV9ZeVNGQ2VocXVtLVN4MmNfQWtYSW9mdTZQQkEwLVYwZGF5ZDBPVURhSFVtRjN1LWsyZ9IBX0FVX3lxTE9wdXFjeUI1SXp3NFFaa3Q0cmNac1VEdzR1QUU1T3NsZE9hQno0emtDR0xQVnBBLUFWazM0T1V4ekVmOEstRGtPNGhuN3FrTy1zbEhPQWR6UTFRbG1nLUVr?oc=5",
@@ -271,12 +295,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5ybGQyNUppeDUyalNPa0dLd1VrMXpUT2pTQUFPOWhINlYyenNFVnVTS1JLSlNsc0phSmhSdTZNeDBBbXhIWlp4MEJFQldpR20wclBVVVV1Z3NrdVc1TUpv?oc=5",
         "publisher": "中央社 CNA",
         "time": 1792393200000
-      },
-      {
-        "title": "統欣生技22週年慶消費滿額抽台積電股票- 商情 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE00MVI1Z2lyM3dhRkNWR0ZXZ09nQm1GWUxOdm0td2htZnZGaldPZWYzSFRib0VQSG16c2tlNXA3MXpHa1lJZlB1TlRYSXJhWkdVNlJVS3Q4TE10cVhNVWhv?oc=5",
-        "publisher": "工商時報",
-        "time": 1792134000000
       }
     ]
   },

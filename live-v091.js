@@ -1,7 +1,7 @@
 (() => {
   'use strict';
-  const VERSION='0.9.8.6';
-  const INTERVAL=4000; // Four-second scheduler; outstanding requests are single-flight, official source timestamps govern freshness.
+  const VERSION='0.9.8.7';
+  const INTERVAL=6000; // Six-second quote scheduler; outstanding requests are single-flight, official source timestamps govern freshness.
   const BACKUP_INTERVAL=60000;
   const MAX_POINTS=600;
   const QKEY='tw_live091_quotes_';
@@ -76,7 +76,7 @@
   // Do not depend on one public CORS gateway. Requests are sequential and the outer poll is single-flight.
   let proxyPreferred=0,misFailureCount=0,nextMisAttemptAt=0;
   async function fetchMis(codes){
-    const now=Date.now();// Next 4-second cycle retries; no long backoff after a source failure.
+    const now=Date.now();// Next six-second cycle retries; no long backoff after a source failure.
     const u=`https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=${encodeURIComponent(channelList(codes).join('|'))}&json=1&delay=0&_=${now}`;
     const endpoints=[`https://proxy.cors.dev/${u}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`];
     let last=null;
@@ -393,7 +393,7 @@
     if(marketOpen()){
       const valid=indexState==='fresh'&&lastMisReceivedAt>0&&Date.now()-lastMisReceivedAt<=30000;
       setText(state,valid?'盤中資料有效':'行情延遲／來源重試中');setClass(state,'v '+(valid?'down':'up'));
-      setText(details,valid?'指數來源 '+(taiex?.time||'—')+'｜每 4 秒檢查，非保證每次有新成交': '指數狀態：'+indexState+'｜'+(retry?'約 '+retry+' 秒後重試':'等待來源資料')+'｜不以舊價冒充即時');
+      setText(details,valid?'指數來源 '+(taiex?.time||'—')+'｜每 6 秒檢查，非保證每次有新成交': '指數狀態：'+indexState+'｜'+(retry?'約 '+retry+' 秒後重試':'等待來源資料')+'｜不以舊價冒充即時');
     }else{
       const valid=taiex?.officialClose===true;
       setText(state,valid?'官方收盤已確認':'非盤中｜等待官方收盤');setClass(state,'v '+(valid?'down':'flat'));

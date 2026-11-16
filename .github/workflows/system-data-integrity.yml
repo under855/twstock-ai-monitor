@@ -57,7 +57,10 @@ jobs:
       - name: Prepare browser checks
         run: npm install --no-save playwright-core@latest
       - name: Exercise real browser with mocked primary and backup quotes
-        run: node scripts/verify_intraday_failover_browser.mjs
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node scripts/verify_intraday_failover_browser.mjs
       - name: Validate current production after deployment
         run: |
           CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)

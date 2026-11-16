@@ -1,0 +1,36 @@
+name: Midnight market source health check
+on:
+  schedule:
+    # 16:00 UTC = next day 00:00 Asia/Taipei; GitHub Actions may start late.
+    - cron: '0 16 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/audit_midnight_sources.mjs'
+      - '.github/workflows/midnight-source-health.yml'
+permissions:
+  contents: read
+concurrency:
+  group: midnight-source-health
+  cancel-in-progress: false
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate audit decisions with fixtures
+        run: node scripts/audit_midnight_sources.mjs --self-test
+      - name: Check approved quote gateways, official backup, daily data and published UI
+        run: node scripts/audit_midnight_sources.mjs
+      - name: Save structured diagnostic report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-health-${{ github.run_id }}
+          path: source-health/
+          if-no-files-found: warn
+          retention-days: 14

@@ -238,6 +238,7 @@ function scoreValue(v){return v==null?'—':String(v)}
 function scoreDate(q,row){const d=q?.time||dateObj(row?.TradeDate)||null;return d?d.toLocaleDateString('zh-TW'):'最近交易日'}
 function snapshotQuote(code){if(!snapshotIsRecent())return null;const x=SNAPSHOT[code];if(!x)return null;const dt=dateObj(SNAPSHOT_DATE);return{price:x.price,change:x.change,prev:x.price-x.change,open:x.open??null,high:x.high,low:x.low,volume:x.volume,time:dt,source:`歷史備援快照 ${SNAPSHOT_DATE}（非最新行情）`}}
 function marketWindowTaipeiNow(){
+ if(typeof window.__TW_STOCK_MARKET_OPEN__==='function')return window.__TW_STOCK_MARKET_OPEN__();
  const p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
  const g=t=>p.find(x=>x.type===t)?.value||'',wd=g('weekday'),mins=Number(g('hour'))*60+Number(g('minute'));
  return !['Sat','Sun'].includes(wd)&&mins>=8*60+55&&mins<=13*60+35;

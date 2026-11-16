@@ -32,6 +32,8 @@
     }catch{return []}
   }
   async function refreshOfficial(){
+    // Off-hours: load the last session once for display, never poll repeatedly.
+    if(typeof window.__TW_STOCK_MARKET_OPEN__==='function'&&!window.__TW_STOCK_MARKET_OPEN__()&&lastRequest>0)return;
     if(pending)return pending;
     if(Date.now()-lastRequest<60000)return;
     lastRequest=Date.now();

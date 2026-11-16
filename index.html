@@ -278,6 +278,8 @@ async function refreshRemote(){const results=await Promise.allSettled([jsonPubli
 let otcRefreshBusy=false;
 async function refreshPostCloseUniverse(){
  if(otcRefreshBusy||document.visibilityState==='hidden'||!universeReady)return;
+ const tradingControl=window.__TW_SCHEDULER_STATE__?.();
+ if(tradingControl&&(tradingControl.officialCloseComplete||!tradingControl.postCloseWindow))return;
  const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
  const get=k=>parts.find(x=>x.type===k)?.value||'';
  const minutes=Number(get('hour'))*60+Number(get('minute'));
@@ -337,15 +339,15 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 
 <script src="./refresh-control-v0973.js?v=0983-no-extra-monitor"></script>
 <script src="./dividend-enhance.js?v=0975-feed"></script>
-<script src="./extras-v090.js?v=0973-no-flicker"></script>
-<script src="./live-v091.js?v=0989-staggered-market-only"></script>
+<script src="./extras-v090.js?v=0989-market-hours"></script>
+<script src="./live-v091.js?v=0989-staggered-market-holidays"></script>
 <!-- Independent WebSocket probe suspended: unreliable across client networks. -->
-<script src="./taiex-sector-ticker.js?v=0977sectors"></script>
+<script src="./taiex-sector-ticker.js?v=0989-market-hours"></script>
 <script src="./stock-price-visual.js?v=0978-price"></script>
 
 
 <script src="split-layout-v095.js?v=0974source"></script>
-<script src="./pilot-chart-00878-v1.js?v=096latency1"></script>
+<script src="./pilot-chart-00878-v1.js?v=0989-market-hours"></script>
 <script src="./dividend-ticker-v0975.js?v=0975a"></script>
 
 </body>

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-16T04:23:12.105355+00:00",
+  "generatedAt": "2026-11-16T05:48:10.181743+00:00",
   "stocks": {
     "0050": [
       {
@@ -7,12 +7,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFA4TVhUOXRNWGVuTkZrNlBEUVR6ZklVR01fZ0RuVlBkUzFQSHhfWXpzb0xOTlhuMjd1a1lIZkdxeWFELU9DWjRUYW9sUFZhRm5Wc0M2d21YNkMyOXBMNGpB0gFkQVVfeXFMT2Z4WTBrdF9lQmY3T2w5emZkb1lSemFQZjVTMmdCd0lSVkN2VnVlWUNyQkpSTnY3QXpoVzNDRUNRcFhnZENIc2liSmQ5ZURwZWhJdDFZZkVjRFNSV2RNbzJEQ3gzVg?oc=5",
         "publisher": "自由財經",
         "time": 1794716189000
-      },
-      {
-        "title": "焦點股》0050：跌破90元 買盤湧入 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBwdG9faUVLOFFIdGNaSWNqUlh2cmdTUU5Jdi1lb2tCTWdnSUQwc1ZEU3V3d3YzVldWaTVJekxLNnE0cWxlbzdFcWdRdmR5aWlqX05xaDBXdTVaSGdmQk9j0gFkQVVfeXFMUGJMRE9LRU5xcTN1T1BFWGhXQVhLWmF2QW9FQ1BVZDRuaVl4RjI5UVFYMUsxSUxoTDJFbHdTd1pSM0o2TW4wa3FCemdtWUhWSW5mdnJRZGI4cDdXbEhhc25nbnkxaA?oc=5",
-        "publisher": "自由財經",
-        "time": 1793952000000
       }
     ],
     "3711": [
@@ -41,6 +35,12 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBjOThTTHlUeHZPZk95MG9qSkhfVkNhME1LS01GTnphVjRnUFZFdmFTWlVaWkk2RFlULUpKZ1NVbVJRY0JmQjRSSTJSMVRJdW1MMTRVRC0xOWFzNjBEaWhV0gFkQVVfeXFMTUFZX19zdTMxUmhScnJEUkNGbVVDaWxqTC13MjNYRkl6alVDZk9HN2k5NGRnZnUwUUp5bExFb3MwMmRPR1dXVUQ5TDhBM010aDFXaHNCbmpieUZiNWZoeGJURTRZVw?oc=5",
         "publisher": "自由財經",
         "time": 1794722718000
+      },
+      {
+        "title": "鈊象財報／前三季 EPS 賺35.24元 擴大美國市場布局 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE5VcEZfQTdkMFVZUUR0TmN1d1h1dm01NU5sR1g4bnZPMmlXMDZENTlwRlc3dUdXclNtd2xpVmhCMjlmS0Vjb0RKVVZPV2ZCLVI4ZkhNWXl2bjVzWHNJZWhnWNIBYEFVX3lxTE5VcEZfQTdkMFVZUUR0TmN1d1h1dm01NU5sR1g4bnZPMmlXMDZENTlwRlc3dUdXclNtd2xpVmhCMjlmS0Vjb0RKVVZPV2ZCLVI4ZkhNWXl2bjVzWHNJZWhnWA?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794240149000
       },
       {
         "title": "眾達、鈊象營運動能強- 日報 - 工商時報",
@@ -75,12 +75,6 @@
         "time": 1793779200000
       },
       {
-        "title": "中鋼10月出貨比9月少 公司卻說修正很正常！理由在哪？法人揭Q4展望 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9aYXg1VDFLYkdBcDhLV1BkRGpKRURVVlJvdGE4a0ZuRjVGTTJ1U1FTUU5zZW5PaFJUY1F6OWhhTU93b2dZVUdiNjg0ckZORTd2a1BjeUZJY1l0N2dQY09R?oc=5",
-        "publisher": "工商時報",
-        "time": 1793692800000
-      },
-      {
         "title": "中鋼營運溫和復甦- 日報 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9QcjJZRW82TVBCSzVmUzBla2RiLVhsak5QS0FtTTNuNFltQ0ZXa3JIVTNFV21QczRXcUlGTFpXa3J2UEpVREFZUUZqcXpzWHJZSlVwdXpSb2xRNFRxWlBF?oc=5",
         "publisher": "工商時報",
@@ -91,6 +85,12 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5RdzB4U3g1RFotS2o5SDY0TlBXZUR5ZHotUkUxb2JXSERFekMyNVRtZkxxeHBtYXFub0lOZUlibElxeTRucENEbXpwbHdRVDdrUHZzOTJtaHN0UdIBX0FVX3lxTE16SlVHYU00UEhsdzc5OEh4LU1tUVNsdmxsMFIwaEpwNE1oc0NoTjJZRGVUaElqSDB5aHJQUkJodEhIdXFaLWdlU2J1OXlmRWgxTFRvMW8tTnJ6LWtEUldZ?oc=5",
         "publisher": "經濟日報",
         "time": 1793257200000
+      },
+      {
+        "title": "中鋼布局高再生料鋼材助攻低碳轉型- 商情 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5EVU5LSVVnamlZaFB4X2ZKWHd4V0d0UWtWR2FhdXhnRkltemxxNHJDODl5N1JHS0puZDk3X0FkYy1ReFJMdUF5N21qVFIxSjhEYllJYVAwZktHc3JUbWNN?oc=5",
+        "publisher": "工商時報",
+        "time": 1793170800000
       },
       {
         "title": "中鋼報喜 前三季轉盈 - 經濟日報",
@@ -113,16 +113,16 @@
     ],
     "00878": [
       {
+        "title": "00878配息1.25元創新高! 今為參與配息最後買進日 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9aWktNSUdsUUFHS2lqaV9VUnp5bTJ5RTNaekg0MWpfQ2ZGYlZlUkdyN0U1ZTVQdkZTaFRKWmkzWmdTbFdkMmwtMzB4bDRmNVVwTDZNeW82ZzNwbXFtSU9r0gFkQVVfeXFMTnBQeXZKNUxoNzMzcWhmVi1rTFFxYVQxRkdJM3Q0a3dGNkFFVTJ5NkM5cF83a2VfbUpaaExyWEdnODFFeEk4M043ZzRlSmFCMUhEWDcxMmdjTGhlNW92T2NXUnhDRg?oc=5",
+        "publisher": "自由財經",
+        "time": 1794792549000
+      },
+      {
         "title": "九檔台股 ETF 創高價 00878、0056等單日股價強彈 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5fQkU5OUJBLUpLLXVhbWpzTjMyWEhydng1b0JpcUxFSnhsNFhOUFN2cFQ0dVNhR21wc1hUUFBfZVExSkhud09GTVZxRE14Q1UtZ0pYaDdBUFJWUdIBX0FVX3lxTE4zd3BDQXBWUXZqQkdhalZGX3FrX0FoV0x6b2I5NS1hWHNRaFIyUjJSYUhpME9DaGpIVTBDM1d4MXJ4X0UwQmgzNUVxdUg5Q0pZc1V5b1RDcnVQNDc0elBJ?oc=5",
         "publisher": "經濟日報",
         "time": 1794556800000
-      },
-      {
-        "title": "國泰永續高股息-ETF配息狀況 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE41UWthZmowZVNaYjRPLWhIRlNQNVZKZzZGeEhlaGdrdXQ1UjFiU3pLdDlzR3RrQzd0NnI5N2tMaDRXMkp3N1h4S2hRd1ZDMzdiVzllRnJrSWI2elVCSWswd1dRMjgyeU9kSTlySkVCV2xEdUtVN0FTSGdrVmw?oc=5",
-        "publisher": "MoneyDJ",
-        "time": 1793619004000
       },
       {
         "title": "國泰永續高股息11/17除息 預估配息1.25元續創新高 - 經濟日報",
@@ -233,12 +233,12 @@
     ]
   },
   "refreshStatus": {
-    "0050": "retained-previous",
-    "3711": "retained-previous",
-    "3293": "retained-previous",
-    "2002": "retained-previous",
-    "00878": "retained-previous",
-    "00919": "retained-previous",
-    "2330": "retained-previous"
+    "0050": "fresh",
+    "3711": "fresh",
+    "3293": "fresh",
+    "2002": "fresh",
+    "00878": "fresh",
+    "00919": "fresh",
+    "2330": "fresh"
   }
 }

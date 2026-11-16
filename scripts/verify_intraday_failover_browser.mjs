@@ -60,8 +60,7 @@ try{
   assert.equal(schedule.secondaryOffset,3000);
   await page.clock.setFixedTime(new Date('2026-12-25T02:15:00Z'));
   const priorRequests=stockRequests;
-  await page.evaluate(()=>{window.__TW_LIVE_REFRESH__();window.__TW_SECONDARY_REFRESH__();});
-  await page.waitForTimeout(300);
+  await page.evaluate(async()=>{await Promise.all([window.__TW_LIVE_REFRESH__(),window.__TW_SECONDARY_REFRESH__()])});
   assert.equal(stockRequests,priorRequests,'HOLIDAY_CREATED_MIS_REQUESTS');
   assert.deepEqual(errors,[],'BROWSER_SCRIPT_ERRORS');
   console.log('DUAL_SOURCE_BROWSER_PASS: GitHub backup, independent 10-second gateway, primary 6-second recovery, stale masking, holiday suspension, no runtime error');

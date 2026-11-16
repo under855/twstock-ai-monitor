@@ -8,7 +8,7 @@ try{
   const errors=[];
   page.on('pageerror',e=>errors.push(e.message));
   const epoch=Date.parse('2026-11-16T02:15:00Z');
-  let mode='primary-offline';
+  let mode='primary-offline',stockRequests=0;
   const point=(price,age=20000)=>({stamp:epoch-age,close:price,time:'10:14:40',source:'TWSE MIS'});
   const snapshot={date:'2026-11-16',generatedAt:'2026-11-16T10:15:00+08:00',source:'TWSE MIS official snapshots',stocks:{'0050':[point(100)]},taiex:[point(42000)]};
   await page.route('**/*',async route=>{
@@ -16,10 +16,11 @@ try{
     if(url.includes('/market-data/data/intraday/latest.json')){
       await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(snapshot),headers:{'access-control-allow-origin':'*'}});
     }else if(url.includes('proxy.cors.dev')||url.includes('api.allorigins.win')){
-      if(mode==='primary-online'){
+      stockRequests++;
+      if(mode==='primary-online'||(mode==='secondary-only'&&url.includes('api.allorigins.win'))){
         await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({msgArray:[
-          {c:'t00',d:'20261116',t:'10:14:55',z:'42050',y:'41900'},
-          {c:'0050',d:'20261116',t:'10:14:55',z:'101',y:'99'}
+          {c:'t00',d:'20261116',t:mode==='secondary-only'?'10:14:54':'10:14:55',z:'42050',y:'41900'},
+          {c:'0050',d:'20261116',t:mode==='secondary-only'?'10:14:54':'10:14:55',z:mode==='secondary-only'?'102':'101',y:'99'}
         ]}),headers:{'access-control-allow-origin':'*'}});
       }else await route.fulfill({status:503,body:'simulated primary outage',headers:{'access-control-allow-origin':'*'}});
     }else await route.abort();
@@ -40,6 +41,10 @@ try{
   assert.match(await page.locator('.meta').textContent(),/GitHub 官方盤中快照/,'BACKUP_NOT_LABELED');
   assert.equal((await page.locator('.scoreNum').textContent())?.trim(),'—','BACKUP_SCORE_FABRICATED');
   assert.match(await page.locator('#marketStatus').textContent(),/備援行情有效/,'BACKUP_STATUS_MISSING');
+  mode='secondary-only';
+  await page.evaluate(()=>window.__TW_SECONDARY_REFRESH__());
+  await page.waitForFunction(()=>document.querySelector('.price')?.textContent==='102',{timeout:12000});
+  assert.match(await page.locator('.meta').textContent(),/TWSE MIS 盤中最新成交/,'SECONDARY_DID_NOT_RENDER');
   mode='primary-online';
   await page.evaluate(()=>window.__TW_LIVE_REFRESH__());
   await page.waitForFunction(()=>document.querySelector('.price')?.textContent==='101',{timeout:12000});
@@ -49,7 +54,16 @@ try{
   await page.evaluate(()=>window.__TW_LIVE_REFRESH__());
   await page.waitForFunction(()=>document.querySelector('.price')?.textContent==='—',{timeout:12000});
   assert.match(await page.locator('.meta').textContent(),/超過90秒/,'EXPIRED_QUOTE_NOT_MASKED');
+  const schedule=await page.evaluate(()=>window.__TW_SCHEDULER_STATE__());
+  assert.equal(schedule.primaryInterval,6000);
+  assert.equal(schedule.secondaryInterval,10000);
+  assert.equal(schedule.secondaryOffset,3000);
+  await page.clock.setFixedTime(new Date('2026-12-25T02:15:00Z'));
+  const priorRequests=stockRequests;
+  await page.evaluate(()=>{window.__TW_LIVE_REFRESH__();window.__TW_SECONDARY_REFRESH__();});
+  await page.waitForTimeout(300);
+  assert.equal(stockRequests,priorRequests,'HOLIDAY_CREATED_MIS_REQUESTS');
   assert.deepEqual(errors,[],'BROWSER_SCRIPT_ERRORS');
-  console.log('DUAL_SOURCE_BROWSER_PASS: fallback visible, verified source label, primary restore, expired masked, no runtime error');
+  console.log('DUAL_SOURCE_BROWSER_PASS: GitHub backup, independent 10-second gateway, primary 6-second recovery, stale masking, holiday suspension, no runtime error');
   await context.close();
 }finally{await browser.close()}

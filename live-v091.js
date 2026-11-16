@@ -20,7 +20,7 @@
   const seeding=new Set();
   let taiex=null;
   let lastIndexSnapshot=null, indexSnapshotBusy=false, lastIndexSnapshotPoll=0;
-  let busy=false,secondaryBusy=false,secondaryCycles=0,secondaryLastPollAt=0,secondaryLastSuccessAt=0,secondaryLastError='';
+  let busy=false,secondaryBusy=false,secondaryCycles=0,secondaryLastPollAt=0,secondaryLastSuccessAt=0,secondaryLastError='',secondaryFailureCount=0,secondaryNextAllowedAt=0;
   let cycle=0;
   let lastPollAt=0;
   let lastSuccessAt=0;
@@ -117,11 +117,11 @@
           if(!usable.length)throw Error('MIS only returned a stale index');
         }
         if(!secondary){proxyPreferred=index;misFailureCount=0;nextMisAttemptAt=0;lastError=''}
-        else{secondaryLastError='';secondaryLastSuccessAt=Date.now()}
+        else{secondaryLastError='';secondaryLastSuccessAt=Date.now();secondaryFailureCount=0;secondaryNextAllowedAt=0}
         lastMisReceivedAt=Date.now();window.__TW_UPDATE_HEALTH__?.(secondary?'台股第二通道':'台股行情',true);return usable;
       }catch(e){last=e}
     }
-    if(secondary){secondaryLastError=String(last?.message||last||'第二通道無法存取');window.__TW_UPDATE_HEALTH__?.('台股第二通道',false)}
+    if(secondary){secondaryLastError=String(last?.message||last||'第二通道無法存取');secondaryFailureCount++;if(secondaryFailureCount>=3)secondaryNextAllowedAt=Date.now()+Math.min(60000,10000*Math.pow(2,secondaryFailureCount-2));window.__TW_UPDATE_HEALTH__?.('台股第二通道',false)}
     else{misFailureCount++;proxyPreferred=(proxyPreferred+1)%endpoints.length;nextMisAttemptAt=0;lastError=String(last?.message||last||'來源無法存取');window.__TW_UPDATE_HEALTH__?.('台股行情',false)}
     throw last||Error('MIS unavailable');
   }
@@ -500,7 +500,7 @@
     }catch(e){lastError=String(e?.message||e);if(marketOpen())await pollIntradayBackup(false);else await pollBackup(false);paintAll();debug()}finally{busy=false}
   }
   async function pollSecondary(){
-    if(!marketOpen()||secondaryBusy||document.visibilityState==='hidden')return false;
+    if(!marketOpen()||secondaryBusy||document.visibilityState==='hidden'||Date.now()<secondaryNextAllowedAt)return false;
     secondaryBusy=true;secondaryCycles++;secondaryLastPollAt=Date.now();
     try{
       const codes=requestedCodes(),{map,idx}=parse(await fetchMis(codes,'secondary'));
@@ -516,7 +516,7 @@
   window.__TW_LIVE_REFRESH__=()=>poll(false);
   window.__TW_SECONDARY_REFRESH__=()=>pollSecondary();
   window.__TW_BACKUP_REFRESH__=()=>pollBackup(true);
-  window.__TW_SCHEDULER_STATE__=()=>({marketOpen:marketOpen(),postCloseWindow:postCloseWindow(),officialCloseComplete:officialCloseComplete(),primaryInterval:INTERVAL,secondaryInterval:SECONDARY_INTERVAL,secondaryOffset:SECONDARY_OFFSET,backupInterval:INTRADAY_BACKUP_INTERVAL,secondaryCycles,secondaryLastPollAt,secondaryLastSuccessAt,secondaryLastError});
+  window.__TW_SCHEDULER_STATE__=()=>({marketOpen:marketOpen(),postCloseWindow:postCloseWindow(),officialCloseComplete:officialCloseComplete(),primaryInterval:INTERVAL,secondaryInterval:SECONDARY_INTERVAL,secondaryOffset:SECONDARY_OFFSET,backupInterval:INTRADAY_BACKUP_INTERVAL,secondaryCycles,secondaryLastPollAt,secondaryLastSuccessAt,secondaryLastError,secondaryFailureCount,secondaryNextAllowedAt});
   function start(){
     loadToday();paintAll();if(marketOpen()){poll(false);pollIndexSnapshot();pollIntradayBackup(true)}else if(postCloseWindow())pollBackup(false);
     // Always schedule polling: a page opened before 09:00 must start updating when trading begins.

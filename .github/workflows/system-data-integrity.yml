@@ -62,6 +62,7 @@ jobs:
           export CHROME
           node scripts/verify_intraday_failover_browser.mjs
       - name: Validate current production after deployment
+        if: github.event_name != 'pull_request'
         run: |
           CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
           export CHROME

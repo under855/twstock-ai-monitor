@@ -170,14 +170,14 @@
     }
     for(const code of wanted){
       const p=latest(j.stocks?.[code]);if(!validPoint(p))continue;
-      const prior=quotes.get(code),base=universeQuote(code)||snapshotQuote(code);
-      const prev=num(prior?.prev)??num(base?.prev);
+      // Do not infer day change from an unrelated daily cached quote.
+      const prev=null; // Snapshot only has the trade price, not a verified previous close.
       const ms=Number(p.stamp),price=num(p.close);
       map.set(code,{code,date:today(),price,prev,change:prev==null?null:price-prev,open:null,high:null,low:null,volume:null,tradeTime:hhmmss(ms),stamp:ms,volumeUnit:'unknown',source:'GitHub 官方盤中快照（可能延遲）',live:true});
     }
     const p=latest(j.taiex);
     if(validPoint(p)){
-      const prior=num(taiex?.prev)??(num(taiex?.price)!=null&&num(taiex?.change)!=null?num(taiex.price)-num(taiex.change):null);
+      const prior=null; // Backup snapshot does not carry a verified previous close.
       const ms=Number(p.stamp),price=num(p.close);
       idx={date:today(),price,prev:prior,change:prior==null?null:price-prior,time:hhmmss(ms),stamp:ms,source:'GitHub 官方盤中快照（可能延遲）'};
     }
@@ -302,6 +302,7 @@
     setText(d,(q.officialClose?'收盤 ': '')+q.tradeTime+'　開 '+fmt(q.open)+'　高 '+fmt(q.high)+'　低 '+fmt(q.low)+'　最新 '+fmt(q.price)+'　量 '+fmt(q.volume,0)+(q.volumeUnit==='lots'?' 張':q.volumeUnit==='shares'?' 股':'（單位未確認）'));
     setText(m,q.source+(q.officialClose?'｜':'｜成交 ')+q.tradeTime);
     const c=canvasFor(r);if(!(typeof window.__TW_DRAW_MAIN_TODAY__==='function'&&window.__TW_DRAW_MAIN_TODAY__(code,c)))drawLine(c,series.get(code)||[]);
+    if(/GitHub 官方盤中快照/.test(String(q.source))){setText(r.querySelector('.scoreNum'),'—');setText(r.querySelector('.scoreLabel'),'備援僅提供成交價，暫停即時評分');return}
     try{const base=rowForCode(code),val=allVals.find(x=>String(x.Code).trim()===code)||{},hist=historyCache?.[code]||[],s=scoreStock(base,val,hist,q),sn=r.querySelector('.scoreNum'),sl=r.querySelector('.scoreLabel');if(sn){setText(sn,s.total==null?'—':String(s.total));setClass(sn,'scoreNum '+scoreCls(s.total))}if(sl)setText(sl,s.total==null?'資料不足':s.mode)}catch{}
   }
   function intradayIndexState(x,now=Date.now()){
@@ -482,7 +483,7 @@
     busy=true;cycle++;lastPollAt=Date.now();
     try{
       const codes=requestedCodes(),{map,idx}=parse(await fetchMis(codes));let accepted=0;if(acceptIndex(idx))accepted++;for(const q of map.values()){if(acceptQuote(q))accepted++}if(accepted)lastSuccessAt=Date.now();saveToday();paintAll();
-    }catch(e){lastError=String(e?.message||e);if(marketOpen())await pollIntradayBackup(true);else await pollBackup(false);paintAll();debug()}finally{busy=false}
+    }catch(e){lastError=String(e?.message||e);if(marketOpen())await pollIntradayBackup(false);else await pollBackup(false);paintAll();debug()}finally{busy=false}
   }
   window.__TW_LIVE_REFRESH__=()=>poll(false);
   window.__TW_BACKUP_REFRESH__=()=>pollBackup(true);

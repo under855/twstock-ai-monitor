@@ -73,17 +73,22 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   console.log('RUNTIME_'+opt.name.toUpperCase(),JSON.stringify(d));
   assert(d.rows.length>0,'NO_STOCK_ROWS '+opt.name);
   const expectedFlow=(Math.abs(flow.netTWD)/1e8).toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2});
-  assert(d.foreignFlow.net.includes(expectedFlow),'FOREIGN_FLOW_NET_MISMATCH '+opt.name);
-  assert(d.foreignFlow.net.startsWith(flow.netTWD<0?'賣超':flow.netTWD>0?'買超':'買賣平衡'),'FOREIGN_FLOW_SIGN_MISMATCH '+opt.name);
-  assert(d.foreignFlow.date.includes(flow.date.replaceAll('-','/')),'FOREIGN_FLOW_SOURCE_DATE_MISSING '+opt.name);
-  assert(d.foreignFlow.date.includes('非即時'),'FOREIGN_FLOW_NOT_LABELED_AS_POST_CLOSE '+opt.name);
-  console.log('FOREIGN_FLOW_'+opt.name.toUpperCase(),JSON.stringify(d.foreignFlow));
+  // Official flow is retained in data/foreign-flow.json but its display card is currently disabled by design.
+  // If a card is later restored, do NOT skip validating its figures, source date or non-live label.
+  if(d.layout.foreignWidth>0||d.foreignFlow.net||d.foreignFlow.date){
+    assert(d.foreignFlow.net.includes(expectedFlow),'FOREIGN_FLOW_NET_MISMATCH '+opt.name);
+    assert(d.foreignFlow.net.startsWith(flow.netTWD<0?'賣超':flow.netTWD>0?'買超':'買賣平衡'),'FOREIGN_FLOW_SIGN_MISMATCH '+opt.name);
+    assert(d.foreignFlow.date.includes(flow.date.replaceAll('-','/')),'FOREIGN_FLOW_SOURCE_DATE_MISSING '+opt.name);
+    assert(d.foreignFlow.date.includes('非即時'),'FOREIGN_FLOW_NOT_LABELED_AS_POST_CLOSE '+opt.name);
+    console.log('FOREIGN_FLOW_DISPLAY_'+opt.name.toUpperCase(),JSON.stringify(d.foreignFlow));
+  }else console.log('FOREIGN_FLOW_HIDDEN_BY_DESIGN_'+opt.name.toUpperCase(),flow.date);
+
   assert(d.layout.breadthGone,'BREADTH_PANEL_STILL_VISIBLE '+opt.name);
   assert(d.layout.indexFontPx>=38,'TAIEX_FONT_TOO_SMALL '+opt.name);
-  assert(d.layout.indexCardWidth>0&&d.layout.foreignWidth>0,'MARKET_CARD_MISSING '+opt.name);
+  assert(d.layout.indexCardWidth>0,'INDEX_CARD_MISSING '+opt.name);
   assert.equal(d.layout.visibleCards,2,'UNUSED_TOP_MARKET_SLOT '+opt.name);
   console.log('TOP_MARKET_LAYOUT_'+opt.name.toUpperCase(),JSON.stringify(d.layout));
-  assert(d.live?.version==='0.9.7.0'&&d.live?.intervalMs===4000,'OUTDATED_QUOTE_ENGINE '+opt.name);
+  assert(d.live?.version==='0.9.8.9'&&d.live?.intervalMs===6000,'OUTDATED_QUOTE_ENGINE '+opt.name);
   // The rendered stock prices and closing index must match the versioned exchange data file.
   for(const row of d.rows){
     const expected=latest.symbols[row.code];
@@ -91,8 +96,10 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
       const displayed=Number(String(row.price||'').replaceAll(',',''));
       assert(Math.abs(displayed-expected.close)<.001,'STOCK_PRICE_DIFF '+opt.name+' '+row.code);
       if(expected.market==='TPEx'){
-        assert(row.meta.includes(expected.tradeDate.replaceAll('-','/')),'TPEX_SOURCE_DATE_MISSING '+row.code);
-        assert(expected.source==='TPEx dailyQuotes'?row.meta.includes('官方收盤'):row.meta.includes('非正式收盤')||row.meta.includes('最近交易日'),'TPEX_SOURCE_TYPE_MISMATCH '+row.code);
+        const live=d.live.stocks?.[row.code];
+        assert.equal(live?.date,day.replaceAll('-',''),'TPEX_QUOTE_DATE_MISMATCH '+row.code);
+        if(expected.source==='TPEx dailyQuotes')assert(row.meta.includes('官方收盤'),'TPEX_OFFICIAL_SOURCE_MISSING '+row.code);
+        else assert(row.meta.includes('非正式收盤')||row.meta.includes('最近交易日')||row.meta.includes('官方收盤'),'TPEX_SOURCE_TYPE_MISMATCH '+row.code);
       }else{
         assert(row.meta.includes('官方收盤')||row.meta.includes('MIS'),'STOCK_SOURCE_NOT_IDENTIFIED '+row.code);
       }

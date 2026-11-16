@@ -57,4 +57,12 @@ epoch=Date.parse('2026-11-14T02:15:00Z'); // Saturday
 assert(!q.marketOpen()&&!q.postCloseWindow(),'WEEKEND_TREATED_AS_OPEN');
 await q.poll();await q.pollSecondary();await q.pollBackup(true);await q.pollIndexSnapshot();
 assert.equal(req.length,later,'WEEKEND_GENERATED_STOCK_REQUESTS');
+epoch=Date.parse('2026-12-25T02:15:00Z'); // 2026 Christmas exchange holiday
+assert(!q.marketOpen()&&!q.postCloseWindow(),'2026_OFFICIAL_HOLIDAY_NOT_BLOCKED');
+await q.poll();await q.pollSecondary();await q.pollBackup(true);await q.pollIndexSnapshot();
+assert.equal(req.length,later,'2026_HOLIDAY_GENERATED_STOCK_REQUESTS');
+epoch=Date.parse('2027-02-08T02:15:00Z'); // 2027 Lunar New Year exchange holiday
+assert(!q.marketOpen()&&!q.postCloseWindow(),'2027_OFFICIAL_HOLIDAY_NOT_BLOCKED');
+await q.poll();await q.pollSecondary();await q.pollBackup(true);await q.pollIndexSnapshot();
+assert.equal(req.length,later,'2027_HOLIDAY_GENERATED_STOCK_REQUESTS');
 console.log('STAGGERED_MARKET_HOURS_PASS: 6s/10s stagger, secondary independent, primary failure isolation, close 15:00 / 21:00 and weekends stop stock network requests');

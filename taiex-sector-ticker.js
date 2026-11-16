@@ -6,7 +6,9 @@
   if(!root||!track||!label)return;
   const SOURCE='./data/latest.json', PERIOD=60000;
   const ALLOW=new Set(['食品','塑膠','電機機械','生技醫療','鋼鐵','半導體','建材營造','航運','金融保險']);
-  let signature='',pending=false;
+  let signature='',pending=false,firstSourceAttempt=false;
+  const stockOpen=()=>typeof window.__TW_STOCK_MARKET_OPEN__==='function'&&window.__TW_STOCK_MARKET_OPEN__();
+  const postClose=()=>typeof window.__TW_STOCK_POST_CLOSE_WINDOW__==='function'&&window.__TW_STOCK_POST_CLOSE_WINDOW__();
   function taiwanToday(){
     const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
     const v=k=>p.find(x=>x.type===k)?.value||'';
@@ -61,7 +63,10 @@
   }
   async function refresh(){
     if(pending||document.visibilityState==='hidden')return;
-    pending=true;
+    // During the daily finalization window retry until a current-day report is received.
+    const hasTodayReport=signature.includes(taiwanToday());
+    if(!stockOpen()&&!(postClose()&&!hasTodayReport)&&firstSourceAttempt)return;
+    firstSourceAttempt=true;pending=true;
     try{
       const data=parse(await window.__TW_LATEST_JSON__());
       if(data)show(data);

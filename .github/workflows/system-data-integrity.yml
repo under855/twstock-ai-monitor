@@ -7,6 +7,7 @@ on:
       - 'live-v091.js'
       - 'index.html'
       - 'scripts/verify_intraday_failover.mjs'
+      - 'scripts/verify_staggered_market_hours.mjs'
       - 'scripts/verify_intraday_failover_browser.mjs'
       - '.github/workflows/system-data-integrity.yml'
   push:
@@ -15,6 +16,7 @@ on:
       - 'scripts/system_data_audit.mjs'
       - 'scripts/verify_live_feed.mjs'
       - 'scripts/verify_intraday_failover.mjs'
+      - 'scripts/verify_staggered_market_hours.mjs'
       - 'scripts/verify_intraday_failover_browser.mjs'
       - 'foreign-flow-card.js'
       - 'data/foreign-flow.json'
@@ -54,6 +56,8 @@ jobs:
         run: node scripts/verify_live_feed.mjs
       - name: Verify independently polled MIS snapshot failover
         run: node scripts/verify_intraday_failover.mjs
+      - name: Verify staggered primary and secondary, closed-market suspension
+        run: node scripts/verify_staggered_market_hours.mjs
       - name: Prepare browser checks
         run: npm install --no-save playwright-core@latest
       - name: Exercise real browser with mocked primary and backup quotes

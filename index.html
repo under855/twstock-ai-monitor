@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="台股監控台">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>台股 AI 監控台 v0.9.8.8 Web</title>
+<title>台股 AI 監控台 v0.9.8.9 Web</title>
 <style>
 :root{--bg:#060d18;--panel:#0d1929;--panel2:#11233a;--line:#213954;--text:#edf5ff;--muted:#93a9c2;--accent:#78adff;--up:#ff6b6b;--down:#63d49a;--warn:#ffd166;--neutral:#d2dceb;--shadow:0 12px 28px rgba(0,0,0,.22)}
 *{box-sizing:border-box}html{background:var(--bg)}body{margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;background:radial-gradient(circle at 50% -10%,#13325a 0,#07111f 35%,#050b13 72%);min-height:100vh}
@@ -61,10 +61,10 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
 <body>
 <div class="app">
   <header class="top">
-    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.8.8｜雙來源備援・行情時效監控・外匯</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
+    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.8.9｜6／10 秒交錯行情・休市停止盤中請求・外匯獨立更新</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
     <div class="search"><input id="code" inputmode="text" autocomplete="off" placeholder="搜尋代號或名稱，例如 2610、華航"><button id="searchBtn" class="primary">搜尋</button></div>
     <div id="searchResults" class="searchResults"></div>
-    <div class="toolbar"><span class="pill" id="clock">—</span><span class="pill">評分 100 分制</span><span class="pill" id="universePill">台股名冊：載入中…</span><span class="pill">行情：TWSE／TPEx</span><span class="pill" id="refreshPill">台股每 6 秒檢查</span></div>
+    <div class="toolbar"><span class="pill" id="clock">—</span><span class="pill">評分 100 分制</span><span class="pill" id="universePill">台股名冊：載入中…</span><span class="pill">行情：TWSE／TPEx</span><span class="pill" id="refreshPill">台股雙通道 6／10 秒交錯檢查</span></div>
       <div id="errorBanner" class="errorBanner"></div>
   </header>
 
@@ -109,7 +109,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
 </div>
 <script src="./shared-latest-v0984.js?v=0985-ttl"></script>
 <script>
-const APP_VERSION='0.9.8.8';
+const APP_VERSION='0.9.8.9';
 const IS_WEB = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 window.addEventListener('DOMContentLoaded',()=>{
   if(!IS_WEB){
@@ -238,6 +238,7 @@ function scoreValue(v){return v==null?'—':String(v)}
 function scoreDate(q,row){const d=q?.time||dateObj(row?.TradeDate)||null;return d?d.toLocaleDateString('zh-TW'):'最近交易日'}
 function snapshotQuote(code){if(!snapshotIsRecent())return null;const x=SNAPSHOT[code];if(!x)return null;const dt=dateObj(SNAPSHOT_DATE);return{price:x.price,change:x.change,prev:x.price-x.change,open:x.open??null,high:x.high,low:x.low,volume:x.volume,time:dt,source:`歷史備援快照 ${SNAPSHOT_DATE}（非最新行情）`}}
 function marketWindowTaipeiNow(){
+ if(typeof window.__TW_STOCK_MARKET_OPEN__==='function')return window.__TW_STOCK_MARKET_OPEN__();
  const p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
  const g=t=>p.find(x=>x.type===t)?.value||'',wd=g('weekday'),mins=Number(g('hour'))*60+Number(g('minute'));
  return !['Sat','Sun'].includes(wd)&&mins>=8*60+55&&mins<=13*60+35;
@@ -278,6 +279,8 @@ async function refreshRemote(){const results=await Promise.allSettled([jsonPubli
 let otcRefreshBusy=false;
 async function refreshPostCloseUniverse(){
  if(otcRefreshBusy||document.visibilityState==='hidden'||!universeReady)return;
+ const tradingControl=window.__TW_SCHEDULER_STATE__?.();
+ if(tradingControl&&(tradingControl.officialCloseComplete||!tradingControl.postCloseWindow))return;
  const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
  const get=k=>parts.find(x=>x.type===k)?.value||'';
  const minutes=Number(get('hour'))*60+Number(get('minute'));
@@ -337,15 +340,15 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 
 <script src="./refresh-control-v0973.js?v=0983-no-extra-monitor"></script>
 <script src="./dividend-enhance.js?v=0975-feed"></script>
-<script src="./extras-v090.js?v=0973-no-flicker"></script>
-<script src="./live-v091.js?v=0988-dual-mis-backup"></script>
+<script src="./extras-v090.js?v=0989-market-hours"></script>
+<script src="./live-v091.js?v=0989-staggered-market-holidays"></script>
 <!-- Independent WebSocket probe suspended: unreliable across client networks. -->
-<script src="./taiex-sector-ticker.js?v=0977sectors"></script>
+<script src="./taiex-sector-ticker.js?v=0989-market-hours"></script>
 <script src="./stock-price-visual.js?v=0978-price"></script>
 
 
 <script src="split-layout-v095.js?v=0974source"></script>
-<script src="./pilot-chart-00878-v1.js?v=096latency1"></script>
+<script src="./pilot-chart-00878-v1.js?v=0989-market-hours"></script>
 <script src="./dividend-ticker-v0975.js?v=0975a"></script>
 
 </body>

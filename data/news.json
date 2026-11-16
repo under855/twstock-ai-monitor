@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-16T22:15:48.748842+00:00",
+  "generatedAt": "2026-11-16T23:13:05.384690+00:00",
   "stocks": {
     "0050": [
       {
@@ -13,12 +13,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1CcFdpaHg3U1cwbzZQcUxxTlBzVXZZeDFzLVNyRERDcnU1enBUbHJmZnBDOF9OSDh5Y21BcW9WYlpaaVRHcVFyWFBKYzI0MlpIMjZRcktoaURud9IBX0FVX3lxTE9ETDNwaGtRS1lfU0NvZkpsZ2lWSnhDVUpYMmxtQzhEX2lkbGpITkw5ZHVhRjMwenJyNmtOaUZBaTZlSGZUVExRcFJIYVVrWjJneU5oTGpaMG1hUUhCcWFN?oc=5",
         "publisher": "經濟日報",
         "time": 1794468123000
-      },
-      {
-        "title": "焦點股》0050：跌破90元 買盤湧入 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBwdG9faUVLOFFIdGNaSWNqUlh2cmdTUU5Jdi1lb2tCTWdnSUQwc1ZEU3V3d3YzVldWaTVJekxLNnE0cWxlbzdFcWdRdmR5aWlqX05xaDBXdTVaSGdmQk9j0gFkQVVfeXFMUGJMRE9LRU5xcTN1T1BFWGhXQVhLWmF2QW9FQ1BVZDRuaVl4RjI5UVFYMUsxSUxoTDJFbHdTd1pSM0o2TW4wa3FCemdtWUhWSW5mdnJRZGI4cDdXbEhhc25nbnkxaA?oc=5",
-        "publisher": "自由財經",
-        "time": 1793952000000
       }
     ],
     "3711": [
@@ -151,12 +145,6 @@
     ],
     "00919": [
       {
-        "title": "小摩：00919 等四檔高股息 ETF 年底前將調整成分股 三檔個股最受惠 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE0yRXN2ZjF3Y195dERPWDdVZklnbDBxcWkzbmo0dlFNc0twMDFYNFQ5b0U1cXZSeU1FSkY4ZFdhVXU3ZHJPcnF0UkJBN3Bxa3VNVERsV1JrMTNCQdIBX0FVX3lxTE53TUxqZ1lrc1oxbV9LTVlVQmJlM0tDMVVXRG5qbjl4U0h5WGgzTlVwYWtFQnNRY2E2VDlmTGNrc0JJOXYyUGNGNmtDTEtjeXpuOGU5S3FsN0xRU2liaEpB?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794729600000
-      },
-      {
         "title": "00981A定期定額扣款衝破百億超車00919 展現存股吸金新戰力 - 鉅亨網",
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5vS0FteE9tYWtFNi1vdXRFMVdIcGw3U1daUU41RHdjQk4wSXhSZmE4N0JnQUxTNS1iVHNTYl9zQ2czS0lhMXdIWmlWMjlHclk?oc=5",
         "publisher": "鉅亨網",
@@ -175,16 +163,16 @@
         "time": 1794556800000
       },
       {
-        "title": "群益台灣精選高息ETF基金 的總覽 | 鉅亨網 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPdEcxTHJnRzhUaG9ZREF0NVBJZFFqX0dTb0U0eVFSeUx0NmpudTA3U21mNEZhUmNqMTNHMjdGbFQzYVNuOUpNakhkX18xeS1adTlOQUZRdTVTbERSUi1PMm12dzc2MWxCNFJSazVTa3BkalB6dzJyXy1FcjgzTzA2VmhhclpEZzhYMXJjazNxUXdXZk9Rb20yc0RVTG9iVzFpMkhVaXpkTmI3MS1TNWg5OGNB?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1794556800000
-      },
-      {
         "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
         "publisher": "經濟日報",
         "time": 1794384000000
+      },
+      {
+        "title": "小摩：00919 等四檔高股息 ETF 年底前將調整成分股 三檔個股最受惠 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE0yRXN2ZjF3Y195dERPWDdVZklnbDBxcWkzbmo0dlFNc0twMDFYNFQ5b0U1cXZSeU1FSkY4ZFdhVXU3ZHJPcnF0UkJBN3Bxa3VNVERsV1JrMTNCQdIBX0FVX3lxTE53TUxqZ1lrc1oxbV9LTVlVQmJlM0tDMVVXRG5qbjl4U0h5WGgzTlVwYWtFQnNRY2E2VDlmTGNrc0JJOXYyUGNGNmtDTEtjeXpuOGU5S3FsN0xRU2liaEpB?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794124800000
       }
     ],
     "2330": [

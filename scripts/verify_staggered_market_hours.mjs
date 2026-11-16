@@ -3,6 +3,10 @@ import vm from 'node:vm';
 import assert from 'node:assert/strict';
 
 const js=fs.readFileSync('live-v091.js','utf8');
+const fx=fs.readFileSync('split-layout-v095.js','utf8');
+assert(fx.includes('FX_CHECK_INTERVAL=60000'),'BANK_FX_MINUTE_REFRESH_MISSING');
+assert(fx.includes('setInterval(refreshFx,FX_CHECK_INTERVAL)'),'BANK_FX_TIMER_NOT_INDEPENDENT');
+assert(!fx.includes('__TW_STOCK_MARKET_OPEN__'),'BANK_FX_IMPROPERLY_GATED_BY_TWSE_HOURS');
 assert(js.includes('const INTERVAL=6000;'),'PRIMARY_NOT_6_SECONDS');
 assert(js.includes('const SECONDARY_INTERVAL=10000;'),'SECONDARY_NOT_10_SECONDS');
 assert(js.includes('const SECONDARY_OFFSET=3000;'),'SECONDARY_NOT_STAGGERED');
@@ -43,6 +47,12 @@ mode='secondary-down';
 await q.pollSecondary();
 assert.equal(q.getQuote('0050')?.price,100.25,'SECONDARY_OUTAGE_CLEARED_VALID_QUOTE');
 assert(q.getSecondaryError(),'SECONDARY_FAILURE_NOT_REPORTED');
+await q.pollSecondary();await q.pollSecondary(); // Third consecutive failure enables a retry backoff.
+const secondaryAttempts=req.length;
+await q.pollSecondary();
+assert.equal(req.length,secondaryAttempts,'SECONDARY_BACKOFF_NOT_ENFORCED');
+mode='secondary-online';epoch+=30000;await q.pollSecondary();
+assert.equal(req.length,secondaryAttempts+1,'SECONDARY_BACKOFF_DID_NOT_RECOVER');
 epoch=Date.parse('2026-11-16T07:00:00Z'); // 15:00 Asia/Taipei
 assert(!q.marketOpen()&&q.postCloseWindow(),'EXPECTED_POST_CLOSE');
 const prev=req.length;
@@ -65,4 +75,4 @@ epoch=Date.parse('2027-02-08T02:15:00Z'); // 2027 Lunar New Year exchange holida
 assert(!q.marketOpen()&&!q.postCloseWindow(),'2027_OFFICIAL_HOLIDAY_NOT_BLOCKED');
 await q.poll();await q.pollSecondary();await q.pollBackup(true);await q.pollIndexSnapshot();
 assert.equal(req.length,later,'2027_HOLIDAY_GENERATED_STOCK_REQUESTS');
-console.log('STAGGERED_MARKET_HOURS_PASS: 6s/10s stagger, secondary independent, primary failure isolation, close 15:00 / 21:00 and weekends stop stock network requests');
+console.log('STAGGERED_MARKET_HOURS_PASS: 6s/10s stagger, secondary independent, error backoff, official 2026/27 holiday suppression, FX independent, market close and weekends stop stock requests');

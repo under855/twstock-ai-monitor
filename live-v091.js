@@ -52,8 +52,18 @@
     return {y:g('year'),m:g('month'),d:g('day'),wd:g('weekday'),h:Number(g('hour')),min:Number(g('minute')),sec:Number(g('second'))};
   }
   function today(){const p=tp();return `${p.y}${p.m}${p.d}`;}
-  function marketOpen(){const p=tp(),mins=p.h*60+p.min;return !['Sat','Sun'].includes(p.wd)&&mins>=8*60+55&&mins<=13*60+35;}
-  function postCloseWindow(){const p=tp(),mins=p.h*60+p.min;return !['Sat','Sun'].includes(p.wd)&&mins>13*60+35&&mins<20*60;}
+  // TWSE announced non-trading dates (ROC 115 / 116). Update each year from the official calendar.
+  const NON_TRADING_DATES=new Set([
+    '20260101','20260212','20260213','20260216','20260217','20260218','20260219','20260220',
+    '20260227','20260403','20260406','20260501','20260619','20260925','20260928',
+    '20261009','20261026','20261225',
+    '20270101','20270202','20270203','20270204','20270205','20270208','20270209','20270210',
+    '20270301','20270405','20270406','20270430','20270609','20270915','20270928',
+    '20271011','20271025','20271224','20271231'
+  ]);
+  function tradingDay(){const p=tp();return !['Sat','Sun'].includes(p.wd)&&!NON_TRADING_DATES.has(today());}
+  function marketOpen(){const p=tp(),mins=p.h*60+p.min;return tradingDay()&&mins>=8*60+55&&mins<=13*60+35;}
+  function postCloseWindow(){const p=tp(),mins=p.h*60+p.min;return tradingDay()&&mins>13*60+35&&mins<20*60;}
   function officialCloseComplete(){return taiex?.date===today()&&taiex?.officialClose===true&&watchCodes().every(code=>quotes.get(code)?.date===today()&&quotes.get(code)?.officialClose===true)}
   function stamp(date,time){
     if(!/^\d{8}$/.test(String(date||''))||!/^\d{2}:\d{2}:\d{2}$/.test(String(time||'')))return null;
@@ -501,6 +511,8 @@
     }catch(e){secondaryLastError=String(e?.message||e);paintAll();return false}
     finally{secondaryBusy=false}
   }
+  window.__TW_STOCK_MARKET_OPEN__=marketOpen;
+  window.__TW_STOCK_POST_CLOSE_WINDOW__=postCloseWindow;
   window.__TW_LIVE_REFRESH__=()=>poll(false);
   window.__TW_SECONDARY_REFRESH__=()=>pollSecondary();
   window.__TW_BACKUP_REFRESH__=()=>pollBackup(true);

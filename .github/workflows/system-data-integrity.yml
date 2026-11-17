@@ -35,10 +35,9 @@ on:
       - 'dividend-enhance.js'
       - 'extras-v090.js'
       - '.github/workflows/system-data-integrity.yml'
-  # GitHub Actions uses UTC; 16:00 UTC = 00:00 next day in Taiwan (UTC+8).
-  # Runs every calendar day, including weekends and Taiwanese market holidays.
+  # Source-independent regression checks now run during exchange preopen preview.
   schedule:
-    - cron: '0 16 * * *'
+    - cron: '40 0 * * 1-5'
 permissions:
   contents: read
 jobs:
@@ -80,7 +79,7 @@ jobs:
           export CHROME
           node scripts/verify_official_close_fallback_browser.mjs
       - name: Validate current production after deployment
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && github.event_name != 'schedule'
         run: |
           CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
           export CHROME

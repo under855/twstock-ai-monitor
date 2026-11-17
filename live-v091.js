@@ -1,9 +1,9 @@
 (() => {
   'use strict';
-  const VERSION='0.9.8.14';
+  const VERSION='0.9.8.15';
   const INTERVAL=6000; // Primary quote channel, exchange timestamps determine freshness.
-  const SECONDARY_INTERVAL=10000; // A separate CORS gateway checks independently every 10 seconds.
-  const SECONDARY_OFFSET=3000; // Stagger the first secondary check from the primary.
+  const SECONDARY_INTERVAL=INTERVAL; // Both MIS relay paths use the same six-second cycle.
+  const SECONDARY_OFFSET=4000; // User rule: second MIS relay exactly four seconds after the first.
   const MIS_REQUEST_TIMEOUT=9000; // Verified production browser aborted at 3.4 seconds despite the proxy returning HTTP 200.
   const BACKUP_INTERVAL=60000;
   const INTRADAY_BACKUP_INTERVAL=30000;
@@ -115,7 +115,7 @@
           if(ticker){
             const epoch=Number(ticker.tlong),ms=epoch>1e12?epoch:stamp(String(ticker.d||''),String(ticker.t||''));
             // A delayed index must not suppress independently valid stock quotes.
-            if(!Number.isFinite(ms)||ms>Date.now()+30000||Date.now()-ms>90000)
+            if(!Number.isFinite(ms)||ms>Date.now()+30000||!sameDay(ms))
               usable=j.msgArray.filter(m=>m!==ticker);
           }
           if(!usable.length)throw Error('MIS only returned a stale index');
@@ -297,11 +297,11 @@
     setText(r.querySelector('.scoreLabel'),'行情無效，暫停即時評分');
   }
   function verifiedUnchangedTrade(code,q,now=Date.now()){
+    // Old last trade stays *visible* even if the source is unreachable;
+    // update receipt status independently from the exchange's last trade time.
     return q?.source==='TWSE MIS 盤中最新成交'&&q?.date===today()&&
-      Number.isFinite(Number(q.stamp))&&now-Number(q.stamp)>90000&&Number(q.stamp)<=now&&
-      now-lastMisReceivedAt<=30000&&now-(lastConfirmedByCode.get(String(code))||0)<=30000&&
-      taiex?.date===today()&&/TWSE MIS/.test(String(taiex.source||''))&&
-      Number(taiex.stamp)>=Number(q.stamp)&&now-Number(taiex.stamp)<=120000;
+      Number.isFinite(Number(q.stamp))&&Number(q.stamp)<=now&&
+      (now-(lastConfirmedByCode.get(String(code))||0)>30000);
   }
   function confirmMisQuotes(map){for(const q of map.values())if(q?.date===today()&&q?.source==='TWSE MIS 盤中最新成交'&&Number(q.stamp)<=Date.now()+30000)lastConfirmedByCode.set(String(q.code),Date.now());}
   function quoteProblem(code,q){
@@ -311,9 +311,9 @@
     const age=Date.now()-Number(q.stamp);
     if(!Number.isFinite(age)||age < -30000)return '行情時間戳記異常';
     if(/GitHub 官方盤中快照/.test(String(q.source||'')))return age>BACKUP_STALE_MS?'今日備援行情已超過可接受時效':'';
-    const unchangedConfirmed=age>90000&&verifiedUnchangedTrade(code,q);
-    if(age>90000&&!unchangedConfirmed)return '行情超過90秒未更新'+(lastError?'｜主要來源：'+lastError.slice(0,55):'')+(lastIntradayBackupError?'｜備援：'+lastIntradayBackupError.slice(0,55):'');
-    if(resumeAfter.has(code)&&Number(q.stamp)<=resumeAfter.get(code)&&!unchangedConfirmed)return '等待新成交行情確認恢復';
+    // No elapsed-time rejection. An exchange can legitimately repeat the last trade
+    // while both relay channels continue receiving valid same-day market records.
+    // Receipt failures are reported separately; never turn an unchanged trade into an invalid price.
     return '';
   }
   function paintRow(code,q){
@@ -331,9 +331,9 @@
     setText(p,fmt(q.price));
     if(ch){setText(ch,(q.change>0?'+':'')+fmt(q.change));setClass(ch,'chg '+cls(q.change))}
     setText(d,(delayedTrade?'最後成交 ':q.officialClose?'收盤 ': '')+q.tradeTime+'　開 '+fmt(q.open)+'　高 '+fmt(q.high)+'　低 '+fmt(q.low)+(delayedTrade?'　最後成交價 ':'　最新 ')+fmt(q.price)+'　量 '+fmt(q.volume,0)+(q.volumeUnit==='lots'?' 張':q.volumeUnit==='shares'?' 股':'（單位未確認）'));
-    setText(m,q.source+(delayedTrade?'｜最後成交 ':'｜成交 ')+q.tradeTime+(backupDelayed?'｜非即時・僅供歷史參考':delayedTrade?'｜成交時間超過90秒，已確認來源仍更新（非即時成交）':''));
+    setText(m,q.source+(delayedTrade?'｜最後成交 ':'｜成交 ')+q.tradeTime+(backupDelayed?'｜非即時・僅供歷史參考':delayedTrade?'｜尚未再次確認來源（非即時成交）':''));
     const c=canvasFor(r);if(!(typeof window.__TW_DRAW_MAIN_TODAY__==='function'&&window.__TW_DRAW_MAIN_TODAY__(code,c)))drawLine(c,series.get(code)||[]);
-    if(delayedTrade){setText(r.querySelector('.scoreNum'),'—');setText(r.querySelector('.scoreLabel'),backupDelayed?'GitHub 延遲快照，不進行即時評分':'最後成交超過90秒，暫停即時評分');return}
+    if(delayedTrade){setText(r.querySelector('.scoreNum'),'—');setText(r.querySelector('.scoreLabel'),backupDelayed?'GitHub 延遲快照，不進行即時評分':'來源暫未確認，暫停即時評分');return}
     if(/GitHub 官方盤中快照/.test(String(q.source))){setText(r.querySelector('.scoreNum'),'—');setText(r.querySelector('.scoreLabel'),'備援僅提供成交價，暫停即時評分');return}
     try{const base=rowForCode(code),val=allVals.find(x=>String(x.Code).trim()===code)||{},hist=historyCache?.[code]||[],s=scoreStock(base,val,hist,q),sn=r.querySelector('.scoreNum'),sl=r.querySelector('.scoreLabel');if(sn){setText(sn,s.total==null?'—':String(s.total));setClass(sn,'scoreNum '+scoreCls(s.total))}if(sl)setText(sl,s.total==null?'資料不足':s.mode)}catch{}
   }
@@ -342,7 +342,8 @@
     if(x.officialClose)return 'official-close';
     const age=now-Number(x.stamp);
     if(age < -30000)return 'future';
-    return age<=120000?'fresh':'stale';
+    // Exchange's last index publication time is not the gateway's last success time.
+    return now-lastMisReceivedAt<=30000?'fresh':'stale';
   }
   function paintIndexExtras(x,usable){
     const p=document.getElementById('taiexPercent');
@@ -447,7 +448,7 @@
     if(!q||q.date!==today()||!Number.isFinite(Number(q.stamp)))return 'unknown';
     if(q.officialClose)return 'close';
     const age=Date.now()-Number(q.stamp);
-    return age<0?'future':age<=90000?'recent':'older';
+    return age<0?'future':/GitHub 官方盤中快照/.test(String(q.source||''))?'older':Date.now()-(lastConfirmedByCode.get(String(q.code))||0)<=30000?'recent':'older';
   }
   function paintStatus(){
     const b=document.getElementById('liveBadge'),s=document.getElementById('marketStatus'),t=document.getElementById('marketTime'),p=document.getElementById('refreshPill');
@@ -455,7 +456,7 @@
     const indexAge=taiex?.stamp?Date.now()-Number(taiex.stamp):Infinity;
     // Separate exchange timestamp from HTTP response receipt time.
     const fromBackup=/GitHub 官方盤中快照/.test(String(taiex?.source||''));
-    const fresh=indexAge>=-30000&&indexAge<=90000&&!fromBackup&&Date.now()-lastMisReceivedAt<=30000;
+    const fresh=indexAge>=-30000&&!fromBackup&&Date.now()-lastMisReceivedAt<=30000;
     if(marketOpen()){
       const retryDelay=Math.max(0,Math.ceil((nextMisAttemptAt-Date.now())/1000));
       const label=fresh?'盤中來源有效':fromBackup&&indexAge>=-30000&&indexAge<=BACKUP_STALE_MS?'GitHub 備援延遲行情（非即時）':'行情延遲／來源重試中';
@@ -474,7 +475,7 @@
     const indexState=intradayIndexState(taiex),retry=Math.max(0,Math.ceil((nextMisAttemptAt-Date.now())/1000));
     if(marketOpen()){
       const viaBackup=/GitHub 官方盤中快照/.test(String(taiex?.source||''));
-      const valid=indexState==='fresh'&&!viaBackup&&lastMisReceivedAt>0&&Date.now()-lastMisReceivedAt<=30000;
+      const valid=taiex?.date===today()&&!viaBackup&&lastMisReceivedAt>0&&Date.now()-lastMisReceivedAt<=30000;
       setText(state,valid?'盤中資料有效':'行情延遲／來源重試中');setClass(state,'v '+(valid?'down':'up'));
       setText(details,valid?'指數來源 '+(taiex?.time||'—')+(viaBackup?'｜GitHub 官方快照（可能延遲）':'｜每 6 秒檢查，非保證每次有新成交'): '指數狀態：'+indexState+'｜'+(retry?'約 '+retry+' 秒後重試':'等待來源資料')+'｜不以舊價冒充即時');
     }else{

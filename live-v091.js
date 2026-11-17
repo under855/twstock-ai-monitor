@@ -515,7 +515,23 @@
     return {date:x.date,price:num(x.close),source:x.source};
   }
   function showPriorCloseRow(code){
-    const x=priorCloseFor(code),r=row(code);if(!x||!r)return false;
+    const r=row(code),q=quotes.get(String(code));
+    if(!r)return false;
+    // The previously authenticated exchange trade is still a historical fact,
+    // but never present it as the current trading price after the source stops updating.
+    if(q?.date===today()&&q?.source==='TWSE MIS 盤中最新成交'&&num(q.price)>0&&
+       Number.isFinite(Number(q.stamp))&&Number(q.stamp)<=Date.now()+30000&&sameDay(q.stamp)){
+      const ts=String(q.tradeTime||hhmmss(q.stamp));
+      r.dataset.liveState='stale-today';r.dataset.livePrice=String(q.price);r.dataset.liveDate=q.date;
+      delete r.dataset.quoteSignature;
+      setText(r.querySelector('.price'),fmt(q.price));
+      const ch=r.querySelector('.chg');if(ch){setText(ch,'—');setClass(ch,'chg flat')}
+      setText(r.querySelector('.dayline'),'今日最後已驗證成交 '+ts+'｜非目前即時價');
+      setText(r.querySelector('.meta'),'TWSE MIS 最後已驗證成交 '+today().replace(/^(\d{4})(\d{2})(\d{2})$/,'$1/$2/$3')+' '+ts+'｜來源中斷或延遲');
+      setText(r.querySelector('.scoreNum'),'—');setText(r.querySelector('.scoreLabel'),'行情未更新，暫停即時評分');
+      return true;
+    }
+    const x=priorCloseFor(code);if(!x)return false;
     r.dataset.liveState='previous-close';r.dataset.livePrice=String(x.price);r.dataset.liveDate=x.date.replaceAll('-','');
     delete r.dataset.quoteSignature;
     setText(r.querySelector('.price'),fmt(x.price));

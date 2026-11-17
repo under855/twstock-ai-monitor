@@ -36,7 +36,9 @@ assert(!q.parseIntradaySnapshot(good,['0050']).map.has('2330'),'UNREQUESTED_SYMB
 assert.throws(()=>q.parseIntradaySnapshot({...good,date:'2026-11-13'},['0050']),/日期/);
 assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[point(100,180000)]},taiex:[]},['0050']).map.size,1,'THREE_MINUTE_DELAYED_BACKUP_WRONGLY_REJECTED');
 assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[point(100,45*60000)]},taiex:[]},['0050']).map.size,1,'FORTY_FIVE_MINUTE_BACKUP_WRONGLY_REJECTED');
-assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[point(100,121*60000)]},taiex:[]},['0050']).map.size,0,'OLDER_THAN_TWO_HOURS_ACCEPTED');
+assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[point(100,121*60000)]},taiex:[]},['0050']).map.size,1,'VERIFIED_SAME_DAY_QUOTE_OLDER_THAN_TWO_HOURS_REJECTED');
+assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[point(100,9*3600000)]},taiex:[]},['0050']).map.size,1,'VERIFIED_SAME_DAY_QUOTE_OLDER_THAN_NINE_HOURS_REJECTED');
+assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[point(100,24*3600000)]},taiex:[]},['0050']).map.size,0,'PREVIOUS_DAY_SNAPSHOT_ACCEPTED_AS_TODAY');
 assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[{...point(100),source:'wrong'}]},taiex:[]},['0050']).map.size,0,'UNVERIFIED_SOURCE_ACCEPTED');
 assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[point(100,-90000)]},taiex:[]},['0050']).map.size,0,'FUTURE_ACCEPTED');
 response=good;
@@ -63,4 +65,4 @@ assert.equal(q.quoteProblem('0050',q.getStock('0050')),'','UNCHANGED_TRADE_MUST_
 response=good;
 assert.equal(await q.pollIntradayBackup(true),true,'VERIFIED_DELAYED_BACKUP_WRONGLY_REJECTED');
 assert.equal(q.getStock('0050').price,101,'EXPIRED_BACKUP_OVERWROTE_NEWER_PRIMARY');
-console.log('DUAL_SOURCE_REGRESSION_PASS: parsing, provenance, 2-hour dated historical backup, independent backup, failover, throttle, primary recovery');
+console.log('DUAL_SOURCE_REGRESSION_PASS: parsing, provenance, full same-day dated historical backup, independent backup, failover, throttle, primary recovery');

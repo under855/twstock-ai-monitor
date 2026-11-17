@@ -9,6 +9,7 @@ on:
       - 'scripts/verify_intraday_failover.mjs'
       - 'scripts/verify_staggered_market_hours.mjs'
       - 'scripts/verify_intraday_failover_browser.mjs'
+      - 'scripts/verify_official_close_fallback_browser.mjs'
       - 'scripts/probe_live_browser.mjs'
       - '.github/workflows/system-data-integrity.yml'
   push:
@@ -73,6 +74,11 @@ jobs:
           CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
           export CHROME
           PROBE_OVERRIDE_JS=1 node scripts/probe_live_browser.mjs
+      - name: Verify dated official close fallback when both browser gateways fail
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node scripts/verify_official_close_fallback_browser.mjs
       - name: Validate current production after deployment
         if: github.event_name != 'pull_request'
         run: |

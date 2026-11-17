@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.9.8.11';
+  const VERSION='0.9.8.12';
   const INTERVAL=6000; // Primary quote channel, exchange timestamps determine freshness.
   const SECONDARY_INTERVAL=10000; // A separate CORS gateway checks independently every 10 seconds.
   const SECONDARY_OFFSET=3000; // Stagger the first secondary check from the primary.
@@ -14,6 +14,7 @@
   const SKEY='tw_live091_series_';
   const IKEY='tw_live091_index_';
   const quotes=new Map();
+  let verifiedClose=null,verifiedCloseCheckedAt=0,verifiedCloseBusy=false,verifiedCloseError='';
   // A masked quote may reappear only after its exchange timestamp advances.
   const resumeAfter=new Map();
   // A recent MIS response can confirm an unchanged last-trade price; exchange timestamp is not the HTTP receipt time.
@@ -384,19 +385,20 @@
       if(state!=='fresh'){
         // The last known same-day quote is informational, NOT a real-time quote.
         const last=latestIndexForDisplay();
-        if(last){
+        if(last&&Number(last.stamp)<=Date.now()+30000&&num(last.price)>0){
           paintIndexExtras(null,false);
-          setText(v,'—');
+          setText(v,fmt(last.price,2));
           setClass(v,'v flat');
           if(c){
             const mins=Math.max(0,Math.floor((Date.now()-Number(last.stamp))/60000));
             const source=last.officialClose?'正式收盤':'最後已取得行情';
-            setText(c,'行情延遲，暫停顯示｜'+source+' '+last.time+'｜已延遲約 '+mins+' 分鐘');
+            setText(c,'今日最後已驗證指數（非即時）｜'+source+' '+last.time+'｜已延遲約 '+mins+' 分鐘');
             setClass(c,'s muted');
           }
         }else{
-          paintIndexExtras(null,false);setText(v,'—');setClass(v,'v flat');
-          if(c){setText(c,'即時行情暫時無法確認｜正在取得最近一筆資料');setClass(c,'s muted')}
+          const prior=priorIndexClose();
+          paintIndexExtras(null,false);setText(v,prior?fmt(prior.price,2):'—');setClass(v,'v flat');
+          if(c){setText(c,prior?'前一交易日官方收盤 '+prior.date.replaceAll('-','/')+'｜非今日行情':'即時行情暫時無法確認｜正在取得最近一筆資料');setClass(c,'s muted')}
         }
         return;
       }
@@ -419,7 +421,9 @@
       const problem=quoteProblem(code,q);
       if(problem){
         ['dPrice','dOpen','dRange','dVolume','dChange'].forEach(id=>set(id,'—'));
-        set('dTime',problem+'｜等待新有效行情');
+        const prior=priorCloseFor(code);
+        if(prior){set('dPrice',fmt(prior.price));set('dTime','前一交易日官方收盤 '+prior.date.replaceAll('-','/')+'｜非今日成交價｜'+problem)}
+        else set('dTime',problem+'｜等待新有效行情');
       }
       if(problem||!q?.live||q.date!==today()){
         if(title)title.textContent='盤中／最近交易日走勢';
@@ -485,7 +489,7 @@
       const q=quotes.get(code);
       if(marketOpen()){
         const problem=quoteProblem(code,q);
-        if(problem){maskRow(code,problem);continue}
+        if(problem){if(!showPriorCloseRow(code))maskRow(code,problem);continue}
       }
       if(q?.date===today())paintRow(code,q);
       else if(marketOpen())maskRow(code,'尚未取得今日有效行情');
@@ -493,12 +497,52 @@
     paintDetail();paintStatus();debug();
   }
 
+  function verifiedPriorCloseDate(v){
+    const d=String(v||'');
+    if(!/^20\d{2}-\d{2}-\d{2}$/.test(d))return false;
+    const todayIso=today().replace(/^(\d{4})(\d{2})(\d{2})$/,'$1-$2-$3');
+    const ms=Date.parse(d+'T00:00:00+08:00'),todayMs=Date.parse(todayIso+'T00:00:00+08:00');
+    return Number.isFinite(ms)&&Number.isFinite(todayMs)&&d<todayIso&&todayMs-ms<=7*86400000;
+  }
+  function priorCloseFor(code){
+    const x=verifiedClose?.symbols?.[String(code)];
+    if(!x||!verifiedPriorCloseDate(x.tradeDate)||!['TWSE STOCK_DAY_ALL','TPEx dailyQuotes','TWSE MI_INDEX'].includes(x.source)||num(x.close)==null||num(x.close)<=0)return null;
+    return {code:String(code),date:x.tradeDate,price:num(x.close),source:x.source};
+  }
+  function priorIndexClose(){
+    const x=verifiedClose?.taiex;
+    if(!x||!verifiedPriorCloseDate(x.date)||!['TWSE FMTQIK','TWSE MI_INDEX'].includes(x.source)||num(x.close)==null||num(x.close)<=0)return null;
+    return {date:x.date,price:num(x.close),source:x.source};
+  }
+  function showPriorCloseRow(code){
+    const x=priorCloseFor(code),r=row(code);if(!x||!r)return false;
+    r.dataset.liveState='previous-close';r.dataset.livePrice=String(x.price);r.dataset.liveDate=x.date.replaceAll('-','');
+    delete r.dataset.quoteSignature;
+    setText(r.querySelector('.price'),fmt(x.price));
+    const ch=r.querySelector('.chg');if(ch){setText(ch,'—');setClass(ch,'chg flat')}
+    setText(r.querySelector('.dayline'),'前一交易日官方收盤 '+x.date.replaceAll('-','/')+'｜非今日成交價');
+    setText(r.querySelector('.meta'),'官方收盤備援｜'+x.source+'｜'+x.date.replaceAll('-','/')+'｜盤中報價暫無法確認');
+    setText(r.querySelector('.scoreNum'),'—');setText(r.querySelector('.scoreLabel'),'僅有前一交易日收盤價，暫停即時評分');
+    return true;
+  }
+  async function loadVerifiedClose(force=false){
+    if(verifiedCloseBusy||(!force&&verifiedClose&&Date.now()-verifiedCloseCheckedAt<15*60000))return;
+    verifiedCloseBusy=true;verifiedCloseCheckedAt=Date.now();
+    try{
+      const x=await window.__TW_LATEST_JSON__();
+      const date=String(x?.tradeDate||'');
+      // Data may be generated during trading, but never use a same-day close that has not happened yet.
+      if(!verifiedPriorCloseDate(date)||!x?.symbols||typeof x.symbols!=='object')throw Error('前一交易日官方收盤資料日期或格式不符');
+      verifiedClose=x;verifiedCloseError='';paintAll();
+    }catch(e){verifiedCloseError=String(e?.message||e);paintAll()}
+    finally{verifiedCloseBusy=false}
+  }
   function placeholder(code){return {code:String(code),price:'',change:'',prev:'',open:'',high:'',low:'',volume:'',date:today(),stamp:null,tradeTime:'',source:'今日資料載入中',live:false}}
   if(originalQuote)quote=async function(code,allowNetwork=true){const q=quotes.get(String(code));if(q?.date===today())return q;if(marketOpen())return placeholder(code);return originalQuote(code,allowNetwork)};
   if(originalRender)render=async function(allowNetwork=false){const x=await originalRender(marketOpen()?false:allowNetwork);if(marketOpen()||hasTodayData())paintAll();return x};
   if(originalShow)show=async function(code,opts={}){code=String(code);const q=quotes.get(code);if(q?.date===today()||marketOpen())quoteCache[code]=q||placeholder(code);const x=await originalShow(code,opts);if(q?.date===today()||marketOpen()){paintDetail();if(marketOpen())poll(false)}return x};
 
-  function debug(){const stocks={};for(const code of watchCodes()){const q=quotes.get(code),a=series.get(code)||[],r=row(code);stocks[code]={date:q?.date||null,price:q?.price??null,change:q?.change??null,tradeTime:q?.tradeTime||null,stamp:q?.stamp||null,freshness:quoteFreshness(q),source:q?.source||null,seriesPoints:a.length,seriesLastStamp:a.at(-1)?.stamp||null,domState:r?.dataset?.liveState||null,domDate:r?.dataset?.liveDate||null,domStamp:Number(r?.dataset?.liveStamp||0)||null,domPrice:r?.dataset?.livePrice||null,invalidReason:r?.dataset?.liveState==='invalid'?r.querySelector('.meta')?.textContent:null}}window.__TW_LIVE_V091__={version:VERSION,intervalMs:INTERVAL,marketWindow:marketOpen(),indexFreshness:intradayIndexState(taiex),indexAgeSeconds:taiex?.stamp?Math.round((Date.now()-Number(taiex.stamp))/1000):null,confirmedLastTradeCount:lastConfirmedByCode.size,backupSource:{lastReceivedAt:lastIntradayBackupReceivedAt,lastStamp:lastIntradayBackupStamp,lastError:lastIntradayBackupError,busy:intradayBackupBusy},secondarySource:{intervalMs:SECONDARY_INTERVAL,cycles:secondaryCycles,lastPollAt:secondaryLastPollAt,lastSuccessAt:secondaryLastSuccessAt,lastError:secondaryLastError},cycle,lastPollAt,lastSuccessAt,lastMisReceivedAt,nextMisAttemptAt,failures:misFailureCount,lastError,taiex:taiex?{date:taiex.date,price:taiex.price,change:taiex.change,high:taiex.high,low:taiex.low,turnover:taiex.turnover,time:taiex.time,stamp:taiex.stamp,source:taiex.source}:null,stocks}}
+  function debug(){const stocks={};for(const code of watchCodes()){const q=quotes.get(code),a=series.get(code)||[],r=row(code);stocks[code]={date:q?.date||null,price:q?.price??null,change:q?.change??null,tradeTime:q?.tradeTime||null,stamp:q?.stamp||null,freshness:quoteFreshness(q),source:q?.source||null,seriesPoints:a.length,seriesLastStamp:a.at(-1)?.stamp||null,domState:r?.dataset?.liveState||null,domDate:r?.dataset?.liveDate||null,domStamp:Number(r?.dataset?.liveStamp||0)||null,domPrice:r?.dataset?.livePrice||null,invalidReason:r?.dataset?.liveState==='invalid'?r.querySelector('.meta')?.textContent:null}}window.__TW_LIVE_V091__={version:VERSION,intervalMs:INTERVAL,marketWindow:marketOpen(),indexFreshness:intradayIndexState(taiex),indexAgeSeconds:taiex?.stamp?Math.round((Date.now()-Number(taiex.stamp))/1000):null,confirmedLastTradeCount:lastConfirmedByCode.size,officialCloseFallback:{loaded:!!verifiedClose,tradeDate:verifiedClose?.tradeDate||null,error:verifiedCloseError},backupSource:{lastReceivedAt:lastIntradayBackupReceivedAt,lastStamp:lastIntradayBackupStamp,lastError:lastIntradayBackupError,busy:intradayBackupBusy},secondarySource:{intervalMs:SECONDARY_INTERVAL,cycles:secondaryCycles,lastPollAt:secondaryLastPollAt,lastSuccessAt:secondaryLastSuccessAt,lastError:secondaryLastError},cycle,lastPollAt,lastSuccessAt,lastMisReceivedAt,nextMisAttemptAt,failures:misFailureCount,lastError,taiex:taiex?{date:taiex.date,price:taiex.price,change:taiex.change,high:taiex.high,low:taiex.low,turnover:taiex.turnover,time:taiex.time,stamp:taiex.stamp,source:taiex.source}:null,stocks}}
 
   async function pollBackup(force=false){
     if(!postCloseWindow()||officialCloseComplete()||backupBusy||(!force&&Date.now()-lastBackupAt<BACKUP_INTERVAL))return false; // No off-hours stock requests; retry only today's unfinished official close.
@@ -532,10 +576,11 @@
   window.__TW_BACKUP_REFRESH__=()=>pollBackup(true);
   window.__TW_SCHEDULER_STATE__=()=>({marketOpen:marketOpen(),postCloseWindow:postCloseWindow(),officialCloseComplete:officialCloseComplete(),primaryInterval:INTERVAL,secondaryInterval:SECONDARY_INTERVAL,secondaryOffset:SECONDARY_OFFSET,backupInterval:INTRADAY_BACKUP_INTERVAL,secondaryCycles,secondaryLastPollAt,secondaryLastSuccessAt,secondaryLastError,secondaryFailureCount,secondaryNextAllowedAt});
   function start(){
-    loadToday();paintAll();if(marketOpen()){poll(false);pollIndexSnapshot();pollIntradayBackup(true)}else if(postCloseWindow())pollBackup(false);
+    loadToday();paintAll();loadVerifiedClose(false);if(marketOpen()){poll(false);pollIndexSnapshot();pollIntradayBackup(true)}else if(postCloseWindow())pollBackup(false);
     // Always schedule polling: a page opened before 09:00 must start updating when trading begins.
     // The poll function itself skips requests outside the TW market window.
     setInterval(()=>poll(false),INTERVAL);
+    setInterval(()=>{if(marketOpen()&&!verifiedClose)loadVerifiedClose(true)},5*60000);
     setTimeout(()=>{pollSecondary();setInterval(pollSecondary,SECONDARY_INTERVAL)},SECONDARY_OFFSET);
     setInterval(()=>pollIntradayBackup(false),INTRADAY_BACKUP_INTERVAL);
     setInterval(()=>{if(postCloseWindow()&&!officialCloseComplete())pollBackup(false)},BACKUP_INTERVAL);

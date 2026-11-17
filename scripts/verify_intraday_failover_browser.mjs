@@ -9,7 +9,7 @@ try{
   page.on('pageerror',e=>errors.push(e.message));
   const epoch=Date.parse('2026-11-16T02:15:00Z');
   let mode='primary-offline',stockRequests=0;
-  const point=(price,age=20000)=>({stamp:epoch-age,close:price,time:'10:14:40',source:'TWSE MIS'});
+  const point=(price,age=180000)=>({stamp:epoch-age,close:price,time:'10:12:00',source:'TWSE MIS'});
   const snapshot={date:'2026-11-16',generatedAt:'2026-11-16T10:15:00+08:00',source:'TWSE MIS official snapshots',stocks:{'0050':[point(100)]},taiex:[point(42000)]};
   await page.route('**/*',async route=>{
     const url=route.request().url();

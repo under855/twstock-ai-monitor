@@ -28,8 +28,8 @@ assert.equal(q.intradayIndexState({date:'20261110',stamp:epoch-37*60000}),'stale
 assert.equal(q.intradayIndexState({date:'20261110',stamp:epoch-50000}),'fresh','RECENT_INDEX_NOT_RECOGNIZED');
 q.setIndex({date:'20261110',price:43300.32,change:588.4,stamp:epoch-37*60000,time:'09:23:00',source:'TWSE MIS'});
 q.paintIndex();
-assert.equal(dom.taiex.textContent,'—','STALE_INDEX_PRICE_MUST_BE_HIDDEN');
-assert(dom.taiexChg.textContent.includes('37 分鐘')&&dom.taiexChg.textContent.includes('09:23:00')&&!dom.taiexChg.textContent.includes('43,300.32'),'STALENESS_REASON_AND_PRICE_MASK_MISSING');
+assert.equal(dom.taiex.textContent,'43,300.32','LAST_VERIFIED_INDEX_NOT_SHOWN_AS_DELAYED');
+assert(dom.taiexChg.textContent.includes('37 分鐘')&&dom.taiexChg.textContent.includes('09:23:00')&&dom.taiexChg.textContent.includes('非即時'),'STALE_INDEX_MUST_EXPLICITLY_SHOW_DELAY');
 q.setIndex({date:'20261110',price:43381.74,change:669.82,stamp:epoch-20000,time:'09:59:40',source:'TWSE MIS'});
 q.paintIndex();
 assert.equal(dom.taiex.textContent,'43,381.74','FRESH_INDEX_NOT_RENDERED');

@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.9.8.12';
+  const VERSION='0.9.8.13';
   const INTERVAL=6000; // Primary quote channel, exchange timestamps determine freshness.
   const SECONDARY_INTERVAL=10000; // A separate CORS gateway checks independently every 10 seconds.
   const SECONDARY_OFFSET=3000; // Stagger the first secondary check from the primary.
@@ -8,7 +8,7 @@
   const BACKUP_INTERVAL=60000;
   const INTRADAY_BACKUP_INTERVAL=30000;
   const INTRADAY_BACKUP_URL='https://raw.githubusercontent.com/under855/twstock-ai-monitor/market-data/data/intraday/latest.json';
-  const BACKUP_STALE_MS=90000; // A five-minute snapshot is not six-second live data.
+  const BACKUP_STALE_MS=2*60*60*1000; // Historical same-day backup maximum two hours, NEVER imply real-time.
   const MAX_POINTS=600;
   const QKEY='tw_live091_quotes_';
   const SKEY='tw_live091_series_';
@@ -192,7 +192,7 @@
       // Do not infer day change from an unrelated daily cached quote.
       const prev=null; // Snapshot only has the trade price, not a verified previous close.
       const ms=Number(p.stamp),price=num(p.close);
-      map.set(code,{code,date:today(),price,prev,change:prev==null?null:price-prev,open:null,high:null,low:null,volume:null,tradeTime:hhmmss(ms),stamp:ms,volumeUnit:'unknown',source:'GitHub 官方盤中快照（可能延遲）',live:true});
+      map.set(code,{code,date:today(),price,prev,change:prev==null?null:price-prev,open:null,high:null,low:null,volume:null,tradeTime:hhmmss(ms),stamp:ms,volumeUnit:'unknown',source:'GitHub 官方盤中快照（延遲行情）',live:true});
     }
     const p=latest(j.taiex);
     if(validPoint(p)){
@@ -212,7 +212,7 @@
       for(const q of map.values())if(acceptQuote(q))accepted++;
       const latestStamp=Math.max(Number(idx?.stamp)||0,...[...map.values()].map(q=>Number(q.stamp)||0));
       if(latestStamp){lastIntradayBackupStamp=latestStamp;lastIntradayBackupReceivedAt=Date.now();lastIntradayBackupError='';window.__TW_UPDATE_HEALTH__?.('台股備援行情',true)}
-      else{lastIntradayBackupError='備援資料超過90秒或沒有追蹤股有效行情';window.__TW_UPDATE_HEALTH__?.('台股備援行情',false)}
+      else{lastIntradayBackupError='今日備援快照無法使用（缺少有效日期、價格或來源逾時）';window.__TW_UPDATE_HEALTH__?.('台股備援行情',false)}
       if(accepted){lastSuccessAt=Date.now();saveToday()}
       paintAll();return latestStamp>0;
     }catch(e){lastIntradayBackupError=String(e?.message||e);window.__TW_UPDATE_HEALTH__?.('台股備援行情',false);paintAll();return false}
@@ -310,6 +310,7 @@
     if(!q?.live||q.date!==today()||num(q.price)==null)return '尚未取得今日有效行情';
     const age=Date.now()-Number(q.stamp);
     if(!Number.isFinite(age)||age < -30000)return '行情時間戳記異常';
+    if(/GitHub 官方盤中快照/.test(String(q.source||'')))return age>BACKUP_STALE_MS?'今日備援行情已超過可接受時效':'';
     const unchangedConfirmed=age>90000&&verifiedUnchangedTrade(code,q);
     if(age>90000&&!unchangedConfirmed)return '行情超過90秒未更新'+(lastError?'｜主要來源：'+lastError.slice(0,55):'')+(lastIntradayBackupError?'｜備援：'+lastIntradayBackupError.slice(0,55):'');
     if(resumeAfter.has(code)&&Number(q.stamp)<=resumeAfter.get(code)&&!unchangedConfirmed)return '等待新成交行情確認恢復';
@@ -320,7 +321,8 @@
     const problem=quoteProblem(code,q);
     if(problem){maskRow(code,problem);return}
     resumeAfter.delete(code);
-    const delayedTrade=verifiedUnchangedTrade(code,q);
+    const backupDelayed=/GitHub 官方盤中快照/.test(String(q.source||''));
+    const delayedTrade=backupDelayed||verifiedUnchangedTrade(code,q);
     const signature=JSON.stringify([q.stamp,q.price,q.change,q.open,q.high,q.low,q.volume,q.source,delayedTrade]);
     if((r.dataset.liveState==='live'||r.dataset.liveState==='delayed')&&r.dataset.quoteSignature===signature)return;
     r.dataset.quoteSignature=signature;
@@ -329,9 +331,9 @@
     setText(p,fmt(q.price));
     if(ch){setText(ch,(q.change>0?'+':'')+fmt(q.change));setClass(ch,'chg '+cls(q.change))}
     setText(d,(delayedTrade?'最後成交 ':q.officialClose?'收盤 ': '')+q.tradeTime+'　開 '+fmt(q.open)+'　高 '+fmt(q.high)+'　低 '+fmt(q.low)+(delayedTrade?'　最後成交價 ':'　最新 ')+fmt(q.price)+'　量 '+fmt(q.volume,0)+(q.volumeUnit==='lots'?' 張':q.volumeUnit==='shares'?' 股':'（單位未確認）'));
-    setText(m,q.source+(delayedTrade?'｜最後成交 ':'｜成交 ')+q.tradeTime+(delayedTrade?'｜成交時間超過90秒，已確認來源仍更新（非即時成交）':''));
+    setText(m,q.source+(delayedTrade?'｜最後成交 ':'｜成交 ')+q.tradeTime+(backupDelayed?'｜非即時・僅供歷史參考':delayedTrade?'｜成交時間超過90秒，已確認來源仍更新（非即時成交）':''));
     const c=canvasFor(r);if(!(typeof window.__TW_DRAW_MAIN_TODAY__==='function'&&window.__TW_DRAW_MAIN_TODAY__(code,c)))drawLine(c,series.get(code)||[]);
-    if(delayedTrade){setText(r.querySelector('.scoreNum'),'—');setText(r.querySelector('.scoreLabel'),'最後成交超過90秒，暫停即時評分');return}
+    if(delayedTrade){setText(r.querySelector('.scoreNum'),'—');setText(r.querySelector('.scoreLabel'),backupDelayed?'GitHub 延遲快照，不進行即時評分':'最後成交超過90秒，暫停即時評分');return}
     if(/GitHub 官方盤中快照/.test(String(q.source))){setText(r.querySelector('.scoreNum'),'—');setText(r.querySelector('.scoreLabel'),'備援僅提供成交價，暫停即時評分');return}
     try{const base=rowForCode(code),val=allVals.find(x=>String(x.Code).trim()===code)||{},hist=historyCache?.[code]||[],s=scoreStock(base,val,hist,q),sn=r.querySelector('.scoreNum'),sl=r.querySelector('.scoreLabel');if(sn){setText(sn,s.total==null?'—':String(s.total));setClass(sn,'scoreNum '+scoreCls(s.total))}if(sl)setText(sl,s.total==null?'資料不足':s.mode)}catch{}
   }
@@ -453,7 +455,7 @@
     const indexAge=taiex?.stamp?Date.now()-Number(taiex.stamp):Infinity;
     // Separate exchange timestamp from HTTP response receipt time.
     const fromBackup=/GitHub 官方盤中快照/.test(String(taiex?.source||''));
-    const fresh=indexAge>=-30000&&indexAge<=90000&&((fromBackup&&Date.now()-lastIntradayBackupReceivedAt<=BACKUP_STALE_MS)||(!fromBackup&&Date.now()-lastMisReceivedAt<=30000));
+    const fresh=indexAge>=-30000&&indexAge<=90000&&!fromBackup&&Date.now()-lastMisReceivedAt<=30000;
     if(marketOpen()){
       const retryDelay=Math.max(0,Math.ceil((nextMisAttemptAt-Date.now())/1000));
       const label=fresh?(fromBackup?'備援行情有效（非即時）':'盤中來源有效'):'行情延遲／來源重試中';
@@ -472,7 +474,7 @@
     const indexState=intradayIndexState(taiex),retry=Math.max(0,Math.ceil((nextMisAttemptAt-Date.now())/1000));
     if(marketOpen()){
       const viaBackup=/GitHub 官方盤中快照/.test(String(taiex?.source||''));
-      const valid=indexState==='fresh'&&((viaBackup&&Date.now()-lastIntradayBackupReceivedAt<=BACKUP_STALE_MS)||(!viaBackup&&lastMisReceivedAt>0&&Date.now()-lastMisReceivedAt<=30000));
+      const valid=indexState==='fresh'&&!viaBackup&&lastMisReceivedAt>0&&Date.now()-lastMisReceivedAt<=30000;
       setText(state,valid?'盤中資料有效':'行情延遲／來源重試中');setClass(state,'v '+(valid?'down':'up'));
       setText(details,valid?'指數來源 '+(taiex?.time||'—')+(viaBackup?'｜GitHub 官方快照（可能延遲）':'｜每 6 秒檢查，非保證每次有新成交'): '指數狀態：'+indexState+'｜'+(retry?'約 '+retry+' 秒後重試':'等待來源資料')+'｜不以舊價冒充即時');
     }else{
@@ -519,7 +521,7 @@
     if(!r)return false;
     // The previously authenticated exchange trade is still a historical fact,
     // but never present it as the current trading price after the source stops updating.
-    if(q?.date===today()&&q?.source==='TWSE MIS 盤中最新成交'&&num(q.price)>0&&
+    if(q?.date===today()&&(/TWSE MIS 盤中最新成交/.test(String(q.source))||/GitHub 官方盤中快照/.test(String(q.source)))&&num(q.price)>0&&
        Number.isFinite(Number(q.stamp))&&Number(q.stamp)<=Date.now()+30000&&sameDay(q.stamp)){
       const ts=String(q.tradeTime||hhmmss(q.stamp));
       r.dataset.liveState='stale-today';r.dataset.livePrice=String(q.price);r.dataset.liveDate=q.date;
@@ -527,7 +529,7 @@
       setText(r.querySelector('.price'),fmt(q.price));
       const ch=r.querySelector('.chg');if(ch){setText(ch,'—');setClass(ch,'chg flat')}
       setText(r.querySelector('.dayline'),'今日最後已驗證成交 '+ts+'｜非目前即時價');
-      setText(r.querySelector('.meta'),'TWSE MIS 最後已驗證成交 '+today().replace(/^(\d{4})(\d{2})(\d{2})$/,'$1/$2/$3')+' '+ts+'｜來源中斷或延遲');
+      setText(r.querySelector('.meta'),q.source+'｜最後已驗證成交 '+today().replace(/^(\d{4})(\d{2})(\d{2})$/,'$1/$2/$3')+' '+ts+'｜來源中斷或延遲（非即時）');
       setText(r.querySelector('.scoreNum'),'—');setText(r.querySelector('.scoreLabel'),'行情未更新，暫停即時評分');
       return true;
     }
@@ -571,7 +573,7 @@
     busy=true;cycle++;lastPollAt=Date.now();
     try{
       const codes=requestedCodes(),{map,idx}=parse(await fetchMis(codes));confirmMisQuotes(map);let accepted=0;if(acceptIndex(idx))accepted++;for(const q of map.values()){if(acceptQuote(q))accepted++}if(accepted)lastSuccessAt=Date.now();saveToday();paintAll();
-    }catch(e){lastError=String(e?.message||e);if(marketOpen())await pollIntradayBackup(false);else await pollBackup(false);paintAll();debug()}finally{busy=false}
+    }catch(e){lastError=String(e?.message||e);if(marketOpen())await Promise.allSettled([pollSecondary(),pollIntradayBackup(true)]);else await pollBackup(false);paintAll();debug()}finally{busy=false}
   }
   async function pollSecondary(){
     if(!marketOpen()||secondaryBusy||document.visibilityState==='hidden'||Date.now()<secondaryNextAllowedAt)return false;

@@ -146,12 +146,10 @@
   async function longHistory(code){
     code=String(code);if(longHistoryCache.has(code))return longHistoryCache.get(code);
     const task=(async()=>{
-      const market=universeMap.get(code)?.market,suffix=market==='TPEx'||code==='3293'?'.TWO':'.TW';
-      try{
-        const url=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(code+suffix)}?interval=1d&range=1y&includePrePost=false`;
-        const j=await jsonPublic(url,7000),r=j?.chart?.result?.[0];
-        if(r){const ts=r.timestamp||[],q=r.indicators?.quote?.[0]||{},out=[];for(let i=0;i<ts.length;i++){const close=num(q.close?.[i]);if(close==null)continue;const d=new Date(ts[i]*1000);out.push({date:`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`,open:num(q.open?.[i]),high:num(q.high?.[i]),low:num(q.low?.[i]),close,volume:num(q.volume?.[i])});}if(out.length)return out;}
-      }catch{}
+      // Use exchange-published daily history; preserve it for fill calculations and scoring.
+      try{const official=window.__TW_OFFICIAL_DAILY_HISTORY__;if(typeof official==='function'){
+        const rows=await official(code);if(Array.isArray(rows)&&rows.length)return rows;
+      }}catch{}
       try{return await history(code)}catch{return []}
     })();
     longHistoryCache.set(code,task);return task;

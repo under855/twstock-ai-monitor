@@ -57,8 +57,8 @@ try{
   assert.equal((await page.locator('.scoreNum').textContent())?.trim(),'—','STALE_QUOTE_HAS_REALTIME_SCORE');
   const schedule=await page.evaluate(()=>window.__TW_SCHEDULER_STATE__());
   assert.equal(schedule.primaryInterval,6000);
-  assert.equal(schedule.secondaryInterval,10000);
-  assert.equal(schedule.secondaryOffset,3000);
+  assert.equal(schedule.secondaryInterval,6000);
+  assert.equal(schedule.secondaryOffset,4000);
   await page.clock.setFixedTime(new Date('2026-12-25T02:15:00Z'));
   const priorRequests=stockRequests;
   await page.evaluate(async()=>{await Promise.all([window.__TW_LIVE_REFRESH__(),window.__TW_SECONDARY_REFRESH__()])});

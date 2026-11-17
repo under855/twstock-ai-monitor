@@ -24,10 +24,14 @@ function assess(type,data){
    const rows=data.msgArray.filter(x=>['t00','0050','3711','3293','2002','00878','00919'].includes(String(x?.c||'')));
    const todayRows=rows.filter(x=>String(x?.d||'')===compact&&/^\d{2}:\d{2}:\d{2}$/.test(String(x?.t||x?.trade?.t||'')));
    if(!rows.length)throw Error('MIS target codes missing');
-   if(tradingDay&&previewWindow&&!todayRows.length)throw Error('試撮時段未收到今日行情日期及時間');
-   return {rows:rows.length,todayRows:todayRows.length,
+   // Before the opening match, the last *actual* trade date can still be yesterday.
+   // A valid read is not proof that trial-matching fields or today's live trades exist.
+   const queryTime=data.queryTime||{};
+   const serverDate=String(queryTime.sysDate||queryTime.sysdate||'');
+   const previewObserved=todayRows.length>0||rows.some(x=>{const ms=Number(x?.tlong);return ms>1e12&&new Intl.DateTimeFormat('en-CA',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(ms))===date&&new Intl.DateTimeFormat('en-GB',{timeZone:TZ,hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(ms))>='08:30';});
+   return {rows:rows.length,todayRows:todayRows.length,previewObserved,serverDate,
      samples:todayRows.slice(0,3).map(x=>({code:x.c,date:x.d,time:x.t||x.trade?.t||'',hasSimulatedFields:['pz','z','b','a','trade'].some(k=>x?.[k]!=null)})),
-     previewNote:'開盤前資料為模擬撮合或買賣申報資訊，不得當成正式成交'};
+     previewNote:previewObserved?'今日盤前時間可核對；模擬撮合不是正式成交':'來源可連線但今日盤前時間未核實，不能宣稱試撮資料已接收'};
  }
  if(type==='snapshot'){
    if(!/^\d{4}-\d{2}-\d{2}$/.test(String(data?.date||''))||data.source!=='TWSE MIS official snapshots')throw Error('快照來源或日期無效');

@@ -1,1 +1,0 @@
-Trigger final open-zero cache refresh and repeated acceptance QA.

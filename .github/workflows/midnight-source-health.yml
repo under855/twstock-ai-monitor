@@ -1,17 +1,17 @@
-name: Midnight market source health check
+name: Preopen trial-matching market source health check
 on:
   schedule:
-    # 16:00 UTC = next day 00:00 Asia/Taipei; GitHub Actions may start late.
-    - cron: '0 16 * * *'
+    # 00:40 UTC = 08:40 Asia/Taipei (TWSE 08:30–09:00 preopen).
+    - cron: '40 0 * * 1-5'
   workflow_dispatch:
   push:
     paths:
-      - 'scripts/audit_midnight_sources.mjs'
+      - 'scripts/audit_preopen_sources.mjs'
       - '.github/workflows/midnight-source-health.yml'
 permissions:
   contents: read
 concurrency:
-  group: midnight-source-health
+  group: preopen-source-health
   cancel-in-progress: false
 jobs:
   health:
@@ -23,9 +23,9 @@ jobs:
         with:
           node-version: '22'
       - name: Validate audit decisions with fixtures
-        run: node scripts/audit_midnight_sources.mjs --self-test
+        run: node scripts/audit_preopen_sources.mjs --self-test
       - name: Check approved quote gateways, official backup, daily data and published UI
-        run: node scripts/audit_midnight_sources.mjs
+        run: node scripts/audit_preopen_sources.mjs
       - name: Save structured diagnostic report
         if: always()
         uses: actions/upload-artifact@v4

@@ -9,6 +9,7 @@ on:
       - 'scripts/verify_intraday_failover.mjs'
       - 'scripts/verify_staggered_market_hours.mjs'
       - 'scripts/verify_intraday_failover_browser.mjs'
+      - 'scripts/audit_preopen_sources.mjs'
       - 'scripts/verify_official_close_fallback_browser.mjs'
       - 'scripts/probe_live_browser.mjs'
       - '.github/workflows/system-data-integrity.yml'
@@ -20,6 +21,7 @@ on:
       - 'scripts/verify_intraday_failover.mjs'
       - 'scripts/verify_staggered_market_hours.mjs'
       - 'scripts/verify_intraday_failover_browser.mjs'
+      - 'scripts/audit_preopen_sources.mjs'
       - 'scripts/probe_live_browser.mjs'
       - 'foreign-flow-card.js'
       - 'data/foreign-flow.json'
@@ -35,10 +37,9 @@ on:
       - 'dividend-enhance.js'
       - 'extras-v090.js'
       - '.github/workflows/system-data-integrity.yml'
-  # GitHub Actions uses UTC; 16:00 UTC = 00:00 next day in Taiwan (UTC+8).
-  # Runs every calendar day, including weekends and Taiwanese market holidays.
+  # Source-independent regression checks now run during exchange preopen preview.
   schedule:
-    - cron: '0 16 * * *'
+    - cron: '40 0 * * 1-5'
 permissions:
   contents: read
 jobs:
@@ -50,6 +51,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Verify preopen source audit logic without assuming simulated price is a real fill
+        run: node scripts/audit_preopen_sources.mjs --self-test
       - name: Syntax check loaded modules
         run: |
           for f in live-v091.js foreign-live-test.js split-layout-v095.js paper-trading-v100.js paper-trading-reset-v101.js pilot-chart-00878-v1.js extras-v090.js dividend-enhance.js foreign-flow-card.js sw.js; do
@@ -80,7 +83,7 @@ jobs:
           export CHROME
           node scripts/verify_official_close_fallback_browser.mjs
       - name: Validate current production after deployment
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && github.event_name != 'schedule'
         run: |
           CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
           export CHROME

@@ -88,7 +88,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   assert(d.layout.indexCardWidth>0,'INDEX_CARD_MISSING '+opt.name);
   assert.equal(d.layout.visibleCards,2,'UNUSED_TOP_MARKET_SLOT '+opt.name);
   console.log('TOP_MARKET_LAYOUT_'+opt.name.toUpperCase(),JSON.stringify(d.layout));
-  assert(d.live?.version==='0.9.8.14'&&d.live?.intervalMs===6000,'OUTDATED_QUOTE_ENGINE '+opt.name);
+  assert(d.live?.version==='0.9.8.15'&&d.live?.intervalMs===6000,'OUTDATED_QUOTE_ENGINE '+opt.name);
   // The rendered stock prices and closing index must match the versioned exchange data file.
   for(const row of d.rows){
     const expected=latest.symbols[row.code];

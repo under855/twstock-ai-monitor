@@ -59,7 +59,7 @@ assert(q.acceptQuote(mis.map.get('0050')),'RECOVERED_PRIMARY_TICK_REJECTED');
 assert(q.acceptIndex(mis.idx),'RECOVERED_PRIMARY_INDEX_REJECTED');
 assert.equal(q.getStock('0050').price,101,'PRIMARY_NOT_RESTORED');
 clock+=92000;
-assert(q.quoteProblem('0050',q.getStock('0050')).includes('超過90秒'),'EXPIRED_QUOTE_NOT_MASKED');
+assert.equal(q.quoteProblem('0050',q.getStock('0050')),'','UNCHANGED_TRADE_MUST_NOT_BECOME_INVALID_AFTER_90_SECONDS');
 response=good;
 assert.equal(await q.pollIntradayBackup(true),true,'VERIFIED_DELAYED_BACKUP_WRONGLY_REJECTED');
 assert.equal(q.getStock('0050').price,101,'EXPIRED_BACKUP_OVERWROTE_NEWER_PRIMARY');

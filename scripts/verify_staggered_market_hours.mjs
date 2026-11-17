@@ -43,10 +43,21 @@ assert(!req.some(x=>x.includes('proxy.cors.dev')),'SECONDARY_USED_PRIMARY_GATEWA
 assert.equal(q.getQuote('0050')?.price,100.25,'SECONDARY_QUOTE_NOT_APPLIED');
 assert.equal(q.getIndex()?.price,42010,'SECONDARY_INDEX_NOT_APPLIED');
 assert.equal(q.getPrimaryFailure(),0,'SECONDARY_CHANGED_PRIMARY_FAILURES');
+const firstHealth=clock.window.__TW_SCHEDULER_STATE__();
+assert.equal(firstHealth.secondaryLastSuccessAt,epoch,'SECONDARY_SUCCESS_TIME_NOT_RECORDED');
+assert.equal(firstHealth.primaryLastSuccessAt,0,'SECONDARY_WAS_RECORDED_AS_PRIMARY_SUCCESS');
+try{await q.fetchMis(['0050'],'primary')}catch{}
+const primaryFailHealth=clock.window.__TW_SCHEDULER_STATE__();
+assert.equal(primaryFailHealth.primaryLastFailureAt,epoch,'PRIMARY_FAILURE_TIME_NOT_RECORDED');
+assert.equal(primaryFailHealth.secondaryLastSuccessAt,epoch,'PRIMARY_FAILURE_CHANGED_SECONDARY_SUCCESS');
+assert.equal(primaryFailHealth.secondaryLastFailureAt,0,'PRIMARY_FAILURE_CHANGED_SECONDARY_FAILURE');
 mode='secondary-down';
 await q.pollSecondary();
 assert.equal(q.getQuote('0050')?.price,100.25,'SECONDARY_OUTAGE_CLEARED_VALID_QUOTE');
 assert(q.getSecondaryError(),'SECONDARY_FAILURE_NOT_REPORTED');
+const secondHealth=clock.window.__TW_SCHEDULER_STATE__();
+assert.equal(secondHealth.secondaryLastFailureAt,epoch,'SECONDARY_FAILURE_TIME_NOT_RECORDED');
+assert.equal(secondHealth.primaryLastFailureAt,epoch,'SECONDARY_FAILURE_CHANGED_PRIMARY_FAILURE');
 await q.pollSecondary();await q.pollSecondary(); // Keep retrying without extra backoff.
 const secondaryAttempts=req.length;
 await q.pollSecondary();

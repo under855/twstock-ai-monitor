@@ -9,6 +9,7 @@ on:
       - 'scripts/verify_intraday_failover.mjs'
       - 'scripts/verify_staggered_market_hours.mjs'
       - 'scripts/verify_intraday_failover_browser.mjs'
+      - 'scripts/probe_live_browser.mjs'
       - '.github/workflows/system-data-integrity.yml'
   push:
     branches: [main]
@@ -18,6 +19,7 @@ on:
       - 'scripts/verify_intraday_failover.mjs'
       - 'scripts/verify_staggered_market_hours.mjs'
       - 'scripts/verify_intraday_failover_browser.mjs'
+      - 'scripts/probe_live_browser.mjs'
       - 'foreign-flow-card.js'
       - 'data/foreign-flow.json'
       - 'scripts/update_foreign_flow.py'
@@ -65,6 +67,12 @@ jobs:
           CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
           export CHROME
           node scripts/verify_intraday_failover_browser.mjs
+      - name: Test staged live MIS requests in real production-like browser
+        if: github.event_name == 'pull_request'
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          PROBE_OVERRIDE_JS=1 node scripts/probe_live_browser.mjs
       - name: Validate current production after deployment
         if: github.event_name != 'pull_request'
         run: |

@@ -25,7 +25,7 @@ vm.createContext(ctx);vm.runInContext(source,ctx,{timeout:4000});
 const q=ctx.__live_test__;
 assert.equal(q.interval,6000,'LIVE_INTERVAL_NOT_6_SECONDS');
 assert.equal(q.intradayIndexState({date:'20261110',stamp:epoch-37*60000}),'stale','37_MIN_OLD_INDEX_MUST_BE_STALE');
-assert.equal(q.intradayIndexState({date:'20261110',stamp:epoch-50000}),'fresh','RECENT_INDEX_NOT_RECOGNIZED');
+assert.equal(q.intradayIndexState({date:'20261110',stamp:epoch-50000}),'stale','INDEX_NEEDS_RECENT_RELAY_CONFIRMATION');
 q.setIndex({date:'20261110',price:43300.32,change:588.4,stamp:epoch-37*60000,time:'09:23:00',source:'TWSE MIS'});
 q.paintIndex();
 assert.equal(dom.taiex.textContent,'43,300.32','LAST_VERIFIED_INDEX_NOT_SHOWN_AS_DELAYED');
@@ -36,7 +36,7 @@ assert.equal(dom.taiex.textContent,'43,381.74','FRESH_INDEX_NOT_RENDERED');
 assert(dom.taiexChg.textContent.includes('09:59:40'),'FRESH_INDEX_SOURCE_TIME_MISSING');
 
 assert.equal(q.quoteFreshness({date:'20261110',stamp:epoch-180000}),'older');
-assert.equal(q.quoteFreshness({date:'20261110',stamp:epoch-30000}),'recent');
+assert.equal(q.quoteFreshness({date:'20261110',stamp:epoch-30000}),'older');
 assert.equal(q.quoteFreshness({date:'20261110',stamp:epoch+40000}),'future');
 assert.equal(q.quoteFreshness({date:'20261109',stamp:epoch}),'unknown');
 const old={stamp:epoch-20000,source:'TWSE MIS'},newer={stamp:epoch-10000,source:'TWSE MIS'};

@@ -487,7 +487,7 @@
     paintQuality();
     if(!marketOpen()&&!hasTodayData()){
       paintIndex();
-      for(const code of watchCodes())showPriorCloseRow(code);
+      for(const code of watchCodes())if(!showPriorCloseRow(code))maskRow(code,'無法確認最近交易日行情');
       paintDetail();paintStatus();debug();return;
     }
     paintIndex();

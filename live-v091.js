@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.9.8.10';
+  const VERSION='0.9.8.11';
   const INTERVAL=6000; // Primary quote channel, exchange timestamps determine freshness.
   const SECONDARY_INTERVAL=10000; // A separate CORS gateway checks independently every 10 seconds.
   const SECONDARY_OFFSET=3000; // Stagger the first secondary check from the primary.
@@ -95,7 +95,7 @@
     try{const r=await fetch(url,{cache:'no-store',signal:ac.signal});if(!r.ok)throw Error(`HTTP ${r.status}`);return await r.json()}finally{clearTimeout(timer)}
   }
   // Do not depend on one public CORS gateway. Requests are sequential and the outer poll is single-flight.
-  let proxyPreferred=0,misFailureCount=0,nextMisAttemptAt=0;
+  let misFailureCount=0,nextMisAttemptAt=0;
   async function fetchMis(codes,channel='primary'){
     const secondary=channel==='secondary';
     const now=Date.now();// Next six-second cycle retries; no long backoff after a source failure.
@@ -103,7 +103,7 @@
     const endpoints=[`https://proxy.cors.dev/${u}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`];
     let last=null;
     for(let attempt=0;attempt<1;attempt++){
-      const index=secondary?1:(proxyPreferred+attempt)%endpoints.length;
+      const index=secondary?1:0; // Distinct staggered scheduler handles endpoint 1, never poison the reliable primary with a failed secondary.
       try{
         const j=await getJson(endpoints[index],MIS_REQUEST_TIMEOUT);
         if(!Array.isArray(j?.msgArray))throw Error('MIS payload missing');
@@ -119,13 +119,13 @@
           }
           if(!usable.length)throw Error('MIS only returned a stale index');
         }
-        if(!secondary){proxyPreferred=index;misFailureCount=0;nextMisAttemptAt=0;lastError=''}
+        if(!secondary){misFailureCount=0;nextMisAttemptAt=0;lastError=''}
         else{secondaryLastError='';secondaryLastSuccessAt=Date.now();secondaryFailureCount=0;secondaryNextAllowedAt=0}
         lastMisReceivedAt=Date.now();window.__TW_UPDATE_HEALTH__?.(secondary?'台股第二通道':'台股行情',true);return usable;
       }catch(e){last=e}
     }
     if(secondary){secondaryLastError=String(last?.message||last||'第二通道無法存取');secondaryFailureCount++;if(secondaryFailureCount>=3)secondaryNextAllowedAt=Date.now()+Math.min(60000,10000*Math.pow(2,secondaryFailureCount-2));window.__TW_UPDATE_HEALTH__?.('台股第二通道',false)}
-    else{misFailureCount++;proxyPreferred=(proxyPreferred+1)%endpoints.length;nextMisAttemptAt=0;lastError=String(last?.message||last||'來源無法存取');window.__TW_UPDATE_HEALTH__?.('台股行情',false)}
+    else{misFailureCount++;nextMisAttemptAt=0;lastError=String(last?.message||last||'來源無法存取');window.__TW_UPDATE_HEALTH__?.('台股行情',false)}
     throw last||Error('MIS unavailable');
   }
 

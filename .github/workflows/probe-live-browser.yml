@@ -1,0 +1,25 @@
+name: Diagnose actual browser live quote
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/probe-live-browser.yml'
+      - 'scripts/probe_live_browser.mjs'
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright-core@latest
+      - name: Inspect real MIS relay responses and live DOM
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node scripts/probe_live_browser.mjs

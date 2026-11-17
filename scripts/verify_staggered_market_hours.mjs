@@ -47,12 +47,12 @@ mode='secondary-down';
 await q.pollSecondary();
 assert.equal(q.getQuote('0050')?.price,100.25,'SECONDARY_OUTAGE_CLEARED_VALID_QUOTE');
 assert(q.getSecondaryError(),'SECONDARY_FAILURE_NOT_REPORTED');
-await q.pollSecondary();await q.pollSecondary(); // Third consecutive failure enables a retry backoff.
+await q.pollSecondary();await q.pollSecondary(); // Keep retrying without extra backoff.
 const secondaryAttempts=req.length;
 await q.pollSecondary();
-assert.equal(req.length,secondaryAttempts,'SECONDARY_BACKOFF_NOT_ENFORCED');
+assert.equal(req.length,secondaryAttempts+1,'SECONDARY_DID_NOT_RETRY_NEXT_SIX_SECOND_CYCLE');
 mode='secondary-online';epoch+=30000;await q.pollSecondary();
-assert.equal(req.length,secondaryAttempts+1,'SECONDARY_BACKOFF_DID_NOT_RECOVER');
+assert.equal(req.length,secondaryAttempts+2,'SECONDARY_DID_NOT_RECOVER');
 // Unchanged final trade prices are valid when an independently fresh MIS index and a just-verified symbol record are present.
 epoch+=150000;indexTime='10:17:50';await q.pollSecondary();
 assert.equal(q.quoteProblem('0050',q.getQuote('0050')),'','VERIFIED_UNCHANGED_LAST_TRADE_HIDDEN');
@@ -80,4 +80,4 @@ epoch=Date.parse('2027-02-08T02:15:00Z'); // 2027 Lunar New Year exchange holida
 assert(!q.marketOpen()&&!q.postCloseWindow(),'2027_OFFICIAL_HOLIDAY_NOT_BLOCKED');
 await q.poll();await q.pollSecondary();await q.pollBackup(true);await q.pollIndexSnapshot();
 assert.equal(req.length,later,'2027_HOLIDAY_GENERATED_STOCK_REQUESTS');
-console.log('STAGGERED_MARKET_HOURS_PASS: 6s/6s stagger +4s, secondary independent, error backoff, official 2026/27 holiday suppression, FX independent, market close and weekends stop stock requests');
+console.log('STAGGERED_MARKET_HOURS_PASS: 6s/6s stagger +4s, secondary independent, no unapproved retry backoff, official 2026/27 holiday suppression, FX independent, market close and weekends stop stock requests');

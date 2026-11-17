@@ -62,4 +62,4 @@ assert.equal(requests,3,'MIS_ONE_REQUEST_PER_CYCLE_EXPECTED');
 assert.equal(q.failureCount,1,'FAILURE_NOT_COUNTED');
 assert.equal(q.retryAt,0,'NEXT_SIX_SECOND_CYCLE_SHOULD_RETRY');
 assert(q.lastError.includes('no today prices'),'NO_ERROR_DIAGNOSTIC');
-console.log('LIVE_FEED_REGRESSION_PASS: 6s loop, index stale masking, per-stock freshness, no intraday closing data, strict index, per-cycle source rotation');
+console.log('LIVE_FEED_REGRESSION_PASS: 6s loop, index stale masking, per-stock freshness, no intraday closing data, strict index, independent primary and secondary gateway routing');

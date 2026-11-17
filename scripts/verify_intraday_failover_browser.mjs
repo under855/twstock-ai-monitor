@@ -40,7 +40,7 @@ try{
   assert.equal((await price())?.trim(),'100','BACKUP_DID_NOT_RENDER');
   assert.match(await page.locator('.meta').textContent(),/GitHub 官方盤中快照/,'BACKUP_NOT_LABELED');
   assert.equal((await page.locator('.scoreNum').textContent())?.trim(),'—','BACKUP_SCORE_FABRICATED');
-  assert.match(await page.locator('#marketStatus').textContent(),/備援行情有效/,'BACKUP_STATUS_MISSING');
+  assert.match(await page.locator('#marketStatus').textContent(),/備援延遲行情（非即時）/,'BACKUP_DELAYED_STATUS_MISSING');
   mode='secondary-only';
   await page.evaluate(()=>window.__TW_SECONDARY_REFRESH__());
   await page.waitForFunction(()=>document.querySelector('.price')?.textContent==='102',{timeout:12000});

@@ -72,7 +72,9 @@ if(!tradingDay||!previewWindow){
  console.log('PREOPEN_NOT_A_TRADING_PREVIEW_WINDOW',JSON.stringify({date,time:`${get('hour')}:${get('minute')}`,tradingDay}));
  process.exit(0);
 }
-const results=await Promise.all(probes.map(probe)),s=summary(results);
+const first=probe(probes[0]);
+const second=(async()=>{await new Promise(resolve=>setTimeout(resolve,4000));return probe(probes[1]);})();
+const results=await Promise.all([first,second,...probes.slice(2).map(probe)]),s=summary(results);
 const report={checkedAt:now.toISOString(),taipeiDate:date,mode:'TWSE 08:30–09:00 simulated matching connectivity and data date/time verification',results,summary:s};
 fs.mkdirSync('source-health',{recursive:true});
 fs.writeFileSync('source-health/latest.json',JSON.stringify(report,null,2)+'\n');

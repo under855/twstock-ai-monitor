@@ -1,15 +1,17 @@
 import {chromium} from 'playwright-core';
+import fs from 'node:fs';
 const chrome=process.env.CHROME;
 if(!chrome)throw Error('CHROME_REQUIRED');
 const b=await chromium.launch({executablePath:chrome,headless:true,args:['--no-sandbox']});
 try{
- const ctx=await b.newContext({timezoneId:'Asia/Taipei',locale:'zh-TW',viewport:{width:1280,height:900}});
+ const ctx=await b.newContext({timezoneId:'Asia/Taipei',locale:'zh-TW',viewport:{width:1280,height:900},serviceWorkers:'block'});
  const page=await ctx.newPage(),issues=[],network=[];
+ if(process.env.PROBE_OVERRIDE_JS==='1')await page.route('**/live-v091.js?*',r=>r.fulfill({status:200,contentType:'application/javascript',body:fs.readFileSync('live-v091.js','utf8')}));
  page.on('pageerror',e=>issues.push('JS '+e.message.slice(0,200)));
  page.on('requestfailed',r=>{if(/mis\.twse|cors\.dev|allorigins|intraday\/latest/.test(r.url()))network.push({channel:r.url().includes('allorigins')?'secondary':r.url().includes('cors.dev')?'primary':'backup',error:r.failure()?.errorText||''})});
  page.on('response',r=>{if(/mis\.twse|cors\.dev|allorigins|intraday\/latest/.test(r.url()))network.push({channel:r.url().includes('allorigins')?'secondary':r.url().includes('cors.dev')?'primary':'backup',status:r.status()})});
  await page.goto('https://under855.github.io/twstock-ai-monitor/?healthprobe='+Date.now(),{waitUntil:'domcontentloaded',timeout:30000});
- await page.waitForTimeout(19000);
+ await page.waitForTimeout(process.env.PROBE_OVERRIDE_JS==='1'?27000:19000);
  const state=await page.evaluate(()=>({
   time:new Date().toLocaleString('zh-TW',{timeZone:'Asia/Taipei'}),
   version:document.querySelector('body')?.dataset?.version||document.querySelector('script[src*="live-v091.js"]')?.src,
@@ -21,5 +23,6 @@ try{
   taiexText:document.getElementById('taiex')?.textContent,rows:[...document.querySelectorAll('#watch article.row')].slice(0,12).map(e=>({code:e.querySelector('.sym')?.textContent,price:e.querySelector('.price')?.textContent,meta:e.querySelector('.meta')?.textContent}))
  }));
  console.log('BROWSER_LIVE_PROBE',JSON.stringify({state,network:network.slice(-35),issues:issues.slice(-15)}));
+ if(process.env.PROBE_OVERRIDE_JS==='1'&&(!state.live?.lastMisReceivedAt||!state.live?.taiex?.price||!state.rows.some(r=>r.price&&r.price!=='—')))throw Error('STAGED_BROWSER_STILL_NO_LIVE_STOCK_DATA');
 }catch(e){console.error('BROWSER_PROBE_ERROR',String(e.stack||e));process.exitCode=1}
 finally{await b.close()}

@@ -52,8 +52,9 @@ try{
   mode='primary-offline';
   await page.clock.setFixedTime(new Date(epoch+140000));
   await page.evaluate(()=>window.__TW_LIVE_REFRESH__());
-  await page.waitForFunction(()=>document.querySelector('.price')?.textContent==='—',{timeout:12000});
-  assert.match(await page.locator('.meta').textContent(),/超過90秒/,'EXPIRED_QUOTE_NOT_MASKED');
+  await page.waitForFunction(()=>document.querySelector('.price')?.textContent==='101',{timeout:12000});
+  assert.match(await page.locator('.meta').textContent(),/最後已驗證成交/,'EXPIRED_QUOTE_NOT_EXPLICITLY_DELAYED');
+  assert.equal((await page.locator('.scoreNum').textContent())?.trim(),'—','STALE_QUOTE_HAS_REALTIME_SCORE');
   const schedule=await page.evaluate(()=>window.__TW_SCHEDULER_STATE__());
   assert.equal(schedule.primaryInterval,6000);
   assert.equal(schedule.secondaryInterval,10000);

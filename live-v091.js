@@ -405,7 +405,7 @@
         return;
       }
     }
-    if(!taiex||!eligibleIndexDate(taiex.date)){paintIndexExtras(null,false);setText(v,'—');setClass(v,'v flat');return}
+    if(!taiex||!eligibleIndexDate(taiex.date)){const prior=priorIndexClose();paintIndexExtras(null,false);setText(v,prior?fmt(prior.price,2):'—');setClass(v,'v flat');if(c&&prior){setText(c,'前一交易日官方指數 '+prior.date.replaceAll('-','/')+'｜非今日收盤');setClass(c,'s muted')}return}
     paintIndexExtras(taiex,true);
     setText(v,fmt(taiex.price,2));setClass(v,'v '+(num(taiex.change)==null?'flat':cls(taiex.change)));
     if(c){

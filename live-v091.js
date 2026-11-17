@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.9.8.13';
+  const VERSION='0.9.8.14';
   const INTERVAL=6000; // Primary quote channel, exchange timestamps determine freshness.
   const SECONDARY_INTERVAL=10000; // A separate CORS gateway checks independently every 10 seconds.
   const SECONDARY_OFFSET=3000; // Stagger the first secondary check from the primary.
@@ -203,7 +203,7 @@
     return {map,idx};
   }
   async function pollIntradayBackup(force=false){
-    if(!marketOpen()||intradayBackupBusy||document.visibilityState==='hidden'||(!force&&Date.now()-lastIntradayBackupAttempt<INTRADAY_BACKUP_INTERVAL))return false;
+    if((!marketOpen()&&!postCloseWindow())||intradayBackupBusy||document.visibilityState==='hidden'||(!force&&Date.now()-lastIntradayBackupAttempt<INTRADAY_BACKUP_INTERVAL))return false;
     intradayBackupBusy=true;lastIntradayBackupAttempt=Date.now();
     try{
       const data=await getJson(INTRADAY_BACKUP_URL+'?ts='+Date.now(),8000);
@@ -485,7 +485,11 @@
   }
   function paintAll(){
     paintQuality();
-    if(!marketOpen()&&!hasTodayData()){paintStatus();debug();return}
+    if(!marketOpen()&&!hasTodayData()){
+      paintIndex();
+      for(const code of watchCodes())showPriorCloseRow(code);
+      paintDetail();paintStatus();debug();return;
+    }
     paintIndex();
     for(const code of watchCodes()){
       const q=quotes.get(code);
@@ -549,9 +553,9 @@
     verifiedCloseBusy=true;verifiedCloseCheckedAt=Date.now();
     try{
       const x=await window.__TW_LATEST_JSON__();
-      const date=String(x?.tradeDate||'');
-      // Data may be generated during trading, but never use a same-day close that has not happened yet.
-      if(!verifiedPriorCloseDate(date)||!x?.symbols||typeof x.symbols!=='object')throw Error('前一交易日官方收盤資料日期或格式不符');
+      // Mixed-date public cache can include today's provisional TPEx rows while TWSE quotes remain prior-day official closes.
+      // Validate each symbol's exchange source and date individually before displaying.
+      if(!x?.symbols||typeof x.symbols!=='object'||Object.keys(x.symbols).length<50)throw Error('官方資料欄位或格式不符');
       verifiedClose=x;verifiedCloseError='';paintAll();
     }catch(e){verifiedCloseError=String(e?.message||e);paintAll()}
     finally{verifiedCloseBusy=false}
@@ -595,7 +599,7 @@
   window.__TW_BACKUP_REFRESH__=()=>pollBackup(true);
   window.__TW_SCHEDULER_STATE__=()=>({marketOpen:marketOpen(),postCloseWindow:postCloseWindow(),officialCloseComplete:officialCloseComplete(),primaryInterval:INTERVAL,secondaryInterval:SECONDARY_INTERVAL,secondaryOffset:SECONDARY_OFFSET,backupInterval:INTRADAY_BACKUP_INTERVAL,secondaryCycles,secondaryLastPollAt,secondaryLastSuccessAt,secondaryLastError,secondaryFailureCount,secondaryNextAllowedAt});
   function start(){
-    loadToday();paintAll();loadVerifiedClose(false);if(marketOpen()){poll(false);pollIndexSnapshot();pollIntradayBackup(true)}else if(postCloseWindow())pollBackup(false);
+    loadToday();paintAll();loadVerifiedClose(false);if(marketOpen()){poll(false);pollIndexSnapshot();pollIntradayBackup(true)}else if(postCloseWindow()){pollBackup(false);pollIntradayBackup(true)}
     // Always schedule polling: a page opened before 09:00 must start updating when trading begins.
     // The poll function itself skips requests outside the TW market window.
     setInterval(()=>poll(false),INTERVAL);

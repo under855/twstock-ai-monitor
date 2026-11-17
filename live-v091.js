@@ -125,7 +125,7 @@
         lastMisReceivedAt=Date.now();window.__TW_UPDATE_HEALTH__?.(secondary?'台股第二通道':'台股行情',true);return usable;
       }catch(e){last=e}
     }
-    if(secondary){secondaryLastError=String(last?.message||last||'第二通道無法存取');secondaryFailureCount++;if(secondaryFailureCount>=3)secondaryNextAllowedAt=Date.now()+Math.min(60000,10000*Math.pow(2,secondaryFailureCount-2));window.__TW_UPDATE_HEALTH__?.('台股第二通道',false)}
+    if(secondary){secondaryLastError=String(last?.message||last||'第二通道無法存取');secondaryFailureCount++;secondaryNextAllowedAt=0;window.__TW_UPDATE_HEALTH__?.('台股第二通道',false)}
     else{misFailureCount++;nextMisAttemptAt=0;lastError=String(last?.message||last||'來源無法存取');window.__TW_UPDATE_HEALTH__?.('台股行情',false)}
     throw last||Error('MIS unavailable');
   }
@@ -582,7 +582,7 @@
     }catch(e){lastError=String(e?.message||e);if(marketOpen())await Promise.allSettled([pollSecondary(),pollIntradayBackup(true)]);else await pollBackup(false);paintAll();debug()}finally{busy=false}
   }
   async function pollSecondary(){
-    if(!marketOpen()||secondaryBusy||document.visibilityState==='hidden'||Date.now()<secondaryNextAllowedAt)return false;
+    if(!marketOpen()||secondaryBusy||document.visibilityState==='hidden')return false;
     secondaryBusy=true;secondaryCycles++;secondaryLastPollAt=Date.now();
     try{
       const codes=requestedCodes(),{map,idx}=parse(await fetchMis(codes,'secondary'));

@@ -51,6 +51,28 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Verify no orphaned old patches or released deployment markers
+        run: |
+          node <<'JS'
+          const fs=require('node:fs');
+          const path=require('node:path');
+          const scripts=fs.readdirSync('scripts');
+          const illegal=scripts.filter(x=>/^(?:patch_|fix_|finalize_|final_fx)/.test(x));
+          if(illegal.length)throw Error('Obsolete source patchers remain: '+illegal.join(', '));
+          const files=fs.readdirSync('.');
+          const markers=files.filter(x=>/^deploy-v\d+/i.test(x)||x==='README.txt');
+          if(markers.length)throw Error('Retired release markers remain: '+markers.join(', '));
+          const html=fs.readFileSync('index.html','utf8');
+          for(const match of html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["']/gi)){
+            const src=match[1];if(/^(?:https?:)?\/\//.test(src))continue;
+            const clean=src.replace(/^\.\//,'').split(/[?#]/)[0];
+            if(!fs.existsSync(clean))throw Error('Active script is missing: '+clean);
+          }
+          for(const critical of ['data/latest.json','data/dividends.json','scripts/update_latest.py','scripts/update_dividends.py','scripts/capture_intraday.py','scripts/audit_preopen_sources.mjs']){
+            if(!fs.existsSync(critical))throw Error('Required market/scoring source removed: '+critical);
+          }
+          console.log('REPOSITORY_CLEANUP_PASS');
+          JS
       - name: Verify preopen source audit logic without assuming simulated price is a real fill
         run: node scripts/audit_preopen_sources.mjs --self-test
       - name: Syntax check loaded modules

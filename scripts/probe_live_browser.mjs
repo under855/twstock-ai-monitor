@@ -25,5 +25,10 @@ try{
  console.log('BROWSER_LIVE_PROBE',JSON.stringify({state,network:network.slice(-35),issues:issues.slice(-15)}));
  if(process.env.PROBE_OVERRIDE_JS==='1'&&state.market?.marketOpen&&(!state.live?.lastMisReceivedAt||!state.live?.taiex?.price||!state.rows.some(r=>r.price&&r.price!=='—')))throw Error('STAGED_BROWSER_STILL_NO_LIVE_STOCK_DATA');
  if(process.env.PROBE_OVERRIDE_JS==='1'&&!state.market?.marketOpen)console.log('OFF_HOURS_NO_INTRADAY_ASSERTION: market closed, explicit simulated failures tested separately');
+ if(process.env.PROBE_REQUIRE_QUOTES==='1'&&state.market?.marketOpen){
+   const validRows=state.rows.filter(r=>r.price&&r.price!=='—'&&/成交|官方收盤|備援/.test(r.meta||''));
+   if(state.taiexText==='—'||validRows.length<Math.min(4,state.rows.length))throw Error('LIVE_BROWSER_VISIBLE_QUOTE_COVERAGE_FAILED '+validRows.length+'/'+state.rows.length);
+   console.log('LIVE_BROWSER_VISIBLE_QUOTE_COVERAGE_PASS',validRows.length,state.rows.length);
+ }
 }catch(e){console.error('BROWSER_PROBE_ERROR',String(e.stack||e));process.exitCode=1}
 finally{await b.close()}

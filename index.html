@@ -61,7 +61,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
 <body>
 <div class="app">
   <header class="top">
-    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.8.9｜6／10 秒交錯行情・休市停止盤中請求・外匯獨立更新</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
+    <div class="head"><div class="brand"><h1>台股 AI 監控台</h1><small>v0.9.8.17｜6 秒週期、第二通道晚 4 秒・休市停止盤中請求・外匯獨立更新</small></div><div id="liveBadge" class="liveBadge">資料初始化</div></div>
     <div class="search"><input id="code" inputmode="text" autocomplete="off" placeholder="搜尋代號或名稱，例如 2610、華航"><button id="searchBtn" class="primary">搜尋</button></div>
     <div id="searchResults" class="searchResults"></div>
     <div class="toolbar"><span class="pill" id="clock">—</span><span class="pill">評分 100 分制</span><span class="pill" id="universePill">台股名冊：載入中…</span><span class="pill">行情：TWSE／TPEx</span><span class="pill" id="refreshPill">台股雙通道 6／10 秒交錯檢查</span></div>
@@ -103,13 +103,13 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
       <div class="card"><h3>配股／配息與填權息</h3><div id="dividendEvents"></div></div>
     </div>
     <div class="card" style="margin-top:9px"><h3>近期新聞（最近 1 個月）</h3><div id="newsState" class="muted small">載入中…</div><div id="news"></div><div class="notice">新聞以外部公開來源彙整；若來源阻擋跨站讀取，會改顯示可直接開啟的新聞搜尋，不會用虛構新聞補空白。</div></div>
-    <div class="actions"><button id="addWatchBtn" class="primary">加入監控</button><button id="yahooBtn">Yahoo 股市</button><button id="twseBtn">證交所個股資訊</button><button id="removeBtn" class="danger">移除監控</button></div>
+    <div class="actions"><button id="addWatchBtn" class="primary">加入監控</button><button id="twseBtn">證交所個股資訊</button><button id="removeBtn" class="danger">移除監控</button></div>
     <div class="notice">分數沿用 v0.2 的可追溯規則：趨勢 36%、短期動能 34%、估值 18%、殖利率 12%。它是分析輔助，不是明日漲跌機率。</div>
   </section>
 </div>
 <script src="./shared-latest-v0984.js?v=0985-ttl"></script>
 <script>
-const APP_VERSION='0.9.8.16';
+const APP_VERSION='0.9.8.17';
 const IS_WEB = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 window.addEventListener('DOMContentLoaded',()=>{
   if(!IS_WEB){
@@ -125,11 +125,7 @@ const API={
   ex:'https://openapi.twse.com.tw/v1/exchangeReport/TWT48U_ALL',
   otc:'https://www.tpex.org.tw/openapi/v1/tpex_mainboard_quotes'
 };
-const MARKET_DATA_URLS=[
- './data/latest.json',
- 'https://raw.githubusercontent.com/u159753123-G/codex-taiwan-market-data/main/data/market/codex_stock_prices_latest.json',
- 'https://cdn.jsdelivr.net/gh/u159753123-G/codex-taiwan-market-data@main/data/market/codex_stock_prices_latest.json'
-];
+const MARKET_DATA_URLS=['./data/latest.json']; // Official TWSE / TPEx aggregate only.
 const UNIVERSE_CACHE_KEY='twMarketUniverseV068';
 const QA_FIXTURE={
  '2610':{symbol:'2610',name:'華航',market:'TWSE',close:20.35,open:20.50,high:20.55,low:20.25,volume:12501711,tradeDate:'2026-10-21',source:'TWSE'},
@@ -145,20 +141,6 @@ const NAMES={
  '2610':'中華航空','3293':'鈊象','3711':'日月光投控','4934':'太極','6592':'和潤企業'
 };
 const ALIASES={'華航':'2610','中華航空':'2610','中華航空公司':'2610','台積電':'2330','台灣積體電路':'2330','台灣積體電路製造':'2330','世界先進':'5347','世界':'5347','啟賦':'7956','日月光':'3711','日月光投控':'3711','中鋼':'2002','鈊象':'3293'};
-// 2026/10/28 最近有效交易日快照：讓 file://、休市、來源暫斷時仍有可驗證畫面。
-// 上市/ETF 以 TWSE 2026/10/22 收盤表為基準；3293 為上櫃，交叉核對 10/22 收盤資料。
-const SNAPSHOT_DATE='2026/10/28';
-const SNAPSHOT={
- '0050':{name:"元大台灣50",price:106.6,change:-0.3,open:107.1,high:107.55,low:105.8,volume:153499719.0},
- '3711':{name:"日月光投控",price:651.0,change:-3.0,open:654.0,high:668.0,low:642.0,volume:25852074.0,pe:47.32},
- '3293':{name:"鈊象",price:796.0,change:9.0,open:787.0,high:797.0,low:786.0,volume:922000.0,pe:18.18},
- '2610':{name:"華航",price:20.45,change:-0.05,open:20.5,high:20.6,low:20.35,volume:17197497.0,pe:9.43},
- '2002':{name:"中鋼",price:19.75,change:0.2,open:19.7,high:19.75,low:19.6,volume:49532749.0},
- '00878':{name:"國泰永續高股息",price:35.4,change:0.13,open:35.68,high:35.75,low:35.18,volume:30625066.0},
- '00919':{name:"群益台灣精選高息",price:32.75,change:0.33,open:32.71,high:32.82,low:32.4,volume:55901688.0}
-};
-const TAIEX_SNAPSHOT={date:SNAPSHOT_DATE,price:null,change:null};
-function snapshotIsRecent(){const day=Date.parse(SNAPSHOT_DATE.replaceAll('/','-')+'T00:00:00+08:00');return Number.isFinite(day)&&Date.now()-day>=0&&Date.now()-day<=7*86400000}
 const $=id=>document.getElementById(id);
 const N=v=>{if(v==null||v===''||v==='--'||v==='-')return null;const x=Number(String(v).replaceAll(',','').replace('%',''));return Number.isFinite(x)?x:null};
 const F=(v,d=2)=>{const x=N(v);return x==null?'—':x.toLocaleString('zh-TW',{maximumFractionDigits:d})};
@@ -170,7 +152,7 @@ async function jsonPublic(url,ms=6000){try{return await json(url,ms)}catch(e){co
 function roc(s){const m=String(s||'').match(/^(\d{2,3})[\/.-](\d{1,2})[\/.-](\d{1,2})$/);return m?`${+m[1]+1911}/${String(+m[2]).padStart(2,'0')}/${String(+m[3]).padStart(2,'0')}`:s}
 function dateObj(s){if(!s)return null;let x=String(s).replace(/年|月/g,'/').replace(/日/g,'').trim();x=roc(x);const d=new Date(x.replaceAll('/','-')+'T00:00:00');return Number.isNaN(d.getTime())?null:d}
 function monthKeys(n=3){const d=new Date(),a=[];for(let i=0;i<n;i++){const x=new Date(d.getFullYear(),d.getMonth()-i,1);a.push(`${x.getFullYear()}${String(x.getMonth()+1).padStart(2,'0')}01`)}return a}
-function stockName(code,row){const raw=row?.Name||row?.['證券名稱']||row?.['公司名稱'];return String(raw||universeMap.get(code)?.name||nameCache[code]||SNAPSHOT[code]?.name||`股票 ${code}`).trim()}
+function stockName(code,row){const raw=row?.Name||row?.['證券名稱']||row?.['公司名稱'];return String(raw||universeMap.get(code)?.name||nameCache[code]||`股票 ${code}`).trim()}
 
 
 function marketLabel(m){return m==='TWSE'?'上市':m==='TPEx'?'上櫃':m==='ESB'?'興櫃':(m||'台股')}
@@ -205,7 +187,7 @@ function universeQuote(code){const u=universeMap.get(String(code));if(!u||u.clos
 function rowForCode(code){return allRows.find(x=>String(x.Code).trim()===String(code))||universeRow(code)||{Code:String(code),Name:stockName(String(code),{})}}
 
 function normalizeTpexRows(rows){return (Array.isArray(rows)?rows:[]).map(x=>({Code:String(x.SecuritiesCompanyCode||x.Code||'').trim(),Name:String(x.CompanyName||x.SecuritiesCompanyName||x.SecuritiesName||'').trim(),ClosingPrice:x.Close||x.ClosePrice||x.LatestPrice||'',Change:x.Change||x.ChangeAmount||'',OpeningPrice:x.Open||x.OpenPrice||'',HighestPrice:x.High||x.HighPrice||'',LowestPrice:x.Low||x.LowPrice||'',TradeVolume:x.TradingShares||x.TradeVolume||'',TradeDate:String(x.TradeDate||x.Date||'').trim()})).filter(x=>x.Code)}
-function seedRows(){if(!snapshotIsRecent())return [];return Object.entries(SNAPSHOT).map(([Code,x])=>({Code,Name:x.name,ClosingPrice:String(x.price),Change:String(x.change),OpeningPrice:String(x.open??''),HighestPrice:String(x.high),LowestPrice:String(x.low),TradeVolume:String(x.volume),TradeDate:SNAPSHOT_DATE}))}
+function seedRows(){return []} // Never seed stale hard-coded prices.
 function seedVals(){return []} // Never invent current valuation data from fixed 2026-10 snapshots.
 async function twseHistory(code){const a=[];for(const date of monthKeys(3)){try{const j=await json(`https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=${date}&stockNo=${encodeURIComponent(code)}&response=json`,3500);if(j?.title){const m=String(j.title).match(new RegExp(code+'\\s+([^\\d]+?)\\s+(?:各日|每日|個股|$)'));if(m?.[1])nameCache[code]=m[1].trim()}(j?.data||[]).forEach(x=>{const c=N(x[6]);if(c!=null)a.push({date:roc(x[0]),open:N(x[3]),high:N(x[4]),low:N(x[5]),close:c,change:N(x[7]),volume:N(x[1])})})}catch{}}
  return a}
@@ -236,7 +218,7 @@ function scoreStock(row,val,h,quote){
 function cls(v){return v>0?'up':v<0?'down':'flat'} function scoreCls(s){return s==null?'flat':s>=65?'up':s<=42?'down':'flat'}
 function scoreValue(v){return v==null?'—':String(v)}
 function scoreDate(q,row){const d=q?.time||dateObj(row?.TradeDate)||null;return d?d.toLocaleDateString('zh-TW'):'最近交易日'}
-function snapshotQuote(code){if(!snapshotIsRecent())return null;const x=SNAPSHOT[code];if(!x)return null;const dt=dateObj(SNAPSHOT_DATE);return{price:x.price,change:x.change,prev:x.price-x.change,open:x.open??null,high:x.high,low:x.low,volume:x.volume,time:dt,source:`歷史備援快照 ${SNAPSHOT_DATE}（非最新行情）`}}
+function snapshotQuote(code){return null} // Retired fixed-date fallback.
 function marketWindowTaipeiNow(){
  if(typeof window.__TW_STOCK_MARKET_OPEN__==='function')return window.__TW_STOCK_MARKET_OPEN__();
  const p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Taipei',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
@@ -272,9 +254,7 @@ window.addEventListener('error',e=>{showError('畫面發生錯誤，但其他功
 window.addEventListener('unhandledrejection',e=>{showError('資料來源暫時失敗，已改用可用資料顯示；不影響搜尋與查看。')});
 async function show(code,opts={}){try{active=code;const row=rowForCode(code)||{Code:code,Name:stockName(code,{})},val=allVals.find(x=>String(x.Code).trim()===code)||{},h=historyCache[code]||[],q=quoteCache[code]||universeQuote(code)||snapshotQuote(code)||await quote(code,false)||{price:null,change:null,prev:null,open:null,high:null,low:null,volume:null,time:null,source:'等待行情更新'},s=scoreStock(row,val,h,q),ch=q.change??N(row.Change)??0,name=stockName(code,row);$('dTitle').textContent=`${name}（${code}）`;$('dTime').textContent=`${q.source||'可用資料'}｜${q.time?.toLocaleString?.('zh-TW')||'—'}`;$('dPrice').textContent=F(q.price);$('dOpen').textContent=F(q.open??row.OpeningPrice);$('dChange').textContent=`${ch>0?'+':''}${F(ch)}`;$('dChange').className='v '+cls(ch);$('dRange').textContent=`${F(q.high??row.HighestPrice)} / ${F(q.low??row.LowestPrice)}`;$('dVolume').textContent=F(q.volume??row.TradeVolume,0);$('dPE').textContent=val.PEratio||'—';$('dYield').textContent=val.DividendYield?val.DividendYield+'%':'—';draw($('bigChart'),h,false,q.price);$('chartMsg').textContent=h.length?`共 ${h.length} 個交易日。`:`最近交易日收盤 ${F(q.price)} 已載入；歷史走勢若可連線會在背景補上。`;const parts=[['趨勢',s.trend],['短期動能',s.momentum],['估值',s.valuation],['殖利率',s.income]];$('scoreParts').innerHTML=parts.map(([n,v])=>`<div class="scoreItem"><span>${n}</span><div class="bar"><i style="width:${v??0}%"></i></div><b>${scoreValue(v)}</b></div>`).join('')+(s.total==null?`<div style="font-size:22px;font-weight:900;margin-top:6px">資料不足，暫不評分</div><div class="small muted">已顯示最近交易日收盤；待歷史／估值資料補齊後自動計算，不再以 50 分代替。</div>`:`<div class="${scoreCls(s.total)}" style="font-size:29px;font-weight:950;margin-top:4px">${s.mode} ${s.total}</div><div class="small muted">資料截至 ${scoreDate(q,row)} 收盤｜可信度 ${s.confidence}｜資料覆蓋率 ${s.coverage??0}%</div>`);$('analysis').innerHTML=buildAnalysis(code,row,val,h,q,s);const ev=exEvents(code),eb=$('dividendEvents');eb.innerHTML=ev.length?'':'<div class="muted small">前後一個月內暫無已載入的除權息資料。</div>';ev.forEach(({x,d})=>{const z=exText(x),e=document.createElement('div');e.className='event';e.innerHTML=`<div class="tag">除權息／股利</div><b>${d.toLocaleDateString('zh-TW')}</b>${z.cash?`<div>現金：${z.cash}</div>`:''}${z.stock?`<div>股票：${z.stock}</div>`:''}${z.note?`<div class="date">${z.note}</div>`:''}`;eb.appendChild(e)});$('addWatchBtn').textContent=watchlist().includes(code)?'已在監控':'加入監控';$('addWatchBtn').disabled=watchlist().includes(code);$('sheet').classList.add('show');document.body.style.overflow='hidden';clearError();if(opts.news!==false)news(code,name)}catch(e){showError('個股頁顯示失敗，已保留搜尋結果。請再點一次查看；錯誤：'+(e?.message||e));throw e}}
 function closeSheet(){$('sheet').classList.remove('show');document.body.style.overflow='';active=null}
-function showSnapshotMarket(){
- if(marketWindowTaipeiNow()){$('taiex').textContent='—';$('taiexChg').textContent='盤中即時指數載入中';$('taiexChg').className='s muted';$('liveBadge').textContent='盤中資料初始化';$('liveBadge').className='liveBadge warn';return}
- const ch=TAIEX_SNAPSHOT.change;$('taiex').textContent=F(TAIEX_SNAPSHOT.price,2);$('taiexChg').textContent=`${ch>0?'+':''}${F(ch,2)}｜最近交易日 ${TAIEX_SNAPSHOT.date}`;$('taiexChg').className='s '+cls(ch);$('liveBadge').textContent=`休市／最近交易日 ${SNAPSHOT_DATE}`;$('liveBadge').className='liveBadge ok';}
+function showSnapshotMarket(){const a=$('taiex'),c=$('taiexChg'),b=$('liveBadge');if(a)a.textContent='—';if(c){c.textContent='等待官方行情（依資料時間標示）';c.className='s muted'}if(b){b.textContent='等待官方資料';b.className='liveBadge warn'}}
 async function refreshRemote(){const results=await Promise.allSettled([jsonPublic(API.daily,4500),jsonPublic(API.val,4500),jsonPublic(API.ex,4500),jsonPublic(API.otc,4500)]);const r0=results[0].status==='fulfilled'&&Array.isArray(results[0].value)?results[0].value:[],r1=results[1].status==='fulfilled'&&Array.isArray(results[1].value)?results[1].value:[],r2=results[2].status==='fulfilled'&&Array.isArray(results[2].value)?results[2].value:[],r3=normalizeTpexRows(results[3].status==='fulfilled'?results[3].value:[]);if(r0.length||r3.length){allRows=[...r0,...r3.filter(o=>!r0.some(t=>String(t.Code).trim()===o.Code))];for(const r of r0){if(r.Code&&r.Name)nameCache[String(r.Code).trim()]=String(r.Name).trim()}lastRemoteOk=new Date()}if(r1.length)allVals=r1;if(r2.length)allEx=r2;quoteCache={};await render(true);if(lastRemoteOk){const p=$('refreshPill');if(p)p.title='已重新取得盤後參考資料；不代表盤中即時行情更新。請以每檔交易日期與行情來源為準。'}}
 let otcRefreshBusy=false;
 async function refreshPostCloseUniverse(){
@@ -332,7 +312,7 @@ async function showSearchResult(code){
 }
 $('searchBtn').onclick=doSearch;$('code').onkeydown=e=>{if(e.key==='Enter')doSearch()};
 $('addWatchBtn').onclick=async()=>{if(!active||watchlist().includes(active))return;saveWatch([active,...watchlist()]);$('addWatchBtn').textContent='已在監控';$('addWatchBtn').disabled=true;await render(false)};
-$('closeBtn').onclick=closeSheet;$('sheet').onclick=e=>{if(e.target===$('sheet'))closeSheet()};$('removeBtn').onclick=async()=>{if(!active)return;saveWatch(watchlist().filter(x=>x!==active));$('addWatchBtn').disabled=false;$('addWatchBtn').textContent='加入監控';await render(false)};$('yahooBtn').onclick=()=>active&&window.open(`https://tw.stock.yahoo.com/quote/${active}.TW`,'_blank');$('twseBtn').onclick=()=>active&&window.open(`https://www.twse.com.tw/IIH2/zh/company/stock.html?code=${active}`,'_blank');
+$('closeBtn').onclick=closeSheet;$('sheet').onclick=e=>{if(e.target===$('sheet'))closeSheet()};$('removeBtn').onclick=async()=>{if(!active)return;saveWatch(watchlist().filter(x=>x!==active));$('addWatchBtn').disabled=false;$('addWatchBtn').textContent='加入監控';await render(false)};$('twseBtn').onclick=()=>active&&window.open(`https://www.twse.com.tw/IIH2/zh/company/stock.html?code=${active}`,'_blank');
 async function runQaIfRequested(){if(new URLSearchParams(location.search).get('qa')!=='1')return;await loadFullUniverse();const tests=[['華航','2610'],['2610','2610'],['台積電','2330'],['世界','5347'],['啟賦','7956'],['00878','00878']];const results=tests.map(([q,c])=>({q,c,ok:searchUniverse(q).some(x=>x.code===c)}));let flow=[];for(const c of ['2610','2330','5347','7956','00878']){try{await showSearchResult(c);const ok=$('sheet').classList.contains('show')&&$('dTitle').textContent.includes(c);flow.push({c,ok});closeSheet()}catch(e){flow.push({c,ok:false,error:String(e)})}}const scoreChecks=[];for(const c of ['2610','2330','5347','7956','00878']){const row=rowForCode(c),val=allVals.find(x=>String(x.Code).trim()===c)||{},q=universeQuote(c)||snapshotQuote(c),s=scoreStock(row,val,historyCache[c]||[],q);scoreChecks.push({c,close:q?.price??null,total:s.total,noFake50:s.total!==50||s.available>0})}const ok=results.every(x=>x.ok)&&flow.every(x=>x.ok)&&scoreChecks.every(x=>x.close!=null&&x.noFake50);document.body.dataset.qa=ok?'PASS':'FAIL';document.body.dataset.qaResults=JSON.stringify({search:results,flow,scoreChecks});const d=document.createElement('div');d.id='qaResult';d.style.cssText='position:fixed;bottom:4px;right:4px;z-index:9999;font:12px monospace;background:#000;color:#fff;padding:4px';d.textContent=(ok?'QA PASS ':'QA FAIL ')+flow.map(x=>x.c+':'+x.ok).join(',');document.body.appendChild(d)}
 function tick(){const d=new Date();$('clock').textContent=d.toLocaleString('zh-TW',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'})}tick();setInterval(tick,1000);boot().then(runQaIfRequested);const liveParams=new URLSearchParams(location.search);if(liveParams.get('browserqa')==='1'&&liveParams.get('autodetail')){setTimeout(()=>Promise.resolve(show(liveParams.get('autodetail'),{news:false})).catch(()=>{}),1200);}else if(liveParams.get('qa')!=='1'){setTimeout(()=>Promise.resolve(render(false)).catch(()=>{}),1500);}
 if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js?v='+APP_VERSION,{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{});
@@ -341,7 +321,7 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 <script src="./refresh-control-v0973.js?v=0983-no-extra-monitor"></script>
 <script src="./dividend-enhance.js?v=0975-feed"></script>
 <script src="./extras-v090.js?v=0989-market-hours"></script>
-<script src="./live-v091.js?v=09816-approved-fallback"></script>
+<script src="./live-v091.js?v=09817-official-only"></script>
 <!-- Independent WebSocket probe suspended: unreliable across client networks. -->
 <script src="./taiex-sector-ticker.js?v=0989-market-hours"></script>
 <script src="./stock-price-visual.js?v=0978-price"></script>

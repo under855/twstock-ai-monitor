@@ -111,7 +111,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
       assert(Number.isFinite(indexNum)&&Math.abs(indexNum-Number(d.live.indexPrice))<.011,'LIVE_INDEX_MISMATCH '+opt.name);
     }else{
       assert(d.index==='—','STALE_INDEX_MUST_NOT_SHOW_AS_LIVE '+opt.name);
-      assert(/行情延遲|無法確認即時/.test(d.indexLabel),'MISSING_INDEX_DELAY_WARNING '+opt.name);
+      assert(/行情延遲|無法確認即時|即時行情暫時無法確認/.test(d.indexLabel),'MISSING_INDEX_DELAY_WARNING '+opt.name);
     }
   }else if(latest.taiex.source==='TWSE MI_INDEX'&&latest.taiex.time==='13:30:00'){
     assert(Math.abs(indexNum-latest.taiex.close)<.011,'OFFICIAL_CLOSE_DIFF '+opt.name);

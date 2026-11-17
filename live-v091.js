@@ -458,7 +458,7 @@
     const fresh=indexAge>=-30000&&indexAge<=90000&&!fromBackup&&Date.now()-lastMisReceivedAt<=30000;
     if(marketOpen()){
       const retryDelay=Math.max(0,Math.ceil((nextMisAttemptAt-Date.now())/1000));
-      const label=fresh?(fromBackup?'備援行情有效（非即時）':'盤中來源有效'):'行情延遲／來源重試中';
+      const label=fresh?'盤中來源有效':fromBackup&&indexAge>=-30000&&indexAge<=BACKUP_STALE_MS?'GitHub 備援延遲行情（非即時）':'行情延遲／來源重試中';
       setText(p,'主要 '+INTERVAL/1000+' 秒／第二通道 '+SECONDARY_INTERVAL/1000+' 秒交錯檢查｜資料時效依交易所｜v'+VERSION);
       if(b){setText(b,label+' v'+VERSION);setClass(b,'liveBadge '+(fresh?'ok':'warn'))}
       setText(s,label);

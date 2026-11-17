@@ -1,9 +1,10 @@
 (() => {
   'use strict';
-  const VERSION='0.9.8.9';
+  const VERSION='0.9.8.10';
   const INTERVAL=6000; // Primary quote channel, exchange timestamps determine freshness.
   const SECONDARY_INTERVAL=10000; // A separate CORS gateway checks independently every 10 seconds.
   const SECONDARY_OFFSET=3000; // Stagger the first secondary check from the primary.
+  const MIS_REQUEST_TIMEOUT=9000; // Verified production browser aborted at 3.4 seconds despite the proxy returning HTTP 200.
   const BACKUP_INTERVAL=60000;
   const INTRADAY_BACKUP_INTERVAL=30000;
   const INTRADAY_BACKUP_URL='https://raw.githubusercontent.com/under855/twstock-ai-monitor/market-data/data/intraday/latest.json';
@@ -102,7 +103,7 @@
     for(let attempt=0;attempt<1;attempt++){
       const index=secondary?1:(proxyPreferred+attempt)%endpoints.length;
       try{
-        const j=await getJson(endpoints[index],3400);
+        const j=await getJson(endpoints[index],MIS_REQUEST_TIMEOUT);
         if(!Array.isArray(j?.msgArray))throw Error('MIS payload missing');
         const ticker=j.msgArray.find(m=>String(m?.c||'')==='t00');
         let usable=j.msgArray;

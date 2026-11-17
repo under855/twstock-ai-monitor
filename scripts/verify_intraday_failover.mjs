@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 
-const source=fs.readFileSync('live-v091.js','utf8').replace(/\}\)\(\);\s*$/, "window.__TEST__={parseIntradaySnapshot,pollIntradayBackup,parse,fetchMis,acceptQuote,acceptIndex,quoteProblem,verifiedPriorCloseDate,priorCloseFor,priorIndexClose,setVerifiedClose:x=>{verifiedClose=x},getStock:c=>quotes.get(c),getIndex:()=>taiex,setError:x=>lastError=x};})();");
+const source=fs.readFileSync('live-v091.js','utf8').replace(/\}\)\(\);\s*$/, "window.__TEST__={parseIntradaySnapshot,pollIntradayBackup,parse,fetchMis,acceptQuote,acceptIndex,quoteProblem,discardPreviousDayIntraday,loadToday,saveToday,verifiedPriorCloseDate,priorCloseFor,priorIndexClose,setVerifiedClose:x=>{verifiedClose=x},getStock:c=>quotes.get(c),getIndex:()=>taiex,setError:x=>lastError=x};})();");
 assert(source.includes('window.__TEST__='),'TEST_HOOK_MISSING');
 let clock=Date.parse('2026-11-16T02:15:00Z');
 class TestDate extends Date{
@@ -10,11 +10,12 @@ class TestDate extends Date{
   static now(){return clock}
 }
 const observed=[];
+const stored=new Map();const store={getItem:k=>stored.get(k)??null,setItem:(k,v)=>stored.set(k,String(v)),removeItem:k=>stored.delete(k),key:i=>[...stored.keys()][i]??null,get length(){return stored.size}};
 let response=null;
 const ctx={
   Date:TestDate,Intl,Number,String,Object,Array,JSON,Map,Set,Math,RegExp,Promise,Error,
   AbortController,setTimeout,clearTimeout,
-  window:{},localStorage:{getItem:()=>null,setItem:()=>{}},
+  window:{},localStorage:store,
   document:{readyState:'loading',visibilityState:'visible',addEventListener:()=>{},querySelectorAll:()=>[],getElementById:()=>null},
   addEventListener:()=>{},watchlist:()=>['0050','2330'],active:null,universeMap:new Map(),
   universeQuote:()=>null,snapshotQuote:()=>null,
@@ -73,4 +74,20 @@ assert.equal(q.quoteProblem('0050',q.getStock('0050')),'','UNCHANGED_TRADE_MUST_
 response=good;
 assert.equal(await q.pollIntradayBackup(true),true,'VERIFIED_DELAYED_BACKUP_WRONGLY_REJECTED');
 assert.equal(q.getStock('0050').price,101,'EXPIRED_BACKUP_OVERWROTE_NEWER_PRIMARY');
+// On Taiwan calendar rollover, delete only yesterday intraday data, not historical scoring or user records.
+stored.set('tw_live091_quotes_20261116','{}');
+stored.set('tw_live091_series_20261116','{}');
+stored.set('tw_live091_index_20261116','{}');
+stored.set('tw_taiex_mis_series_20261116','[]');
+stored.set('twAiWatchV3','["0050"]');
+stored.set('twPaperTradingV100','{"cash":1000000}');
+stored.set('exchangeHistoricalScoring','{"0050":[1,2,3]}');
+q.loadToday();
+clock=Date.parse('2026-11-17T02:15:00Z');
+assert.equal(q.discardPreviousDayIntraday(),true,'TAIWAN_DATE_ROLLOVER_NOT_DETECTED');
+for(const key of ['tw_live091_quotes_20261116','tw_live091_series_20261116','tw_live091_index_20261116','tw_taiex_mis_series_20261116'])assert.equal(stored.has(key),false,'PRIOR_DAY_INTRADAY_CACHE_RETAINED '+key);
+for(const key of ['twAiWatchV3','twPaperTradingV100','exchangeHistoricalScoring'])assert.equal(stored.has(key),true,'NON_INTRADAY_USER_DATA_DELETED '+key);
+assert.equal(q.getStock('0050'),undefined,'PREVIOUS_SESSION_PRICE_STILL_ACTIVE');
+assert.equal(q.getIndex(),null,'PREVIOUS_SESSION_INDEX_STILL_ACTIVE');
+console.log('DAILY_ROLLOVER_PURGE_PASS: prior-day quotes and plots removed; history, watchlist and paper portfolio retained');
 console.log('DUAL_SOURCE_REGRESSION_PASS: parsing, provenance, full same-day dated historical backup, independent backup, failover, throttle, primary recovery');

@@ -53,7 +53,7 @@ try{
   await page.clock.setFixedTime(new Date(epoch+140000));
   await page.evaluate(()=>window.__TW_LIVE_REFRESH__());
   await page.waitForFunction(()=>document.querySelector('.price')?.textContent==='101',{timeout:12000});
-  assert.match(await page.locator('.meta').textContent(),/尚未再次確認來源（非即時成交）/,'SOURCE_FAILURE_MUST_BE_LABELED_WITHOUT_INVALIDATING_LAST_TRADE');
+  assert.match(await page.locator('.meta').textContent(),/非最新資料・來源尚未再次確認/,'SOURCE_FAILURE_MUST_BE_LABELED_WITHOUT_INVALIDATING_LAST_TRADE');
   assert.equal((await page.locator('.scoreNum').textContent())?.trim(),'—','STALE_QUOTE_HAS_REALTIME_SCORE');
   const schedule=await page.evaluate(()=>window.__TW_SCHEDULER_STATE__());
   assert.equal(schedule.primaryInterval,6000);

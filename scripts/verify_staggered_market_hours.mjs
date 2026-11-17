@@ -10,7 +10,7 @@ assert(!fx.includes('__TW_STOCK_MARKET_OPEN__'),'BANK_FX_IMPROPERLY_GATED_BY_TWS
 assert(js.includes('const INTERVAL=6000;'),'PRIMARY_NOT_6_SECONDS');
 assert(js.includes('const SECONDARY_INTERVAL=INTERVAL;'),'SECONDARY_NOT_10_SECONDS');
 assert(js.includes('const SECONDARY_OFFSET=4000;'),'SECONDARY_NOT_STAGGERED');
-assert(js.includes('setInterval(()=>poll(false),INTERVAL)'),'PRIMARY_SCHEDULER_MISSING');
+assert(js.includes('setInterval(()=>{discardPreviousDayIntraday();poll(false)},INTERVAL)'),'PRIMARY_SCHEDULER_AND_ROLLOVER_MISSING');
 assert(js.includes('setTimeout(()=>{pollSecondary();setInterval(pollSecondary,SECONDARY_INTERVAL)},SECONDARY_OFFSET)'),'SECONDARY_SCHEDULER_MISSING');
 const text=js.replace(/\}\)\(\);\s*$/, "window.__CHECK__={poll,pollSecondary,pollBackup,pollIndexSnapshot,marketOpen,postCloseWindow,officialCloseComplete,fetchMis,quoteProblem,getQuote:c=>quotes.get(c),getIndex:()=>taiex,acceptQuote,acceptIndex,getPrimaryFailure:()=>misFailureCount,getSecondaryError:()=>secondaryLastError};})();");
 assert(text.includes('window.__CHECK__='),'TEST_HOOK_MISSING');

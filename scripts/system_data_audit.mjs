@@ -103,7 +103,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
         // independently polled last-trade snapshot is newer. Never assert equal prices
         // without equal source timestamps; accept only a dated, identified source.
         assert(Number.isFinite(displayed)&&displayed>0,'NO_VERIFIED_DELAYED_CLOSE '+opt.name+' '+row.code);
-        assert(/MIS|備援|最近交易日|非正式收盤/.test(row.meta),'PROVISIONAL_SOURCE_UNLABELED '+opt.name+' '+row.code);
+        assert(/MIS|備援|快照|最近交易日|非正式收盤/.test(row.meta),'PROVISIONAL_SOURCE_UNLABELED '+opt.name+' '+row.code);
       }
     }
   }

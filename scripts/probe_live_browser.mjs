@@ -23,6 +23,7 @@ try{
   taiexText:document.getElementById('taiex')?.textContent,rows:[...document.querySelectorAll('#watch article.row')].slice(0,12).map(e=>({code:e.querySelector('.sym')?.textContent,price:e.querySelector('.price')?.textContent,meta:e.querySelector('.meta')?.textContent}))
  }));
  console.log('BROWSER_LIVE_PROBE',JSON.stringify({state,network:network.slice(-35),issues:issues.slice(-15)}));
- if(process.env.PROBE_OVERRIDE_JS==='1'&&(!state.live?.lastMisReceivedAt||!state.live?.taiex?.price||!state.rows.some(r=>r.price&&r.price!=='—')))throw Error('STAGED_BROWSER_STILL_NO_LIVE_STOCK_DATA');
+ if(process.env.PROBE_OVERRIDE_JS==='1'&&state.market?.marketOpen&&(!state.live?.lastMisReceivedAt||!state.live?.taiex?.price||!state.rows.some(r=>r.price&&r.price!=='—')))throw Error('STAGED_BROWSER_STILL_NO_LIVE_STOCK_DATA');
+ if(process.env.PROBE_OVERRIDE_JS==='1'&&!state.market?.marketOpen)console.log('OFF_HOURS_NO_INTRADAY_ASSERTION: market closed, explicit simulated failures tested separately');
 }catch(e){console.error('BROWSER_PROBE_ERROR',String(e.stack||e));process.exitCode=1}
 finally{await b.close()}

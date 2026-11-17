@@ -555,7 +555,7 @@
       const x=await window.__TW_LATEST_JSON__();
       // Mixed-date public cache can include today's provisional TPEx rows while TWSE quotes remain prior-day official closes.
       // Validate each symbol's exchange source and date individually before displaying.
-      if(!x?.symbols||typeof x.symbols!=='object'||Object.keys(x.symbols).length<50)throw Error('官方資料欄位或格式不符');
+      if(!x?.symbols||typeof x.symbols!=='object'||Object.keys(x.symbols).length<1)throw Error('官方資料欄位或格式不符');
       verifiedClose=x;verifiedCloseError='';paintAll();
     }catch(e){verifiedCloseError=String(e?.message||e);paintAll()}
     finally{verifiedCloseBusy=false}

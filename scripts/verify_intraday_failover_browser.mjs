@@ -9,7 +9,7 @@ try{
   page.on('pageerror',e=>errors.push(e.message));
   const epoch=Date.parse('2026-11-16T02:15:00Z');
   let mode='primary-offline',stockRequests=0;
-  const point=(price,age=20000)=>({stamp:epoch-age,close:price,time:'10:14:40',source:'TWSE MIS'});
+  const point=(price,age=180000)=>({stamp:epoch-age,close:price,time:'10:12:00',source:'TWSE MIS'});
   const snapshot={date:'2026-11-16',generatedAt:'2026-11-16T10:15:00+08:00',source:'TWSE MIS official snapshots',stocks:{'0050':[point(100)]},taiex:[point(42000)]};
   await page.route('**/*',async route=>{
     const url=route.request().url();
@@ -40,7 +40,7 @@ try{
   assert.equal((await price())?.trim(),'100','BACKUP_DID_NOT_RENDER');
   assert.match(await page.locator('.meta').textContent(),/GitHub 官方盤中快照/,'BACKUP_NOT_LABELED');
   assert.equal((await page.locator('.scoreNum').textContent())?.trim(),'—','BACKUP_SCORE_FABRICATED');
-  assert.match(await page.locator('#marketStatus').textContent(),/備援行情有效/,'BACKUP_STATUS_MISSING');
+  assert.match(await page.locator('#marketStatus').textContent(),/備援延遲行情（非即時）/,'BACKUP_DELAYED_STATUS_MISSING');
   mode='secondary-only';
   await page.evaluate(()=>window.__TW_SECONDARY_REFRESH__());
   await page.waitForFunction(()=>document.querySelector('.price')?.textContent==='102',{timeout:12000});

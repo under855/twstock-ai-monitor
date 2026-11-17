@@ -522,7 +522,8 @@
     // The previously authenticated exchange trade is still a historical fact,
     // but never present it as the current trading price after the source stops updating.
     if(q?.date===today()&&(/TWSE MIS 盤中最新成交/.test(String(q.source))||/GitHub 官方盤中快照/.test(String(q.source)))&&num(q.price)>0&&
-       Number.isFinite(Number(q.stamp))&&Number(q.stamp)<=Date.now()+30000&&sameDay(q.stamp)){
+       Number.isFinite(Number(q.stamp))&&Number(q.stamp)<=Date.now()+30000&&sameDay(q.stamp)&&
+       (!/GitHub 官方盤中快照/.test(String(q.source))||Date.now()-Number(q.stamp)<=BACKUP_STALE_MS)){
       const ts=String(q.tradeTime||hhmmss(q.stamp));
       r.dataset.liveState='stale-today';r.dataset.livePrice=String(q.price);r.dataset.liveDate=q.date;
       delete r.dataset.quoteSignature;

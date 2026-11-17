@@ -4,6 +4,9 @@ on:
     paths:
       - '.github/workflows/source-audit.yml'
   workflow_dispatch:
+  # Also diagnose official MIS and browser relays shortly after the Taiwan market opens.
+  schedule:
+    - cron: '10 1 * * 1-5'
 permissions:
   contents: read
 jobs:

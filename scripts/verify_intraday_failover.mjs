@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 
-const source=fs.readFileSync('live-v091.js','utf8').replace(/\}\)\(\);\s*$/, "window.__TEST__={parseIntradaySnapshot,pollIntradayBackup,parse,fetchMis,acceptQuote,acceptIndex,quoteProblem,getStock:c=>quotes.get(c),getIndex:()=>taiex,setError:x=>lastError=x};})();");
+const source=fs.readFileSync('live-v091.js','utf8').replace(/\}\)\(\);\s*$/, "window.__TEST__={parseIntradaySnapshot,pollIntradayBackup,parse,fetchMis,acceptQuote,acceptIndex,quoteProblem,verifiedPriorCloseDate,priorCloseFor,priorIndexClose,setVerifiedClose:x=>{verifiedClose=x},getStock:c=>quotes.get(c),getIndex:()=>taiex,setError:x=>lastError=x};})();");
 assert(source.includes('window.__TEST__='),'TEST_HOOK_MISSING');
 let clock=Date.parse('2026-11-16T02:15:00Z');
 class TestDate extends Date{
@@ -24,6 +24,14 @@ vm.createContext(ctx);
 vm.runInContext(source,ctx,{timeout:4000});
 const q=ctx.window.__TEST__;
 assert(q,'TEST_API_UNAVAILABLE');
+assert.equal(q.verifiedPriorCloseDate('2026-10-30'),true,'OLDER_OFFICIAL_TRADING_DAY_BLOCKED_BY_ARBITRARY_AGE');
+assert.equal(q.verifiedPriorCloseDate('2026-11-16'),false,'CURRENT_DAY_CALLED_PREVIOUS_CLOSE');
+assert.equal(q.verifiedPriorCloseDate('2026-11-17'),false,'FUTURE_OFFICIAL_CLOSE_ACCEPTED');
+assert.equal(q.verifiedPriorCloseDate('2026-02-30'),false,'INVALID_CALENDAR_DATE_ACCEPTED');
+q.setVerifiedClose({symbols:{'0050':{tradeDate:'2026-10-30',source:'TWSE MI_INDEX',close:91.23},'2002':{tradeDate:'2026-10-30',source:'UNTRUSTED',close:18}},taiex:{date:'2026-10-30',source:'TWSE FMTQIK',close:38000}});
+assert.equal(q.priorCloseFor('0050')?.price,91.23,'LAST_VERIFIED_OFFICIAL_TRADING_DAY_NOT_AVAILABLE');
+assert.equal(q.priorIndexClose()?.price,38000,'LAST_VERIFIED_OFFICIAL_INDEX_NOT_AVAILABLE');
+assert.equal(q.priorCloseFor('2002'),null,'UNKNOWN_SOURCE_ACCEPTED_AS_OFFICIAL_CLOSE');
 const point=(price,age=20000)=>({stamp:clock-age,close:price,time:'10:14:40',source:'TWSE MIS'});
 const good={date:'2026-11-16',generatedAt:'2026-11-16T10:15:00+08:00',source:'TWSE MIS official snapshots',stocks:{'0050':[point(100)],'2330':[point(2200)],'2002':[point(20)]},taiex:[point(42000)]};
 let r=q.parseIntradaySnapshot(good,['0050','2330']);
@@ -36,7 +44,9 @@ assert(!q.parseIntradaySnapshot(good,['0050']).map.has('2330'),'UNREQUESTED_SYMB
 assert.throws(()=>q.parseIntradaySnapshot({...good,date:'2026-11-13'},['0050']),/日期/);
 assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[point(100,180000)]},taiex:[]},['0050']).map.size,1,'THREE_MINUTE_DELAYED_BACKUP_WRONGLY_REJECTED');
 assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[point(100,45*60000)]},taiex:[]},['0050']).map.size,1,'FORTY_FIVE_MINUTE_BACKUP_WRONGLY_REJECTED');
-assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[point(100,121*60000)]},taiex:[]},['0050']).map.size,0,'OLDER_THAN_TWO_HOURS_ACCEPTED');
+assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[point(100,121*60000)]},taiex:[]},['0050']).map.size,1,'VERIFIED_SAME_DAY_QUOTE_OLDER_THAN_TWO_HOURS_REJECTED');
+assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[point(100,9*3600000)]},taiex:[]},['0050']).map.size,1,'VERIFIED_SAME_DAY_QUOTE_OLDER_THAN_NINE_HOURS_REJECTED');
+assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[point(100,24*3600000)]},taiex:[]},['0050']).map.size,0,'PREVIOUS_DAY_SNAPSHOT_ACCEPTED_AS_TODAY');
 assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[{...point(100),source:'wrong'}]},taiex:[]},['0050']).map.size,0,'UNVERIFIED_SOURCE_ACCEPTED');
 assert.equal(q.parseIntradaySnapshot({...good,stocks:{'0050':[point(100,-90000)]},taiex:[]},['0050']).map.size,0,'FUTURE_ACCEPTED');
 response=good;
@@ -63,4 +73,4 @@ assert.equal(q.quoteProblem('0050',q.getStock('0050')),'','UNCHANGED_TRADE_MUST_
 response=good;
 assert.equal(await q.pollIntradayBackup(true),true,'VERIFIED_DELAYED_BACKUP_WRONGLY_REJECTED');
 assert.equal(q.getStock('0050').price,101,'EXPIRED_BACKUP_OVERWROTE_NEWER_PRIMARY');
-console.log('DUAL_SOURCE_REGRESSION_PASS: parsing, provenance, 2-hour dated historical backup, independent backup, failover, throttle, primary recovery');
+console.log('DUAL_SOURCE_REGRESSION_PASS: parsing, provenance, full same-day dated historical backup, independent backup, failover, throttle, primary recovery');

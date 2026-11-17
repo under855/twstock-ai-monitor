@@ -9,6 +9,7 @@ on:
       - 'scripts/verify_intraday_failover.mjs'
       - 'scripts/verify_staggered_market_hours.mjs'
       - 'scripts/verify_intraday_failover_browser.mjs'
+      - 'scripts/audit_preopen_sources.mjs'
       - 'scripts/verify_official_close_fallback_browser.mjs'
       - 'scripts/probe_live_browser.mjs'
       - '.github/workflows/system-data-integrity.yml'
@@ -20,6 +21,7 @@ on:
       - 'scripts/verify_intraday_failover.mjs'
       - 'scripts/verify_staggered_market_hours.mjs'
       - 'scripts/verify_intraday_failover_browser.mjs'
+      - 'scripts/audit_preopen_sources.mjs'
       - 'scripts/probe_live_browser.mjs'
       - 'foreign-flow-card.js'
       - 'data/foreign-flow.json'
@@ -49,6 +51,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Verify preopen source audit logic without assuming simulated price is a real fill
+        run: node scripts/audit_preopen_sources.mjs --self-test
       - name: Syntax check loaded modules
         run: |
           for f in live-v091.js foreign-live-test.js split-layout-v095.js paper-trading-v100.js paper-trading-reset-v101.js pilot-chart-00878-v1.js extras-v090.js dividend-enhance.js foreign-flow-card.js sw.js; do

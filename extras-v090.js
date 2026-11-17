@@ -369,6 +369,7 @@
     }
     return [...new Map(out.filter(x=>x.date).map(x=>[x.date,x])).values()].sort((a,b)=>a.date.localeCompare(b.date));
   }
+  window.__TW_OFFICIAL_DAILY_HISTORY__=officialDailyHistory;
   async function loadHistoryFor(code){
     try{
       const key=String(code),cached=typeof historyCache!=='undefined'?historyCache[key]:null;

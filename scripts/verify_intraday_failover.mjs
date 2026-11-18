@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 
-const source=fs.readFileSync('live-v091.js','utf8').replace(/\}\)\(\);\s*$/, "window.__TEST__={parseIntradaySnapshot,pollIntradayBackup,parse,fetchMis,acceptQuote,acceptIndex,quoteProblem,discardPreviousDayIntraday,loadToday,saveToday,verifiedPriorCloseDate,priorCloseFor,priorIndexClose,setVerifiedClose:x=>{verifiedClose=x},getStock:c=>quotes.get(c),getIndex:()=>taiex,setError:x=>lastError=x};})();");
+const source=fs.readFileSync('live-v091.js','utf8').replace(/\}\)\(\);\s*$/, "window.__TEST__={parseIntradaySnapshot,pollIntradayBackup,parse,fetchMis,acceptQuote,acceptIndex,confirmMisQuotes,quoteProblem,discardPreviousDayIntraday,loadToday,saveToday,verifiedPriorCloseDate,priorCloseFor,priorIndexClose,setVerifiedClose:x=>{verifiedClose=x},getStock:c=>quotes.get(c),getIndex:()=>taiex,setError:x=>lastError=x};})();");
 assert(source.includes('window.__TEST__='),'TEST_HOOK_MISSING');
 let clock=Date.parse('2026-11-16T02:15:00Z');
 class TestDate extends Date{
@@ -69,6 +69,13 @@ assert.equal(mis.map.get('0050').price,101);
 assert(q.acceptQuote(mis.map.get('0050')),'RECOVERED_PRIMARY_TICK_REJECTED');
 assert(q.acceptIndex(mis.idx),'RECOVERED_PRIMARY_INDEX_REJECTED');
 assert.equal(q.getStock('0050').price,101,'PRIMARY_NOT_RESTORED');
+q.confirmMisQuotes(mis.map);
+const newerBackup={...good,stocks:{'0050':[point(999,1000)],'2330':[point(2201,1000)]},taiex:[point(43000,1000)]};
+response=newerBackup;
+assert.equal(await q.pollIntradayBackup(true),true,'MISSING_SYMBOL_BACKUP_NOT_AVAILABLE');
+assert.equal(q.getStock('0050').price,101,'NEWER_BACKUP_REPLACED_VALID_MIS_STOCK');
+assert.equal(q.getIndex().price,42050,'NEWER_BACKUP_REPLACED_VALID_MIS_INDEX');
+assert.equal(q.getStock('2330').price,2201,'BACKUP_MUST_FILL_MISSING_SYMBOL_INDEPENDENTLY');
 clock+=92000;
 assert.equal(q.quoteProblem('0050',q.getStock('0050')),'','UNCHANGED_TRADE_MUST_NOT_BECOME_INVALID_AFTER_90_SECONDS');
 response=good;

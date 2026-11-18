@@ -206,7 +206,7 @@
     return {map,idx};
   }
   async function pollIntradayBackup(force=false){
-    if((!marketOpen()&&!postCloseWindow())||intradayBackupBusy||document.visibilityState==='hidden'||(!force&&Date.now()-lastIntradayBackupAttempt<INTRADAY_BACKUP_INTERVAL))return false;
+    if((!marketOpen()&&!postCloseWindow())||intradayBackupBusy||document.visibilityState==='hidden'||(!force&&Date.now()-lastIntradayBackupAttempt<INTRADAY_BACKUP_INTERVAL)||!needsIntradayBackup())return false;
     intradayBackupBusy=true;lastIntradayBackupAttempt=Date.now();
     try{
       const data=await getJson(INTRADAY_BACKUP_URL+'?ts='+Date.now(),8000);
@@ -282,15 +282,25 @@
     const d=today(),qo={},so={};for(const [c,q] of quotes)if(q?.date===d&&sameDay(q.stamp))qo[c]=q;for(const [c,a] of series)so[c]=a.slice(-MAX_POINTS);
     try{localStorage.setItem(QKEY+d,JSON.stringify(qo));localStorage.setItem(SKEY+d,JSON.stringify(so));if(taiex?.date===d&&sameDay(taiex.stamp))localStorage.setItem(IKEY+d,JSON.stringify(taiex))}catch{}
   }
+  function isLiveMis(q){return /^TWSE MIS 盤中/.test(String(q?.source||''))}
+  function isSnapshot(q){return /GitHub 官方盤中快照/.test(String(q?.source||''))}
+  // Backup eligibility is per instrument, not based on an unrelated symbol's HTTP success.
+  function liveStockHealthy(code){const q=quotes.get(String(code));return q?.date===today()&&isLiveMis(q)&&Date.now()-(lastConfirmedByCode.get(String(code))||0)<=30000}
+  function needsIntradayBackup(){return !marketOpen()||intradayIndexState(taiex)!=='fresh'||requestedCodes().some(code=>!liveStockHealthy(code))}
   function acceptQuote(q){
     if(!q||!sameDay(q.stamp)||Number(q.stamp)>Date.now()+30000)return false;
-    const old=quotes.get(q.code);if(!newerOrEqual(old,q))return false;quotes.set(q.code,q);
+    const old=quotes.get(q.code);
+    if(marketOpen()&&isSnapshot(q)&&liveStockHealthy(q.code))return false;
+    // Recover MIS provenance at an equal timestamp; never roll back a later verified trade.
+    if(!newerOrEqual(old,q))return false;quotes.set(q.code,q);
     if(q.officialClose)return true;
     const a=series.get(q.code)||[],last=a.at(-1);if(!last||Number(last.stamp)<q.stamp)a.push({stamp:q.stamp,close:q.price,source:q.source||'行情'});else if(Number(last.stamp)===q.stamp)last.close=q.price;
     a.sort((x,y)=>x.stamp-y.stamp);if(a.length>MAX_POINTS)a.splice(0,a.length-MAX_POINTS);series.set(q.code,a);return true;
   }
   function acceptIndex(x){
-    if(!x||!eligibleIndexDate(x.date)||Number(x.stamp)>Date.now()+30000||!newerOrEqual(taiex,x))return false;
+    if(!x||!eligibleIndexDate(x.date)||Number(x.stamp)>Date.now()+30000)return false;
+    if(marketOpen()&&isSnapshot(x)&&intradayIndexState(taiex)==='fresh')return false;
+    if(!newerOrEqual(taiex,x))return false;
     if(taiex?.date===x.date){
       // Preserve same-day verified intraday range when the official close has no range fields.
       if(num(x.high)==null&&num(taiex.high)!=null)x.high=taiex.high;
@@ -333,7 +343,7 @@
       Number.isFinite(Number(q.stamp))&&Number(q.stamp)<=now&&
       (q?.source==='本日最後盤中成交（重新連線中）'||(primaryLastFailureAt>primaryLastSuccessAt&&secondaryLastFailureAt>secondaryLastSuccessAt)||now-(lastConfirmedByCode.get(String(code))||0)>30000);
   }
-  function confirmMisQuotes(map){for(const q of map.values())if(q?.date===today()&&q?.source==='TWSE MIS 盤中最新成交'&&Number(q.stamp)<=Date.now()+30000)lastConfirmedByCode.set(String(q.code),Date.now());}
+  function confirmMisQuotes(map){for(const q of map.values())if(q?.date===today()&&q?.source==='TWSE MIS 盤中最新成交'&&Number(q.stamp)<=Date.now()+30000&&Number(q.stamp)>=(Number(quotes.get(q.code)?.stamp)||0))lastConfirmedByCode.set(String(q.code),Date.now());}
   function quoteProblem(code,q){
     if(!marketOpen())return '';
     // Primary gateway failure does not invalidate independently verified backup quotes.
@@ -390,13 +400,14 @@
   }
   function latestIndexForDisplay(){
     const live=taiex?.date===today()&&num(taiex.price)!=null?taiex:null;
+    if(live&&intradayIndexState(live)==='fresh')return live;
     const backup=lastIndexSnapshot?.date===today()&&num(lastIndexSnapshot.price)!=null?lastIndexSnapshot:null;
     if(!live)return backup;
     if(!backup)return live;
     return Number(backup.stamp)>Number(live.stamp)?backup:live;
   }
   async function pollIndexSnapshot(){
-    if(!marketOpen()||indexSnapshotBusy||document.visibilityState==='hidden'||Date.now()-lastIndexSnapshotPoll<60000)return;
+    if(!marketOpen()||intradayIndexState(taiex)==='fresh'||indexSnapshotBusy||document.visibilityState==='hidden'||Date.now()-lastIndexSnapshotPoll<60000)return;
     indexSnapshotBusy=true;lastIndexSnapshotPoll=Date.now();
     try{
       // Same versioned official-data file already used by the app, not a new data provider.
@@ -632,7 +643,7 @@
   window.__TW_BACKUP_REFRESH__=()=>pollBackup(true);
   window.__TW_SCHEDULER_STATE__=()=>({marketOpen:marketOpen(),postCloseWindow:postCloseWindow(),officialCloseComplete:officialCloseComplete(),primaryInterval:INTERVAL,secondaryInterval:SECONDARY_INTERVAL,secondaryOffset:SECONDARY_OFFSET,backupInterval:INTRADAY_BACKUP_INTERVAL,secondaryCycles,secondaryLastPollAt,secondaryLastSuccessAt,secondaryLastFailureAt,secondaryLastError,secondaryFailureCount,secondaryNextAllowedAt,primaryLastSuccessAt,primaryLastFailureAt});
   function start(){
-    loadToday();paintAll();loadVerifiedClose(false);if(marketOpen()){poll(false);pollIndexSnapshot();pollIntradayBackup(true)}else if(postCloseWindow()){pollBackup(false);pollIntradayBackup(true)}
+    loadToday();paintAll();loadVerifiedClose(false);if(marketOpen()){poll(false)}else if(postCloseWindow()){pollBackup(false);pollIntradayBackup(true)}
     // Always schedule polling: a page opened before 09:00 must start updating when trading begins.
     // The poll function itself skips requests outside the TW market window.
     setInterval(()=>{discardPreviousDayIntraday();poll(false)},INTERVAL);

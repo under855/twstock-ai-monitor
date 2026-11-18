@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-18T11:37:25.179430+00:00",
+  "generatedAt": "2026-11-18T12:38:56.662906+00:00",
   "stocks": {
     "0050": [
       {
@@ -123,16 +123,16 @@
         "time": 1793692800000
       },
       {
-        "title": "中鋼盤價有望連三漲 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5lbXY1T2tETGRQVWtveUF5MVR6aVdsQldxZ1lmdXBZS3VsaUJHb3ZYakM4V0lwSl92b0FiMi1ReWMyRWpRZjdUQ1JZSWphdDF1bDRVeEozZG1uZ9IBX0FVX3lxTE5Pck5COGo4bE0xNFNEblRTcUJlaVplZkRvSllqYnhTdFVYbUcxSi1MQ0Z3dzBLdkxEbW84c3JZdnFQMDY2Z0l3b2UyU0ZDemdLbnQxTmdaaUtpaG9VWW5J?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793606400000
-      },
-      {
         "title": "中鋼營運溫和復甦- 日報 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9QcjJZRW82TVBCSzVmUzBla2RiLVhsak5QS0FtTTNuNFltQ0ZXa3JIVTNFV21QczRXcUlGTFpXa3J2UEpVREFZUUZqcXpzWHJZSlVwdXpSb2xRNFRxWlBF?oc=5",
         "publisher": "工商時報",
         "time": 1793516400000
+      },
+      {
+        "title": "中鋼揪伴 攻無稀土馬達 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5RdzB4U3g1RFotS2o5SDY0TlBXZUR5ZHotUkUxb2JXSERFekMyNVRtZkxxeHBtYXFub0lOZUlibElxeTRucENEbXpwbHdRVDdrUHZzOTJtaHN0UdIBX0FVX3lxTE16SlVHYU00UEhsdzc5OEh4LU1tUVNsdmxsMFIwaEpwNE1oc0NoTjJZRGVUaElqSDB5aHJQUkJodEhIdXFaLWdlU2J1OXlmRWgxTFRvMW8tTnJ6LWtEUldZ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793257200000
       }
     ],
     "00878": [
@@ -191,56 +191,62 @@
         "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPdEcxTHJnRzhUaG9ZREF0NVBJZFFqX0dTb0U0eVFSeUx0NmpudTA3U21mNEZhUmNqMTNHMjdGbFQzYVNuOUpNakhkX18xeS1adTlOQUZRdTVTbERSUi1PMm12dzc2MWxCNFJSazVTa3BkalB6dzJyXy1FcjgzTzA2VmhhclpEZzhYMXJjazNxUXdXZk9Rb20yc0RVTG9iVzFpMkhVaXpkTmI3MS1TNWg5OGNB?oc=5",
         "publisher": "鉅亨網",
         "time": 1794556800000
+      },
+      {
+        "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794384000000
       }
     ],
     "2330": [
       {
-        "title": "傳奇投資人家族大砍台積電持股94％ 科技股逃命波？ - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE03T0drZ2hibEdtREpXY05UWVlLYWtEajRLRWJibkVnc3l6NXppMXUtcEh5Tmlqa19VUEZ5NUY1clg0S0hyR3g1LVd6V0x3X2t4V2RHR2twNnB4cnBMM2Fv0gFkQVVfeXFMTlhZWnpRRE04d05sRkQxdjNmZ0w3Y0puUmdkTTk3MTd2SmRRWFY1Nlk3a0c5cEVlZEo4S1Z1YlZROE96M2FKQ0J4TDBnNGo5U2JER2xFV0huektScUVSUUc0SWhZYg?oc=5",
+        "title": "不是輝達、博通！外媒點名年底前買進「台積電」是首選 理由曝光 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9kN2R3cVJDQzBzbkxETUp4NjlCVHZSN3poRVAtSm1yck1YdjBGeE1EN051WUgyTjFQR1MwS2NUb3M5RUg2OXFIZlc4ZHllVWpEZ0Vsb1hIM0FENlFrdG5n0gFkQVVfeXFMTzZSejQ3RnF3dnNxRWNVUnN6LTd5RkRUZmpfTVZaYkVLaHQtMXNnWGx2SHNLVW5OQkZZQmpuU2RJQ2M5ajVNNDJCSlF6ZUNEYzhrbmpZSTdvUkhhMnM4R0pvU1Frdw?oc=5",
         "publisher": "自由財經",
-        "time": 1794909923000
+        "time": 1794982194000
       },
       {
-        "title": "台積電抵得住AI市場恐慌 外媒直指股票首選 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5SLXFMbUd5NFNPdF9WS1hvTTJFdjlkNUlCRkZHLXFUQm1ZYUNXS2JMMVJ6bXo2YlZEa2g4aUJ4X09VYy1CZ0l2QktyYXgtOF83aHExS0hoZEwySmllczJv0gFkQVVfeXFMT05IbTVCM2FSU3hsb25Yd2o3Z28wSFJKTlpwUFdLT3lXOGV4MGlZNnRzdG45NW1JRDBleWZmR3dQSGtXcWpYVFJ0Szl4aEhmS3UyallCWnZrVnhBNmZhb0E5YmlfdA?oc=5",
+        "title": "台積電米玉傑：半導體創新不能單打獨鬥 攜手科林研發加速AI世代技術開發 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1xajZaeUlyaHdTYXhiNGh3ZFU2SE90Q1VGendNX2N2TmVZSEh3d01pSENvVzllS1hJMzZQWGxHYmhoS1ZwOTdNaHBtR2dUUEl2WXV4VU1CQzRRR0VZVVEw0gFkQVVfeXFMTUs2VS1SR3FObDFHWWlxdUFNdGRyTnRZblZIUjMtR2c4RlBXeDhRYTRGY0RiTzA1RTZvdDVxZE4zb3dKeGN6bkNUZWJFWG9ZQnRrTnRkbVRLSUJDMmRscFJ3TkRrNQ?oc=5",
         "publisher": "自由財經",
-        "time": 1794297600000
+        "time": 1794976426000
       },
       {
-        "title": "台積電股價反彈2,200元關卡以上 市值回升至逾59兆 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFA4Q21Vejc0VjNUUE15QU5OTDdXTW5EbG0wM3UtWE15STk5WTdBdU9GazFUM3pmVkhpZUx6UXp5T0s1VFZpeU9LTGYxSFJqTnNzTUdGSmcwVzhpd9IBX0FVX3lxTE1fenhmUzZVQkFGRjFWbkRtR01jWFgtbXJ6MGZMaUc3cjI5R0VWdVdMenhiZ0x4QjZiRmFPVUVMbHg4bDhXSVpFSlotc1BkWFdrUjJXWVAzaUV6Y1hqUXlB?oc=5",
+        "title": "黃仁勳閃辭後！台積電有動作了 輝達代理CEO曝內情 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5VbDhvaG9JU2lvNjdhUVNUY2FjNzJadmZuQzdYU2JCcjNvM3k5WC1XZEJZaEFqR19Yd1poZlU5clJibzVLQzQ4czRSSUUtRXJwZGRrNEVudGN4WEhCQ3FF0gFkQVVfeXFMUG5JLUZwOUVxRlZXWGVRZ1I3dTZ3d19FeUlqNFNiSDVneWhxLV9QcXpIYVU5NW1QTmVFNThPaXgwTDVrQ2phMFQ4Ynl6d2wyRlMyRndBUWFzd3E2Vnp6MDV6b25sUQ?oc=5",
+        "publisher": "自由財經",
+        "time": 1794968050000
+      },
+      {
+        "title": "輝達柯蕾絲說台積電高層親赴送暖 宣布與景碩矽品合作 點名多家台廠 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1rN1ZicHJFemVqenNwR3VMcVE4WTNuN2hrekxTVXJ6c0Y1LTFab2FSTlFJYVlmUzdaNVRFY3E1cG5LUVduNEc0SzZTcm1pQnNCdWYwOWxKWG5RQdIBX0FVX3lxTE1SV1BrYV9ZSnFZWkdMSGJhdEdNT3o2b2RrbnVNQ3JLQ054SVVTT1cxcG1EcUxWM1JYZXA1RUlIdHZZT1hfU0xxZGJYNWY0bEpBbERGOGpMLXJfdGZfdGlJ?oc=5",
         "publisher": "經濟日報",
-        "time": 1794211200000
+        "time": 1794962169000
       },
       {
-        "title": "台積電市值從2.2兆上看6.5兆美元 外媒估這時候股價漲3倍 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE0tQnFkUERwSXBCU0RVUTNHTG1WcFdsYUpCNDk0MlczcDlOR3hIVWltcUpyeXpTZnE3MHB4cDdDSjRhMVNpOWpTOV9aRkZka1RjQlVORGxmSW1RaUdmYlNv0gFkQVVfeXFMUFF3bndIaVdoN2pnLVdFYUl4NVhvVlRSaktsZ1doOFZ0emk2MjNvMTJ1cGMwRkxDeWstOXBwcXF5VmtHNWlrdlRpX2pLRFRtaVBMYnp4N2VVekp6ZHJDTW5lV2RQcQ?oc=5",
-        "publisher": "自由財經",
-        "time": 1793606400000
+        "title": "無勳之達》台積電高層親訪輝達景碩、矽品簽長約擴產- 產業 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE40TldOTU94Qnd2cjlQd29mOWh5cHl3T1hWVTE2SmFNVHJHZ1RNTndtcFF5VF8zVS1HUHhobFJmVGZGa2RvNDV1YVBQeUNFY3Z3eE4zRVZMUExkalNIY1BF?oc=5",
+        "publisher": "工商時報",
+        "time": 1794957840000
       },
       {
-        "title": "看好台積電再大賺一筆！外媒估2030年驚人市值 股價將漲這麼多 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5KMEdndUNGUnFIWExEU2JHUzFTOWJvV20tLW83M1Z0MFNYRjc3QXZJV2pqbm4xV0RMbWptb2t5U1lKU3lKOE1RaVFTb1lCSXVpaHAyQmVkQzdDUXRCb2dN0gFkQVVfeXFMTm0xclg5WnhadWtvSjAxWE5XWExwQldIZmc3c3lJTzZOem8tVVE2STZpdmFuSG9ZWEVpMmZEa3UzMF9lQVlBcFA1MkRuWW5pUkctdkxET201VUdGUUFiNXg1OWZTTg?oc=5",
+        "title": "獨家》台積電一年狂掃逾70億度離岸風電 地板價5.5元也買進 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5MSEZqbmRidGwzNUVfaGpOSEk1S3p4aGRVMjlfWkJCeTBQU3E2M0NNNW1RaERHVkNZWld1dmctNnFDOUk2Z1FBbG50TjFwelV5YzNyaTZEOFR4TGdNOTdB?oc=5",
         "publisher": "自由財經",
-        "time": 1792998000000
+        "time": 1794956400000
       },
       {
-        "title": "台積電11張股票領逾7萬！股民哀怨價差快跌沒 網友羨慕炸鍋 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1ic1YtdjhlUEdfbGFmWlhHMndSc2VSNVB1Z2ktbzZrdm8yeWNpWWMxWUJKWTNvUGVfdVp6eE8tLUloZ3c3bHdWQ2R0Sk1DWUREUGtnVVJOWGVLVW5DSl9Z0gFkQVVfeXFMTjdBVXVDZmJJVmtmQVdZeEpoc28tVWhtVFBWNXI3cVk4RlZkU0tRcFRiRk5lMlR4UW5wXzlQbFFOel9seGxPTnFyQW1DYUd1TnhMSUk3djNTWlBVdk5ZYVFqM2RWXw?oc=5",
+        "title": "美股收盤》道瓊再挫848點！費半翻紅 台積電ADR跌3.68％ - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5kampPQWhubEJrbDBpb3lOa0lVRDh5NFdLZ1NacnV5UFRjTlRLdl9QOERTa2N4dFllck1aYVhEckRoWEdJNXZsNHR3YU5LWlVPOHVqbDFtVlRPcXZsMnZZ0gFkQVVfeXFMUFNnUFlEdFlyOGNlUUdwcFRwQnRoWHEycHBFMkRteWZPMDJmUUNYZHVkdmkzUXhER0ZHeWxjOHZMZzhua3MxZFdqbkZaX1pmZjhLWWRWTnBkZzJ5ekFwRDZBOHhRVQ?oc=5",
         "publisher": "自由財經",
-        "time": 1792911600000
+        "time": 1794954485000
       },
       {
-        "title": "台積電繳超強財報股價卻下跌？外媒給出答案 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9GYXBhLVdodmk2M2RxYnAwVURzNk1NaGRfakd5MENlaVFqZWZyeGEwbThzX1VkV3JldUxVRU5SWmhHTUMyVW1XOFM2eTZtdExTOVM1YmFfUExNRG9Jd1ZB0gFkQVVfeXFMUDBaeWdoZFVyNjBmeEZhaUFUdUs2Um5hVVhCSHpNMVhwR1N5WVBJbVh3YmRvNWtYVS1TWjdEekNUakh4ZGxFSW5OUkszeEpwZFd5NUd4Z0hQMjJ3Wk5qVGktRnEwYg?oc=5",
-        "publisher": "自由財經",
-        "time": 1792825200000
-      },
-      {
-        "title": "台積電股價有望狂飆近3倍！外媒看好「這時」衝破1200美元驚人目標 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBKdWRKZDFuVHFBOHZ1NERQSGZNZ20tMVAyaG9Gd3REQkRXZDdNcmxiNThvZlVLRk12d0Jwd1J5Qmc4V0EwSjY2d2pQUXlVOURKX1Y1SnRFT0xuRWFHX1dn0gFkQVVfeXFMUEdLU0NiRGZySzZkRno1NGdpRkhkRDZ6UlpPVGlBYi1zdUJvb0xqaTRiVEVuRk5RbWJpY3hBRE5PRHRBOFZscUdKSWNnT0dBMmVEcEV4VjlUNVNxTFIwNW1FSHVWeg?oc=5",
-        "publisher": "自由財經",
-        "time": 1792652400000
+        "title": "台積電、友達合攻先進封裝 在玻璃基板 CoPoS 領域合作開發新製程 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1xbFpYaFluc2ZSUmtmSWtkMnI1Vms4NXF6Y1Z6aFFmYlFEdWNhamRVbE5VNHZJMFpZalhhUXhpczAwcFJFOE9HUVY2SS1aTDZ5bjhwY1NMWjNjUdIBX0FVX3lxTE8teWN6TWtoYTBpSno2MzlKa0tUSE90eGdQOTFpTFNuNkltMVROVFJGcU8xMlFyUkhXLWlLUDVBdC1Pb2FhS09NSUZwRk5pejF1LTA4cDNwZTlMLUdvMU1J?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794945600000
       }
     ]
   },

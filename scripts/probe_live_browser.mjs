@@ -27,7 +27,9 @@ try{
  if(process.env.PROBE_OVERRIDE_JS==='1'&&!state.market?.marketOpen)console.log('OFF_HOURS_NO_INTRADAY_ASSERTION: market closed, explicit simulated failures tested separately');
  if(process.env.PROBE_REQUIRE_QUOTES==='1'&&state.market?.marketOpen){
    const validRows=state.rows.filter(r=>r.price&&r.price!=='—'&&/成交|官方收盤|備援/.test(r.meta||''));
-   if(state.taiexText==='—'||validRows.length<Math.min(4,state.rows.length))throw Error('LIVE_BROWSER_VISIBLE_QUOTE_COVERAGE_FAILED '+validRows.length+'/'+state.rows.length);
+   const today=await page.evaluate(()=>{const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());return ['year','month','day'].map(k=>p.find(x=>x.type===k)?.value).join('')});
+   const idx=state.live?.taiex;
+   if(!idx||idx.date!==today||!Number.isFinite(idx.price)||!idx.stamp||state.taiexText==='—'||validRows.length<Math.min(4,state.rows.length))throw Error('LIVE_BROWSER_VISIBLE_QUOTE_COVERAGE_FAILED '+validRows.length+'/'+state.rows.length);
    console.log('LIVE_BROWSER_VISIBLE_QUOTE_COVERAGE_PASS',validRows.length,state.rows.length);
  }
 }catch(e){console.error('BROWSER_PROBE_ERROR',String(e.stack||e));process.exitCode=1}

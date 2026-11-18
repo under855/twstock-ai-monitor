@@ -110,17 +110,15 @@
       try{
         const j=await getJson(endpoints[index],MIS_REQUEST_TIMEOUT);
         if(!Array.isArray(j?.msgArray))throw Error('MIS payload missing');
-        const ticker=j.msgArray.find(m=>String(m?.c||'')==='t00');
         let usable=j.msgArray;
         if(marketOpen()){
-          if(!j.msgArray.some(m=>String(m?.d||'')===today()&&num(m?.trade?.z??m?.z)!=null))throw Error('MIS quote payload has no today prices');
-          if(ticker){
-            const epoch=Number(ticker.tlong),ms=epoch>1e12?epoch:stamp(String(ticker.d||''),String(ticker.t||''));
-            // A delayed index must not suppress independently valid stock quotes.
-            if(!Number.isFinite(ms)||ms>Date.now()+30000||!sameDay(ms))
-              usable=j.msgArray.filter(m=>m!==ticker);
-          }
-          if(!usable.length)throw Error('MIS only returned a stale index');
+          // Use the same price/date parser as rendering; a placeholder trade.z must not hide a valid top-level z.
+          usable=j.msgArray.filter(m=>{
+            const isIndex=String(m?.c||'')==='t00'||String(m?.ch||'')==='t00.tw';
+            const q=isIndex?parseTaiex(m):parseStock(m);
+            return q!=null&&Number.isFinite(Number(q.stamp))&&sameDay(q.stamp)&&Number(q.stamp)<=Date.now()+30000;
+          });
+          if(!usable.length)throw Error('MIS quote payload has no today prices');
         }
         if(!secondary){misFailureCount=0;nextMisAttemptAt=0;lastError='';primaryLastSuccessAt=Date.now()}
         else{secondaryLastError='';secondaryLastSuccessAt=Date.now();secondaryFailureCount=0;secondaryNextAllowedAt=0}
@@ -223,8 +221,8 @@
 
   function parseStock(m){
     const code=String(m?.c||'').trim(),date=String(m?.d||'');if(!code||date!==today())return null;
-    const tr=m?.trade||{},price=num(tr?.z)??num(m?.z);if(price==null)return null;
-    const time=String(tr?.t||m?.t||''),ms=stamp(date,time);if(ms==null)return null;
+    const tr=m?.trade||{},tradePrice=num(tr?.z),price=tradePrice??num(m?.z);if(price==null)return null;
+    const time=String((tradePrice!=null?tr?.t:m?.t)||m?.t||tr?.t||''),ms=stamp(date,time);if(ms==null)return null;
     const prev=num(m?.y);
     return {code,date,price,prev,change:prev==null?null:price-prev,open:num(m?.o),high:num(m?.h),low:num(m?.l),volume:num(m?.v),tradeTime:time,stamp:ms,volumeUnit:'lots',source:'TWSE MIS 盤中最新成交',live:true};
   }
@@ -608,7 +606,7 @@
     busy=true;cycle++;lastPollAt=Date.now();
     try{
       const codes=requestedCodes(),{map,idx}=parse(await fetchMis(codes));confirmMisQuotes(map);let accepted=0;if(acceptIndex(idx))accepted++;for(const q of map.values()){if(acceptQuote(q))accepted++}if(accepted)lastSuccessAt=Date.now();saveToday();paintAll();
-    }catch(e){lastError=String(e?.message||e);if(marketOpen())await Promise.allSettled([pollSecondary(),pollIntradayBackup(true)]);else await pollBackup(false);paintAll();debug()}finally{busy=false}
+    }catch(e){lastError=String(e?.message||e);if(marketOpen())void pollIntradayBackup(false);else void pollBackup(false);paintAll();debug()}finally{busy=false}
   }
   async function pollSecondary(){
     if(!marketOpen()||secondaryBusy||document.visibilityState==='hidden')return false;

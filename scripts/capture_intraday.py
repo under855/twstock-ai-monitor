@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import json, urllib.request, urllib.parse, datetime, pathlib
+import json, urllib.request, urllib.parse, datetime, pathlib, sys, math
 
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 OUT=ROOT/'data'/'intraday'/'latest.json'
@@ -8,6 +8,11 @@ CODES={
  '2330':'tse','009817':'tse','0050':'tse','3711':'tse','3293':'otc',
  '2002':'tse','00878':'tse','00919':'tse','0056':'tse','6592':'tse'
 }
+HOLIDAYS=set('20260101 20260212 20260213 20260216 20260217 20260218 20260219 20260220 20260227 20260403 20260406 20260501 20260619 20260925 20260928 20261009 20261026 20261225 20270101 20270202 20270203 20270204 20270205 20270208 20270209 20270210 20270301 20270405 20270406 20270430 20270609 20270915 20270928 20271011 20271025 20271224 20271231'.split())
+
+def market_open(now):
+    return now.weekday()<5 and now.strftime('%Y%m%d') not in HOLIDAYS and 8*60+55<=now.hour*60+now.minute<=13*60+35
+
 UA={'User-Agent':'Mozilla/5.0 twstock-ai-monitor official-capture/1.0','Accept':'application/json'}
 
 def n(v):
@@ -15,7 +20,8 @@ def n(v):
         if v is None:return None
         s=str(v).strip().replace(',','').replace('+','')
         if not s or s in ('-','--','---'):return None
-        return float(s)
+        v=float(s)
+        return v if math.isfinite(v) else None
     except:return None
 
 def stamp(date,time):
@@ -43,9 +49,7 @@ def append(arr,p):
 
 def main():
     now=datetime.datetime.now(TZ)
-    if now.weekday()>=5:return
-    mins=now.hour*60+now.minute
-    if mins<8*60+55 or mins>13*60+35:return
+    if not market_open(now):return
     day=now.strftime('%Y%m%d')
     ch=['tse_t00.tw']+[f'{m}_{c}.tw' for c,m in CODES.items()]
     u='https://mis.twse.com.tw/stock/api/getStockInfo.jsp?'+urllib.parse.urlencode({'ex_ch':'|'.join(ch),'json':'1','delay':'0','_':str(int(now.timestamp()*1000))})
@@ -55,10 +59,12 @@ def main():
         d=str(x.get('d') or '')
         if d!=day:continue
         code=str(x.get('c') or '')
-        price=n((x.get('trade') or {}).get('z')) or n(x.get('z'))
-        tm=str((x.get('trade') or {}).get('t') or x.get('t') or '')
+        tr=x.get('trade') or {}
+        trade_price=n(tr.get('z'))
+        price=trade_price if trade_price is not None else n(x.get('z'))
+        tm=str((tr.get('t') if trade_price is not None else x.get('t')) or x.get('t') or tr.get('t') or '')
         st=stamp(d,tm)
-        if price is None or st is None:continue
+        if price is None or price<=0 or st is None or st>int(now.timestamp()*1000)+30000:continue
         p={'stamp':st,'close':price,'time':tm,'source':'TWSE MIS'}
         if code=='t00' or str(x.get('ch') or '')=='t00.tw':
             changed=append(data['taiex'],p) or changed
@@ -71,4 +77,6 @@ def main():
         print(json.dumps({'ok':True,'date':data['date'],'taiex':len(data['taiex']),'stocks':{k:len(v) for k,v in data['stocks'].items()}},ensure_ascii=False))
     else:print(json.dumps({'ok':True,'changed':False,'date':data['date']},ensure_ascii=False))
 
-if __name__=='__main__':main()
+if __name__=='__main__':
+    if '--market-open' in sys.argv:sys.exit(0 if market_open(datetime.datetime.now(TZ)) else 1)
+    main()

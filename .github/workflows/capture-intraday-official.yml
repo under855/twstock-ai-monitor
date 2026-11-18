@@ -17,6 +17,7 @@ concurrency:
 jobs:
   capture:
     runs-on: ubuntu-latest
+    timeout-minutes: 300
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,14 +30,22 @@ jobs:
           git checkout market-data
           mkdir -p scripts data/intraday
           git show origin/main:scripts/capture_intraday.py > scripts/capture_intraday.py
-          python scripts/capture_intraday.py
-          rm -f scripts/capture_intraday.py
-          git add data/intraday/latest.json
-          if git diff --cached --quiet; then
-            echo 'No new official MIS timestamp.'
-            exit 0
-          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'Capture official TWSE MIS intraday snapshot'
-          git push origin HEAD:market-data
+          # Keep the already-approved five-minute capture cadence even when scheduled starts are delayed.
+          # Concurrency prevents overlapping sessions. Stop on holidays and at market close.
+          while python scripts/capture_intraday.py --market-open; do
+            if python scripts/capture_intraday.py; then
+              git add data/intraday/latest.json
+              if git diff --cached --quiet; then
+                echo 'No new official MIS timestamp.'
+              else
+                git commit -m 'Capture official TWSE MIS intraday snapshot'
+                git push origin HEAD:market-data
+              fi
+            else
+              echo '::warning::Official MIS capture failed; retry at next existing five-minute boundary.'
+            fi
+            sleep "$((300 - $(date +%s) % 300))"
+          done
+          rm -f scripts/capture_intraday.py

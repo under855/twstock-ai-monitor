@@ -3,7 +3,7 @@ import vm from 'node:vm';
 import assert from 'node:assert/strict';
 const text=fs.readFileSync('live-v091.js','utf8');
 assert(text.includes('})();'),'LIVE_WRAPPER_MISSING');
-const source=text.replace(/\}\)\(\);\s*$/, 'globalThis.__live_test__={parseBackup,parseStock,parseTaiex,quoteFreshness,intradayIndexState,paintIndex,setIndex:(x)=>{taiex=x},newerOrEqual,fetchMis,get interval(){return INTERVAL},get failureCount(){return misFailureCount},get retryAt(){return nextMisAttemptAt},get lastError(){return lastError},setMisReceivedAt:x=>{lastMisReceivedAt=x}};})();');
+const source=text.replace(/\}\)\(\);\s*$/, 'globalThis.__live_test__={parseBackup,parseStock,parseTaiex,quoteFreshness,intradayIndexState,paintIndex,setIndex:(x)=>{taiex=x;lastIndexMisStamp=Number(x?.stamp)||0},newerOrEqual,fetchMis,get interval(){return INTERVAL},get failureCount(){return misFailureCount},get retryAt(){return nextMisAttemptAt},get lastError(){return lastError},setMisReceivedAt:x=>{lastMisReceivedAt=x;lastIndexMisReceivedAt=x}};})();');
 const epoch=Date.parse('2026-11-10T02:00:00Z');
 class FrozenDate extends Date{
   constructor(...args){super(...(args.length?args:[epoch]))}
@@ -35,6 +35,7 @@ q.setIndex({date:'20261110',price:43381.74,change:669.82,stamp:epoch-20000,time:
 q.paintIndex();
 assert.equal(dom.taiex.textContent,'43,381.74','FRESH_INDEX_NOT_RENDERED');
 assert(dom.taiexChg.textContent.includes('09:59:40'),'FRESH_INDEX_SOURCE_TIME_MISSING');
+assert.equal(q.intradayIndexState({date:'20261110',stamp:epoch-22*60000,source:'TWSE MIS'}),'stale','RECENT_HTTP_MUST_NOT_MARK_22_MIN_OLD_INDEX_FRESH');
 
 assert.equal(q.quoteFreshness({date:'20261110',stamp:epoch-180000}),'older');
 assert.equal(q.quoteFreshness({date:'20261110',stamp:epoch-30000}),'older');

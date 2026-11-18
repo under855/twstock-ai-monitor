@@ -32,7 +32,7 @@
   let lastBackupAt=0;
   let backupBusy=false;
   let lastError='';
-  let lastMisReceivedAt=0;
+  let lastMisReceivedAt=0,lastIndexMisReceivedAt=0,lastIndexMisStamp=0;
   let primaryLastSuccessAt=0,primaryLastFailureAt=0,secondaryLastFailureAt=0;
   let intradayBackupBusy=false,lastIntradayBackupAttempt=0,lastIntradayBackupReceivedAt=0,lastIntradayBackupError='',lastIntradayBackupStamp=0;
   let lastVisibleAt=Date.now();
@@ -122,7 +122,10 @@
         }
         if(!secondary){misFailureCount=0;nextMisAttemptAt=0;lastError='';primaryLastSuccessAt=Date.now()}
         else{secondaryLastError='';secondaryLastSuccessAt=Date.now();secondaryFailureCount=0;secondaryNextAllowedAt=0}
-        lastMisReceivedAt=Math.max(primaryLastSuccessAt,secondaryLastSuccessAt);window.__TW_UPDATE_HEALTH__?.(secondary?'台股第二通道':'台股行情',true);return usable;
+        lastMisReceivedAt=Math.max(primaryLastSuccessAt,secondaryLastSuccessAt);
+        const indexRecord=usable.map(m=>String(m?.c||'')==='t00'||String(m?.ch||'')==='t00.tw'?parseTaiex(m):null).filter(Boolean).sort((a,b)=>b.stamp-a.stamp)[0];
+        if(indexRecord&&indexRecord.stamp>=lastIndexMisStamp){lastIndexMisStamp=indexRecord.stamp;lastIndexMisReceivedAt=Date.now()}
+        window.__TW_UPDATE_HEALTH__?.(secondary?'台股第二通道':'台股行情',true);return usable;
       }catch(e){last=e}
     }
     if(secondary){secondaryLastError=String(last?.message||last||'第二通道無法存取');secondaryFailureCount++;secondaryLastFailureAt=Date.now();secondaryNextAllowedAt=0;window.__TW_UPDATE_HEALTH__?.('台股第二通道',false)}
@@ -258,7 +261,7 @@
     quotes.clear();series.clear();lastConfirmedByCode.clear();resumeAfter.clear();
     seeded.clear();seeding.clear();taiex=null;lastIndexSnapshot=null;
     lastIntradayBackupStamp=0;lastIntradayBackupReceivedAt=0;lastIntradayBackupError='';
-    primaryLastSuccessAt=0;secondaryLastSuccessAt=0;lastMisReceivedAt=0;
+    primaryLastSuccessAt=0;secondaryLastSuccessAt=0;lastMisReceivedAt=0;lastIndexMisReceivedAt=0;lastIndexMisStamp=0;
     try{quoteCache={}}catch{}
     for(const r of document.querySelectorAll('#watch article.row')){
       const code=r.querySelector('.sym')?.textContent?.trim();
@@ -370,7 +373,9 @@
     const age=now-Number(x.stamp);
     if(age < -30000)return 'future';
     // Exchange's last index publication time is not the gateway's last success time.
-    return now-lastMisReceivedAt<=30000?'fresh':'stale';
+    // Keep the last verified index visible, but do not label an old publication as current.
+    if(/GitHub 官方盤中快照|重新連線中/.test(String(x.source||'')))return 'stale';
+    return age<=30000&&Number(x.stamp)===lastIndexMisStamp&&now-lastIndexMisReceivedAt<=30000?'fresh':'stale';
   }
   function paintIndexExtras(x,usable){
     const p=document.getElementById('taiexPercent');
@@ -422,7 +427,7 @@
           if(c){
             const mins=Math.max(0,Math.floor((Date.now()-Number(last.stamp))/60000));
             const source=last.officialClose?'正式收盤':'最後已取得行情';
-            setText(c,'今日最後已驗證指數（非即時）｜'+source+' '+last.time+'｜已延遲約 '+mins+' 分鐘');
+            setText(c,'今日最後已驗證指數（非即時）｜'+source+' '+last.time+'｜資料時間差 '+(mins>0?mins+' 分鐘':Math.max(0,Math.floor((Date.now()-Number(last.stamp))/1000))+' 秒'));
             setClass(c,'s muted');
           }
         }else{
@@ -483,14 +488,14 @@
     const indexAge=taiex?.stamp?Date.now()-Number(taiex.stamp):Infinity;
     // Separate exchange timestamp from HTTP response receipt time.
     const fromBackup=/GitHub 官方盤中快照/.test(String(taiex?.source||''));
-    const fresh=indexAge>=-30000&&!fromBackup&&Date.now()-lastMisReceivedAt<=30000;
+    const fresh=intradayIndexState(taiex)==='fresh';
     if(marketOpen()){
       const retryDelay=Math.max(0,Math.ceil((nextMisAttemptAt-Date.now())/1000));
       const label=fresh?'盤中來源有效':fromBackup&&indexAge>=-30000?'GitHub 備援延遲行情（非即時）':'行情延遲／來源重試中';
       setText(p,'主要 '+INTERVAL/1000+' 秒／第二通道 '+SECONDARY_INTERVAL/1000+' 秒交錯檢查｜資料時效依交易所｜v'+VERSION);
       if(b){setText(b,label+' v'+VERSION);setClass(b,'liveBadge '+(fresh?'ok':'warn'))}
       setText(s,label);
-      setText(t,fresh?(fromBackup?'GitHub 備援快照 '+(taiex?.time||'—')+'｜快照非每6秒更新':'證交所行情 '+(taiex?.time||'—')+'｜本機收到 '+hhmmss(lastMisReceivedAt)):
+      setText(t,fresh?(fromBackup?'GitHub 備援快照 '+(taiex?.time||'—')+'｜快照非每6秒更新':'證交所行情 '+(taiex?.time||'—')+'｜本機收到 '+hhmmss(lastIndexMisReceivedAt)):
         '最後行情 '+(taiex?.time||'—')+'｜'+(retryDelay?'下次來源重試約 '+retryDelay+' 秒':'來源尚未更新'));
 
     }else if(hasTodayData()){
@@ -502,7 +507,7 @@
     const indexState=intradayIndexState(taiex),retry=Math.max(0,Math.ceil((nextMisAttemptAt-Date.now())/1000));
     if(marketOpen()){
       const viaBackup=/GitHub 官方盤中快照/.test(String(taiex?.source||''));
-      const valid=taiex?.date===today()&&!viaBackup&&lastMisReceivedAt>0&&Date.now()-lastMisReceivedAt<=30000;
+      const valid=indexState==='fresh';
       setText(state,valid?'盤中資料有效':'行情延遲／來源重試中');setClass(state,'v '+(valid?'down':'up'));
       setText(details,valid?'指數來源 '+(taiex?.time||'—')+(viaBackup?'｜GitHub 官方快照（可能延遲）':'｜每 6 秒檢查，非保證每次有新成交'): '指數狀態：'+indexState+'｜'+(retry?'約 '+retry+' 秒後重試':'等待來源資料')+'｜不以舊價冒充即時');
     }else{
@@ -593,7 +598,7 @@
   if(originalRender)render=async function(allowNetwork=false){const x=await originalRender(marketOpen()?false:allowNetwork);if(marketOpen()||hasTodayData())paintAll();return x};
   if(originalShow)show=async function(code,opts={}){code=String(code);const q=quotes.get(code);if(q?.date===today()||marketOpen())quoteCache[code]=q||placeholder(code);const x=await originalShow(code,opts);if(q?.date===today()||marketOpen()){paintDetail();if(marketOpen())poll(false)}return x};
 
-  function debug(){const stocks={};for(const code of watchCodes()){const q=quotes.get(code),a=series.get(code)||[],r=row(code);stocks[code]={date:q?.date||null,price:q?.price??null,change:q?.change??null,tradeTime:q?.tradeTime||null,stamp:q?.stamp||null,freshness:quoteFreshness(q),source:q?.source||null,seriesPoints:a.length,seriesLastStamp:a.at(-1)?.stamp||null,domState:r?.dataset?.liveState||null,domDate:r?.dataset?.liveDate||null,domStamp:Number(r?.dataset?.liveStamp||0)||null,domPrice:r?.dataset?.livePrice||null,invalidReason:r?.dataset?.liveState==='invalid'?r.querySelector('.meta')?.textContent:null}}window.__TW_LIVE_V091__={version:VERSION,intervalMs:INTERVAL,marketWindow:marketOpen(),indexFreshness:intradayIndexState(taiex),indexAgeSeconds:taiex?.stamp?Math.round((Date.now()-Number(taiex.stamp))/1000):null,confirmedLastTradeCount:lastConfirmedByCode.size,officialCloseFallback:{loaded:!!verifiedClose,tradeDate:verifiedClose?.tradeDate||null,error:verifiedCloseError},backupSource:{lastReceivedAt:lastIntradayBackupReceivedAt,lastStamp:lastIntradayBackupStamp,lastError:lastIntradayBackupError,busy:intradayBackupBusy},secondarySource:{intervalMs:SECONDARY_INTERVAL,cycles:secondaryCycles,lastPollAt:secondaryLastPollAt,lastSuccessAt:secondaryLastSuccessAt,lastFailureAt:secondaryLastFailureAt,lastError:secondaryLastError},primarySource:{intervalMs:INTERVAL,lastPollAt,lastSuccessAt:primaryLastSuccessAt,lastFailureAt:primaryLastFailureAt,lastError},cycle,lastPollAt,lastSuccessAt,lastMisReceivedAt,nextMisAttemptAt,failures:misFailureCount,lastError,taiex:taiex?{date:taiex.date,price:taiex.price,change:taiex.change,high:taiex.high,low:taiex.low,turnover:taiex.turnover,time:taiex.time,stamp:taiex.stamp,source:taiex.source}:null,stocks}}
+  function debug(){const stocks={};for(const code of watchCodes()){const q=quotes.get(code),a=series.get(code)||[],r=row(code);stocks[code]={date:q?.date||null,price:q?.price??null,change:q?.change??null,tradeTime:q?.tradeTime||null,stamp:q?.stamp||null,freshness:quoteFreshness(q),source:q?.source||null,seriesPoints:a.length,seriesLastStamp:a.at(-1)?.stamp||null,domState:r?.dataset?.liveState||null,domDate:r?.dataset?.liveDate||null,domStamp:Number(r?.dataset?.liveStamp||0)||null,domPrice:r?.dataset?.livePrice||null,invalidReason:r?.dataset?.liveState==='invalid'?r.querySelector('.meta')?.textContent:null}}window.__TW_LIVE_V091__={version:VERSION,intervalMs:INTERVAL,marketWindow:marketOpen(),indexFreshness:intradayIndexState(taiex),indexAgeSeconds:taiex?.stamp?Math.round((Date.now()-Number(taiex.stamp))/1000):null,confirmedLastTradeCount:lastConfirmedByCode.size,officialCloseFallback:{loaded:!!verifiedClose,tradeDate:verifiedClose?.tradeDate||null,error:verifiedCloseError},backupSource:{lastReceivedAt:lastIntradayBackupReceivedAt,lastStamp:lastIntradayBackupStamp,lastError:lastIntradayBackupError,busy:intradayBackupBusy},secondarySource:{intervalMs:SECONDARY_INTERVAL,cycles:secondaryCycles,lastPollAt:secondaryLastPollAt,lastSuccessAt:secondaryLastSuccessAt,lastFailureAt:secondaryLastFailureAt,lastError:secondaryLastError},primarySource:{intervalMs:INTERVAL,lastPollAt,lastSuccessAt:primaryLastSuccessAt,lastFailureAt:primaryLastFailureAt,lastError},cycle,lastPollAt,lastSuccessAt,lastMisReceivedAt,lastIndexMisReceivedAt,lastIndexMisStamp,nextMisAttemptAt,failures:misFailureCount,lastError,taiex:taiex?{date:taiex.date,price:taiex.price,change:taiex.change,high:taiex.high,low:taiex.low,turnover:taiex.turnover,time:taiex.time,stamp:taiex.stamp,source:taiex.source}:null,stocks}}
 
   async function pollBackup(force=false){
     if(!postCloseWindow()||officialCloseComplete()||backupBusy||(!force&&Date.now()-lastBackupAt<BACKUP_INTERVAL))return false; // No off-hours stock requests; retry only today's unfinished official close.

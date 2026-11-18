@@ -12,6 +12,8 @@ try{
  page.on('response',r=>{if(/mis\.twse|cors\.dev|allorigins|intraday\/latest/.test(r.url()))network.push({channel:r.url().includes('allorigins')?'secondary':r.url().includes('cors.dev')?'primary':'backup',status:r.status()})});
  await page.goto('https://under855.github.io/twstock-ai-monitor/?healthprobe='+Date.now(),{waitUntil:'domcontentloaded',timeout:30000});
  await page.waitForTimeout(process.env.PROBE_OVERRIDE_JS==='1'?27000:19000);
+ const first=await page.evaluate(()=>({stamp:window.__TW_LIVE_V091__?.taiex?.stamp||0,primary:window.__TW_SCHEDULER_STATE__?.()?.primaryLastSuccessAt||0,secondary:window.__TW_SCHEDULER_STATE__?.()?.secondaryLastSuccessAt||0}));
+ if(process.env.PROBE_REQUIRE_QUOTES==='1'&&await page.evaluate(()=>window.__TW_SCHEDULER_STATE__?.()?.marketOpen))await page.waitForTimeout(65000);
  const state=await page.evaluate(()=>({
   time:new Date().toLocaleString('zh-TW',{timeZone:'Asia/Taipei'}),
   version:document.querySelector('body')?.dataset?.version||document.querySelector('script[src*="live-v091.js"]')?.src,
@@ -22,7 +24,7 @@ try{
   indicator:document.getElementById('liveBadge')?.textContent,refreshPill:document.getElementById('refreshPill')?.textContent,
   taiexText:document.getElementById('taiex')?.textContent,rows:[...document.querySelectorAll('#watch article.row')].slice(0,12).map(e=>({code:e.querySelector('.sym')?.textContent,price:e.querySelector('.price')?.textContent,meta:e.querySelector('.meta')?.textContent}))
  }));
- console.log('BROWSER_LIVE_PROBE',JSON.stringify({state,network:network.slice(-35),issues:issues.slice(-15)}));
+ console.log('BROWSER_LIVE_PROBE',JSON.stringify({first,state,network:network.slice(-35),issues:issues.slice(-15)}));
  if(process.env.PROBE_OVERRIDE_JS==='1'&&state.market?.marketOpen&&(!state.live?.lastMisReceivedAt||!state.live?.taiex?.price||!state.rows.some(r=>r.price&&r.price!=='—')))throw Error('STAGED_BROWSER_STILL_NO_LIVE_STOCK_DATA');
  if(process.env.PROBE_OVERRIDE_JS==='1'&&!state.market?.marketOpen)console.log('OFF_HOURS_NO_INTRADAY_ASSERTION: market closed, explicit simulated failures tested separately');
  if(process.env.PROBE_REQUIRE_QUOTES==='1'&&state.market?.marketOpen){
@@ -31,6 +33,11 @@ try{
    const idx=state.live?.taiex;
    if(!idx||idx.date!==today||!Number.isFinite(idx.price)||!idx.stamp||state.taiexText==='—'||validRows.length<Math.min(4,state.rows.length))throw Error('LIVE_BROWSER_VISIBLE_QUOTE_COVERAGE_FAILED '+validRows.length+'/'+state.rows.length);
    console.log('LIVE_BROWSER_VISIBLE_QUOTE_COVERAGE_PASS',validRows.length,state.rows.length);
+   const age=Date.now()-idx.stamp;
+   const advanced=idx.stamp>first.stamp&&age<=30000;
+   console.log('LIVE_SUSTAINED_CHECK',JSON.stringify({firstIndexStamp:first.stamp,lastIndexStamp:idx.stamp,ageSeconds:Math.round(age/1000),advanced,primary:state.market.primaryLastSuccessAt,secondary:state.market.secondaryLastSuccessAt}));
+   if(!advanced)throw Error('INDEX_STILL_DELAYED_OR_NOT_ADVANCING');
+   if(!state.market.primaryLastSuccessAt||!state.market.secondaryLastSuccessAt)throw Error('TWO_INDEPENDENT_MIS_RELAY_PATHS_NOT_VERIFIED');
  }
 }catch(e){console.error('BROWSER_PROBE_ERROR',String(e.stack||e));process.exitCode=1}
 finally{await b.close()}

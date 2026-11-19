@@ -98,6 +98,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
       <div class="card"><h3>盤中／最近交易日走勢</h3><canvas id="bigChart" class="big" width="820" height="260"></canvas><div id="chartMsg" class="muted small"></div></div>
       <div class="card"><h3>AI 判定分數</h3><div id="scoreParts" class="scoreParts"></div></div>
     </div>
+    <div class="card" id="holdPilot" style="margin-top:9px"><h3>一季／一年持有觀察（測試版）</h3><div class="tabs" role="group" aria-label="持有觀察期間"><button type="button" class="tab active" data-horizon="quarter" aria-pressed="true">一季</button><button type="button" class="tab" data-horizon="year" aria-pressed="false">一年</button></div><div id="holdPilotBody" class="small muted" aria-live="polite">按期間檢查長期資料</div><div class="notice">與現有短期評分獨立；缺少長期財報或 ETF 總報酬資料，絕不編造綜合分數。</div></div>
     <div class="cards">
       <div class="card"><h3>專業判讀</h3><div id="analysis" class="analysis"></div></div>
       <div class="card"><h3>配股／配息與填權息</h3><div id="dividendEvents"></div></div>
@@ -322,6 +323,7 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 <script src="./dividend-enhance.js?v=0975-feed"></script>
 <script src="./extras-v090.js?v=0989-market-hours"></script>
 <script src="./live-v091.js?v=09817-mis-first"></script>
+<script src="./holding-horizon-trial.js?v=trial-1"></script>
 <!-- Independent WebSocket probe suspended: unreliable across client networks. -->
 <script src="./taiex-sector-ticker.js?v=0989-market-hours"></script>
 <script src="./stock-price-visual.js?v=0978-price"></script>

@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+const js=fs.readFileSync('detail-candles-pilot.js','utf8'),html=fs.readFileSync('index.html','utf8');
+const sandbox={window:{},document:{readyState:'loading',addEventListener:()=>{}},Map,Math,Number,String,Array,Date,JSON};
+vm.createContext(sandbox);vm.runInContext(js,sandbox);
+const {daily,aggregate}=sandbox.window.__TW_DETAIL_CANDLES_TEST__;
+const raw=[{date:'2026-11-16',open:100,high:109,low:98,close:105,volume:1000},{date:'2026-11-17',open:105,high:108,low:101,close:103,volume:2000},{date:'2026-11-20',open:103,high:110,low:102,close:108,volume:3000},{date:'2026-11-23',open:108,high:111,low:105,close:107,volume:4000}];
+assert.equal(daily(raw).length,4);
+assert.equal(daily([{date:'2026-11-23',open:108,high:99,low:105,close:107}]).length,0,'BAD_OHLC_MUST_BE_REJECTED');
+const weekly=aggregate(raw,'weekly');assert.equal(weekly.length,2);assert.equal(weekly[0].open,100);assert.equal(weekly[0].close,108);assert.equal(weekly[0].high,110);assert.equal(weekly[0].low,98);assert.equal(weekly[0].volume,6000);
+const monthly=aggregate(raw,'monthly');assert.equal(monthly.length,1);assert.equal(monthly[0].high,111);assert.equal(monthly[0].close,107);assert.equal(monthly[0].volume,10000);
+assert(!/setInterval\s*\(|localStorage|__TW_LIVE_REFRESH__|__TW_BACKUP_REFRESH__|fetchMis\s*\(/.test(js),'CANDLE_MUST_NOT_TOUCH_LIVE_SCHEDULER');
+assert(html.includes('id="detailCandlePilot"')&&html.includes('detail-candles-pilot.js?v=trial-1'));
+assert(html.indexOf('id="detailCandlePilot"')>html.indexOf('id="sheet"')&&html.indexOf('id="detailCandlePilot"')<html.indexOf('</section>\n</div>\n<script src="./shared-latest'),'DETAIL_ONLY');
+assert(html.includes('live-v091.js?v=09817-mis-first')&&html.includes('id="scoreParts"'),'LIVE_OR_SCORE_CONTRACT_CHANGED');
+console.log('DETAIL_CANDLE_PILOT_PASS: OHLC aggregation, invalid data rejected, detail-only rendering, live engine isolated');

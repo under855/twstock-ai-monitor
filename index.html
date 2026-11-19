@@ -98,6 +98,7 @@ body{min-height:100vh;min-height:100svh;overflow-x:hidden;-webkit-overflow-scrol
       <div class="card"><h3>盤中／最近交易日走勢</h3><canvas id="bigChart" class="big" width="820" height="260"></canvas><div id="chartMsg" class="muted small"></div></div>
       <div class="card"><h3>AI 判定分數</h3><div id="scoreParts" class="scoreParts"></div></div>
     </div>
+    <div class="card" id="detailCandlePilot" style="margin-top:9px"><h3>歷史 K 線圖（測試版）</h3><div class="tabs" role="group" aria-label="K 線週期"><button type="button" class="tab" data-candle-period="daily" aria-pressed="false">日 K</button><button type="button" class="tab active" data-candle-period="weekly" aria-pressed="true">週 K</button><button type="button" class="tab" data-candle-period="monthly" aria-pressed="false">月 K</button></div><canvas id="detailCandlesCanvas" style="width:100%;height:260px;display:block;background:#071321;border-radius:9px" aria-label="歷史開高低收 K 線圖"></canvas><div id="detailCandlesStatus" class="muted small" aria-live="polite">點開個股後載入證交所歷史 K 線資料</div><div class="notice">紅漲綠跌；圖表為歷史原始價格，未做除權息調整。僅供觀察趨勢，不代表即時報價或投資評分。</div></div>
     <div class="cards">
       <div class="card"><h3>專業判讀</h3><div id="analysis" class="analysis"></div></div>
       <div class="card"><h3>配股／配息與填權息</h3><div id="dividendEvents"></div></div>
@@ -322,6 +323,7 @@ if('serviceWorker'in navigator&&IS_WEB)navigator.serviceWorker.register('./sw.js
 <script src="./dividend-enhance.js?v=0975-feed"></script>
 <script src="./extras-v090.js?v=0989-market-hours"></script>
 <script src="./live-v091.js?v=09817-mis-first"></script>
+<script src="./detail-candles-pilot.js?v=trial-1"></script>
 <!-- Independent WebSocket probe suspended: unreliable across client networks. -->
 <script src="./taiex-sector-ticker.js?v=0989-market-hours"></script>
 <script src="./stock-price-visual.js?v=0978-price"></script>

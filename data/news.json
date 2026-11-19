@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T01:58:06.220530+00:00",
+  "generatedAt": "2026-11-19T02:48:21.122259+00:00",
   "stocks": {
     "0050": [
       {
@@ -36,7 +36,7 @@
     "3711": [
       {
         "title": "熱門股》輝達簽長約 日月光投控股價樂 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBYNGJyMC1vbE9UbS1VSnBPSE0wa2ZoYUU0YnVnWXctVWNkQ2g4TlJnVnNCODdEckpPaXFzX0lfMFFFNm9MeWo0dF9hNGtwdmJEWnFIbkJn0gFbQVVfeXFMTnllWk9nU3RjZHRLc0hTZVozdTNmZ3pqeVRKNUFfRzFqSlBJZUw3WFRIN0hNTVVJX0dKZHJJc0t2b0dHVTBGeTluWlkxSDR6dHlCQU11R1V6UDhBaw?oc=5",
+        "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBYNGJyMC1vbE9UbS1VSnBPSE0wa2ZoYUU0YnVnWXctVWNkQ2g4TlJnVnNCODdEckpPaXFzX0lfMFFFNm9MeWo0dF9hNGtwdmJEWnFIbkJn?oc=5",
         "publisher": "自由財經",
         "time": 1795037400000
       },
@@ -99,12 +99,6 @@
     ],
     "2002": [
       {
-        "title": "中鋼與鋼板業聯誼會 表明全力支持公共工程與科技廠房興建拚經濟 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1OVFBXRHVwWjBEWm1KYUFrcmtiazh2TWM0NUlvcWpfdDJxR3NmOFhtOXFXZF9GZ1BvUWFrMW4yWnViNmlmT0Z5d2pDLWpaU2Z5a3UzN2lOSE10UdIBX0FVX3lxTE1iLVNORjRXV0JUWlBDQ0JMRWxtdUlXd3hQa0drVFhCR2dJTGU4SFFGRXBzTTlxMFRaNk9ja1lyekJTZlJzN3hIQmx5NkpFMGpaVjJmNGE0RVdqa2RsdWNV?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794995111000
-      },
-      {
         "title": "歐盟課冷軋鋼反傾銷稅中鋼：客戶下單轉積極| 產經 - 中央社 CNA",
         "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE4yX0M2aXRwa1dQTy1XMEFCR0RLNUUyVjhpNk9pMVlDZTh6QnlBVDFXMjZsQUtGSUNnRUh5Umo2YkxnNWJIMTZoU1dPaWhlRDNYLXBWMGpXRXBwNXczTGc?oc=5",
         "publisher": "中央社 CNA",
@@ -117,15 +111,15 @@
         "time": 1794855600000
       },
       {
-        "title": "中鋼鋼板供不應求 今年訂單滿載、明年首季接單看旺 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1JR2FKYUdTUkpJb2N5VlZpajdlRDc3b1czYVc1dWxnNG04TDNXQ2Uwd0hYYTh0RUE5THRNVGFzQUhJSWJqbTBNTzVUNnZDZ1JhUVVsTDFfeFUxQdIBX0FVX3lxTE1TUWh1XzBaTG51ZlFleGdJU0hiS3N3X0hRTVZpUF9sbG1JbHJjNFNzYkQ2LTlYSDIwUndvQUtycWcyUFJQSzI0aG1BY2NpRTlZTWkyY3h3aUVnMjVUS1lR?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793779200000
-      },
-      {
         "title": "中鋼12月盤價平盤機率高- 日報 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5RYW12OVc4aFVTb0xMN2x2NkJ4VnFKR04xQS1JeEFnSXlaaHJHWG92VXhqMHZGa25YMFBIRmxaMEV0MWdhTzB5RndJREJDZGdRVmhCOUZfVG9WbC0wQTFN?oc=5",
         "publisher": "工商時報",
+        "time": 1793779200000
+      },
+      {
+        "title": "中鋼鋼板供不應求 今年訂單滿載、明年首季接單看旺 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1JR2FKYUdTUkpJb2N5VlZpajdlRDc3b1czYVc1dWxnNG04TDNXQ2Uwd0hYYTh0RUE5THRNVGFzQUhJSWJqbTBNTzVUNnZDZ1JhUVVsTDFfeFUxQdIBX0FVX3lxTE1TUWh1XzBaTG51ZlFleGdJU0hiS3N3X0hRTVZpUF9sbG1JbHJjNFNzYkQ2LTlYSDIwUndvQUtycWcyUFJQSzI0aG1BY2NpRTlZTWkyY3h3aUVnMjVUS1lR?oc=5",
+        "publisher": "經濟日報",
         "time": 1793779200000
       },
       {
@@ -133,6 +127,12 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9aYXg1VDFLYkdBcDhLV1BkRGpKRURVVlJvdGE4a0ZuRjVGTTJ1U1FTUU5zZW5PaFJUY1F6OWhhTU93b2dZVUdiNjg0ckZORTd2a1BjeUZJY1l0N2dQY09R?oc=5",
         "publisher": "工商時報",
         "time": 1793692800000
+      },
+      {
+        "title": "中鋼盤價有望連三漲 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5lbXY1T2tETGRQVWtveUF5MVR6aVdsQldxZ1lmdXBZS3VsaUJHb3ZYakM4V0lwSl92b0FiMi1ReWMyRWpRZjdUQ1JZSWphdDF1bDRVeEozZG1uZ9IBX0FVX3lxTE5Pck5COGo4bE0xNFNEblRTcUJlaVplZkRvSllqYnhTdFVYbUcxSi1MQ0Z3dzBLdkxEbW84c3JZdnFQMDY2Z0l3b2UyU0ZDemdLbnQxTmdaaUtpaG9VWW5J?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793606400000
       },
       {
         "title": "中鋼營運溫和復甦- 日報 - 工商時報",

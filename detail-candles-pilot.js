@@ -33,29 +33,49 @@
     for(let i=0;i<n;i++){const d=new Date(Date.UTC(date.getUTCFullYear(),date.getUTCMonth()-i,1));out.push(String(d.getUTCFullYear())+String(d.getUTCMonth()+1).padStart(2,'0')+'01')}
     return out;
   }
-  async function download(code){
-    if(cache.has(code))return cache.get(code);
+  // Official history fetches are bounded, shared per symbol and progressively displayed.
+  // No timers or network access are added to the six-second live quote scheduler.
+  const loadedMonths=new Map(),historyProgress=new Map(),progressListeners=new Map();
+  async function download(code,onProgress){
+    if(typeof onProgress==='function')progressListeners.set(code,onProgress);
+    const keys=months(13),done=loadedMonths.get(code)||new Set();
+    loadedMonths.set(code,done);
+    const existing=cache.get(code)||[];
+    if(done.size===keys.length)return existing;
     if(pending.has(code))return pending.get(code);
+    const all=new Map(existing.map(x=>[x.date,x]));
     const task=(async()=>{
-      const all=new Map(),keys=months(13);
-      // At most one detail-only request at a time, never triggered by 6s MIS scheduler.
-      for(const key of keys){
-        if(!document.getElementById('sheet')?.classList.contains('show')||String(active)!==code)break;
-        try{
-          const ac=new AbortController(),timer=setTimeout(()=>ac.abort(),3200);
-          let response;
-          try{response=await fetch('https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date='+key+'&stockNo='+encodeURIComponent(code)+'&response=json',{signal:ac.signal,cache:'default'})}finally{clearTimeout(timer)}
-          if(!response.ok)continue;
-          const body=await response.json();
-          if(body?.stat!=='OK'||!Array.isArray(body.data))continue;
-          for(const raw of body.data){const date=isoDate(raw?.[0]);if(!date)continue;all.set(date,{date,open:raw[3],high:raw[4],low:raw[5],close:raw[6],volume:raw[1]})}
-        }catch{/* Missing history is displayed, not silently fabricated. */}
-      }
-      const points=daily([...all.values()]);
-      if(points.length)cache.set(code,points);
-      return points;
+      const queue=keys.filter(key=>!done.has(key));
+      let next=0;
+      const worker=async()=>{
+        while(next<queue.length){
+          if(!document.getElementById('sheet')?.classList.contains('show')||String(active)!==code)break;
+          const key=queue[next++];
+          try{
+            const ac=new AbortController(),timer=setTimeout(()=>ac.abort(),3200);
+            let response;
+            try{response=await fetch('https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date='+key+'&stockNo='+encodeURIComponent(code)+'&response=json',{signal:ac.signal,cache:'default'})}finally{clearTimeout(timer)}
+            if(!response.ok)continue;
+            const body=await response.json();
+            if(body?.stat!=='OK'||!Array.isArray(body.data))continue;
+            const batch=daily(body.data.map(raw=>({date:isoDate(raw?.[0]),open:raw?.[3],high:raw?.[4],low:raw?.[5],close:raw?.[6],volume:raw?.[1]})));
+            // Do not mark unsuccessful or invalid months as complete.
+            if(!batch.length)continue;
+            for(const x of batch)all.set(x.date,x);
+            done.add(key);
+            const points=daily([...all.values()]);
+            cache.set(code,points);
+            historyProgress.set(code,{done:done.size,total:keys.length});
+            try{progressListeners.get(code)?.(points,done.size,keys.length)}catch{}
+          }catch{/* Do not create substitute values for failed official-history requests. */}
+        }
+      };
+      // Two at most to reduce waiting without overloading the official endpoint.
+      await Promise.all([worker(),worker()]);
+      return cache.get(code)||[];
     })().finally(()=>pending.delete(code));
-    pending.set(code,task);return task;
+    pending.set(code,task);
+    return task;
   }
   function draw(canvas,points){
     const ctx=canvas?.getContext('2d');if(!ctx||!points.length)return;
@@ -81,9 +101,17 @@
   function init(){
     const card=document.getElementById('detailCandlePilot'),canvas=document.getElementById('detailCandlesCanvas'),status=document.getElementById('detailCandlesStatus');
     if(!card||!canvas||!status)return;
-    let period='weekly',loadedCode='',renderToken=0;
+    let period='weekly',renderToken=0;
     const buttons=[...card.querySelectorAll('button[data-candle-period]')];
     const setStatus=v=>{if(status.textContent!==v)status.textContent=v};
+    function showBars(code,records,progress){
+      const bars=aggregate(records,period).slice(period==='daily'?-70:period==='weekly'?-55:-13);
+      if(!bars.length)return false;
+      draw(canvas,bars);
+      const text='歷史 '+(period==='daily'?'日':period==='weekly'?'週':'月')+' K｜'+bars.length+' 根｜'+bars[0].date+'～'+bars.at(-1).date;
+      setStatus(text+'｜證交所原始價格（非即時、未還原除權息）'+(progress?'｜已載入 '+progress.done+'/'+progress.total+' 個月份':'｜已有歷史資料'));
+      return true;
+    }
     async function render(){
       const code=String(typeof active==='undefined'?'':active||''),token=++renderToken;
       if(!code||!document.getElementById('sheet')?.classList.contains('show'))return;
@@ -91,20 +119,20 @@
       if(!/^\d{4,6}$/.test(code)){setStatus('此標的暫無可驗證的歷史日 K 資料');return}
       const market=String(universeMap?.get?.(code)?.market||'');
       if(market==='TPEx'){setStatus('上櫃標的：尚未接入櫃買中心歷史日 K，暫不以證交所資料替代');return}
-      let records=cache.get(code);
-      // Use previously fetched daily data while the official year-long history is loading.
-      if(!records?.length){records=daily(historyCache?.[code]||[])}
-      if(records.length){const bars=aggregate(records,period).slice(period==='daily'?-70:period==='weekly'?-55:-13);draw(canvas,bars);setStatus('歷史 '+(period==='daily'?'日':period==='weekly'?'週':'月')+' K｜'+bars.length+' 根｜'+bars[0]?.date+'～'+bars.at(-1)?.date+'｜證交所歷史收盤（非即時）')}
-      else{canvas.getContext('2d')?.clearRect(0,0,canvas.width,canvas.height);setStatus('等待證交所歷史資料，不使用即時行情或 GitHub 備援代替')}
-      // Download one year only on explicit weekly/monthly selection and only after detail opened.
-      if(period==='daily'||cache.has(code)||pending.has(code)&&loadedCode===code)return;
-      loadedCode=code;
-      setStatus('正在載入證交所歷史日 K（不影響盤中報價）…');
-      const complete=await download(code);
+      const records=cache.get(code)||daily(historyCache?.[code]||[]);
+      const progress=historyProgress.get(code);
+      const drawn=records.length&&showBars(code,records,progress);
+      if(!drawn){canvas.getContext('2d')?.clearRect(0,0,canvas.width,canvas.height);setStatus('正在取得證交所歷史 K 線資料；不影響盤中報價')}
+      if(loadedMonths.get(code)?.size===months(13).length)return;
+      // Exactly one download per symbol; a tab switch attaches to its existing results.
+      const update=(points,count,total)=>{
+        if(token!==renderToken||String(active)!==code||!document.getElementById('sheet')?.classList.contains('show'))return;
+        showBars(code,points,{done:count,total});
+      };
+      const points=await download(code,update);
       if(token!==renderToken||String(active)!==code)return;
-      if(!complete.length){setStatus('證交所歷史資料暫時無法取得；已保留可驗證的舊有資料');return}
-      const bars=aggregate(complete,period).slice(period==='weekly'?-55:-13);
-      draw(canvas,bars);setStatus('證交所歷史 '+(period==='weekly'?'週':'月')+' K｜'+bars.length+' 根｜'+bars[0]?.date+'～'+bars.at(-1)?.date+'｜未還原除權息，非即時報價');
+      if(points.length)showBars(code,points,historyProgress.get(code));
+      else if(!drawn)setStatus('證交所歷史資料暫時無法取得，請稍後重試；不顯示虛構行情');
     }
     card.addEventListener('click',e=>{const b=e.target.closest('button[data-candle-period]');if(!b||!card.contains(b))return;period=b.dataset.candlePeriod;void render().catch(()=>setStatus('歷史圖表載入失敗，其他功能不受影響'))});
     const sheet=document.getElementById('sheet'),title=document.getElementById('dTitle');

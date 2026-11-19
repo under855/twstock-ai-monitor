@@ -43,6 +43,9 @@ on:
       - '.github/workflows/system-data-integrity.yml'
   # Source-independent regression checks now run during exchange preopen preview.
   schedule:
+    # Daily 00:10 Asia/Taipei (previous UTC day at 16:10); read-only full regression.
+    - cron: '10 16 * * *'
+    # Weekday 08:40 Asia/Taipei preopen verification remains unchanged.
     - cron: '40 0 * * 1-5'
 permissions:
   contents: read

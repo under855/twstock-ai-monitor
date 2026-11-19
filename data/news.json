@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T16:55:21.370170+00:00",
+  "generatedAt": "2026-11-19T17:49:57.618136+00:00",
   "stocks": {
     "0050": [
       {
@@ -41,6 +41,12 @@
     ],
     "3711": [
       {
+        "title": "日月光加速擴充先進封測產能 砸2,489億興建高雄新廠 | 產業熱點 | 產業 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNZnk5NXlVWDdKRWxKeU5qbEY1Q1NIa1JocTZrSTJGWWJId2tmWUpwYkpza0dHX2ZFVXhsV0pINGExbExUUXhzOFI0YjV1S21sR1hGN29aa0I2cG1pcHZNZ2hBU1ZpSVJTdWJUVmEyQk9OcWUxanhaVVA1M3hWcC0xcW5OcEhoVWRsVU1IM21Bek0?oc=5",
+        "publisher": "經濟日報",
+        "time": 1795110048000
+      },
+      {
         "title": "熱門股》輝達簽長約 日月光投控股價樂 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBYNGJyMC1vbE9UbS1VSnBPSE0wa2ZoYUU0YnVnWXctVWNkQ2g4TlJnVnNCODdEckpPaXFzX0lfMFFFNm9MeWo0dF9hNGtwdmJEWnFIbkJn0gFbQVVfeXFMTnllWk9nU3RjZHRLc0hTZVozdTNmZ3pqeVRKNUFfRzFqSlBJZUw3WFRIN0hNTVVJX0dKZHJJc0t2b0dHVTBGeTluWlkxSDR6dHlCQU11R1V6UDhBaw?oc=5",
         "publisher": "自由財經",
@@ -66,12 +72,6 @@
       }
     ],
     "3293": [
-      {
-        "title": "鴻海、鈊象 押寶長天期 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBycVVpZkN4a21MX1lTVnNzNUhUQTVhSWcybVU3WTF5c3N0dy1UQkZvY0FFNmR0Z0ZKYTRia0VHQnVNXy1fb3hKMFM3ci1nNG9XcWY3V2dXd2ZXQdIBX0FVX3lxTFBZTi1ReEVCXy02eWgxR2E1ak1Ib1VoTjEzYThZM3h0ajFhV2hFVjhzU0lVSnRkS29wOGVqOVlFdkczX0pXdlJoTldtX3BTMjh1bmtld0t2RjdBWGlEVXRZ?oc=5",
-        "publisher": "經濟日報",
-        "time": 1795103019000
-      },
       {
         "title": "鈊象受惠台幣貶值業外獲利大增授權業務續成長- 新聞 - MoneyDJ",
         "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNT21sVzhDMDZyZ2lDY3FHSGh4UUFmSHBTMnZKekN6NzRGcHdWLVBKdF9uNEs3X3JYYjd4RU13azJqNHFhdHZtUnd6NE5IWlRZazVRRHk1RjRvZTZtdFU0enFlMmpSR0lkNHpUWXZOQjI4VzdzZkhoYjdwZ3RYRFhLUWU1d0ZPMjIzYWRiWXlYOHdyZw?oc=5",
@@ -205,16 +205,16 @@
         "time": 1794988800000
       },
       {
+        "title": "領錢了！台股本周21檔 ETF 發放股利共421億、00919配發207.8億最多 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE8xOThxSWptVnBuU2FWYkp0djR0bW5nV2hTc3YwdDBITnBvc1ZMSjhSQ0l4VU4xSFRJUmFjNEF0dkJVaTJ2VmlaczhvdGVnaE5zUnhWVjNjRTVIQdIBX0FVX3lxTE1Xc0k5MVNTWVloYi1rTmIzUGI0Vmh6NzRvWF9fZ3lWMnU3VTdQOEppcXVOV2VzTmp2VjlxV1RXS1pXcWtWVHJrTjVTQ3dXdjhYLVc3NVduejNUSXVfcVA0?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794988800000
+      },
+      {
         "title": "台股ETF受益人連五周攀峰 0050、00919等23檔同創高 - 鉅亨網",
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE00VDUtVlVzdTVvVHBneFByQzF6dGdURGJRYUlfQnpjMWJxbU5mRDRXX25kNl9hR2pHT0Q4Ul9XcVM2c3FOUDlPdGc1YWMweGM?oc=5",
         "publisher": "鉅亨網",
         "time": 1794884222000
-      },
-      {
-        "title": "領錢了！台股本周21檔 ETF 發放股利共421億、00919配發207.8億最多 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE8xOThxSWptVnBuU2FWYkp0djR0bW5nV2hTc3YwdDBITnBvc1ZMSjhSQ0l4VU4xSFRJUmFjNEF0dkJVaTJ2VmlaczhvdGVnaE5zUnhWVjNjRTVIQdIBX0FVX3lxTE1Xc0k5MVNTWVloYi1rTmIzUGI0Vmh6NzRvWF9fZ3lWMnU3VTdQOEppcXVOV2VzTmp2VjlxV1RXS1pXcWtWVHJrTjVTQ3dXdjhYLVc3NVduejNUSXVfcVA0?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794816000000
       },
       {
         "title": "00981A定期定額扣款衝破百億超車00919 展現存股吸金新戰力 - 鉅亨網",

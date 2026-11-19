@@ -6,6 +6,8 @@ on:
     paths:
       - 'live-v091.js'
       - 'index.html'
+      - 'holding-horizon-trial.js'
+      - 'scripts/verify_hold_horizon_trial.mjs'
       - 'scripts/verify_intraday_failover.mjs'
       - 'scripts/verify_staggered_market_hours.mjs'
       - 'scripts/verify_intraday_failover_browser.mjs'
@@ -27,6 +29,8 @@ on:
       - 'data/foreign-flow.json'
       - 'scripts/update_foreign_flow.py'
       - 'index.html'
+      - 'holding-horizon-trial.js'
+      - 'scripts/verify_hold_horizon_trial.mjs'
       - 'sw.js'
       - 'live-v091.js'
       - 'foreign-live-test.js'
@@ -80,6 +84,10 @@ jobs:
           for f in live-v091.js foreign-live-test.js split-layout-v095.js paper-trading-v100.js paper-trading-reset-v101.js pilot-chart-00878-v1.js extras-v090.js dividend-enhance.js foreign-flow-card.js sw.js; do
             node --check "$f"
           done
+      - name: Verify holding-horizon pilot isolation
+        run: |
+          node --check holding-horizon-trial.js
+          node scripts/verify_hold_horizon_trial.mjs
       - name: Verify delayed-source protection and MIS backoff
         run: node scripts/verify_live_feed.mjs
       - name: Verify independently polled MIS snapshot failover

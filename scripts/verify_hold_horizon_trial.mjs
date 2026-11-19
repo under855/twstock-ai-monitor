@@ -6,7 +6,7 @@ assert(!/\bfetch\s*\(|\bsetInterval\s*\(|\blocalStorage\b|MIS_REQUEST_TIMEOUT|IN
 const ctx={window:{},document:{readyState:'loading',addEventListener:()=>{}},Date,Map,Number,String,Array,RegExp,Math,JSON};
 vm.createContext(ctx);vm.runInContext(s,ctx);
 const analyze=ctx.window.__TW_HOLD_SCORE_TRIAL__.analyze;
-const h=Array.from({length:240},(_,i)=>({date:new Date(Date.parse('2026-01-01T00:00:00+08:00')+86400000*i).toISOString().slice(0,10),close:100+i/10}));
+const h=Array.from({length:340},(_,i)=>({date:new Date(Date.parse('2026-01-01T00:00:00+08:00')+86400000*i).toISOString().slice(0,10),close:100+i/10}));
 assert(analyze(h,'quarter',false).complete);
 assert(!analyze(h.slice(-45),'year',true).complete);
 assert(!analyze(h.slice(-12),'quarter',false).complete);

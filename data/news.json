@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T08:24:16.497996+00:00",
+  "generatedAt": "2026-11-19T09:33:54.757001+00:00",
   "stocks": {
     "0050": [
       {
@@ -129,9 +129,9 @@
         "time": 1794855600000
       },
       {
-        "title": "反映市場行情，中鋼12月月盤小幅調漲- 新聞 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPRXlHS0N4STB6WV9Va085SWc5YUlaQ20xY0ZDRmpBTWRfeTlvcUFRVXRWeUc5QVFlMi12Rjk2Mm1rZnNXY25sbllZZmFsUTFmbEtmWDN6SDFOa1c1ZUxiZ2FDb3lQc0V2VTE0REJQeUFvRFIwdkV1VDR6M0tPb29hWkdwZzMtSEo2QmllY25QS1JmQQ?oc=5",
-        "publisher": "MoneyDJ",
+        "title": "外銷接單升溫、新台幣走貶 中鋼12月盤價全面小漲300元 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9ycFpNaVMzUWVpWmtHSmFQNVNqRGgxWG1iYjFkSEtPMGdBbjYzUjRPQ3dxUXVYNlRfdUhPN3NBVGNfaU92WEVRa3hLOXBPT1V1XzdUNEVlLU9xZ3JrbzhN0gFkQVVfeXFMTWQ5T2k2NFYxV2Z3SVhlU1FfNnp2V05WeVRYeEdta2toR2tXanJGcmdmUnFHNldqenUwY25SNWllZ1pNYy1jT2t3NGlqa3I2cUFBRXpzdDhOS0xJZUtmQllaTFVITQ?oc=5",
+        "publisher": "自由財經",
         "time": 1793865600000
       },
       {
@@ -153,16 +153,16 @@
         "time": 1793692800000
       },
       {
-        "title": "中鋼盤價有望連三漲 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5lbXY1T2tETGRQVWtveUF5MVR6aVdsQldxZ1lmdXBZS3VsaUJHb3ZYakM4V0lwSl92b0FiMi1ReWMyRWpRZjdUQ1JZSWphdDF1bDRVeEozZG1uZ9IBX0FVX3lxTE5Pck5COGo4bE0xNFNEblRTcUJlaVplZkRvSllqYnhTdFVYbUcxSi1MQ0Z3dzBLdkxEbW84c3JZdnFQMDY2Z0l3b2UyU0ZDemdLbnQxTmdaaUtpaG9VWW5J?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793606400000
-      },
-      {
         "title": "中鋼營運溫和復甦- 日報 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9QcjJZRW82TVBCSzVmUzBla2RiLVhsak5QS0FtTTNuNFltQ0ZXa3JIVTNFV21QczRXcUlGTFpXa3J2UEpVREFZUUZqcXpzWHJZSlVwdXpSb2xRNFRxWlBF?oc=5",
         "publisher": "工商時報",
         "time": 1793516400000
+      },
+      {
+        "title": "中鋼揪伴 攻無稀土馬達 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5RdzB4U3g1RFotS2o5SDY0TlBXZUR5ZHotUkUxb2JXSERFekMyNVRtZkxxeHBtYXFub0lOZUlibElxeTRucENEbXpwbHdRVDdrUHZzOTJtaHN0UdIBX0FVX3lxTE16SlVHYU00UEhsdzc5OEh4LU1tUVNsdmxsMFIwaEpwNE1oc0NoTjJZRGVUaElqSDB5aHJQUkJodEhIdXFaLWdlU2J1OXlmRWgxTFRvMW8tTnJ6LWtEUldZ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793257200000
       }
     ],
     "00878": [
@@ -192,12 +192,6 @@
       }
     ],
     "00919": [
-      {
-        "title": "整理包／瑤池金母發錢了！00918、00919 創新高 00981A、00929 等 ETF 9 月配息、最後買進日一次看 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1qNmhXc251NnZ2TzdEblhkN2F2R2tiaGo0dC1uSkVNRVotRkdCV3ctZGxIeWFtalBTeXVVMjA2NlNxajdKMDFKOWVnR2p5a21Vc1VIaGtSUXhuYkxa?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794902400000
-      },
       {
         "title": "台股ETF受益人連五周攀峰 0050、00919等23檔同創高 - 鉅亨網",
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE00VDUtVlVzdTVvVHBneFByQzF6dGdURGJRYUlfQnpjMWJxbU5mRDRXX25kNl9hR2pHT0Q4Ul9XcVM2c3FOUDlPdGc1YWMweGM?oc=5",
@@ -249,12 +243,6 @@
         "time": 1793606400000
       },
       {
-        "title": "看好台積電再大賺一筆！外媒估2030年驚人市值 股價將漲這麼多 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5KMEdndUNGUnFIWExEU2JHUzFTOWJvV20tLW83M1Z0MFNYRjc3QXZJV2pqbm4xV0RMbWptb2t5U1lKU3lKOE1RaVFTb1lCSXVpaHAyQmVkQzdDUXRCb2dN0gFkQVVfeXFMTm0xclg5WnhadWtvSjAxWE5XWExwQldIZmc3c3lJTzZOem8tVVE2STZpdmFuSG9ZWEVpMmZEa3UzMF9lQVlBcFA1MkRuWW5pUkctdkxET201VUdGUUFiNXg1OWZTTg?oc=5",
-        "publisher": "自由財經",
-        "time": 1792998000000
-      },
-      {
         "title": "台積電11張股票領逾7萬！股民哀怨價差快跌沒 網友羨慕炸鍋 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1ic1YtdjhlUEdfbGFmWlhHMndSc2VSNVB1Z2ktbzZrdm8yeWNpWWMxWUJKWTNvUGVfdVp6eE8tLUloZ3c3bHdWQ2R0Sk1DWUREUGtnVVJOWGVLVW5DSl9Z0gFkQVVfeXFMTjdBVXVDZmJJVmtmQVdZeEpoc28tVWhtVFBWNXI3cVk4RlZkU0tRcFRiRk5lMlR4UW5wXzlQbFFOel9seGxPTnFyQW1DYUd1TnhMSUk3djNTWlBVdk5ZYVFqM2RWXw?oc=5",
         "publisher": "自由財經",
@@ -265,6 +253,12 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9GYXBhLVdodmk2M2RxYnAwVURzNk1NaGRfakd5MENlaVFqZWZyeGEwbThzX1VkV3JldUxVRU5SWmhHTUMyVW1XOFM2eTZtdExTOVM1YmFfUExNRG9Jd1ZB0gFkQVVfeXFMUDBaeWdoZFVyNjBmeEZhaUFUdUs2Um5hVVhCSHpNMVhwR1N5WVBJbVh3YmRvNWtYVS1TWjdEekNUakh4ZGxFSW5OUkszeEpwZFd5NUd4Z0hQMjJ3Wk5qVGktRnEwYg?oc=5",
         "publisher": "自由財經",
         "time": 1792825200000
+      },
+      {
+        "title": "台積電股價有望狂飆近3倍！外媒看好「這時」衝破1200美元驚人目標 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBKdWRKZDFuVHFBOHZ1NERQSGZNZ20tMVAyaG9Gd3REQkRXZDdNcmxiNThvZlVLRk12d0Jwd1J5Qmc4V0EwSjY2d2pQUXlVOURKX1Y1SnRFT0xuRWFHX1dn0gFkQVVfeXFMUEdLU0NiRGZySzZkRno1NGdpRkhkRDZ6UlpPVGlBYi1zdUJvb0xqaTRiVEVuRk5RbWJpY3hBRE5PRHRBOFZscUdKSWNnT0dBMmVEcEV4VjlUNVNxTFIwNW1FSHVWeg?oc=5",
+        "publisher": "自由財經",
+        "time": 1792652400000
       }
     ]
   },

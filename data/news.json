@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T17:49:57.618136+00:00",
+  "generatedAt": "2026-11-19T18:50:14.296740+00:00",
   "stocks": {
     "0050": [
       {
@@ -40,12 +40,6 @@
       }
     ],
     "3711": [
-      {
-        "title": "日月光加速擴充先進封測產能 砸2,489億興建高雄新廠 | 產業熱點 | 產業 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNZnk5NXlVWDdKRWxKeU5qbEY1Q1NIa1JocTZrSTJGWWJId2tmWUpwYkpza0dHX2ZFVXhsV0pINGExbExUUXhzOFI0YjV1S21sR1hGN29aa0I2cG1pcHZNZ2hBU1ZpSVJTdWJUVmEyQk9OcWUxanhaVVA1M3hWcC0xcW5OcEhoVWRsVU1IM21Bek0?oc=5",
-        "publisher": "經濟日報",
-        "time": 1795110048000
-      },
       {
         "title": "熱門股》輝達簽長約 日月光投控股價樂 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBYNGJyMC1vbE9UbS1VSnBPSE0wa2ZoYUU0YnVnWXctVWNkQ2g4TlJnVnNCODdEckpPaXFzX0lfMFFFNm9MeWo0dF9hNGtwdmJEWnFIbkJn0gFbQVVfeXFMTnllWk9nU3RjZHRLc0hTZVozdTNmZ3pqeVRKNUFfRzFqSlBJZUw3WFRIN0hNTVVJX0dKZHJJc0t2b0dHVTBGeTluWlkxSDR6dHlCQU11R1V6UDhBaw?oc=5",
@@ -101,12 +95,6 @@
         "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE41RTV3Vk9SYmJ6SFZJRGNHcHNhMGdWUWdlUkxlN01oeTRxZk1CdUFmQVg0WUV5N0ZzRUlaaFlPVk1GSTZwUHh3WmdGc01LTGVoVnZxeUJ5S0MtR0XSAWBBVV95cUxQVkgyRG80eTM2ZWVTeWZEZ3VzV294SFZHQU9aelBxTG1jVlM3bF9PMzd4TXEzZXVMU3gtT3JFN3N0X1doanNVWWpuSEtqTGZCQ1BhVEc0a0JfRmp6Q3h6WDg?oc=5",
         "publisher": "經濟日報",
         "time": 1792998000000
-      },
-      {
-        "title": "灰熊狙擊遊戲股王鈊象 內資送暖喊目標價上看千元 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBqdGRjeFlJVXZtOEFnQmluNnpKUktWeDRhV1F2eC1EVy1VNmhaZVNkSTFBdFhRbDJRaWY5Qk5HZnp2eTdsY2U4NWZhVnU2S3IzUWJYRVV2X0dla2xaWUNB0gFkQVVfeXFMUHVPekhFMzlpQXVWWlpQUmxpTXh6d3dVWFNPSkR1d09zdHByR0kwczdhVk9qb2FZbVpmMnl1cEp2ZTNfWUtQNHhqOGxpTTNOVXd6SmtzZThTVGJmNGkzZlQ2VEd2RA?oc=5",
-        "publisher": "自由財經",
-        "time": 1792911600000
       }
     ],
     "2002": [
@@ -225,6 +213,12 @@
     ],
     "2330": [
       {
+        "title": "美股收盤》輝達財報亮眼難救股價 美股漲跌不一 台積電ADR漲0.81％ - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFA5MG1OMi1MOGx1YWhLZjNCby0zRjQ5RkxDR25kSjlRY2JodHhYUjM0ZTJNeVZ6NHZfZW1oell2Qmk3ZDhoNE4yTER1aTN2eXFmQ3dKRmNYQ0dBTThpR3BR0gFkQVVfeXFMUGRMWDhyN2JpUVFKTjRTNWxGWWMwbzJ2bUpjQjM5dDhCN3d5WmxfTmZYZW9ZMlVLOGd1VGNwUjRSbVhNWnYzYk1sUExOdS1Oazhzb09DWllLRjBXYTlRS0l0SS15Mg?oc=5",
+        "publisher": "自由財經",
+        "time": 1795041082000
+      },
+      {
         "title": "傳奇投資人家族大砍台積電持股94％ 科技股逃命波？ - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE03T0drZ2hibEdtREpXY05UWVlLYWtEajRLRWJibkVnc3l6NXppMXUtcEh5Tmlqa19VUEZ5NUY1clg0S0hyR3g1LVd6V0x3X2t4V2RHR2twNnB4cnBMM2Fv0gFkQVVfeXFMTlhZWnpRRE04d05sRkQxdjNmZ0w3Y0puUmdkTTk3MTd2SmRRWFY1Nlk3a0c5cEVlZEo4S1Z1YlZROE96M2FKQ0J4TDBnNGo5U2JER2xFV0huektScUVSUUc0SWhZYg?oc=5",
         "publisher": "自由財經",
@@ -265,12 +259,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9GYXBhLVdodmk2M2RxYnAwVURzNk1NaGRfakd5MENlaVFqZWZyeGEwbThzX1VkV3JldUxVRU5SWmhHTUMyVW1XOFM2eTZtdExTOVM1YmFfUExNRG9Jd1ZB0gFkQVVfeXFMUDBaeWdoZFVyNjBmeEZhaUFUdUs2Um5hVVhCSHpNMVhwR1N5WVBJbVh3YmRvNWtYVS1TWjdEekNUakh4ZGxFSW5OUkszeEpwZFd5NUd4Z0hQMjJ3Wk5qVGktRnEwYg?oc=5",
         "publisher": "自由財經",
         "time": 1792825200000
-      },
-      {
-        "title": "台積電股價有望狂飆近3倍！外媒看好「這時」衝破1200美元驚人目標 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBKdWRKZDFuVHFBOHZ1NERQSGZNZ20tMVAyaG9Gd3REQkRXZDdNcmxiNThvZlVLRk12d0Jwd1J5Qmc4V0EwSjY2d2pQUXlVOURKX1Y1SnRFT0xuRWFHX1dn0gFkQVVfeXFMUEdLU0NiRGZySzZkRno1NGdpRkhkRDZ6UlpPVGlBYi1zdUJvb0xqaTRiVEVuRk5RbWJpY3hBRE5PRHRBOFZscUdKSWNnT0dBMmVEcEV4VjlUNVNxTFIwNW1FSHVWeg?oc=5",
-        "publisher": "自由財經",
-        "time": 1792652400000
       }
     ]
   },

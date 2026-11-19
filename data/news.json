@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T14:52:25.064108+00:00",
+  "generatedAt": "2026-11-19T15:50:13.541093+00:00",
   "stocks": {
     "0050": [
       {
@@ -117,12 +117,6 @@
         "time": 1794995111000
       },
       {
-        "title": "歐盟課冷軋鋼反傾銷稅中鋼：客戶下單轉積極| 產經 - 中央社 CNA",
-        "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE4yX0M2aXRwa1dQTy1XMEFCR0RLNUUyVjhpNk9pMVlDZTh6QnlBVDFXMjZsQUtGSUNnRUh5Umo2YkxnNWJIMTZoU1dPaWhlRDNYLXBWMGpXRXBwNXczTGc?oc=5",
-        "publisher": "中央社 CNA",
-        "time": 1794989100000
-      },
-      {
         "title": "Q3獲利「翻升股」 法人加碼16檔台塑、中鋼吸金前2位 Q4續飄香- 日報 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE10T2d6Q0Y2V3RRWDc5NVBzZG1JY2JLc3VkYzZ6QktEUGZwR1JPZTl3TWxBZHEzX3ZPWG9RNjFpOGU2UFIxWEc0eGtmSWhfUERub0VJLUJmWjZIdzFuZkow?oc=5",
         "publisher": "工商時報",
@@ -157,6 +151,12 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE4wT3NJM2ZkRnJZTnZQbnNzcVRFZlUzcWcxdGEzQm1nM2p6aFJ6aGtfcGwwdllOb1BHWkNra3NKdjBBTGpsODdtQ3BEYUdDNHFyZTgxT1JpX1BvZ9IBX0FVX3lxTE5VVFlKYmtLa2FLSk1lV3lfc0liNS1SaHMxMTR2YmdJYXJpbG1oYTg0bzRacG1rQjY2TUl2U2lkMjBiWGU2dnlNS2I4dU1BcUpOdkJGT25PdlpJb1RJbk5J?oc=5",
         "publisher": "經濟日報",
         "time": 1793779200000
+      },
+      {
+        "title": "中鋼10月出貨比9月少 公司卻說修正很正常！理由在哪？法人揭Q4展望 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9aYXg1VDFLYkdBcDhLV1BkRGpKRURVVlJvdGE4a0ZuRjVGTTJ1U1FTUU5zZW5PaFJUY1F6OWhhTU93b2dZVUdiNjg0ckZORTd2a1BjeUZJY1l0N2dQY09R?oc=5",
+        "publisher": "工商時報",
+        "time": 1793692800000
       }
     ],
     "00878": [
@@ -225,12 +225,6 @@
     ],
     "2330": [
       {
-        "title": "美股收盤》輝達財報亮眼難救股價 美股漲跌不一 台積電ADR漲0.81％ - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFA5MG1OMi1MOGx1YWhLZjNCby0zRjQ5RkxDR25kSjlRY2JodHhYUjM0ZTJNeVZ6NHZfZW1oell2Qmk3ZDhoNE4yTER1aTN2eXFmQ3dKRmNYQ0dBTThpR3BR0gFkQVVfeXFMUGRMWDhyN2JpUVFKTjRTNWxGWWMwbzJ2bUpjQjM5dDhCN3d5WmxfTmZYZW9ZMlVLOGd1VGNwUjRSbVhNWnYzYk1sUExOdS1Oazhzb09DWllLRjBXYTlRS0l0SS15Mg?oc=5",
-        "publisher": "自由財經",
-        "time": 1795041082000
-      },
-      {
         "title": "傳奇投資人家族大砍台積電持股94％ 科技股逃命波？ - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE03T0drZ2hibEdtREpXY05UWVlLYWtEajRLRWJibkVnc3l6NXppMXUtcEh5Tmlqa19VUEZ5NUY1clg0S0hyR3g1LVd6V0x3X2t4V2RHR2twNnB4cnBMM2Fv0gFkQVVfeXFMTlhZWnpRRE04d05sRkQxdjNmZ0w3Y0puUmdkTTk3MTd2SmRRWFY1Nlk3a0c5cEVlZEo4S1Z1YlZROE96M2FKQ0J4TDBnNGo5U2JER2xFV0huektScUVSUUc0SWhZYg?oc=5",
         "publisher": "自由財經",
@@ -271,6 +265,12 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9GYXBhLVdodmk2M2RxYnAwVURzNk1NaGRfakd5MENlaVFqZWZyeGEwbThzX1VkV3JldUxVRU5SWmhHTUMyVW1XOFM2eTZtdExTOVM1YmFfUExNRG9Jd1ZB0gFkQVVfeXFMUDBaeWdoZFVyNjBmeEZhaUFUdUs2Um5hVVhCSHpNMVhwR1N5WVBJbVh3YmRvNWtYVS1TWjdEekNUakh4ZGxFSW5OUkszeEpwZFd5NUd4Z0hQMjJ3Wk5qVGktRnEwYg?oc=5",
         "publisher": "自由財經",
         "time": 1792825200000
+      },
+      {
+        "title": "台積電股價有望狂飆近3倍！外媒看好「這時」衝破1200美元驚人目標 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBKdWRKZDFuVHFBOHZ1NERQSGZNZ20tMVAyaG9Gd3REQkRXZDdNcmxiNThvZlVLRk12d0Jwd1J5Qmc4V0EwSjY2d2pQUXlVOURKX1Y1SnRFT0xuRWFHX1dn0gFkQVVfeXFMUEdLU0NiRGZySzZkRno1NGdpRkhkRDZ6UlpPVGlBYi1zdUJvb0xqaTRiVEVuRk5RbWJpY3hBRE5PRHRBOFZscUdKSWNnT0dBMmVEcEV4VjlUNVNxTFIwNW1FSHVWeg?oc=5",
+        "publisher": "自由財經",
+        "time": 1792652400000
       }
     ]
   },

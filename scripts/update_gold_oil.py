@@ -42,10 +42,10 @@ def parse_gold(html):
     if "黃金存摺" not in text and "Gold Passbook" not in text:raise ValueError("BOT passbook page not confirmed")
     for row in doc.rows:
         line=" ".join(row)
-        if "1 公克" in line or "1 g" in line or re.search(r"黃金存摺|Gold\\s*Passbook",line,re.I):in_passbook=True
+        if "1 公克" in line or "1 g" in line or re.search(r"黃金存摺|Gold\s*Passbook",line,re.I):in_passbook=True
         if not in_passbook:continue
-        if "黃金條塊" in line or re.search(r"Gold\\s*Bar|Gold\\s*Holobar",line,re.I):break
-        m=re.search(r"(?<!\\d)(\\d{1,3}(?:,\\d{3})+|\\d{4,6})(?!\\d)",line)
+        if "黃金條塊" in line or re.search(r"Gold\s*Bar|Gold\s*Holobar",line,re.I):break
+        m=re.search(r"(?<!\d)(\d{1,3}(?:,\d{3})+|\d{4,6})(?!\d)",line)
         if not m:continue
         price=int(m.group(1).replace(",",""))
         if re.search(r"本行賣出|Selling",line,re.I) and selling is None:selling=price
@@ -55,11 +55,11 @@ def parse_gold(html):
     return {"bankBuy":buying,"bankSell":selling,"unit":"TWD/g","quoteAt":quote.isoformat(timespec="minutes"),"source":"BOT gold passbook","sourceUrl":BOT}
 def date_str(value):
     s=str(value or "").strip()
-    if re.fullmatch(r"\\d{7}",s):
+    if re.fullmatch(r"\d{7}",s):
         return dt.date(1911+int(s[:3]),int(s[3:5]),int(s[5:7])).isoformat()
-    if re.fullmatch(r"\\d{8}",s):
+    if re.fullmatch(r"\d{8}",s):
         return dt.date(int(s[:4]),int(s[4:6]),int(s[6:8])).isoformat()
-    m=re.search(r"(\\d{2,4})[/-](\\d{1,2})[/-](\\d{1,2})",s)
+    m=re.search(r"(\d{2,4})[/-](\d{1,2})[/-](\d{1,2})",s)
     if not m:raise ValueError("CPC effective date missing")
     year,month,day=map(int,m.groups())
     if year<1911:year+=1911
@@ -129,7 +129,7 @@ def main():
             flat=" ".join(" ".join(doc.text).split())
             print("BOT_MARKERS",[(word,flat[max(0,flat.find(word)-60):flat.find(word)+220]) for word in ("黃金存摺","牌價時間","報價時間","Quoted Time","Gold Passbook") if word in flat][:5])
             print("BOT_ROWS",doc.rows[:9])
-            print("BOT_DATE_HINTS",re.findall(r".{0,55}(?:20\\d{2}|11[456]|牌價|報價|更新).{0,90}",flat[:1800],flags=re.I)[:18])
+            print("BOT_DATE_HINTS",re.findall(r".{0,55}(?:20\d{2}|11[456]|牌價|報價|更新).{0,90}",flat[:1800],flags=re.I)[:18])
             print("BOT_TEXT_HEAD",flat[:1300])
         except Exception as e:print("BOT_DIAG_ERROR",str(e))
         try:

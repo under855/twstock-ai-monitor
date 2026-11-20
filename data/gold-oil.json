@@ -1,1 +1,35 @@
-{"gold": null, "oil": null}
+{
+  "gold": {
+    "bankBuy": 3796,
+    "bankSell": 3796,
+    "quoteAt": "2026-11-20T14:54+08:00",
+    "source": "BOT gold passbook",
+    "sourceUrl": "https://rate.bot.com.tw/gold?Lang=zh-TW",
+    "unit": "TWD/g"
+  },
+  "oil": {
+    "change": null,
+    "comparisonDate": null,
+    "effectiveFrom": "2026-11-16",
+    "history": [
+      {
+        "effectiveFrom": "2026-11-16",
+        "prices": {
+          "92": 31.2,
+          "95": 32.7,
+          "98": 34.7,
+          "diesel": 29.9
+        }
+      }
+    ],
+    "prices": {
+      "92": 31.2,
+      "95": 32.7,
+      "98": 34.7,
+      "diesel": 29.9
+    },
+    "source": "CPC official open data",
+    "sourceUrl": "https://vipmbr.cpc.com.tw/opendata/sixtypeoillistprice",
+    "unit": "TWD/L"
+  }
+}

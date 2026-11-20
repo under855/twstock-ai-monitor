@@ -51,7 +51,7 @@ def parse_gold(html):
         if re.search(r"(?:本行)?賣出|Selling",line,re.I) and selling is None:selling=price
         if re.search(r"(?:本行)?買進|Buying",line,re.I) and buying is None:buying=price
         if selling is not None and buying is not None:break
-    if not (selling and buying and 1000<buying<=selling<30000):raise ValueError("BOT passbook buy/sell invalid or absent")
+    if not (selling and buying and 1000<buying<selling<30000):raise ValueError("BOT passbook buy/sell invalid or absent")
     return {"bankBuy":buying,"bankSell":selling,"unit":"TWD/g","quoteAt":quote.isoformat(timespec="minutes"),"source":"BOT gold passbook","sourceUrl":BOT}
 def date_str(value):
     s=str(value or "").strip()

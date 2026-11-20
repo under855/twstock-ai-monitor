@@ -4,7 +4,7 @@
  const el=id=>document.getElementById(id),fmt=v=>typeof v==='number'&&Number.isFinite(v)?v.toLocaleString('zh-TW',{maximumFractionDigits:2,minimumFractionDigits:0}):'—';
  const day=s=>{const d=new Date(String(s||''));return Number.isNaN(d.getTime())?null:d};
  const todayTW=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
- const isValidGold=g=>g&&Number.isFinite(g.bankBuy)&&Number.isFinite(g.bankSell)&&g.bankBuy>1000&&g.bankBuy<=g.bankSell&&g.unit==='TWD/g'&&g.source==='BOT gold passbook'&&day(g.quoteAt);
+ const isValidGold=g=>g&&Number.isFinite(g.bankBuy)&&Number.isFinite(g.bankSell)&&g.bankBuy>1000&&g.bankBuy<g.bankSell&&g.unit==='TWD/g'&&g.source==='BOT gold passbook'&&day(g.quoteAt);
  const isValidOil=o=>o&&o.source==='CPC official open data'&&o.unit==='TWD/L'&&/^\d{4}-\d{2}-\d{2}$/.test(o.effectiveFrom||'')&&["92","95","98","diesel"].every(k=>Number.isFinite(o.prices?.[k])&&o.prices[k]>5&&o.prices[k]<80);
  function fuelStatus(o,now){
    if(!isValidOil(o))return '官方油價資料未確認';

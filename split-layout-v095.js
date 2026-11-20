@@ -5,6 +5,7 @@
   const ROOT_ID='stockFxSplitV095';
   const BOT_URL='https://rate.bot.com.tw/xrt?Lang=zh-TW';
   const CURRENCIES=['USD','JPY','EUR','GBP','SGD','CNY'];
+  const CURRENCY_NAMES={USD:'美元',JPY:'日圓',EUR:'歐元',GBP:'英鎊',SGD:'新加坡幣',CNY:'人民幣'};
 
   function installStyle(){
     if(document.getElementById(STYLE_ID)) return;
@@ -22,7 +23,7 @@
       .botCashFx{margin-top:12px;border:1px solid #233c59;border-radius:16px;background:#0c1725;padding:12px;overflow:hidden}
       .stockFxRightV095 .fxStrip{display:none!important}
       .botCashFxHead{display:flex;justify-content:space-between;gap:10px;align-items:end;margin-bottom:9px}.botCashFxTitle{font-size:15px;font-weight:900}.botCashFxTime{font-size:11px;color:#91a8c2;text-align:right}
-      .botCashFxGrid{display:grid;grid-template-columns:1fr repeat(4,minmax(0,1fr));gap:1px;background:#233c59;border:1px solid #233c59;border-radius:10px;overflow:hidden}.botCashFxCell{background:#101f31;padding:8px 7px;font-size:12px}.botCashFxHdr{font-weight:850;color:#a9cbff}.botCashFxCode{font-weight:900}.botCashFxNum{font-variant-numeric:tabular-nums;text-align:right}.botCashFxNote{font-size:10px;color:#91a8c2;margin-top:8px;line-height:1.45}
+      .botCashFxGrid{display:grid;grid-template-columns:1fr repeat(4,minmax(0,1fr));gap:1px;background:#233c59;border:1px solid #233c59;border-radius:10px;overflow:hidden}.botCashFxCell{background:#101f31;padding:8px 7px;font-size:12px}.botCashFxHdr{font-weight:850;color:#a9cbff}.botCashFxCode{font-weight:900;white-space:normal}.botCashFxChinese{font-size:10px;color:#a9c8ea;font-weight:650;white-space:nowrap}.botCashFxNum{font-variant-numeric:tabular-nums;text-align:right}.botCashFxNote{font-size:10px;color:#91a8c2;margin-top:8px;line-height:1.45}
       @media(max-width:900px){.stockFxSplitV095{grid-template-columns:1fr}.stockFxRightV095{position:static;order:-1}.stockFxSplitV095 .fxStrip{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
       @media(max-width:560px){.botCashFxCell{padding:6px 3px;font-size:10px}.botCashFxHdr{font-size:9px}.botCashFxHead{align-items:start}.botCashFxTime{font-size:10px}}
     `;
@@ -112,7 +113,7 @@
       for(let i=0;i<values.length;i++){
         const cell=document.createElement('div');
         cell.className='botCashFxCell '+(i===0?'botCashFxCode':'botCashFxNum');
-        cell.textContent=values[i];grid.appendChild(cell);
+        if(i===0){cell.textContent=code+' ';const name=document.createElement('span');name.className='botCashFxChinese';name.textContent=CURRENCY_NAMES[code]||'';cell.appendChild(name)}else cell.textContent=values[i];grid.appendChild(cell);
       }
     }
     const board=document.getElementById('fxBoardStrip');if(board)board.replaceChildren();

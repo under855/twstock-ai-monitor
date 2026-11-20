@@ -113,6 +113,21 @@ jobs:
           assert data.get('gold') and data.get('oil'), 'GOLD_OIL_OFFICIAL_SOURCES_NOT_BOTH_VERIFIED'
           print('GOLD_OIL_LIVE_OFFICIAL_SOURCES_PASS')
           PY
+      - name: Verify FX currency Chinese names do not change exchange rates
+        run: |
+          node <<'JS'
+          const fs=require('node:fs');
+          const html=fs.readFileSync('index.html','utf8');
+          const fx=fs.readFileSync('split-layout-v095.js','utf8');
+          const labels={USD:'美元',JPY:'日圓',EUR:'歐元',GBP:'英鎊',SGD:'新加坡幣',CNY:'人民幣'};
+          for(const [code,name] of Object.entries(labels)){
+            if(!html.includes(code+' <span class="botCashFxChinese">'+name+'</span>'))throw Error('Missing initial FX label '+code);
+            if(!fx.includes(code+':\''+name+'\''))throw Error('Missing runtime FX label '+code);
+          }
+          if(!fx.includes("const values=[code,fmt(x.buy),fmt(x.sell),fmt(x.sightBuy),fmt(x.sightSell)]"))throw Error('Foreign exchange rate columns changed');
+          if(!fx.includes('if(i===0){cell.textContent=code+'))throw Error('FX dynamic text generation changed');
+          console.log('FX_CHINESE_LABELS_PASS');
+          JS
       - name: Verify delayed-source protection and MIS backoff
         run: node scripts/verify_live_feed.mjs
       - name: Verify independently polled MIS snapshot failover

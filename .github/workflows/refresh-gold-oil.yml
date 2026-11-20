@@ -1,0 +1,45 @@
+name: Refresh official BOT gold and CPC oil prices
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/refresh-gold-oil.yml'
+  schedule:
+    # Bank quotation hours: 09:00–17:59 Taiwan time, weekdays; effective cadence is best effort.
+    - cron: '*/15 1-9 * * 1-5'
+    # Weekly CPC announcements may appear Saturday or Sunday; check several times on weekends.
+    - cron: '20 4,8,11 * * 0,6'
+permissions:
+  contents: write
+concurrency:
+  group: official-gold-oil-price-refresh
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate source parsers before requesting external sources
+        run: python scripts/update_gold_oil.py --self-test
+      - name: Retrieve only verified official prices
+        run: python scripts/update_gold_oil.py
+      - name: Publish only when official source data actually changed
+        run: |
+          if git diff --quiet -- data/gold-oil.json; then
+            echo "No verified price change"
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/gold-oil.json
+          git commit -m "Update verified BOT gold and CPC weekly oil price snapshot"
+          git pull --rebase origin main
+          git push origin HEAD:main

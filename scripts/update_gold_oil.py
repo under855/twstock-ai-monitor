@@ -48,8 +48,8 @@ def parse_gold(html):
         m=re.search(r"(?<!\d)(\d{1,3}(?:,\d{3})+|\d{4,6})(?!\d)",line)
         if not m:continue
         price=int(m.group(1).replace(",",""))
-        if re.search(r"本行賣出|Selling",line,re.I) and selling is None:selling=price
-        if re.search(r"本行買進|Buying",line,re.I) and buying is None:buying=price
+        if re.search(r"(?:本行)?賣出|Selling",line,re.I) and selling is None:selling=price
+        if re.search(r"(?:本行)?買進|Buying",line,re.I) and buying is None:buying=price
         if selling is not None and buying is not None:break
     if not (selling and buying and 1000<buying<=selling<30000):raise ValueError("BOT passbook buy/sell invalid or absent")
     return {"bankBuy":buying,"bankSell":selling,"unit":"TWD/g","quoteAt":quote.isoformat(timespec="minutes"),"source":"BOT gold passbook","sourceUrl":BOT}

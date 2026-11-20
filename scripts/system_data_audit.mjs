@@ -124,7 +124,7 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
   assert(['verified','unverified'].includes(d.fx?.state),'BANK_TIME_UNVERIFIED '+opt.name);
   if(d.fx.state==='unverified')assert(d.fxRows===0,'STALE_BANK_RATES_VISIBLE '+opt.name);
   if(d.fx.state==='unverified')assert.equal(d.fxCodes.length,0,'BANK_FX_UNVERIFIED_CODES_VISIBLE '+opt.name);
-  if(d.fx.state==='verified'){assert.equal(d.fxRows,6,'BANK_RATES_NOT_SIX '+opt.name);assert.deepEqual(d.fxCodes,['USD','JPY','EUR','GBP','SGD','CNY'],'BANK_FX_CURRENCIES_MISMATCH '+opt.name);}
+  if(d.fx.state==='verified'){assert.equal(d.fxRows,6,'BANK_RATES_NOT_SIX '+opt.name);assert.deepEqual(d.fxCodes,['USD 美元','JPY 日圓','EUR 歐元','GBP 英鎊','SGD 新加坡幣','CNY 人民幣'],'BANK_FX_CURRENCIES_MISMATCH '+opt.name);}
   // Detail panel, chart pilot, research and trading controls must load without crashing.
   const detailRow=page.locator('#watch article.row').filter({hasText:'00878'}).first();
   await detailRow.click();await page.waitForTimeout(1400);

@@ -105,6 +105,7 @@ jobs:
       - name: Verify official BOT and CPC production formats before release
         if: github.event_name == 'pull_request'
         run: |
+          python scripts/update_gold_oil.py --diagnose
           python scripts/update_gold_oil.py
           python - <<'PY'
           import json

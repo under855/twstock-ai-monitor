@@ -48,8 +48,12 @@ def parse_gold(html):
         m=re.search(r"(?<!\d)(\d{1,3}(?:,\d{3})+|\d{4,6})(?!\d)",line)
         if not m:continue
         price=int(m.group(1).replace(",",""))
-        if re.search(r"(?:本行)?賣出|Selling",line,re.I) and selling is None:selling=price
-        if re.search(r"(?:本行)?買進|Buying",line,re.I) and buying is None:buying=price
+        # '買進' after the price is an action button, not a bank buying quote.
+        labels=[cell.strip() for cell in row if re.fullmatch(r"(?:本行)?(?:賣出|買進)|Selling|Buying",cell.strip(),re.I)]
+        if not labels:continue
+        label=labels[0]
+        if re.fullmatch(r"(?:本行)?賣出|Selling",label,re.I) and selling is None:selling=price
+        elif re.fullmatch(r"(?:本行)?買進|Buying",label,re.I) and buying is None:buying=price
         if selling is not None and buying is not None:break
     if not (selling and buying and 1000<buying<selling<30000):raise ValueError("BOT passbook buy/sell invalid or absent")
     return {"bankBuy":buying,"bankSell":selling,"unit":"TWD/g","quoteAt":quote.isoformat(timespec="minutes"),"source":"BOT gold passbook","sourceUrl":BOT}
@@ -107,7 +111,7 @@ def update_oil(old,new):
     change={k:round(new["prices"][k]-comparable[k],2) for k in new["prices"]} if comparable and all(k in comparable for k in new["prices"]) else None
     return {**new,"history":history,"change":change,"comparisonDate":max((d for d in dates if d<new["effectiveFrom"]),default=None)}
 def test():
-    gold='<div>黃金存摺｜掛牌時間：2026/11/20 11:55</div><table><tr><td>1 公克</td></tr><tr><td>黃金存摺</td><td>賣出</td><td>3,790</td></tr><tr><td></td><td>買進</td><td>3,747</td></tr><tr><td>黃金條塊</td><td>賣出</td><td>999999</td></tr></table>'
+    gold='<div>黃金存摺｜掛牌時間：2026/11/20 11:55</div><table><tr><td>1 公克</td></tr><tr><td>本行賣出</td><td>3,790 買進</td></tr><tr><td></td><td>本行買進</td><td>3,747 回售</td></tr><tr><td>黃金條塊</td><td>賣出</td><td>999999</td></tr></table>'
     g=parse_gold(gold);assert g["bankSell"]==3790 and g["bankBuy"]==3747
     data=[{"型別名稱":"汽柴油零售","產品名稱":n,"計價單位":"元/公升","參考牌價_金額":v,"牌價生效日期":"2026/11/16"} for n,v in [("92無鉛汽油",31.2),("95無鉛汽油",32.7),("98無鉛汽油",34.7),("超級柴油",29.9)]]
     o=parse_oil(data);assert o["prices"]["95"]==32.7 and o["effectiveFrom"]=="2026-11-16"

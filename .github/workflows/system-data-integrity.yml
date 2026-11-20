@@ -102,6 +102,17 @@ jobs:
           python scripts/update_gold_oil.py --self-test
           node --check gold-oil-board.js
           node scripts/verify_gold_oil_board.mjs
+      - name: Verify official BOT and CPC production formats before release
+        if: github.event_name == 'pull_request'
+        run: |
+          python scripts/update_gold_oil.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('data/gold-oil.json').read_text('utf-8'))
+          assert data.get('gold') and data.get('oil'), 'GOLD_OIL_OFFICIAL_SOURCES_NOT_BOTH_VERIFIED'
+          print('GOLD_OIL_LIVE_OFFICIAL_SOURCES_PASS')
+          PY
       - name: Verify delayed-source protection and MIS backoff
         run: node scripts/verify_live_feed.mjs
       - name: Verify independently polled MIS snapshot failover

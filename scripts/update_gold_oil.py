@@ -125,7 +125,11 @@ def main():
     old=json.loads(DEST.read_text("utf-8")) if DEST.exists() else {"gold":None,"oil":None}
     new={"gold":old.get("gold"),"oil":old.get("oil")}
     failures=[]
-    try:new["gold"]=parse_gold(get(BOT));print("GOLD_OFFICIAL_VERIFIED",new["gold"]["quoteAt"])
+    try:
+        candidate=parse_gold(get(BOT))
+        previous=old.get("gold") if isinstance(old.get("gold"),dict) else None
+        if not previous or candidate["quoteAt"]>=str(previous.get("quoteAt","")):new["gold"]=candidate
+        print("GOLD_OFFICIAL_VERIFIED",candidate["quoteAt"])
     except Exception as e:failures.append("BOT: "+str(e))
     try:new["oil"]=update_oil(old.get("oil"),parse_oil(json.loads(get(CPC))));print("CPC_OFFICIAL_VERIFIED",new["oil"]["effectiveFrom"])
     except Exception as e:failures.append("CPC: "+str(e))

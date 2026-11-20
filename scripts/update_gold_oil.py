@@ -125,6 +125,8 @@ def main():
             flat=" ".join(" ".join(doc.text).split())
             print("BOT_MARKERS",[(word,flat[max(0,flat.find(word)-60):flat.find(word)+220]) for word in ("黃金存摺","牌價時間","報價時間","Quoted Time","Gold Passbook") if word in flat][:5])
             print("BOT_ROWS",doc.rows[:9])
+            print("BOT_DATE_HINTS",re.findall(r".{0,55}(?:20\\d{2}|11[456]|牌價|報價|更新).{0,90}",flat[:1800],flags=re.I)[:18])
+            print("BOT_TEXT_HEAD",flat[:1300])
         except Exception as e:print("BOT_DIAG_ERROR",str(e))
         try:
             data=json.loads(get(CPC))

@@ -14,6 +14,7 @@
    const ahead=start>tw;
    if(ahead)return '下週已公告｜'+o.effectiveFrom+' 起生效';
    const age=Math.floor((tw-start)/86400000);
+   if(age>14)return '最近一次已核實油價（資料過期，請核對中油）｜'+o.effectiveFrom+' 生效';
    return age>=7?'上週油價（尚未取得本週新公告）':'已公告油價｜'+o.effectiveFrom+' 起生效';
  }
  function display(data,now=new Date()){

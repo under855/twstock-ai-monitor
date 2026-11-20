@@ -6,6 +6,9 @@ on:
     paths:
       - 'live-v091.js'
       - 'index.html'
+      - 'gold-oil-board.js'
+      - 'scripts/verify_gold_oil_board.mjs'
+      - 'scripts/update_gold_oil.py'
       - 'detail-candles-pilot.js'
       - 'scripts/verify_detail_candles_pilot.mjs'
       - 'scripts/verify_intraday_failover.mjs'
@@ -29,6 +32,9 @@ on:
       - 'data/foreign-flow.json'
       - 'scripts/update_foreign_flow.py'
       - 'index.html'
+      - 'gold-oil-board.js'
+      - 'scripts/verify_gold_oil_board.mjs'
+      - 'scripts/update_gold_oil.py'
       - 'detail-candles-pilot.js'
       - 'scripts/verify_detail_candles_pilot.mjs'
       - 'sw.js'
@@ -91,6 +97,11 @@ jobs:
         run: |
           node --check detail-candles-pilot.js
           node scripts/verify_detail_candles_pilot.mjs
+      - name: Validate official gold and oil cards independently
+        run: |
+          python scripts/update_gold_oil.py --self-test
+          node --check gold-oil-board.js
+          node scripts/verify_gold_oil_board.mjs
       - name: Verify delayed-source protection and MIS backoff
         run: node scripts/verify_live_feed.mjs
       - name: Verify independently polled MIS snapshot failover

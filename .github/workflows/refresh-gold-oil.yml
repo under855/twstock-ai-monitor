@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/refresh-gold-oil.yml'
+      - 'scripts/update_gold_oil.py'
   schedule:
     # Bank quotation hours: 09:00–17:59 Taiwan time, weekdays; effective cadence is best effort.
     - cron: '*/15 1-9 * * 1-5'

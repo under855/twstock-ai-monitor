@@ -17,6 +17,24 @@
    if(age>14)return '最近一次已核實油價（資料過期，請核對中油）｜'+o.effectiveFrom+' 生效';
    return age>=7?'上週油價（尚未取得本週新公告）':'已公告油價｜'+o.effectiveFrom+' 起生效';
  }
+ function changeLabel(v,label){return label+' '+(v>0?'漲':v<0?'跌':'持平')+' '+Math.abs(v).toFixed(1)+' 元／公升';}
+ function oilChangeSummary(o){
+   const c=o?.change;
+   if(!c||!['92','95','98','diesel'].every(k=>Number.isFinite(c[k])))return {gas:'汽油｜尚無可核實的前週差額',diesel:'柴油｜尚無可核實的前週差額',gasState:'pending',dieselState:'pending'};
+   const labels=['92','95','98'];
+   const uniform=labels.every(k=>Math.abs(c[k]-c['92'])<0.001);
+   const gas=uniform?changeLabel(c['92'],'汽油'):labels.map(k=>changeLabel(c[k],k)).join('｜');
+   return {gas,diesel:changeLabel(c.diesel,'柴油'),gasState:uniform?(c['92']>0?'rise':c['92']<0?'fall':'flat'):'flat',dieselState:c.diesel>0?'rise':c.diesel<0?'fall':'flat'};
+ }
+ function renderOilDelta(o){
+   const gas=el('oilGasDelta'),diesel=el('oilDieselDelta');
+   if(!gas||!diesel)return;
+   const values=isValidOil(o)?oilChangeSummary(o):{gas:'等待官方汽油資料',diesel:'等待官方柴油資料',gasState:'pending',dieselState:'pending'};
+   if(gas.textContent!==values.gas)gas.textContent=values.gas;
+   if(diesel.textContent!==values.diesel)diesel.textContent=values.diesel;
+   gas.className='oilWeeklyDelta '+values.gasState;
+   diesel.className='oilWeeklyDelta '+values.dieselState;
+ }
  function display(data,now=new Date()){
    const gold=data?.gold,oil=data?.oil;
    const goldEl=el('goldPriceBody'),oilEl=el('oilPriceBody'),goldMeta=el('goldPriceTime'),oilMeta=el('oilPriceTime');
@@ -28,10 +46,9 @@
    }else{goldEl.textContent='—';goldMeta.textContent='尚無驗證通過的臺銀黃金牌價'}
    if(isValidOil(oil)){
      oilEl.textContent='92 '+fmt(oil.prices["92"])+'｜95 '+fmt(oil.prices["95"])+'｜98 '+fmt(oil.prices["98"])+'｜柴油 '+fmt(oil.prices.diesel)+' 元／公升';
-     const c=oil.change;
-     const delta=c&&Number.isFinite(c["95"])&&Number.isFinite(c.diesel)?'｜95 '+(c["95"]>0?'漲 ':c["95"]<0?'跌 ':'持平 ')+Math.abs(c["95"]).toFixed(1)+' 元／柴油 '+(c.diesel>0?'漲 ':c.diesel<0?'跌 ':'持平 ')+Math.abs(c.diesel).toFixed(1)+' 元':'｜上週比較資料尚不足';
-     oilMeta.textContent=fuelStatus(oil,now)+delta;
-   }else{oilEl.textContent='—';oilMeta.textContent='尚未取得中油正式公告，請以中油網站為準'}
+     oilMeta.textContent=fuelStatus(oil,now)+(oil.comparisonDate?'｜比較週 '+oil.comparisonDate:'｜前週比較尚未取得');
+     renderOilDelta(oil);
+   }else{oilEl.textContent='—';oilMeta.textContent='尚未取得中油正式公告，請以中油網站為準';renderOilDelta(null)}
  }
  async function refresh(){
    if(document.visibilityState==='hidden')return;
@@ -47,7 +64,7 @@
      if(!el('oilPriceBody')?.textContent?.trim())el('oilPriceBody').textContent='—';
    }
  }
- window.__GOLD_OIL_BOARD_TEST__={isValidGold,isValidOil,fuelStatus,display};
+ window.__GOLD_OIL_BOARD_TEST__={isValidGold,isValidOil,fuelStatus,oilChangeSummary,display};
  function init(){if(!el('goldOilBoard'))return;void refresh();setInterval(refresh,300000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void refresh()})}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

@@ -4,7 +4,7 @@ import vm from 'node:vm';
 const index=fs.readFileSync('index.html','utf8');
 const src=fs.readFileSync('gold-oil-board.js','utf8');
 const ctx={window:{},document:{readyState:'loading',addEventListener(){}},Date,Intl,Number,Math,String,Array,Map,JSON};vm.createContext(ctx);vm.runInContext(src,ctx);
-const {isValidGold,isValidOil,fuelStatus}=ctx.window.__GOLD_OIL_BOARD_TEST__;
+const {isValidGold,isValidOil,fuelStatus,oilChangeSummary}=ctx.window.__GOLD_OIL_BOARD_TEST__;
 assert(isValidGold({bankBuy:3747,bankSell:3790,unit:'TWD/g',quoteAt:'2026-11-20T11:55:00+08:00',source:'BOT gold passbook'}));
 assert(!isValidGold({bankBuy:3800,bankSell:3747,unit:'TWD/g',quoteAt:'2026-11-20T11:55:00+08:00',source:'BOT gold passbook'}));
 const oil={source:'CPC official open data',unit:'TWD/L',effectiveFrom:'2026-11-16',prices:{"92":31.2,"95":32.7,"98":34.7,"diesel":29.9}};
@@ -15,6 +15,13 @@ assert(fuelStatus({...oil,effectiveFrom:'2026-11-23'},new Date('2026-11-20T00:00
 assert(index.indexOf('id="goldOilBoard"')>index.indexOf('id="botCashFxV096"'));
 assert(index.indexOf('id="goldOilBoard"')<index.indexOf('id="watch"'));
 assert(index.includes('gold-oil-board.js?v=1'));
+assert(index.includes('id="oilGasDelta"')&&index.includes('id="oilDieselDelta"'));
+assert.equal(oilChangeSummary({...oil,change:{"92":0.3,"95":0.3,"98":0.3,"diesel":-0.2}}).gas,'汽油 漲 0.3 元／公升');
+assert.equal(oilChangeSummary({...oil,change:{"92":0.3,"95":0.3,"98":0.3,"diesel":-0.2}}).diesel,'柴油 跌 0.2 元／公升');
+assert.equal(oilChangeSummary({...oil,change:{"92":0,"95":0,"98":0,"diesel":0}}).gas,'汽油 持平 0.0 元／公升');
+assert(oilChangeSummary(oil).gas.includes('尚無可核實'));
+assert(oilChangeSummary({...oil,change:{"92":0.1,"95":0.2,"98":0.1,"diesel":0}}).gas.includes('95 漲 0.2'));
+
 assert(index.includes('live-v091.js?v=09817-mis-first'));
 assert(!src.includes('MIS')&&!src.includes('TWSE')&&!src.includes('marketStatus')&&!src.includes('quoteCache'));
 console.log('GOLD_OIL_BOARD_ISOLATION_PASS');

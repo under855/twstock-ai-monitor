@@ -116,8 +116,24 @@ def test():
     except ValueError:pass
     print("GOLD_OIL_OFFICIAL_PARSER_SELFTEST_PASS")
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument("--self-test",action="store_true");args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument("--self-test",action="store_true");parser.add_argument("--diagnose",action="store_true");args=parser.parse_args()
     if args.self_test:test();return
+    if args.diagnose:
+        try:
+            source=get(BOT)
+            doc=Cells();doc.feed(source)
+            flat=" ".join(" ".join(doc.text).split())
+            print("BOT_MARKERS",[(word,flat[max(0,flat.find(word)-60):flat.find(word)+220]) for word in ("黃金存摺","牌價時間","報價時間","Quoted Time","Gold Passbook") if word in flat][:5])
+            print("BOT_ROWS",doc.rows[:9])
+        except Exception as e:print("BOT_DIAG_ERROR",str(e))
+        try:
+            data=json.loads(get(CPC))
+            if isinstance(data,dict):
+                print("CPC_WRAPPER_KEYS",list(data.keys())[:15])
+                data=next((value for value in data.values() if isinstance(value,list)),[])
+            print("CPC_SAMPLE",json.dumps(data[:3],ensure_ascii=False)[:1900])
+        except Exception as e:print("CPC_DIAG_ERROR",str(e))
+        return
     old=json.loads(DEST.read_text("utf-8")) if DEST.exists() else {"gold":None,"oil":None}
     new={"gold":old.get("gold"),"oil":old.get("oil")}
     failures=[]

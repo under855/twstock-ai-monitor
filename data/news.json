@@ -1,7 +1,13 @@
 {
-  "generatedAt": "2026-11-20T23:27:56.842784+00:00",
+  "generatedAt": "2026-11-21T00:17:29.996749+00:00",
   "stocks": {
     "0050": [
+      {
+        "title": "一周熱門零股／0050、高息 ETF 人氣夯 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1pQllFLXpGYTBIOXk0R3E1aUEwdzNicEtIS0F2aHRZRHh6cGtaNHRuOVRYbHR0cTg3d0IwUFBMV3dzdTJFbTROYmZiVTZLc0FrZWZfTE5yeEJud9IBX0FVX3lxTFBscWNYbm1DdGk2cGh0cUtENFdmLW90dm9BeVZ6RGUxeU9XTzA0TmUyWlVYT0VjeENWN3pUTzNzZUdwTWRPSFZRZjRvMmJqQzBBTy1ZeEpBWWhtWjBOcjZZ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1795190223000
+      },
       {
         "title": "台股慘跌有人怕、有人撿！散戶勇敢抄底台積電、0050 成交價曝光 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1keGU4ZmRZN3g3VXFUdWdMaUhFX0JnSjJxNUZ0S2JNWDR5RWVpSzRjcUg1aU02Ni1WV0pmS0FGdzVEVU1VejFKTmlBNjNWUXctSU5pUTNVc1luMmNiR0Fv0gFkQVVfeXFMT2VaSW9DWjJmY0dfTklGb3NkdXcxOVJzWnNjRW56UUJPQzZrSnlJOWdiWE1WNWhUMjVoNTJicjIyMEVOQzlqWENFR0FvUG5QZGU0TE42QVhsMmI1OExEOG54LWZqTg?oc=5",
@@ -129,12 +135,6 @@
         "time": 1793952000000
       },
       {
-        "title": "反映市場行情，中鋼12月月盤小幅調漲- 新聞 - MoneyDJ",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPRXlHS0N4STB6WV9Va085SWc5YUlaQ20xY0ZDRmpBTWRfeTlvcUFRVXRWeUc5QVFlMi12Rjk2Mm1rZnNXY25sbllZZmFsUTFmbEtmWDN6SDFOa1c1ZUxiZ2FDb3lQc0V2VTE0REJQeUFvRFIwdkV1VDR6M0tPb29hWkdwZzMtSEo2QmllY25QS1JmQQ?oc=5",
-        "publisher": "MoneyDJ",
-        "time": 1793865600000
-      },
-      {
         "title": "中鋼12月盤價小漲 穩定供應鏈購料成本擴大接單 - 鉅亨網",
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9GbXNtc1N2aXQ5MVU3TGl5amJKYUlQRDNzbkZOdDA3UWxfZ3huS3cwUUlsLW9qT2hXcXhpbmYxTmxEbnp5MjhGcGhwT3pYYVE?oc=5",
         "publisher": "鉅亨網",
@@ -150,6 +150,12 @@
         "title": "中鋼鋼板供不應求 今年訂單滿載、明年首季接單看旺 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1JR2FKYUdTUkpJb2N5VlZpajdlRDc3b1czYVc1dWxnNG04TDNXQ2Uwd0hYYTh0RUE5THRNVGFzQUhJSWJqbTBNTzVUNnZDZ1JhUVVsTDFfeFUxQdIBX0FVX3lxTE1TUWh1XzBaTG51ZlFleGdJU0hiS3N3X0hRTVZpUF9sbG1JbHJjNFNzYkQ2LTlYSDIwUndvQUtycWcyUFJQSzI0aG1BY2NpRTlZTWkyY3h3aUVnMjVUS1lR?oc=5",
         "publisher": "經濟日報",
+        "time": 1793779200000
+      },
+      {
+        "title": "中鋼12月盤價平盤機率高- 日報 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5RYW12OVc4aFVTb0xMN2x2NkJ4VnFKR04xQS1JeEFnSXlaaHJHWG92VXhqMHZGa25YMFBIRmxaMEV0MWdhTzB5RndJREJDZGdRVmhCOUZfVG9WbC0wQTFN?oc=5",
+        "publisher": "工商時報",
         "time": 1793779200000
       }
     ],
@@ -231,52 +237,52 @@
     ],
     "2330": [
       {
-        "title": "傳奇投資人家族大砍台積電持股94％ 科技股逃命波？ - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE03T0drZ2hibEdtREpXY05UWVlLYWtEajRLRWJibkVnc3l6NXppMXUtcEh5Tmlqa19VUEZ5NUY1clg0S0hyR3g1LVd6V0x3X2t4V2RHR2twNnB4cnBMM2Fv0gFkQVVfeXFMTlhZWnpRRE04d05sRkQxdjNmZ0w3Y0puUmdkTTk3MTd2SmRRWFY1Nlk3a0c5cEVlZEo4S1Z1YlZROE96M2FKQ0J4TDBnNGo5U2JER2xFV0huektScUVSUUc0SWhZYg?oc=5",
+        "title": "黃仁勳風暴》台積電先收訂金築防火牆！暫收客戶款3595億 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE00NHhONW1IS2JLSnNXV25pV21HekZUVUs1eUdfRTBzYUhGdFZ3bFVBaUtGTFBsX2taQzNjUzJpQlNERDlwUXhja1I5T0RrYVlrMTNrWjVzTW1GZUY4NDEw0gFkQVVfeXFMTXlKX1BmUlNYbC1iMEprelJnM2hwWkpKVEhKMS1hVk53dVBqQnVGN3RUM2Zlc0YwaWdMN3hmSUhFQ0N2aWlXcnlaRlNuU21kU2hsRl9POXJXaGw0T3Y4YXI3MkNfdA?oc=5",
         "publisher": "自由財經",
-        "time": 1794909923000
+        "time": 1795217700000
       },
       {
-        "title": "傳奇投資人Druckenmiller大砍台積電持股94%！增持SpaceX、Palantir、AppLovin - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE03TEpPUmRXWl9nUXhmUXU1NXNIV3BHQWhWMDVHUUtpaGxERGl1WXRyNjBSWklQQm9NS3VVZGpCWE1FX0k5RUpHM1BtMTRvU2c?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1794887452000
-      },
-      {
-        "title": "華爾街變心了？輝達失寵 3檔個股受惠、台積電入榜 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9CSERDNkhzQ21keGk2UG9STjhsZG1DU1FIdXF3ZWRic3haWTU2Q3NuOVJnYTJTUHRTdXAtc0hTOXNQbGUyMHNFVEFMeU9rS2lOdlNqWG1BRTU1Y1B5TDdB0gFkQVVfeXFMTmxnNUtSRDRDMjNETHQ0TjJHdnJqYXlGNTVLUk4wSDd0M3VSbWxfZzAwVDhtSUNNdXJCcElBQ0JSd2w5V0Q5THhDZFdTdGZHOFdJZzlheXR0SmR6QlR2cmhOSjNsUA?oc=5",
+        "title": "美BIS新規範 台積電：將會遵循 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9vMi10eDcxeS1FZ216TUZmLXVnaHBxZkh2R0VVTDJuYXJkYThsRGdmRm1veVppUjlWWmVQaDZrRkdDSzQ3RE5HWTJDSmpLTENhbjVYZTZR0gFbQVVfeXFMTTNGb3lKSXJiMXBBVVZqUldRc0xLMFJUc3YwSXcxWF8wcEZ4Y3Y3VmlzVDN0SzJ5QnZXc0tSMmRVMVpNU3M3LTVpMUxkUUNacmU3QzVWQllGLTRHZw?oc=5",
         "publisher": "自由財經",
-        "time": 1794563852000
+        "time": 1795210200000
       },
       {
-        "title": "台積電加入 AI 閉環投資 認購 Anthropic、OpenAI 股票 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE84TTdVWjNIbGNCYzJIT0NjV3RLdGZPN1Zqck5JNzZXTV9ZeVNGQ2VocXVtLVN4MmNfQWtYSW9mdTZQQkEwLVYwZGF5ZDBPVURhSFVtRjN1LWsyZ9IBX0FVX3lxTE9wdXFjeUI1SXp3NFFaa3Q0cmNac1VEdzR1QUU1T3NsZE9hQno0emtDR0xQVnBBLUFWazM0T1V4ekVmOEstRGtPNGhuN3FrTy1zbEhPQWR6UTFRbG1nLUVr?oc=5",
+        "title": "AI拋售未止血！費半、台積電ADR跌逾4％ 那斯達克今年漲幅縮至1％ - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBGVjBkVTlOTVJTd0RQc2lQRVZPa2tEZVZUVUJVZFhuNG16WU1MMVhBVzhrU3pLZWZ1bkdBR0V0bTYyRFA0YllfYXF6TEJzeGs4QWMwM0Q5dFA0TS1CS0hR0gFkQVVfeXFMTkpTaHB0T1pFdG9qLVJzRnpkRzdZTjFHcHpNY2FfdEVMSU5KTUhMUFJsQjBmNjI3OFFtYm9faWhRUHRvSE8tOURlNUxuRDBHNlZfRk4xSUFiX1Y4RjRLbFVLZUNZUg?oc=5",
+        "publisher": "自由財經",
+        "time": 1795188388000
+      },
+      {
+        "title": "台積電投資 Element Labs 斥資逾3.2億元 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBVSXExNG5qcGNrMHdhOXpGejh3Y3NoT2FYYlNCUWsxRmVCdWhLc0xaSG5NWHF5WDlsV0ZieUtDVU1waUJsWnc5eUZWbndFMzV6QWJ2NENjSzBDZ9IBX0FVX3lxTE11N0szc1lBeWswZTRBcEtQN3I4dHhXeW1lTnZJRDg2LWxubEt0ZnY2SmxTWWJ4ZkRIWTBMYzV0M2JZLVUxaXVCcFUzTlY3U1gtTG13S0lSQXJROTM0d25V?oc=5",
         "publisher": "經濟日報",
-        "time": 1794384000000
+        "time": 1795179126000
       },
       {
-        "title": "台積電抵得住AI市場恐慌 外媒直指股票首選 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5SLXFMbUd5NFNPdF9WS1hvTTJFdjlkNUlCRkZHLXFUQm1ZYUNXS2JMMVJ6bXo2YlZEa2g4aUJ4X09VYy1CZ0l2QktyYXgtOF83aHExS0hoZEwySmllczJv0gFkQVVfeXFMT05IbTVCM2FSU3hsb25Yd2o3Z28wSFJKTlpwUFdLT3lXOGV4MGlZNnRzdG45NW1JRDBleWZmR3dQSGtXcWpYVFJ0Szl4aEhmS3UyallCWnZrVnhBNmZhb0E5YmlfdA?oc=5",
-        "publisher": "自由財經",
-        "time": 1794297600000
-      },
-      {
-        "title": "台積電股價反彈2,200元關卡以上 市值回升至逾59兆 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFA4Q21Vejc0VjNUUE15QU5OTDdXTW5EbG0wM3UtWE15STk5WTdBdU9GazFUM3pmVkhpZUx6UXp5T0s1VFZpeU9LTGYxSFJqTnNzTUdGSmcwVzhpd9IBX0FVX3lxTE1fenhmUzZVQkFGRjFWbkRtR01jWFgtbXJ6MGZMaUc3cjI5R0VWdVdMenhiZ0x4QjZiRmFPVUVMbHg4bDhXSVpFSlotc1BkWFdrUjJXWVAzaUV6Y1hqUXlB?oc=5",
+        "title": "台積電為何壓線入股OpenAI、Anthropic？兩大盤算曝光 還想找下一個輝達 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBMUkFsdzhFOFExOVp1WVBxTDJCLUNQWmxnbEdlUEdoNDRuZEVwUkFqM2hWNmVnNHZ3TzlkWC1xSU1GVVhCTDhaajc5aFplN1Z0blpkS3hvN2E0d9IBX0FVX3lxTFBwblRUdjRBcXRNa3dQdXl1cncybVpJQzR2WnJuVXoyT2czR0FCdWJ3UHhtY2dldUxiNWJNZzBLdHJYWXpYVEIyLUZLazVqR1BzTUpCdGRYdTdkYldYelhn?oc=5",
         "publisher": "經濟日報",
-        "time": 1794211200000
+        "time": 1795177978000
       },
       {
-        "title": "看好台積電還會漲！外媒最新預測出爐 輝達、博通都靠它 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1GME1maWk3aXFwZ2VJOVhTLTBBRHNtSlJ2WkpnUi05aUtXWXkxQk5BWXlIVHptaFpOZTVMRlVHZDUtQXFRa1lYTHVzakp4X05qc1RqSllsRDhac3U5dWpB0gFkQVVfeXFMTkZNSzhhbEJUdWFfdS1NZWw1b2hiTnpNbU8zNkgwd014ZUpqMVpxcGY3Q0pwVlhiOHFWNlJqYmVoQTZxcGg5dHBtMVZwbHNNekhYVzRKV1UxOXY0ZXEyYnpnaHV6ZQ?oc=5",
+        "title": "台股慘跌有人怕、有人撿！散戶勇敢抄底台積電、0050 成交價曝光 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1keGU4ZmRZN3g3VXFUdWdMaUhFX0JnSjJxNUZ0S2JNWDR5RWVpSzRjcUg1aU02Ni1WV0pmS0FGdzVEVU1VejFKTmlBNjNWUXctSU5pUTNVc1luMmNiR0Fv0gFkQVVfeXFMT2VaSW9DWjJmY0dfTklGb3NkdXcxOVJzWnNjRW56UUJPQzZrSnlJOWdiWE1WNWhUMjVoNTJicjIyMEVOQzlqWENFR0FvUG5QZGU0TE42QVhsMmI1OExEOG54LWZqTg?oc=5",
         "publisher": "自由財經",
-        "time": 1794038400000
+        "time": 1795174642000
       },
       {
-        "title": "台股史上最大崩跌！台積電一度跌停 卓揆喊話金管會因應 國安基金也待命 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5MalRzMWtTUGlnUkgtelJoUmF1dE1nUXNoVkRCTi16NkNFQWtiQTNfUXJrem41Q3R0d0lnZDQyNWd3b3BRWGVVU1Z6RnNCczg?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1793952000000
+        "title": "台積電再投入3.2億元 投資以色列AI晶片新創Element Labs - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5GWXlLMm52WTM4bnhmWThTX2VMOHRodjBQWE11NThPXzNHN2oyUldOd2NMcWNGanJpcVVOUFFDcjB4UU5KMU5vR21BUTJ5YVhwNU13cWROUW1YRTZMdVdV0gFkQVVfeXFMT0dLN0xFYnFCM1BlMWNwQ2tUU0p0cGROS1YwTjN4c3RiVVhnSW01OVVobm9nX1JSUUVoQk1vVUxqTnNQMlJsSEdtc2xaZ25rVzI4dG5relVucTUyMy1sZFViQzF5MA?oc=5",
+        "publisher": "自由財經",
+        "time": 1795169225000
+      },
+      {
+        "title": "輸出中國16奈米以下晶片傳全面喊停 台積電：遵循適用法令 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5abzU2NGZRbWdueWpCV2RrUktnMFhBUGpYWkZBU0JFQW9oa29QV3VCVWx5NV9SempxWjRiRXcxYVdPeXpLbXdMLXRTNGdGalgzaWpSVmxQSGRNaWFGZ1pJ0gFkQVVfeXFMTU5NXzUwVFdTTnVWWGV6V2M3NkxIdVBhUnkzMmxMRmRhRmIyX0pOSTlLRVEtaFJjUWVSYXJGcm4wb0RqaXVUNUt0ZHhteFFEMUVXOXhNQmJONWNrVV9obmZIenVLYw?oc=5",
+        "publisher": "自由財經",
+        "time": 1795157034000
       }
     ]
   },

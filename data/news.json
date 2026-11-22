@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T11:17:10.223202+00:00",
+  "generatedAt": "2026-11-22T12:08:34.739671+00:00",
   "stocks": {
     "0050": [
       {
@@ -19,6 +19,12 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE43SlgtbzdRR1hFMFZ0MktrYURPYnUtbUxnRUtBQ2lxWkVBODFRR1FTdWxzTnN3N1JOWVhGb2w1Y3NTbXNnQzNDNDNfa3d5dlRITXRuRGRnNHQyeE5kOHNZ0gFkQVVfeXFMT0psQmk1enVUNnZoR2l3VHY5MVJoZkNVeUhDRmFUcU9ZdDJFSVRKQ0lranpfOWRTa3VqQ2lZMU94aVdLTGlTcE5HVUg1WC05eDgzUmk5R1owdWZ5MXdzNkV6OVJ6ZQ?oc=5",
         "publisher": "自由財經",
         "time": 1795242485000
+      },
+      {
+        "title": "一周熱門零股／0050、高息 ETF 人氣夯 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1pQllFLXpGYTBIOXk0R3E1aUEwdzNicEtIS0F2aHRZRHh6cGtaNHRuOVRYbHR0cTg3d0IwUFBMV3dzdTJFbTROYmZiVTZLc0FrZWZfTE5yeEJud9IBX0FVX3lxTFBscWNYbm1DdGk2cGh0cUtENFdmLW90dm9BeVZ6RGUxeU9XTzA0TmUyWlVYT0VjeENWN3pUTzNzZUdwTWRPSFZRZjRvMmJqQzBBTy1ZeEpBWWhtWjBOcjZZ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1795190223000
       },
       {
         "title": "台股慘跌有人怕、有人撿！散戶勇敢抄底台積電、0050 成交價曝光 - 自由財經",
@@ -57,12 +63,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBZQUVVT1R1U0Y2X2dRVkpWLUpfLWY1Yzh6d19xeGtLQThaV2JpZ0pmN0NYbEM0VUtWSmM2eUJfaUl1a2QwcGlNOG53elJCdU5KalBfNDZaVVRJZW1jc2FV0gFkQVVfeXFMTktObENwVVJJdVdPNXItSEItbmo1Zy1CdjN1TU9CVnljN1Q0eXVFXzdtc3QxQkR3WmNfWi0yN0I2dWVVWTFiOW5ZM2hodTE4YkJ4dF9qaFIycmhldE55Ylh1Tk5NYQ?oc=5",
         "publisher": "自由財經",
         "time": 1793257200000
-      },
-      {
-        "title": "日月光投控第四度上修今年資本支出 明年先進封測營收目標倍增 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE4tNXg5N3piWnF6Q0NJaW5zUFhBSTdnWWtRZmNWTGNQWVQteThaQ3BCWnVCZndZa05lVHdSdHE2cFYxQmRDNjh4cFAyR1U2cEp1RE1udVRibmM2U0piSmVn0gFkQVVfeXFMT2xrd1F3XzlKYkt4NnFmYm9QZ1EtbFVEcEsyZEdOSkFUb3Q2MDBxY2V5T2lLY2lRZVg0YXZKOVJJZ3pxMHNGaVJBaW05MXpIVU1EVk9zOWFSaGJvRHJTcXFESWZzYg?oc=5",
-        "publisher": "自由財經",
-        "time": 1793257200000
       }
     ],
     "3293": [
@@ -85,6 +85,12 @@
         "time": 1794722718000
       },
       {
+        "title": "鈊象財報／前三季 EPS 賺35.24元 擴大美國市場布局 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE5VcEZfQTdkMFVZUUR0TmN1d1h1dm01NU5sR1g4bnZPMmlXMDZENTlwRlc3dUdXclNtd2xpVmhCMjlmS0Vjb0RKVVZPV2ZCLVI4ZkhNWXl2bjVzWHNJZWhnWNIBYEFVX3lxTE5VcEZfQTdkMFVZUUR0TmN1d1h1dm01NU5sR1g4bnZPMmlXMDZENTlwRlc3dUdXclNtd2xpVmhCMjlmS0Vjb0RKVVZPV2ZCLVI4ZkhNWXl2bjVzWHNJZWhnWA?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794240149000
+      },
+      {
         "title": "眾達、鈊象營運動能強- 日報 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE40NHFpNmhMeDZrSnFOSDV1UTVaeUZ6bEZJX0hRcEVSa24ydDJHczQ2bGtMT1dCNUZWY0laN0FfVTVkRFpKYW1DQVlGUV9NTmlZTU55VHV5VkJFR0JGOUJZ?oc=5",
         "publisher": "工商時報",
@@ -99,52 +105,52 @@
     ],
     "2002": [
       {
-        "title": "董事長的一句話／全球經濟靠AI單腳站立？中鋼黃建智示警：沒有AI支撐會是大代誌| 專題報導| 專題 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBTWHRWSm1QaUNlYi1NOGZCNlF4Q3RHd203MHFqUVFCT3pUYkEzb0JLeW9pTzl1dXMySXZpdkdNcWs1TWxZeklZcG9oRnRZdU5fd1lJQ0d5ZmpVWTF1?oc=5",
+        "title": "面對歐課鋼材反傾銷稅 中鋼：推多元去化策略 降低衝擊 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE13Y1FtMWJEN0gzd3FtNy12ODRQaWQzck93LXpGXzJiRm40U0s2S21rWl9SaEY0WjNIVURjM3RGWXVKZHpFTEZsaHJia3Q2ZWNrQWdoVmpWZDJrZjDSAWBBVV95cUxNb3lUbDVLdEhoekJsX29uTHBfUjcycFRmMlFib3dMaUw0RUFzZXo3d0J4a0RyaTIxVF82ZHQ2MnlPdC1zS3FMNnBZZGVsaHdIUDFaOF9WMThPZnJLazM2MWo?oc=5",
         "publisher": "經濟日報",
-        "time": 1795309242000
+        "time": 1795248000000
+      },
+      {
+        "title": "中鋼四小金雞Q4營運拚穩健成長- 日報 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5EMnFhemVsdWMzc3VYdUpOUjhkQTA0S2w4LUVjLXplWmpOcjl3ZnpaQ3FLUFpDVmtuYzNmamdfUmNLbm14VGdTVGhVVWpJN1hLUWpzSVIxTkxDLW9JN2hJ?oc=5",
+        "publisher": "工商時報",
+        "time": 1795114800000
+      },
+      {
+        "title": "中鋼與鋼線鋼纜聯誼會：漲價有利接單 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5yWkd1Uk5PU2RBclU2RjFvU1FYc1dBQW5faFVUTFRaWWx4enZVQUs2eG94QVVqYV90ZnNIUFFhblk0TmxIZzF0cEU3ZG1XeHpnTWNEcWMtTi1RZ9IBX0FVX3lxTFBhNkJQTExSb3NhM2lXVnJoWDRLRHQ5bEpTRVIzanJMUlBiTGVnb3JmODFqMEJXem95a3JSQmxzZWVKRG5TNlRaYU5vc1VFb2NfSjlLWXhscUt4b1Bpc0E0?oc=5",
+        "publisher": "經濟日報",
+        "time": 1795082211000
+      },
+      {
+        "title": "中鋼與鋼板業聯誼會 表明全力支持公共工程與科技廠房興建拚經濟 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1OVFBXRHVwWjBEWm1KYUFrcmtiazh2TWM0NUlvcWpfdDJxR3NmOFhtOXFXZF9GZ1BvUWFrMW4yWnViNmlmT0Z5d2pDLWpaU2Z5a3UzN2lOSE10UdIBX0FVX3lxTE1iLVNORjRXV0JUWlBDQ0JMRWxtdUlXd3hQa0drVFhCR2dJTGU4SFFGRXBzTTlxMFRaNk9ja1lyekJTZlJzN3hIQmx5NkpFMGpaVjJmNGE0RVdqa2RsdWNV?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794995111000
+      },
+      {
+        "title": "銷歐鋼品面臨20.7％關稅 中鋼：稅率拍板後客戶下單積極 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE8ySGVJNm1UVGpaU1B0TjIxdzYxMmhlcmQzZDUtcTg5eEpYc3lvSGduUDJZQnM4YXFsMGxhNlNjbUpOQnZMU0hOYy1IYUhSQTdzaHpmYVVJREZIV2g4aC1z0gFkQVVfeXFMTVpMWG9aYmJQYUR6eEkyRmRKOGo0bk0xeUZZT0huUmdmSm1RMk1uWmJpOFpYWGhZWHFXYXJKekhRZXVyT3ZtRkd2V18tLWdFdFlvaHZLakpWZHhmb0Jra3dYdWp2cg?oc=5",
+        "publisher": "自由財經",
+        "time": 1794991193000
+      },
+      {
+        "title": "歐盟課冷軋鋼反傾銷稅中鋼：客戶下單轉積極| 產經 - 中央社 CNA",
+        "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE4yX0M2aXRwa1dQTy1XMEFCR0RLNUUyVjhpNk9pMVlDZTh6QnlBVDFXMjZsQUtGSUNnRUh5Umo2YkxnNWJIMTZoU1dPaWhlRDNYLXBWMGpXRXBwNXczTGc?oc=5",
+        "publisher": "中央社 CNA",
+        "time": 1794989100000
+      },
+      {
+        "title": "稅率最高27% 歐課鋼材反傾銷稅 中鋼、中鴻承壓 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE44a2ZmZDFoZ0tlSjcxY3otSk9hMmV2TS1KNExTd3RfTC1idDlObFdNdkxnQjNmOTVyZDNHS3JNemFrR0p0RjdvR0hxTnI1YVZ1QWRVWkpyaEdWeTDSAWBBVV95cUxOcl91TWxoMjJodUhtTjlqb1ZxQVdBTDViRnJxSGtxSE5fSEhtX0gyYkFoN195NjdVTTFIRzdBSzlQbDZHcHRZTE92cWJ6aGtOQlVEcGkyWExnVzgwQk5nSlc?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794939806000
       },
       {
         "title": "Q3獲利「翻升股」 法人加碼16檔台塑、中鋼吸金前2位 Q4續飄香- 日報 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE10T2d6Q0Y2V3RRWDc5NVBzZG1JY2JLc3VkYzZ6QktEUGZwR1JPZTl3TWxBZHEzX3ZPWG9RNjFpOGU2UFIxWEc0eGtmSWhfUERub0VJLUJmWjZIdzFuZkow?oc=5",
         "publisher": "工商時報",
         "time": 1794855600000
-      },
-      {
-        "title": "中鋼投資10多億布局低碳發電預計2年後完工| 地方 - 中央社 CNA",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1tNkRRbW9BMWJsUWI1TDJOS2lNdXExbnhhWFdMSnYtTkluRnYtdG5uSFF0MF9TNHBCS0J6dDVwTUxFYURqTEtiNUV6eXNpZFQ2U1BUWG1iMjZFN284dXhj?oc=5",
-        "publisher": "中央社 CNA",
-        "time": 1794038400000
-      },
-      {
-        "title": "中鋼Q3每股賺0.07元 投資10.79億元布局SOFC因應製程電氣化 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5zQkJrd1Z0eEJwLTI4MElkYldqTFU3N0x5Wk1DRDZsTkhTNUpHeFl3OUhXbUU1YUw5NXhfZUVpOFRHWG5kWjY3MjVwQ29aOUU?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1793952000000
-      },
-      {
-        "title": "中鋼財報／第3季獲利11.21億元、EPS 0.07元 連續兩季賺錢 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1FdEN1ekw4WG8yZmZVOUpYTy05XzVUZUFxb01JU050MXdpdElqUTJJRU91S3VNMHEzUlNPNlZ6eHZjc1dUdzZyZkdqeTY4SXA1WU5nU01NZFVCQdIBX0FVX3lxTE40YUt1cXNHaG9Ua1pKRVZCX045Z2xBT3psUGZyUm1OXzg1U25fdnpHZnVvNkxCZDFNWlB3MS1GSGZsbjhycnRzLWdCdEVSNTZNbndNeU9lWm05blV4VXBV?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793952000000
-      },
-      {
-        "title": "中鋼12月盤價小漲 穩定供應鏈購料成本擴大接單 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9GbXNtc1N2aXQ5MVU3TGl5amJKYUlQRDNzbkZOdDA3UWxfZ3huS3cwUUlsLW9qT2hXcXhpbmYxTmxEbnp5MjhGcGhwT3pYYVE?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1793865600000
-      },
-      {
-        "title": "外銷接單升溫、新台幣走貶 中鋼12月盤價全面小漲300元 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9ycFpNaVMzUWVpWmtHSmFQNVNqRGgxWG1iYjFkSEtPMGdBbjYzUjRPQ3dxUXVYNlRfdUhPN3NBVGNfaU92WEVRa3hLOXBPT1V1XzdUNEVlLU9xZ3JrbzhN0gFkQVVfeXFMTWQ5T2k2NFYxV2Z3SVhlU1FfNnp2V05WeVRYeEdta2toR2tXanJGcmdmUnFHNldqenUwY25SNWllZ1pNYy1jT2t3NGlqa3I2cUFBRXpzdDhOS0xJZUtmQllaTFVITQ?oc=5",
-        "publisher": "自由財經",
-        "time": 1793865600000
-      },
-      {
-        "title": "中鋼12月盤價平盤機率高- 日報 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5RYW12OVc4aFVTb0xMN2x2NkJ4VnFKR04xQS1JeEFnSXlaaHJHWG92VXhqMHZGa25YMFBIRmxaMEV0MWdhTzB5RndJREJDZGdRVmhCOUZfVG9WbC0wQTFN?oc=5",
-        "publisher": "工商時報",
-        "time": 1793779200000
       }
     ],
     "00878": [
@@ -181,14 +187,14 @@
     ],
     "00919": [
       {
-        "title": "領錢了！台股本周21檔 ETF 發放股利共421億、00919配發207.8億最多 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE8xOThxSWptVnBuU2FWYkp0djR0bW5nV2hTc3YwdDBITnBvc1ZMSjhSQ0l4VU4xSFRJUmFjNEF0dkJVaTJ2VmlaczhvdGVnaE5zUnhWVjNjRTVIQdIBX0FVX3lxTE1Xc0k5MVNTWVloYi1rTmIzUGI0Vmh6NzRvWF9fZ3lWMnU3VTdQOEppcXVOV2VzTmp2VjlxV1RXS1pXcWtWVHJrTjVTQ3dXdjhYLVc3NVduejNUSXVfcVA0?oc=5",
+        "title": "整理包／瑤池金母發錢了！00918、00919 創新高 00981A、00929 等 ETF 9 月配息、最後買進日一次看 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1qNmhXc251NnZ2TzdEblhkN2F2R2tiaGo0dC1uSkVNRVotRkdCV3ctZGxIeWFtalBTeXVVMjA2NlNxajdKMDFKOWVnR2p5a21Vc1VIaGtSUXhuYkxa?oc=5",
         "publisher": "經濟日報",
         "time": 1795161600000
       },
       {
-        "title": "整理包／瑤池金母發錢了！00918、00919 創新高 00981A、00929 等 ETF 9 月配息、最後買進日一次看 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1qNmhXc251NnZ2TzdEblhkN2F2R2tiaGo0dC1uSkVNRVotRkdCV3ctZGxIeWFtalBTeXVVMjA2NlNxajdKMDFKOWVnR2p5a21Vc1VIaGtSUXhuYkxa?oc=5",
+        "title": "領錢了！台股本周21檔 ETF 發放股利共421億、00919配發207.8億最多 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE8xOThxSWptVnBuU2FWYkp0djR0bW5nV2hTc3YwdDBITnBvc1ZMSjhSQ0l4VU4xSFRJUmFjNEF0dkJVaTJ2VmlaczhvdGVnaE5zUnhWVjNjRTVIQdIBX0FVX3lxTE1Xc0k5MVNTWVloYi1rTmIzUGI0Vmh6NzRvWF9fZ3lWMnU3VTdQOEppcXVOV2VzTmp2VjlxV1RXS1pXcWtWVHJrTjVTQ3dXdjhYLVc3NVduejNUSXVfcVA0?oc=5",
         "publisher": "經濟日報",
         "time": 1795161600000
       },
@@ -219,6 +225,18 @@
     ],
     "2330": [
       {
+        "title": "台積電地板價已到！杜金龍曝登上三千元條件喊年底作帳行情這集團有看點- 證券 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBUNW1NeHJDd2FPYllzLS03VE9qS09CbW1xcDVBX3NkRnRCQm9jWTFjbmdaVE5BcGx2bzFrM2g2QnpROEdnbzR0MUZDWnRadVl6TUZReTZweHEzbURSWFlR?oc=5",
+        "publisher": "工商時報",
+        "time": 1795326360000
+      },
+      {
+        "title": "股災還沒完？費半重挫千點、台積電ADR跌近一成分析師揭周一台股關鍵轉折- 證券 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE54TERLWmtjTmVScHFMSlVaR0VSTEZFY3VWRUR5R3dfNndQYk9UcHVKdExKUG1iX1RoZXNUU2NFdWoySFRiTkFZczF1TlE3N25qZXNOYUJJVGNVNkduZWlj?oc=5",
+        "publisher": "工商時報",
+        "time": 1795317480000
+      },
+      {
         "title": "台積電周線重挫15.8%！台股創36年最慘單周紀錄、美收緊AI晶片出口管制添壓 - 鉅亨網",
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1CdGhhMmtpREk3aDJGQ25PVklyeDNyajBISkVQODBob3FnWFhXclVva0dackJaWE5xY2psdmpDOEJTNS1oN01mdXZySm1NOTA?oc=5",
         "publisher": "鉅亨網",
@@ -231,40 +249,28 @@
         "time": 1795244711000
       },
       {
+        "title": "本周美台韓日災情一覽 台積電 ADR 跌到溢價剩5% - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFB6TVBWX3k5dGhENTJiTnpqZUxyUFVrZS1wSmlpYnF3NjBBaGJ5TVc0NXp1Y0d4SFBSQk1JS0xlY1VMczE1VDZDYk14Wk9VaTl4U3J4aUJ2S2p2TlZO0gFiQVVfeXFMT0ZjMmRybmw4OFFXNkVEX2dyYVczRkl4YkxWOWtJaVE2WjNicUZPLTBkTjVsc2NWdmhYT210VU15cVFvTW0wdkFyd0hJRTA5UEdXdUZQTzNtSDBWMVJFSFFrRUE?oc=5",
+        "publisher": "經濟日報",
+        "time": 1795236058000
+      },
+      {
+        "title": "股民注意！台積電、聯發科被盯上 證交所公告39檔注意股一次看 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1tN1JlTDE5dUdSWUpQWFI1TnRhM1J1Rk0ydlVjNC1sNzZXbUtEdW5GZ3B1ZDNFRU91bS1XWWpCT3lvYmJGUmVPU3RhN0JYaW11VWpwaW9hQ3JRUVA5MTNR0gFkQVVfeXFMT2dOSGNQeGVyZThJOHg0S3RkQjJnd3hEZ05ZRHZ1NjBtOWRHQ0VTdmp5OFJib3RVa2FkUFlpaUwyMkdMZjFjTk54RWV3S2VvQnJMN2JFWkJEWjRvTlI5Q3VTcVk5VA?oc=5",
+        "publisher": "自由財經",
+        "time": 1795225991000
+      },
+      {
         "title": "台積電跌到2千能買？杜金龍曝「合理價」 再點名1檔記憶體、1檔CCL遭錯殺- 證券 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9WVlR5LU5PVnBYcXJDQ0RhQVhnV3lWdFQyNXlMWk95SFQxdDFtS0xDSUQ1eVhGZTlSQVlQMEJaTmxSRDEtTG5GU1VjUTg2V0hDOFZDNmJDcm96ZTY5aWNB?oc=5",
         "publisher": "工商時報",
         "time": 1795223580000
       },
       {
-        "title": "黃仁勳風暴》台積電先收訂金築防火牆！暫收客戶款3595億 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE00NHhONW1IS2JLSnNXV25pV21HekZUVUs1eUdfRTBzYUhGdFZ3bFVBaUtGTFBsX2taQzNjUzJpQlNERDlwUXhja1I5T0RrYVlrMTNrWjVzTW1GZUY4NDEw0gFkQVVfeXFMTXlKX1BmUlNYbC1iMEprelJnM2hwWkpKVEhKMS1hVk53dVBqQnVGN3RUM2Zlc0YwaWdMN3hmSUhFQ0N2aWlXcnlaRlNuU21kU2hsRl9POXJXaGw0T3Y4YXI3MkNfdA?oc=5",
-        "publisher": "自由財經",
-        "time": 1795217700000
-      },
-      {
-        "title": "台股殺到3萬6 台積電跌出「甜甜價」？張錫看明年首季攻5萬點揭2大底氣- 日報 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9SRUo5X1hLSHB6VjJuMXQxZHB5MW53b2drWVNoQlF3RktxdVBoX3NtUDBtUzJGelhyUFBOUmhzZElhSnlNTC1GZ0xYVUVSaGFFSEltZlpNMlJydDcwb1hR?oc=5",
+        "title": "為什麼是亞利桑那？拆解台積電千億美元投資背後的四道護城河- 書房 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9FMk5tLVAwN1NkMmRtNHZkYlNQTWVkN0gxM2JhWHJZSk44cGJpNTNpcGFhOXpSNm9tQjU4a01SMFNjMk81dGI0ampXbTZuMllzV2ZHc2pPSHJaM0ZrRjdz?oc=5",
         "publisher": "工商時報",
-        "time": 1795201200000
-      },
-      {
-        "title": "AI拋售未止血！費半、台積電ADR跌逾4％ 那斯達克今年漲幅縮至1％ - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBGVjBkVTlOTVJTd0RQc2lQRVZPa2tEZVZUVUJVZFhuNG16WU1MMVhBVzhrU3pLZWZ1bkdBR0V0bTYyRFA0YllfYXF6TEJzeGs4QWMwM0Q5dFA0TS1CS0hR0gFkQVVfeXFMTkpTaHB0T1pFdG9qLVJzRnpkRzdZTjFHcHpNY2FfdEVMSU5KTUhMUFJsQjBmNjI3OFFtYm9faWhRUHRvSE8tOURlNUxuRDBHNlZfRk4xSUFiX1Y4RjRLbFVLZUNZUg?oc=5",
-        "publisher": "自由財經",
-        "time": 1795188388000
-      },
-      {
-        "title": "台股慘跌有人怕、有人撿！散戶勇敢抄底台積電、0050 成交價曝光 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1keGU4ZmRZN3g3VXFUdWdMaUhFX0JnSjJxNUZ0S2JNWDR5RWVpSzRjcUg1aU02Ni1WV0pmS0FGdzVEVU1VejFKTmlBNjNWUXctSU5pUTNVc1luMmNiR0Fv0gFkQVVfeXFMT2VaSW9DWjJmY0dfTklGb3NkdXcxOVJzWnNjRW56UUJPQzZrSnlJOWdiWE1WNWhUMjVoNTJicjIyMEVOQzlqWENFR0FvUG5QZGU0TE42QVhsMmI1OExEOG54LWZqTg?oc=5",
-        "publisher": "自由財經",
-        "time": 1795174642000
-      },
-      {
-        "title": "輸出中國16奈米以下晶片傳全面喊停 台積電：遵循適用法令 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5abzU2NGZRbWdueWpCV2RrUktnMFhBUGpYWkZBU0JFQW9oa29QV3VCVWx5NV9SempxWjRiRXcxYVdPeXpLbXdMLXRTNGdGalgzaWpSVmxQSGRNaWFGZ1pJ0gFkQVVfeXFMTU5NXzUwVFdTTnVWWGV6V2M3NkxIdVBhUnkzMmxMRmRhRmIyX0pOSTlLRVEtaFJjUWVSYXJGcm4wb0RqaXVUNUt0ZHhteFFEMUVXOXhNQmJONWNrVV9obmZIenVLYw?oc=5",
-        "publisher": "自由財經",
-        "time": 1795157034000
+        "time": 1795220520000
       }
     ]
   },

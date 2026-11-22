@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-21T23:47:36.239267+00:00",
+  "generatedAt": "2026-11-22T00:41:33.444705+00:00",
   "stocks": {
     "0050": [
       {
@@ -113,6 +113,12 @@
         "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE41RTV3Vk9SYmJ6SFZJRGNHcHNhMGdWUWdlUkxlN01oeTRxZk1CdUFmQVg0WUV5N0ZzRUlaaFlPVk1GSTZwUHh3WmdGc01LTGVoVnZxeUJ5S0MtR0XSAWBBVV95cUxQVkgyRG80eTM2ZWVTeWZEZ3VzV294SFZHQU9aelBxTG1jVlM3bF9PMzd4TXEzZXVMU3gtT3JFN3N0X1doanNVWWpuSEtqTGZCQ1BhVEc0a0JfRmp6Q3h6WDg?oc=5",
         "publisher": "經濟日報",
         "time": 1792998000000
+      },
+      {
+        "title": "灰熊狙擊遊戲股王鈊象 內資送暖喊目標價上看千元 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBqdGRjeFlJVXZtOEFnQmluNnpKUktWeDRhV1F2eC1EVy1VNmhaZVNkSTFBdFhRbDJRaWY5Qk5HZnp2eTdsY2U4NWZhVnU2S3IzUWJYRVV2X0dla2xaWUNB0gFkQVVfeXFMUHVPekhFMzlpQXVWWlpQUmxpTXh6d3dVWFNPSkR1d09zdHByR0kwczdhVk9qb2FZbVpmMnl1cEp2ZTNfWUtQNHhqOGxpTTNOVXd6SmtzZThTVGJmNGkzZlQ2VEd2RA?oc=5",
+        "publisher": "自由財經",
+        "time": 1792911600000
       }
     ],
     "2002": [
@@ -177,6 +183,12 @@
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFAteVN3eXhxdjRnSnhLX2w1THBUWFAwbVZnbUxodmROTl9GMTFuMDZjUEU5M0VCVzJya251S0ZmTENVcXBYeUstSUJiR29xclE?oc=5",
         "publisher": "鉅亨網",
         "time": 1793692800000
+      },
+      {
+        "title": "171萬股民嗨翻！00878季配1.25元創新高 年化配息率逾14% - 鉅亨網",
+        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFA2VnAwc2ExbEFXRUNnWDktNnhGN0pBUTdHOXA3SWVPQzU1Q2JjdFU4TzduOEtFNDZheDBaZUJiTGVjUmlLRWJVSzFtYXZoXzQ?oc=5",
+        "publisher": "鉅亨網",
+        "time": 1793606400000
       },
       {
         "title": "0050輸給00878、0056 該跳車了？阮慕驊比較45檔ETF 揭高股息績效落差- 理財 - 工商時報",
@@ -261,12 +273,6 @@
         "time": 1795236058000
       },
       {
-        "title": "股民注意！台積電、聯發科被盯上 證交所公告39檔注意股一次看 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1tN1JlTDE5dUdSWUpQWFI1TnRhM1J1Rk0ydlVjNC1sNzZXbUtEdW5GZ3B1ZDNFRU91bS1XWWpCT3lvYmJGUmVPU3RhN0JYaW11VWpwaW9hQ3JRUVA5MTNR0gFkQVVfeXFMT2dOSGNQeGVyZThJOHg0S3RkQjJnd3hEZ05ZRHZ1NjBtOWRHQ0VTdmp5OFJib3RVa2FkUFlpaUwyMkdMZjFjTk54RWV3S2VvQnJMN2JFWkJEWjRvTlI5Q3VTcVk5VA?oc=5",
-        "publisher": "自由財經",
-        "time": 1795225991000
-      },
-      {
         "title": "台積電跌到2千能買？杜金龍曝「合理價」 再點名1檔記憶體、1檔CCL遭錯殺- 證券 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9WVlR5LU5PVnBYcXJDQ0RhQVhnV3lWdFQyNXlMWk95SFQxdDFtS0xDSUQ1eVhGZTlSQVlQMEJaTmxSRDEtTG5GU1VjUTg2V0hDOFZDNmJDcm96ZTY5aWNB?oc=5",
         "publisher": "工商時報",
@@ -289,6 +295,12 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBGVjBkVTlOTVJTd0RQc2lQRVZPa2tEZVZUVUJVZFhuNG16WU1MMVhBVzhrU3pLZWZ1bkdBR0V0bTYyRFA0YllfYXF6TEJzeGs4QWMwM0Q5dFA0TS1CS0hR0gFkQVVfeXFMTkpTaHB0T1pFdG9qLVJzRnpkRzdZTjFHcHpNY2FfdEVMSU5KTUhMUFJsQjBmNjI3OFFtYm9faWhRUHRvSE8tOURlNUxuRDBHNlZfRk4xSUFiX1Y4RjRLbFVLZUNZUg?oc=5",
         "publisher": "自由財經",
         "time": 1795188388000
+      },
+      {
+        "title": "台積電為何壓線入股OpenAI、Anthropic？兩大盤算曝光 還想找下一個輝達 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBMUkFsdzhFOFExOVp1WVBxTDJCLUNQWmxnbEdlUEdoNDRuZEVwUkFqM2hWNmVnNHZ3TzlkWC1xSU1GVVhCTDhaajc5aFplN1Z0blpkS3hvN2E0d9IBX0FVX3lxTFBwblRUdjRBcXRNa3dQdXl1cncybVpJQzR2WnJuVXoyT2czR0FCdWJ3UHhtY2dldUxiNWJNZzBLdHJYWXpYVEIyLUZLazVqR1BzTUpCdGRYdTdkYldYelhn?oc=5",
+        "publisher": "經濟日報",
+        "time": 1795177978000
       }
     ]
   },

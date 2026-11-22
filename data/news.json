@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T16:26:52.896367+00:00",
+  "generatedAt": "2026-11-22T17:14:09.264769+00:00",
   "stocks": {
     "0050": [
       {
@@ -13,12 +13,6 @@
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE05cG5DRldBdVFRVXFHS3llSkIzLXA4dDU2ZWRheWNoZkE1UlJRNk1MMGxGNDFSMXNlNFFpX1RscFNzdDQtSXpqaUlHZ3ZOa091VVhuMFRVTl9UZ9IBX0FVX3lxTFB4NkVXRFptMGpMOElHSEVyeURUQ3U3b1YwM2puUTNKdTN5N2twM1NnRmpKdk9Ka2o0S0tVT01XOWg5bjFGZlRWUzR5S3NhSU00eVh2VGNCRlhQbzktc2Uw?oc=5",
         "publisher": "經濟日報",
         "time": 1795275391000
-      },
-      {
-        "title": "台股慘跌有人怕、有人撿！散戶勇敢抄底台積電、0050 成交價曝光 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1keGU4ZmRZN3g3VXFUdWdMaUhFX0JnSjJxNUZ0S2JNWDR5RWVpSzRjcUg1aU02Ni1WV0pmS0FGdzVEVU1VejFKTmlBNjNWUXctSU5pUTNVc1luMmNiR0Fv0gFkQVVfeXFMT2VaSW9DWjJmY0dfTklGb3NkdXcxOVJzWnNjRW56UUJPQzZrSnlJOWdiWE1WNWhUMjVoNTJicjIyMEVOQzlqWENFR0FvUG5QZGU0TE42QVhsMmI1OExEOG54LWZqTg?oc=5",
-        "publisher": "自由財經",
-        "time": 1795174642000
       },
       {
         "title": "台股洗盤震盪！0050能逢低布局嗎？市值型、高股息ETF與正投資指南 - 鉅亨網",
@@ -51,9 +45,21 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBZQUVVT1R1U0Y2X2dRVkpWLUpfLWY1Yzh6d19xeGtLQThaV2JpZ0pmN0NYbEM0VUtWSmM2eUJfaUl1a2QwcGlNOG53elJCdU5KalBfNDZaVVRJZW1jc2FV0gFkQVVfeXFMTktObENwVVJJdVdPNXItSEItbmo1Zy1CdjN1TU9CVnljN1Q0eXVFXzdtc3QxQkR3WmNfWi0yN0I2dWVVWTFiOW5ZM2hodTE4YkJ4dF9qaFIycmhldE55Ylh1Tk5NYQ?oc=5",
         "publisher": "自由財經",
         "time": 1793257200000
+      },
+      {
+        "title": "日月光投控第四度上修今年資本支出 明年先進封測營收目標倍增 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE4tNXg5N3piWnF6Q0NJaW5zUFhBSTdnWWtRZmNWTGNQWVQteThaQ3BCWnVCZndZa05lVHdSdHE2cFYxQmRDNjh4cFAyR1U2cEp1RE1udVRibmM2U0piSmVn0gFkQVVfeXFMT2xrd1F3XzlKYkt4NnFmYm9QZ1EtbFVEcEsyZEdOSkFUb3Q2MDBxY2V5T2lLY2lRZVg0YXZKOVJJZ3pxMHNGaVJBaW05MXpIVU1EVk9zOWFSaGJvRHJTcXFESWZzYg?oc=5",
+        "publisher": "自由財經",
+        "time": 1793257200000
       }
     ],
     "3293": [
+      {
+        "title": "鈊象 選逾三個月 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMihAFBVV95cUxQMzFMc2UteXc3blVHU2lWN2tIRUU5TVZXTnRJWTF4eW92SlBCc2JPS21ETVBEeFUtMDRTa2RwRjYtUldjYUo4UlZGN2VtM25PZ1VNVUZXeGNvWkJaNHRsM25CV28tNHR6YXo5OHNoSmJsZmdURF9qWE1CeHQ0OVV4Zi1wWkrSAV9BVV95cUxPM1dqWVFzWFJIdjFnREpmY2hEZmZ5dmtuRVNMSS1aQzZLWmUxWENoelVuUzJwc1VlcWRGMXlKVEtReVp1cEdMWS1xUGcxc0s3aE1salJfa3A5T3BtRHNmUQ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1795366617000
+      },
       {
         "title": "鴻海、鈊象 押寶長天期 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1CcjJYcEpxSGpabkcyVHFWNFFZMC1CTUNSNWE3X0FURnlxN0k1b3FERVgtbDhGcFRyQ0loekRCWTZ4UEhwS3NGTHRDN2xJb0MtNU1oNkFxN3cyd9IBX0FVX3lxTE5pVGkwZWYwZUtrdlUta0Z0bWJxdTg2WXYwekt6RENiTG80aVBYOGY4UDB1RVNfOHBrWlBHN1JwUWM0dGZ5ajk2dVlSVGswSUV0ZmtFSWdUSGpJOEdGSjhN?oc=5",
@@ -61,22 +67,16 @@
         "time": 1795103019000
       },
       {
+        "title": "鈊象受惠台幣貶值業外獲利大增授權業務續成長- 新聞 - MoneyDJ",
+        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNT21sVzhDMDZyZ2lDY3FHSGh4UUFmSHBTMnZKekN6NzRGcHdWLVBKdF9uNEs3X3JYYjd4RU13azJqNHFhdHZtUnd6NE5IWlRZazVRRHk1RjRvZTZtdFU0enFlMmpSR0lkNHpUWXZOQjI4VzdzZkhoYjdwZ3RYRFhLUWU1d0ZPMjIzYWRiWXlYOHdyZw?oc=5",
+        "publisher": "MoneyDJ",
+        "time": 1795055820000
+      },
+      {
         "title": "遊戲股前三季獲利出爐 鈊象穩坐股王EPS達35.24元 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBjOThTTHlUeHZPZk95MG9qSkhfVkNhME1LS01GTnphVjRnUFZFdmFTWlVaWkk2RFlULUpKZ1NVbVJRY0JmQjRSSTJSMVRJdW1MMTRVRC0xOWFzNjBEaWhV0gFkQVVfeXFMTUFZX19zdTMxUmhScnJEUkNGbVVDaWxqTC13MjNYRkl6alVDZk9HN2k5NGRnZnUwUUp5bExFb3MwMmRPR1dXVUQ5TDhBM010aDFXaHNCbmpieUZiNWZoeGJURTRZVw?oc=5",
         "publisher": "自由財經",
         "time": 1794722718000
-      },
-      {
-        "title": "鈊象追價買盤強勁- 日報 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9CUWN3d0lYZEh2RzJ3Qjl6ems0SkZKdWpZQmJxUlFZY0xhNDNKU0UzLUFXQWg0RjFrRUdYV0NEOUJmYkRpeTFNMjg1MEx4TXdpcHQybUNNTEE5ME4zaGxv?oc=5",
-        "publisher": "工商時報",
-        "time": 1794682800000
-      },
-      {
-        "title": "鈊象財報／前三季 EPS 賺35.24元 擴大美國市場布局 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE5VcEZfQTdkMFVZUUR0TmN1d1h1dm01NU5sR1g4bnZPMmlXMDZENTlwRlc3dUdXclNtd2xpVmhCMjlmS0Vjb0RKVVZPV2ZCLVI4ZkhNWXl2bjVzWHNJZWhnWNIBYEFVX3lxTE5VcEZfQTdkMFVZUUR0TmN1d1h1dm01NU5sR1g4bnZPMmlXMDZENTlwRlc3dUdXclNtd2xpVmhCMjlmS0Vjb0RKVVZPV2ZCLVI4ZkhNWXl2bjVzWHNJZWhnWA?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794240149000
       },
       {
         "title": "眾達、鈊象營運動能強- 日報 - 工商時報",
@@ -93,52 +93,52 @@
     ],
     "2002": [
       {
-        "title": "面對歐課鋼材反傾銷稅 中鋼：推多元去化策略 降低衝擊 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE13Y1FtMWJEN0gzd3FtNy12ODRQaWQzck93LXpGXzJiRm40U0s2S21rWl9SaEY0WjNIVURjM3RGWXVKZHpFTEZsaHJia3Q2ZWNrQWdoVmpWZDJrZjDSAWBBVV95cUxNb3lUbDVLdEhoekJsX29uTHBfUjcycFRmMlFib3dMaUw0RUFzZXo3d0J4a0RyaTIxVF82ZHQ2MnlPdC1zS3FMNnBZZGVsaHdIUDFaOF9WMThPZnJLazM2MWo?oc=5",
+        "title": "董事長的一句話／全球經濟靠AI單腳站立？中鋼黃建智示警：沒有AI支撐會是大代誌| 專題報導| 專題 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBTWHRWSm1QaUNlYi1NOGZCNlF4Q3RHd203MHFqUVFCT3pUYkEzb0JLeW9pTzl1dXMySXZpdkdNcWs1TWxZeklZcG9oRnRZdU5fd1lJQ0d5ZmpVWTF1?oc=5",
         "publisher": "經濟日報",
-        "time": 1795248000000
-      },
-      {
-        "title": "中鋼四小金雞Q4營運拚穩健成長- 日報 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5EMnFhemVsdWMzc3VYdUpOUjhkQTA0S2w4LUVjLXplWmpOcjl3ZnpaQ3FLUFpDVmtuYzNmamdfUmNLbm14VGdTVGhVVWpJN1hLUWpzSVIxTkxDLW9JN2hJ?oc=5",
-        "publisher": "工商時報",
-        "time": 1795114800000
-      },
-      {
-        "title": "中鋼與鋼線鋼纜聯誼會：漲價有利接單 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5yWkd1Uk5PU2RBclU2RjFvU1FYc1dBQW5faFVUTFRaWWx4enZVQUs2eG94QVVqYV90ZnNIUFFhblk0TmxIZzF0cEU3ZG1XeHpnTWNEcWMtTi1RZ9IBX0FVX3lxTFBhNkJQTExSb3NhM2lXVnJoWDRLRHQ5bEpTRVIzanJMUlBiTGVnb3JmODFqMEJXem95a3JSQmxzZWVKRG5TNlRaYU5vc1VFb2NfSjlLWXhscUt4b1Bpc0E0?oc=5",
-        "publisher": "經濟日報",
-        "time": 1795082211000
-      },
-      {
-        "title": "中鋼與鋼板業聯誼會 表明全力支持公共工程與科技廠房興建拚經濟 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1OVFBXRHVwWjBEWm1KYUFrcmtiazh2TWM0NUlvcWpfdDJxR3NmOFhtOXFXZF9GZ1BvUWFrMW4yWnViNmlmT0Z5d2pDLWpaU2Z5a3UzN2lOSE10UdIBX0FVX3lxTE1iLVNORjRXV0JUWlBDQ0JMRWxtdUlXd3hQa0drVFhCR2dJTGU4SFFGRXBzTTlxMFRaNk9ja1lyekJTZlJzN3hIQmx5NkpFMGpaVjJmNGE0RVdqa2RsdWNV?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794995111000
-      },
-      {
-        "title": "銷歐鋼品面臨20.7％關稅 中鋼：稅率拍板後客戶下單積極 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE8ySGVJNm1UVGpaU1B0TjIxdzYxMmhlcmQzZDUtcTg5eEpYc3lvSGduUDJZQnM4YXFsMGxhNlNjbUpOQnZMU0hOYy1IYUhSQTdzaHpmYVVJREZIV2g4aC1z0gFkQVVfeXFMTVpMWG9aYmJQYUR6eEkyRmRKOGo0bk0xeUZZT0huUmdmSm1RMk1uWmJpOFpYWGhZWHFXYXJKekhRZXVyT3ZtRkd2V18tLWdFdFlvaHZLakpWZHhmb0Jra3dYdWp2cg?oc=5",
-        "publisher": "自由財經",
-        "time": 1794991193000
-      },
-      {
-        "title": "歐盟課冷軋鋼反傾銷稅中鋼：客戶下單轉積極| 產經 - 中央社 CNA",
-        "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE4yX0M2aXRwa1dQTy1XMEFCR0RLNUUyVjhpNk9pMVlDZTh6QnlBVDFXMjZsQUtGSUNnRUh5Umo2YkxnNWJIMTZoU1dPaWhlRDNYLXBWMGpXRXBwNXczTGc?oc=5",
-        "publisher": "中央社 CNA",
-        "time": 1794989100000
-      },
-      {
-        "title": "稅率最高27% 歐課鋼材反傾銷稅 中鋼、中鴻承壓 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE44a2ZmZDFoZ0tlSjcxY3otSk9hMmV2TS1KNExTd3RfTC1idDlObFdNdkxnQjNmOTVyZDNHS3JNemFrR0p0RjdvR0hxTnI1YVZ1QWRVWkpyaEdWeTDSAWBBVV95cUxOcl91TWxoMjJodUhtTjlqb1ZxQVdBTDViRnJxSGtxSE5fSEhtX0gyYkFoN195NjdVTTFIRzdBSzlQbDZHcHRZTE92cWJ6aGtOQlVEcGkyWExnVzgwQk5nSlc?oc=5",
-        "publisher": "經濟日報",
-        "time": 1794939806000
+        "time": 1795309242000
       },
       {
         "title": "Q3獲利「翻升股」 法人加碼16檔台塑、中鋼吸金前2位 Q4續飄香- 日報 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE10T2d6Q0Y2V3RRWDc5NVBzZG1JY2JLc3VkYzZ6QktEUGZwR1JPZTl3TWxBZHEzX3ZPWG9RNjFpOGU2UFIxWEc0eGtmSWhfUERub0VJLUJmWjZIdzFuZkow?oc=5",
         "publisher": "工商時報",
         "time": 1794855600000
+      },
+      {
+        "title": "中鋼投資10多億布局低碳發電預計2年後完工| 地方 - 中央社 CNA",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1tNkRRbW9BMWJsUWI1TDJOS2lNdXExbnhhWFdMSnYtTkluRnYtdG5uSFF0MF9TNHBCS0J6dDVwTUxFYURqTEtiNUV6eXNpZFQ2U1BUWG1iMjZFN284dXhj?oc=5",
+        "publisher": "中央社 CNA",
+        "time": 1794038400000
+      },
+      {
+        "title": "中鋼Q3每股賺0.07元 投資10.79億元布局SOFC因應製程電氣化 - 鉅亨網",
+        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5zQkJrd1Z0eEJwLTI4MElkYldqTFU3N0x5Wk1DRDZsTkhTNUpHeFl3OUhXbUU1YUw5NXhfZUVpOFRHWG5kWjY3MjVwQ29aOUU?oc=5",
+        "publisher": "鉅亨網",
+        "time": 1793952000000
+      },
+      {
+        "title": "中鋼財報／第3季獲利11.21億元、EPS 0.07元 連續兩季賺錢 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1FdEN1ekw4WG8yZmZVOUpYTy05XzVUZUFxb01JU050MXdpdElqUTJJRU91S3VNMHEzUlNPNlZ6eHZjc1dUdzZyZkdqeTY4SXA1WU5nU01NZFVCQdIBX0FVX3lxTE40YUt1cXNHaG9Ua1pKRVZCX045Z2xBT3psUGZyUm1OXzg1U25fdnpHZnVvNkxCZDFNWlB3MS1GSGZsbjhycnRzLWdCdEVSNTZNbndNeU9lWm05blV4VXBV?oc=5",
+        "publisher": "經濟日報",
+        "time": 1793952000000
+      },
+      {
+        "title": "中鋼12月盤價小漲 穩定供應鏈購料成本擴大接單 - 鉅亨網",
+        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9GbXNtc1N2aXQ5MVU3TGl5amJKYUlQRDNzbkZOdDA3UWxfZ3huS3cwUUlsLW9qT2hXcXhpbmYxTmxEbnp5MjhGcGhwT3pYYVE?oc=5",
+        "publisher": "鉅亨網",
+        "time": 1793865600000
+      },
+      {
+        "title": "外銷接單升溫、新台幣走貶 中鋼12月盤價全面小漲300元 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9ycFpNaVMzUWVpWmtHSmFQNVNqRGgxWG1iYjFkSEtPMGdBbjYzUjRPQ3dxUXVYNlRfdUhPN3NBVGNfaU92WEVRa3hLOXBPT1V1XzdUNEVlLU9xZ3JrbzhN0gFkQVVfeXFMTWQ5T2k2NFYxV2Z3SVhlU1FfNnp2V05WeVRYeEdta2toR2tXanJGcmdmUnFHNldqenUwY25SNWllZ1pNYy1jT2t3NGlqa3I2cUFBRXpzdDhOS0xJZUtmQllaTFVITQ?oc=5",
+        "publisher": "自由財經",
+        "time": 1793865600000
+      },
+      {
+        "title": "中鋼12月盤價平盤機率高- 日報 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5RYW12OVc4aFVTb0xMN2x2NkJ4VnFKR04xQS1JeEFnSXlaaHJHWG92VXhqMHZGa25YMFBIRmxaMEV0MWdhTzB5RndJREJDZGdRVmhCOUZfVG9WbC0wQTFN?oc=5",
+        "publisher": "工商時報",
+        "time": 1793779200000
       }
     ],
     "00878": [
@@ -219,12 +219,6 @@
         "time": 1795326360000
       },
       {
-        "title": "台積電周線重挫15.8%！台股創36年最慘單周紀錄、美收緊AI晶片出口管制添壓 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1CdGhhMmtpREk3aDJGQ25PVklyeDNyajBISkVQODBob3FnWFhXclVva0dackJaWE5xY2psdmpDOEJTNS1oN01mdXZySm1NOTA?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1795255946000
-      },
-      {
         "title": "散戶搶購台積電零股衝241億 杜金龍曝合理價、分批買進區 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE93OGlzZjRaWG1DUWNFZ1hWSFVCaDZFS0VaM3VLUGlRYmtqODl4NGxqdU8tV2ZvWFhWa3JHNlR5M0Zzak4zQjRCcG93aUxXR2pxUDRQSXVGOGVtMWdYeG5R0gFkQVVfeXFMT2FMdC0xY0FiYmRpNF9fSGtTMmdkTVA4c0pvd2cwU2wyMmloM3F6STVMTVBPd3FZQ2cwY01UcU05NDRnYnlOVzVWY1FOTmZiUjM3cU11VV9ZV2tRazVsVjBRMnhMaw?oc=5",
         "publisher": "自由財經",
@@ -259,16 +253,22 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9SRUo5X1hLSHB6VjJuMXQxZHB5MW53b2drWVNoQlF3RktxdVBoX3NtUDBtUzJGelhyUFBOUmhzZElhSnlNTC1GZ0xYVUVSaGFFSEltZlpNMlJydDcwb1hR?oc=5",
         "publisher": "工商時報",
         "time": 1795201200000
+      },
+      {
+        "title": "AI拋售未止血！費半、台積電ADR跌逾4％ 那斯達克今年漲幅縮至1％ - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBGVjBkVTlOTVJTd0RQc2lQRVZPa2tEZVZUVUJVZFhuNG16WU1MMVhBVzhrU3pLZWZ1bkdBR0V0bTYyRFA0YllfYXF6TEJzeGs4QWMwM0Q5dFA0TS1CS0hR0gFkQVVfeXFMTkpTaHB0T1pFdG9qLVJzRnpkRzdZTjFHcHpNY2FfdEVMSU5KTUhMUFJsQjBmNjI3OFFtYm9faWhRUHRvSE8tOURlNUxuRDBHNlZfRk4xSUFiX1Y4RjRLbFVLZUNZUg?oc=5",
+        "publisher": "自由財經",
+        "time": 1795188388000
       }
     ]
   },
   "refreshStatus": {
-    "0050": "retained-previous",
-    "3711": "retained-previous",
-    "3293": "retained-previous",
-    "2002": "retained-previous",
-    "00878": "retained-previous",
-    "00919": "retained-previous",
-    "2330": "retained-previous"
+    "0050": "fresh",
+    "3711": "fresh",
+    "3293": "fresh",
+    "2002": "fresh",
+    "00878": "fresh",
+    "00919": "fresh",
+    "2330": "fresh"
   }
 }

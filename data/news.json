@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T22:54:56.298155+00:00",
+  "generatedAt": "2026-11-22T23:33:49.100686+00:00",
   "stocks": {
     "0050": [
       {
@@ -15,16 +15,40 @@
         "time": 1795275391000
       },
       {
-        "title": "台股洗盤震盪！0050能逢低布局嗎？市值型、高股息ETF與正投資指南 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9lNWVMaDMxeWR6RVJ6dl9QVXhYYmVKUHZBUlhZd1VnRk05dkR6MjA3aG1HSERuV0JUakRfb2tNQTh5ZXFHVkdpV1hyZ3dva0k?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1793779200000
+        "title": "一周熱門零股／0050、高息 ETF 人氣夯 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1pQllFLXpGYTBIOXk0R3E1aUEwdzNicEtIS0F2aHRZRHh6cGtaNHRuOVRYbHR0cTg3d0IwUFBMV3dzdTJFbTROYmZiVTZLc0FrZWZfTE5yeEJud9IBX0FVX3lxTFBscWNYbm1DdGk2cGh0cUtENFdmLW90dm9BeVZ6RGUxeU9XTzA0TmUyWlVYT0VjeENWN3pUTzNzZUdwTWRPSFZRZjRvMmJqQzBBTy1ZeEpBWWhtWjBOcjZZ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1795190223000
       },
       {
-        "title": "元大台灣50 伺機布局 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE92Y2YzODhwVVJ5eFpzMzVRLWxOY0ZaV0Y1WmxzSnpaUjctYW1fTXo2dWtydkVOUW1vaTZCa1dDQlBPQ2wwXzVzOUJXalJnX25KMFRSNnU5cW5OZ9IBX0FVX3lxTE1aSDR5Wm1wWjNUWjJrenl1dnZkRkpmcy1qa2FMbTV2U1JKaHN1Smd6c2dHem5rSHVfRXdqdDJmUi1GV1dIdTRpR2tVTW45bGRqZ3ZvT3lYYUM2bWtZRG9Z?oc=5",
-        "publisher": "經濟日報",
-        "time": 1793516400000
+        "title": "台股慘跌有人怕、有人撿！散戶勇敢抄底台積電、0050 成交價曝光 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1keGU4ZmRZN3g3VXFUdWdMaUhFX0JnSjJxNUZ0S2JNWDR5RWVpSzRjcUg1aU02Ni1WV0pmS0FGdzVEVU1VejFKTmlBNjNWUXctSU5pUTNVc1luMmNiR0Fv0gFkQVVfeXFMT2VaSW9DWjJmY0dfTklGb3NkdXcxOVJzWnNjRW56UUJPQzZrSnlJOWdiWE1WNWhUMjVoNTJicjIyMEVOQzlqWENFR0FvUG5QZGU0TE42QVhsMmI1OExEOG54LWZqTg?oc=5",
+        "publisher": "自由財經",
+        "time": 1795174642000
+      },
+      {
+        "title": "外資再提款243億元 0050、主動式ETF慘遭倒貨 - 鉅亨網",
+        "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE9jUWkzUlhiUFNHak9LcHh2eFY0Z3AwQnFzVm5TOUg5b0x3RFZ1ZEduUldGVXlibXVNVjFaZDRneDAxRGdLclEyR21Ccw?oc=5",
+        "publisher": "鉅亨網",
+        "time": 1795082021000
+      },
+      {
+        "title": "股市新手誤買整張0050 急求救：會違約交割嗎？ - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1vcEx2MDhGeG9TMWJmSk5SRWJVMzhVV01tY1FmRDVIVlgtUklEX1pCczNvbWFUUUxMa0pSeWlzb0xaQkQxSzlXV1k5RHl4WnptLWZxYjBNdlVZdXRTdU9V0gFkQVVfeXFMTkJPQVdjN0puc2VFSVZPU2JUb2ptclBYR3EwOU5LU2V0OXFDOU9uM3dDeTVQMzAzdUFQaVNZdENnVk1tWGQwdTVSdnZtSndaSjdqcUdZdEdZbUZxMjlJZUNhMUQ4Rg?oc=5",
+        "publisher": "自由財經",
+        "time": 1794992020000
+      },
+      {
+        "title": "台股10月風雲變色散戶無懼 0050定期定額單月扣款衝破130億 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFA4TVhUOXRNWGVuTkZrNlBEUVR6ZklVR01fZ0RuVlBkUzFQSHhfWXpzb0xOTlhuMjd1a1lIZkdxeWFELU9DWjRUYW9sUFZhRm5Wc0M2d21YNkMyOXBMNGpB0gFkQVVfeXFMT2Z4WTBrdF9lQmY3T2w5emZkb1lSemFQZjVTMmdCd0lSVkN2VnVlWUNyQkpSTnY3QXpoVzNDRUNRcFhnZENIc2liSmQ5ZURwZWhJdDFZZkVjRFNSV2RNbzJEQ3gzVg?oc=5",
+        "publisher": "自由財經",
+        "time": 1794716189000
+      },
+      {
+        "title": "不只0050與高股息！從10大熱門ETF排行，一次看懂最新存股風向與績效表現 - 鉅亨網",
+        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBTMWNZZFgzdFdteFhzSl8wYmFpZkQ5TEt5VzZRSzRvMnBhVzdkU19WSExFb08tWHVZOWFtQkZiVFI0LVlzalZSR2tpV1hVT00?oc=5",
+        "publisher": "鉅亨網",
+        "time": 1794556800000
       }
     ],
     "3711": [
@@ -89,12 +113,6 @@
         "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE41RTV3Vk9SYmJ6SFZJRGNHcHNhMGdWUWdlUkxlN01oeTRxZk1CdUFmQVg0WUV5N0ZzRUlaaFlPVk1GSTZwUHh3WmdGc01LTGVoVnZxeUJ5S0MtR0XSAWBBVV95cUxQVkgyRG80eTM2ZWVTeWZEZ3VzV294SFZHQU9aelBxTG1jVlM3bF9PMzd4TXEzZXVMU3gtT3JFN3N0X1doanNVWWpuSEtqTGZCQ1BhVEc0a0JfRmp6Q3h6WDg?oc=5",
         "publisher": "經濟日報",
         "time": 1792998000000
-      },
-      {
-        "title": "灰熊狙擊遊戲股王鈊象 內資送暖喊目標價上看千元 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBqdGRjeFlJVXZtOEFnQmluNnpKUktWeDRhV1F2eC1EVy1VNmhaZVNkSTFBdFhRbDJRaWY5Qk5HZnp2eTdsY2U4NWZhVnU2S3IzUWJYRVV2X0dla2xaWUNB0gFkQVVfeXFMUHVPekhFMzlpQXVWWlpQUmxpTXh6d3dVWFNPSkR1d09zdHByR0kwczdhVk9qb2FZbVpmMnl1cEp2ZTNfWUtQNHhqOGxpTTNOVXd6SmtzZThTVGJmNGkzZlQ2VEd2RA?oc=5",
-        "publisher": "自由財經",
-        "time": 1792911600000
       }
     ],
     "2002": [
@@ -159,12 +177,6 @@
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFAteVN3eXhxdjRnSnhLX2w1THBUWFAwbVZnbUxodmROTl9GMTFuMDZjUEU5M0VCVzJya251S0ZmTENVcXBYeUstSUJiR29xclE?oc=5",
         "publisher": "鉅亨網",
         "time": 1793692800000
-      },
-      {
-        "title": "0050輸給00878、0056 該跳車了？阮慕驊比較45檔ETF 揭高股息績效落差- 理財 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBJaHlsa3JJb2ZGZ25IZ3FRYndpWE5oMjA0N0Q1YndRdHkzbGFPMUJiRHNUT3FmczJVRzJDM1Zsb0VaVDdPZmZSMURuLXdVVUMxZ1oyb1JxTWtDT3oxWmRZ?oc=5",
-        "publisher": "工商時報",
-        "time": 1793606400000
       },
       {
         "title": "00878國泰永續高股息11/17除息預估配息1.25元續創新高| 證券 - 中央社 CNA",
@@ -237,6 +249,24 @@
         "time": 1795244711000
       },
       {
+        "title": "傳奇投資人家族大砍台積電持股94％ 科技股逃命波？ - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE03T0drZ2hibEdtREpXY05UWVlLYWtEajRLRWJibkVnc3l6NXppMXUtcEh5Tmlqa19VUEZ5NUY1clg0S0hyR3g1LVd6V0x3X2t4V2RHR2twNnB4cnBMM2Fv0gFkQVVfeXFMTlhZWnpRRE04d05sRkQxdjNmZ0w3Y0puUmdkTTk3MTd2SmRRWFY1Nlk3a0c5cEVlZEo4S1Z1YlZROE96M2FKQ0J4TDBnNGo5U2JER2xFV0huektScUVSUUc0SWhZYg?oc=5",
+        "publisher": "自由財經",
+        "time": 1794909923000
+      },
+      {
+        "title": "華爾街變心了？輝達失寵 3檔個股受惠、台積電入榜 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9CSERDNkhzQ21keGk2UG9STjhsZG1DU1FIdXF3ZWRic3haWTU2Q3NuOVJnYTJTUHRTdXAtc0hTOXNQbGUyMHNFVEFMeU9rS2lOdlNqWG1BRTU1Y1B5TDdB0gFkQVVfeXFMTmxnNUtSRDRDMjNETHQ0TjJHdnJqYXlGNTVLUk4wSDd0M3VSbWxfZzAwVDhtSUNNdXJCcElBQ0JSd2w5V0Q5THhDZFdTdGZHOFdJZzlheXR0SmR6QlR2cmhOSjNsUA?oc=5",
+        "publisher": "自由財經",
+        "time": 1794556800000
+      },
+      {
+        "title": "台積電加入 AI 閉環投資 認購 Anthropic、OpenAI 股票 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE84TTdVWjNIbGNCYzJIT0NjV3RLdGZPN1Zqck5JNzZXTV9ZeVNGQ2VocXVtLVN4MmNfQWtYSW9mdTZQQkEwLVYwZGF5ZDBPVURhSFVtRjN1LWsyZ9IBX0FVX3lxTE9wdXFjeUI1SXp3NFFaa3Q0cmNac1VEdzR1QUU1T3NsZE9hQno0emtDR0xQVnBBLUFWazM0T1V4ekVmOEstRGtPNGhuN3FrTy1zbEhPQWR6UTFRbG1nLUVr?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794384000000
+      },
+      {
         "title": "台積電抵得住AI市場恐慌 外媒直指股票首選 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5SLXFMbUd5NFNPdF9WS1hvTTJFdjlkNUlCRkZHLXFUQm1ZYUNXS2JMMVJ6bXo2YlZEa2g4aUJ4X09VYy1CZ0l2QktyYXgtOF83aHExS0hoZEwySmllczJv0gFkQVVfeXFMT05IbTVCM2FSU3hsb25Yd2o3Z28wSFJKTlpwUFdLT3lXOGV4MGlZNnRzdG45NW1JRDBleWZmR3dQSGtXcWpYVFJ0Szl4aEhmS3UyallCWnZrVnhBNmZhb0E5YmlfdA?oc=5",
         "publisher": "自由財經",
@@ -249,28 +279,10 @@
         "time": 1794211200000
       },
       {
-        "title": "台積電市值從2.2兆上看6.5兆美元 外媒估這時候股價漲3倍 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE0tQnFkUERwSXBCU0RVUTNHTG1WcFdsYUpCNDk0MlczcDlOR3hIVWltcUpyeXpTZnE3MHB4cDdDSjRhMVNpOWpTOV9aRkZka1RjQlVORGxmSW1RaUdmYlNv0gFkQVVfeXFMUFF3bndIaVdoN2pnLVdFYUl4NVhvVlRSaktsZ1doOFZ0emk2MjNvMTJ1cGMwRkxDeWstOXBwcXF5VmtHNWlrdlRpX2pLRFRtaVBMYnp4N2VVekp6ZHJDTW5lV2RQcQ?oc=5",
-        "publisher": "自由財經",
-        "time": 1793606400000
-      },
-      {
-        "title": "錯過先前大漲？外媒精算「台積電2030年驚人股價」 現在進場還來得及 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE95b2tXV3dGVVl3b3piVTZqLURkbzh6T2ltWUhpaXdRLUtvM0d3UkJvYUdSSWJsdnRCVVBHYlY2TVpRTHA0T2hWZDMzLWRqLWJqcjQyVUVPTnhyTkxGdnlR0gFkQVVfeXFMUHJ0WHJRaVJ5SEdUNGNfT2dPTmRpZUtkOW5NaXgzM3NIc29Gd2tFQUx6TjBQXzNmcFp5eXhTV21iMDBLakJUeV80Vkw3bV9Pa1QzMk5TaG9PQ09lUF9LTXJGZEtUZw?oc=5",
-        "publisher": "自由財經",
-        "time": 1793430000000
-      },
-      {
-        "title": "台積電11張股票領逾7萬！股民哀怨價差快跌沒 網友羨慕炸鍋 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1ic1YtdjhlUEdfbGFmWlhHMndSc2VSNVB1Z2ktbzZrdm8yeWNpWWMxWUJKWTNvUGVfdVp6eE8tLUloZ3c3bHdWQ2R0Sk1DWUREUGtnVVJOWGVLVW5DSl9Z0gFkQVVfeXFMTjdBVXVDZmJJVmtmQVdZeEpoc28tVWhtVFBWNXI3cVk4RlZkU0tRcFRiRk5lMlR4UW5wXzlQbFFOel9seGxPTnFyQW1DYUd1TnhMSUk3djNTWlBVdk5ZYVFqM2RWXw?oc=5",
-        "publisher": "自由財經",
-        "time": 1792911600000
-      },
-      {
-        "title": "台積電繳超強財報股價卻下跌？外媒給出答案 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9GYXBhLVdodmk2M2RxYnAwVURzNk1NaGRfakd5MENlaVFqZWZyeGEwbThzX1VkV3JldUxVRU5SWmhHTUMyVW1XOFM2eTZtdExTOVM1YmFfUExNRG9Jd1ZB0gFkQVVfeXFMUDBaeWdoZFVyNjBmeEZhaUFUdUs2Um5hVVhCSHpNMVhwR1N5WVBJbVh3YmRvNWtYVS1TWjdEekNUakh4ZGxFSW5OUkszeEpwZFd5NUd4Z0hQMjJ3Wk5qVGktRnEwYg?oc=5",
-        "publisher": "自由財經",
-        "time": 1792825200000
+        "title": "台股史上最大崩跌！台積電一度跌停 卓揆喊話金管會因應 國安基金也待命 - 鉅亨網",
+        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5MalRzMWtTUGlnUkgtelJoUmF1dE1nUXNoVkRCTi16NkNFQWtiQTNfUXJrem41Q3R0d0lnZDQyNWd3b3BRWGVVU1Z6RnNCczg?oc=5",
+        "publisher": "鉅亨網",
+        "time": 1793952000000
       }
     ]
   },

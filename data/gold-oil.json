@@ -14,8 +14,8 @@
       "98": 0.0,
       "diesel": 0.0
     },
-    "comparisonDate": "2026-11-09",
-    "effectiveFrom": "2026-11-16",
+    "comparisonDate": "2026-11-16",
+    "effectiveFrom": "2026-11-23",
     "history": [
       {
         "effectiveFrom": "2026-11-09",
@@ -28,6 +28,15 @@
       },
       {
         "effectiveFrom": "2026-11-16",
+        "prices": {
+          "92": 31.2,
+          "95": 32.7,
+          "98": 34.7,
+          "diesel": 29.9
+        }
+      },
+      {
+        "effectiveFrom": "2026-11-23",
         "prices": {
           "92": 31.2,
           "95": 32.7,

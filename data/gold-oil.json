@@ -1,8 +1,8 @@
 {
   "gold": {
-    "bankBuy": 3770,
-    "bankSell": 3817,
-    "quoteAt": "2026-11-20T19:57+08:00",
+    "bankBuy": 3789,
+    "bankSell": 3832,
+    "quoteAt": "2026-11-23T10:14+08:00",
     "source": "BOT gold passbook",
     "sourceUrl": "https://rate.bot.com.tw/gold?Lang=zh-TW",
     "unit": "TWD/g"

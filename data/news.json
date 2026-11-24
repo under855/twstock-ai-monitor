@@ -1,13 +1,7 @@
 {
-  "generatedAt": "2026-11-24T11:30:08.640271+00:00",
+  "generatedAt": "2026-11-24T21:31:45.246884+00:00",
   "stocks": {
     "0050": [
-      {
-        "title": "元大台灣50反1爆違約交割3946萬元　集中市場今年第25起 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9GZlhwVXFDNE4weE53ZmxhSG8tb3UxQ3lDQk9ZUklDMzM1Um9KaEdWak16dU54TXVJUXhvRUJrMVhOallYN0F2ZFZBUWxXSTJ1SFBrWENkd2Z3QdIBX0FVX3lxTE1kM2Jyb0tkZEV0T2tiaERkSkNodzRwRVJFamd5UmtqeFp1ejFxSEU4OWsyWlpaeE1kUGZjRkZpUFBJRjVRWWh6R0Q5dUEybUFjY3dzbFpoN1lJU19zN3pv?oc=5",
-        "publisher": "經濟日報",
-        "time": 1795517156000
-      },
       {
         "title": "連ETF都會翻車！ 元大台灣50反1首見鉅額違約交割3,946.9萬元- 證券 - 工商時報",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9WeEV0bDFLWXlkT0dpMlJ3Ty1ocksyUEVRMUVBSjR3amxUSVhQMFFWcHFpOVQxNkh6OFhoLUpwNElydm9UVXBlN2I1dVZmaTFNOFhIaGFEaVd6NWkzaEVV?oc=5",
@@ -21,10 +15,10 @@
         "time": 1795516542000
       },
       {
-        "title": "台股震盪反成買點！0050全年淨申購破兆 再創ETF新里程碑 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9HTEk0a2Nsc1hCRlJ5WUloekJnWEJkZ0wxTDJBOUp3ZWo5alFxTkVOWnN3c1RyUG5TMnNPU2JmdG9XelQ5N25zV0ExYWxocjA?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1795509271000
+        "title": "創紀錄！台股上沖下洗0050全年淨申購破兆元 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5FU1ZTTXY3MFdvZEpQZjJMUmtOTF9pbEEtYWEwN3prVlpVNHlNdGtkVDFySWktVHBsZkM1a1B4d1c0d3VBb1JkV3g5UTV6d1pHd21HbWdGMFNQRHBIcUNr0gFkQVVfeXFMUHkxcGpSMWRwUHgzalNnbElBUGVFNmdVLS1XN2xaRTJLVl9BS0RHMGxpY3dOb0FSYkRrNGdJY0ZaRVYxcC16RjQweTJQbGRfbVBlSnRSYk44b1JVZldySk9EYkJ4Wg?oc=5",
+        "publisher": "自由財經",
+        "time": 1795499381000
       },
       {
         "title": "0050開盤就漲停 ! 網友崩潰錯過低點 釣出內行人教一招 - 自由財經",
@@ -45,6 +39,12 @@
         "time": 1794038400000
       },
       {
+        "title": "台股失守4萬大關 散戶狂掃0050、00631L單日成交金額創新高 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE53cENpOG1ENms0c2cwWWY0U2VVdGpac2VseEV4cmRhWklNUWF3QkF2YVZPN1ZQQTQwT1hhMGpEUjIteTkxUjZuOGhHb2xkdXQ0cE5QRnd5SEtTY2t5SEk40gFkQVVfeXFMT24ySzZIU1N3Vm52cXhwTm00bXUxZkIyaFBwLVhUclV6WlBfZTgzQ2xHTl9Ib3huMkdOZ2NoN2dadXFzbTBYNmlPS05mbmhaTTExS3dCT2h6UUMzUXRuQ2hfeG1TMQ?oc=5",
+        "publisher": "自由財經",
+        "time": 1793952000000
+      },
+      {
         "title": "焦點股》0050：跌破90元 買盤湧入 - 自由財經",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBwdG9faUVLOFFIdGNaSWNqUlh2cmdTUU5Jdi1lb2tCTWdnSUQwc1ZEU3V3d3YzVldWaTVJekxLNnE0cWxlbzdFcWdRdmR5aWlqX05xaDBXdTVaSGdmQk9j0gFkQVVfeXFMUGJMRE9LRU5xcTN1T1BFWGhXQVhLWmF2QW9FQ1BVZDRuaVl4RjI5UVFYMUsxSUxoTDJFbHdTd1pSM0o2TW4wa3FCemdtWUhWSW5mdnJRZGI4cDdXbEhhc25nbnkxaA?oc=5",
         "publisher": "自由財經",
@@ -57,12 +57,6 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBQQ0NQd2hoeDNNcG9pR1dmdG4tdm5STm90R3VXUHhwbVFDdGp1R2dyd2N2Qm9aT1EydmYwOFExTGR2eHJNYll4TVlzaFBvVmVPNkNucWFZNjBBQWl3ZThz0gFkQVVfeXFMTVBXemJoN3pmQmVhQlcwWm94bnFfeEpLeVpfWGNwVFl0MEZFdThiWUJCLTVscy10eTJham9RQ1h6eEVaWTJjZ1NFaGk4NzRGTDZOSmp6eGVpckFUY0lpRUdkTWJHVA?oc=5",
         "publisher": "自由財經",
         "time": 1795487687000
-      },
-      {
-        "title": "買盤強力挹注！日月光投控早盤亮燈漲停 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFA4TnRodXduSk41d2dPc0k0N1lxUmFITVNwZ1ZxWWZBM2JlaGZuNzlJaTlqYVpDODBkNW9IVGp4LVg1N28zY0lkbjZCQlhRckV4LUJHSWU3amlPaFAtaVZ30gFkQVVfeXFMUE1fM0FOQlJOYXE3Q0dIRWZobzYyTDBLTS1RR3liQmhRT0ZLV0szbXpDRHd5djYwdld0MVFQZERnbERwZXRYUVdTOEJRQUNyVEpmUFAtWXdzVnZZNFNNQUFhZGZoWQ?oc=5",
-        "publisher": "自由財經",
-        "time": 1794297600000
       },
       {
         "title": "日月光投控Q3獲利創19季新高 單季大賺逾半個股本 - 自由財經",
@@ -79,22 +73,40 @@
     ],
     "3293": [
       {
+        "title": "華碩、鈊象今年獲利拚季季高- 日報 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE05aTRoN2FZZHpRT04yUm1NQUJPd3ItOWJ6NkJtMFNwUF9BQnppay1zZlZ0anFDZXVLdUVEZ205ckVlb2pqRVNFVGx1M3dsTHJmajBuVC1oLTJkVDdoenVv?oc=5",
+        "publisher": "工商時報",
+        "time": 1795546800000
+      },
+      {
         "title": "鴻海、鈊象 押寶長天期 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBycVVpZkN4a21MX1lTVnNzNUhUQTVhSWcybVU3WTF5c3N0dy1UQkZvY0FFNmR0Z0ZKYTRia0VHQnVNXy1fb3hKMFM3ci1nNG9XcWY3V2dXd2ZXQdIBX0FVX3lxTFBZTi1ReEVCXy02eWgxR2E1ak1Ib1VoTjEzYThZM3h0ajFhV2hFVjhzU0lVSnRkS29wOGVqOVlFdkczX0pXdlJoTldtX3BTMjh1bmtld0t2RjdBWGlEVXRZ?oc=5",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1CcjJYcEpxSGpabkcyVHFWNFFZMC1CTUNSNWE3X0FURnlxN0k1b3FERVgtbDhGcFRyQ0loekRCWTZ4UEhwS3NGTHRDN2xJb0MtNU1oNkFxN3cyd9IBX0FVX3lxTE5pVGkwZWYwZUtrdlUta0Z0bWJxdTg2WXYwekt6RENiTG80aVBYOGY4UDB1RVNfOHBrWlBHN1JwUWM0dGZ5ajk2dVlSVGswSUV0ZmtFSWdUSGpJOEdGSjhN?oc=5",
         "publisher": "經濟日報",
         "time": 1795103019000
       },
       {
-        "title": "遊戲股前三季獲利出爐 鈊象穩坐股王EPS達35.24元 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBjOThTTHlUeHZPZk95MG9qSkhfVkNhME1LS01GTnphVjRnUFZFdmFTWlVaWkk2RFlULUpKZ1NVbVJRY0JmQjRSSTJSMVRJdW1MMTRVRC0xOWFzNjBEaWhV0gFkQVVfeXFMTUFZX19zdTMxUmhScnJEUkNGbVVDaWxqTC13MjNYRkl6alVDZk9HN2k5NGRnZnUwUUp5bExFb3MwMmRPR1dXVUQ5TDhBM010aDFXaHNCbmpieUZiNWZoeGJURTRZVw?oc=5",
-        "publisher": "自由財經",
+        "title": "鈊象受惠台幣貶值業外獲利大增授權業務續成長- 新聞 - MoneyDJ",
+        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNT21sVzhDMDZyZ2lDY3FHSGh4UUFmSHBTMnZKekN6NzRGcHdWLVBKdF9uNEs3X3JYYjd4RU13azJqNHFhdHZtUnd6NE5IWlRZazVRRHk1RjRvZTZtdFU0enFlMmpSR0lkNHpUWXZOQjI4VzdzZkhoYjdwZ3RYRFhLUWU1d0ZPMjIzYWRiWXlYOHdyZw?oc=5",
+        "publisher": "MoneyDJ",
+        "time": 1795055820000
+      },
+      {
+        "title": "鈊象追價買盤強勁- 日報 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9CUWN3d0lYZEh2RzJ3Qjl6ems0SkZKdWpZQmJxUlFZY0xhNDNKU0UzLUFXQWg0RjFrRUdYV0NEOUJmYkRpeTFNMjg1MEx4TXdpcHQybUNNTEE5ME4zaGxv?oc=5",
+        "publisher": "工商時報",
         "time": 1794729600000
       },
       {
-        "title": "鈊象財報／前三季 EPS 賺35.24元 擴大美國市場布局 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE44MmR1Tm8xSFEtUVZuOVF6ODIzTGQxbVAzc3pHemViWGhGRi1ObnNjTXd3Q0xueXdLWDNiM2FWV3ZEMTJHbThuUnozS2o3MFZVTGNLNWhwcTNOMkXSAWBBVV95cUxOVXBGX0E3ZDBVWVFEdE5jdXdYdXZtNTVObEdYOG52TzJpVzA2RDU5cEZXN3VHV3JTbXdsaVZoQjI5ZktFY29ESlVWT1dmQi1SOGZITVl5dm41c1hzSWVoZ1g?oc=5",
+        "title": "遊戲股王鈊象 Q3 賺逾一股本獲利創高 每股純益12.46元 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5LaHZwZU03Zk12emVYRE9Kc1V4WF9JdllXeTU5Sk1mSWswdkgtR2lfYnJPUHFUb0FaclJlcmhIUXk3cHFuajQ4eTVkS1d5dkdRazdJR1E5NDl1NWPSAWBBVV95cUxQRmV3MzB1TzFUbk5uMzFMTF9xVUFZeHhLZkhtSTJzMHd6ZndVV242RHNNUXR5LXZCN0lGWU1oNWpPR2dlVmF0MDVLbE1SZVFnVkNtTkx6dTBXSnpFS1dEVms?oc=5",
         "publisher": "經濟日報",
         "time": 1794297600000
+      },
+      {
+        "title": "鈊象財報／前三季 EPS 賺35.24元 擴大美國市場布局 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE5VcEZfQTdkMFVZUUR0TmN1d1h1dm01NU5sR1g4bnZPMmlXMDZENTlwRlc3dUdXclNtd2xpVmhCMjlmS0Vjb0RKVVZPV2ZCLVI4ZkhNWXl2bjVzWHNJZWhnWNIBYEFVX3lxTE5VcEZfQTdkMFVZUUR0TmN1d1h1dm01NU5sR1g4bnZPMmlXMDZENTlwRlc3dUdXclNtd2xpVmhCMjlmS0Vjb0RKVVZPV2ZCLVI4ZkhNWXl2bjVzWHNJZWhnWA?oc=5",
+        "publisher": "經濟日報",
+        "time": 1794240149000
       },
       {
         "title": "眾達、鈊象營運動能強- 日報 - 工商時報",
@@ -105,12 +117,6 @@
       {
         "title": "鈊象擴大美布局 營運衝 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE41RTV3Vk9SYmJ6SFZJRGNHcHNhMGdWUWdlUkxlN01oeTRxZk1CdUFmQVg0WUV5N0ZzRUlaaFlPVk1GSTZwUHh3WmdGc01LTGVoVnZxeUJ5S0MtR0XSAWBBVV95cUxQVkgyRG80eTM2ZWVTeWZEZ3VzV294SFZHQU9aelBxTG1jVlM3bF9PMzd4TXEzZXVMU3gtT3JFN3N0X1doanNVWWpuSEtqTGZCQ1BhVEc0a0JfRmp6Q3h6WDg?oc=5",
-        "publisher": "經濟日報",
-        "time": 1792998000000
-      },
-      {
-        "title": "鈊象 選逾四個月 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFA4cHZobENYUUFRcDZWS184VzJnVF9kcmVZTV9tYW1OQ1FqOUhvelgtSXlPYVJHTUpXdGd3b2dKVHRqU3gtZ2dlV1hldDd1UEVKWWNBMER2LXY4d9IBX0FVX3lxTE9ndERUZU15Vm85UjRLZ1laa1E5VVFLekdRS1lNakd5ZHdPb0VGUUhLS1IwRXZJajBNZVQ5YUhzT3Z4UE14bm1SSVhLeS15ZTVuSzF6TTNyMlpJLU43d3RV?oc=5",
         "publisher": "經濟日報",
         "time": 1792998000000
       }
@@ -167,12 +173,6 @@
     ],
     "00878": [
       {
-        "title": "00878周增逾3.1萬人、受益人衝破180萬締新猷 經理人解析震盪入市3關鍵 - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBLcHhsRzNtT0ZnTG8yaERiQndCRlR5MHp1Wmd4Si1HZTk2dFdwZ2hEb0U3dy1vbzduNy1lX0owaWtZTUkzdkp3eGNjUnVmRFk?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1795430564000
-      },
-      {
         "title": "193萬投資人笑了！台股狂飆3,186點、ETF 00878及00881配息同飆新高 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1NMWVKNkZzOWxuY0xnS1NjVzEwY0lodnRac3VBRWg2aFNvSExTMnpLYlVOdWFWWGJzYXhnY0REWWhqeThaMU5QcFF2Xy1SNEkyVzNFMGRTdjc1QdIBX0FVX3lxTFB5dkZHSHlKUTFvQ0NObUZBWnNHQXJDVDF2Zm1JMXViMWl5cWdhWnRkZWxNLWdiWE1ZQVliUDRzbmdiUFNFMktiQlBlRGxzOUNSQThMbEY5bC1CaXptRlJz?oc=5",
         "publisher": "經濟日報",
@@ -189,6 +189,12 @@
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9tcExMUTdvR3MzX1haWHpQU1hES2JocHh3d0lTQzFmbGpxZDc5Q2Rqc0FuSWRPM3B6aFJIVEltY3ZqUEV5UDllYUNBb1ItSjhpaUYzY3hRc3g4U1oyb0E4?oc=5",
         "publisher": "工商時報",
         "time": 1794556800000
+      },
+      {
+        "title": "00878定期定額戶數突破33萬 近5年含息報酬率181％ - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5EakVJZWNKVmJtRzB5RjgxN3hsRmY2clY1LVRVQVFtZE5MSXhRdWszb0d2VnI3UnJYQUE0S2w4ZFgzemE1RjdLaTh6U0pvWW13eEdfNTcxWW9xcDNXTUVB0gFkQVVfeXFMTURZbk9GOEJCR3hKQlMyY2xiRjZsYWFpMENMQmNBd2Q3T1ZOM3VrcEVqQWhpQnlvQlRaV2ptbVhwWmZ3Ymh6d3ZXOUV5VXdZWG82UUVuNjZBMEZkeEl1eHZGNzIzMA?oc=5",
+        "publisher": "自由財經",
+        "time": 1794470400000
       },
       {
         "title": "00878三因素激勵股民 上周反增近3.7萬人 - 經濟日報",
@@ -209,13 +215,31 @@
         "time": 1793692800000
       },
       {
-        "title": "171萬股民嗨翻！00878季配1.25元創新高 年化配息率逾14% - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFA2VnAwc2ExbEFXRUNnWDktNnhGN0pBUTdHOXA3SWVPQzU1Q2JjdFU4TzduOEtFNDZheDBaZUJiTGVjUmlLRWJVSzFtYXZoXzQ?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1793606400000
+        "title": "171萬股民樂翻！00878配息1.25元創新高 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFAzTTdEdWxUWHdsTHZoWncwUUpSOUhoeGxlWGl2Q1p5TWttRjIzMi1feUNTT05KWndKRy16QnRqMUhLMUlnNzBMRkJtMFZfTmhSaE9MSTZnck1qdGJseUcw0gFkQVVfeXFMTjFrdWxqSkxYOThIRUJ6VExlMy1OUHZpVUFPUTAtWFkwRGROcjhERUttRE9EQ3JlWDZUcHdRajNnWkhvLUlxUWNySnhCRTNvQVQ2VlhhY3VXbmkzejhzUU5MSHJoNw?oc=5",
+        "publisher": "自由財經",
+        "time": 1793692800000
       }
     ],
     "00919": [
+      {
+        "title": "小摩：00919 等四檔高股息 ETF 年底前將調整成分股 三檔個股最受惠 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE0yRXN2ZjF3Y195dERPWDdVZklnbDBxcWkzbmo0dlFNc0twMDFYNFQ5b0U1cXZSeU1FSkY4ZFdhVXU3ZHJPcnF0UkJBN3Bxa3VNVERsV1JrMTNCQdIBX0FVX3lxTE53TUxqZ1lrc1oxbV9LTVlVQmJlM0tDMVVXRG5qbjl4U0h5WGgzTlVwYWtFQnNRY2E2VDlmTGNrc0JJOXYyUGNGNmtDTEtjeXpuOGU5S3FsN0xRU2liaEpB?oc=5",
+        "publisher": "經濟日報",
+        "time": 1795420800000
+      },
+      {
+        "title": "台股 ETF 規模衝7.86兆創高！00919晉身6千億俱樂部 除息最後搶進日揭曉 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aWUEtRDliSERBRTZzblhSSHhnN2hHQk9tUmZ0MFZhY2lKYkpEdmJKd1dpTUFUNE9JWGhOLVpUNVpDRWU1YmhxUmNIUXlmLWVTSWxDZnhaUFo5d9IBX0FVX3lxTFBHNG9TUDBpdEU0VURTanB6MHMtSHN1b2JZei1LNWlkTjdtRmh4SHpOelh1ZUJJbzhfWFJqOWV0ZkV5WEd3djh6WUt6ZTcxVjB4VkRhTVRaVVM2UzNWT0tZ?oc=5",
+        "publisher": "經濟日報",
+        "time": 1795420800000
+      },
+      {
+        "title": "台股 ETF 股利發放金額比一比 00919單次發放207.85億元 奪股利發放王 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1sQnItN3J6TWhubWJidGxBWW5mZW5WeC00MU9xa3VmWFRyX0UwWEVmaFQ2elNJM3dHQlNJRThfLXctZVFXeXZaOVJmcUdwX0h3S1dBald6REpvQdIBX0FVX3lxTE5TR3JZb1BvU2VKcktYZ0w3OVRWRFhJWGR1TGZpMjREWjk0Z0pPRlVoOEt6eFZmcTI0NmVhYnFEaDZvNUFSZjNKb0oxampPcnBNNGkwWXpkSl9oU3dPQ3Fv?oc=5",
+        "publisher": "經濟日報",
+        "time": 1795420800000
+      },
       {
         "title": "領錢了！台股本周21檔 ETF 發放股利共421億、00919配發207.8億最多 - 經濟日報",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE8xOThxSWptVnBuU2FWYkp0djR0bW5nV2hTc3YwdDBITnBvc1ZMSjhSQ0l4VU4xSFRJUmFjNEF0dkJVaTJ2VmlaczhvdGVnaE5zUnhWVjNjRTVIQdIBX0FVX3lxTE1Xc0k5MVNTWVloYi1rTmIzUGI0Vmh6NzRvWF9fZ3lWMnU3VTdQOEppcXVOV2VzTmp2VjlxV1RXS1pXcWtWVHJrTjVTQ3dXdjhYLVc3NVduejNUSXVfcVA0?oc=5",
@@ -243,52 +267,52 @@
     ],
     "2330": [
       {
-        "title": "路透：台積電評估德州設廠房產稅減免成關鍵條件| 產經 - 中央社 CNA",
-        "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE5abHZfMXREbDhGVHk5UG02X0taaXZpTG1zZXN0SFhhN2pOTzNDOGxvdU9kTmZVVVVRc2VrWUo5eXVHejFYWk5PUjFQSXdDOWpYckZXc1NWYmVMMmZFNmc?oc=5",
-        "publisher": "中央社 CNA",
-        "time": 1795516500000
-      },
-      {
-        "title": "Tokyo Electron榮獲 2026 年台積電卓越量產支援獎- 商情 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBjRUZDd3E3YzdtQ0FkUnQtYjU5bFRtSUtuVjZpbDhZQTVsalE4U3ZpQVNQekdSUFBrakNCRmN6aEF1WFlmU2hGSEktQnRUb3VsXzJMVm9WeVB0RF9ZQ3dn?oc=5",
+        "title": "台積電擬赴德州設廠- 日報 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBPTEhjWV9lb3o0aTlNeUMxcTJwTW43S0ktQ2g4ZEhxVkpWZTVUNURlcnNXVGZxVkVPZ1pwQ2wzZWNmaU16M0Q2RHRaMmEteTlNUDJ3YWQ3UWhRcVRMLUc0?oc=5",
         "publisher": "工商時報",
-        "time": 1795512300000
+        "time": 1795546800000
       },
       {
-        "title": "明天會震盪!!換股時機?台積電⊕、鴻海⊕、台達電⊕、國巨⊕、金像電⊕ - 鉅亨網",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5NYzd2S1dmcXByRnlra3VEZ0IxR1Z4VnozOXFJR1hHRDg4azVvbGFPMldGd2pFZWRpeUhYZUl5alZBX0ZHc2JqR24tZEI3TUE?oc=5",
-        "publisher": "鉅亨網",
-        "time": 1795511577000
-      },
-      {
-        "title": "台積電德州新廠投資226億美元申請房產稅優惠成建廠關鍵- 國際 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBsOTZsSnJpUzlNLXM5TEFCb2wwMUc4TGljS3dYZmt1N1B6T213c19vQ01rcVptV3RkYUpTN1BSODhMeDJiZDZGLTk3eGRBU1ZKMlo0T2VmVWpLalpnYjM4?oc=5",
+        "title": "攻先進製程台積電兩路並進- 日報 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFB1MmRzbkxjRkpnajV0czFYZ0NDQmxOM0I3YzFGRWhZbHNkWm1xMmZDM3VpMU5sUlNqam9kTDhCNzE1SGdnaE9KNnVzbEdTTVBDcHg1N1hnUml0V2FYaWVN?oc=5",
         "publisher": "工商時報",
-        "time": 1795511460000
+        "time": 1795546800000
       },
       {
-        "title": "台股史上第1！台積電領622家飆漲停 指數收漲3310點 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBMb1pCRmtYR3BaaGtyNzVsSGw1OFdjcHJxN2k0ZlJtOEltUGtrNHZLNmRTbzdhbTRZM0RCNmpmOEktWGx4NGhBS0Y5R3FWQUc3RjZyVFNOVXhFYUVjd0ZV0gFkQVVfeXFMT3J6NmdZNzdBS2ZVXzR2YVlyQ1RMVHZsYVAyUEI5aGREcVJlTjYtOElvSVlEb29iU2NRUWZ6OFpzU2ZzdGNEdDFRUVZZZmtnQV8xV3loT2laNDRtUUxKYnc3TVJkTA?oc=5",
-        "publisher": "自由財經",
-        "time": 1795499400000
-      },
-      {
-        "title": "台積電強鎖漲停貢獻指數約1,600點近2萬張排隊等上車- 證券 - 工商時報",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9YOXVhdHplaE81REUxOVZETkN0WllsSlBRUHktc2JRb2xwbnlZLUpra1d5ZVJ3bnIzVWN6MXZUT29mNS13QVk3TXFaRWtFZ0FVbUU4V0hhVWp2c05vWm5n?oc=5",
-        "publisher": "工商時報",
-        "time": 1795497720000
-      },
-      {
-        "title": "川普再點名台灣！大讚魏哲家是「天才」 透露台積電德州建廠計畫 - 自由財經",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBkd0JUb3FrMVRZcWVqLTZlSWoxeHpIZmpiNW9CMVhwczNYWFlrRWdKc0JnMW81VmVlWHIzeDdvLVluMDJlUHBYUk9RWGktVEEtOG1yeUhaUUFUVjJuY2Nr0gFkQVVfeXFMT0ZweTB1OFR4V0dFWXdHdWRDMGhPQnhJZWotU1I1ZGVQb0RmT3FhcTNELURCNjdLSEF2TkpQcFI4dzBXZGtLOGtiYnVveWF0cS1UYkdDY0tGc3p3UHNtUURXUzJxZg?oc=5",
-        "publisher": "自由財經",
-        "time": 1795489853000
-      },
-      {
-        "title": "台積電竟然漲停了！黃仁勳回歸輝達點火衝上2,230元亮燈 - 經濟日報",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5objc1cmROYVQzSjZNMEIzZ1NUSlNBQ2N2OXZpMDh6cFNZMUVGT2lxSkI3VV9QdEVCeDZPUC0tYXloN1RsX0tSZUYxU1FTVFktRWFyN2tXYmF0Z9IBX0FVX3lxTFBpbmphUldMZ0pjeWw5Z3g4UVExLURoVlloQ2VVR2JGdlNpSnA0bmdLVXY5ZkxPY2I2RGJmYjI5blRNWmVLTXJQNll2RGpkQUp0Yk1XVmN1a1l4U1l5QXVV?oc=5",
+        "title": "台積電美國擴產力挺 AI 後市 美政治領袖、黃仁勳等大咖可能與會 | 產業熱點 | 產業 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9EYXYyUWtLNmZOMVNhMlBISThhQ3M2d0xHdjFOSl83Q2s0QXMzckpDMlBKQXY1US1ZODhBcVNUMXlYeVkwTExFODZvZWJSTTEwR0ZzNDBIbkhXdw?oc=5",
         "publisher": "經濟日報",
-        "time": 1795484183000
+        "time": 1795545281000
+      },
+      {
+        "title": "台積電德州新廠申請送件 - 經濟日報",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5ubDhlbTZHQTlXUm1faHVmZFBQU21HMEpvVXpvQm5PVWVFRU9zSmJweEJ6d1BfeGNZaDZLNW8tQ2szaWIwR3VjS2lSVUxWeFFTRGp6Tk5NaVNkUdIBX0FVX3lxTE9xRDg2S3NGNGRCVWZrX1RhM0RLejhlblAwUnJXOUh3UjNSRlpHVFMtNVhnT3l2VFJIMFM2bkpUNkNRWHVTbHEtckNYZG1QTENVZGxvNGgwM1NpRUYxLVdV?oc=5",
+        "publisher": "經濟日報",
+        "time": 1795545096000
+      },
+      {
+        "title": "傳減稅與否成落腳德州關鍵 台積電這麼說 - 自由財經",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5FUFlPcUQzd094Z2FVcjMwVzVsdmljMnQteUxOdDR3aDNrZFYzcVFVUEtVQkFmU3VLVVZ2RGJtUG5NMUhPS0pNSzFiRy1ZZHFkVldZM1V4UHZBR2NidjNR0gFkQVVfeXFMUGdqaHdZcWR3Z1hDSkx3RlM3T3o1WHVhNmxvR0c5Zm5MMWtkR3NwS0dqd2djM2VJSHphTVdFNXpUcG5EejlGcF9iU1BDYU1tZlhZQmtfZGhULUlQaGFuVUl1bzl4Xw?oc=5",
+        "publisher": "自由財經",
+        "time": 1795529341000
+      },
+      {
+        "title": "減稅成落腳德州關鍵？台積電：提申報資訊為透明良好溝通| 產經 - 中央社 CNA",
+        "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFBqdnRiVWVYRDVfWjQ1b1V2YUszVnF5Wkc4Q3BUTTZleVp5ZkEzY0tObTNMYzJDYjVkbmFZempfa0pXM3djV0tIeDY4Z2l4bW1feEJ4dko2dVNzLVZoQkE?oc=5",
+        "publisher": "中央社 CNA",
+        "time": 1795522560000
+      },
+      {
+        "title": "台積電226億美元新廠落腳德州？能否減稅成關鍵 - 鉅亨網",
+        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE55WGFJNmpaTmJ2YTdydlRyLXJma0hiWTdsUWQxQTVXM21fY1RGYkY4NWhXWktCWE00TmgwZi1VUVVHU3l6eC1SSUVac193UTg?oc=5",
+        "publisher": "鉅亨網",
+        "time": 1795519805000
+      },
+      {
+        "title": "11／24台股雷達｜台股絕地大反攻鴻海、台積電強勢亮燈漲停- 證券 - 工商時報",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBSSnVhY3F2eVUyczc5N1ZrWHVyZ2JUMkIzdTFCVld5aW15VmZPMmZPOWNqc0Fsd0pGcVZsbFcwcTNtajNjbFpwWTVBS2NlNElJYm0wYWw5V3N2MjN0Ukkw?oc=5",
+        "publisher": "工商時報",
+        "time": 1795519680000
       }
     ]
   },

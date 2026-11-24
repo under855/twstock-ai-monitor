@@ -1,10 +1,10 @@
 {
-  "date": "2026-11-23",
+  "date": "2026-11-24",
   "market": "TWSE",
   "category": "外資及陸資（不含外資自營商）",
-  "buyTWD": 484813745109,
-  "sellTWD": 513761625104,
-  "netTWD": -28947879995,
+  "buyTWD": 98157580905,
+  "sellTWD": 148547493397,
+  "netTWD": -50389912492,
   "unit": "TWD",
   "source": "TWSE BFI82U",
   "sourceUrl": "https://www.twse.com.tw/zh/trading/foreign/bfi82u.html"

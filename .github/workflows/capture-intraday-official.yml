@@ -1,6 +1,8 @@
 name: Capture official TWSE MIS intraday
 on:
   schedule:
+    # 08:45 Taiwan warm-up: job may start early, then wait for the official session.
+    - cron: '45 0 * * 1-5'
     - cron: '*/5 1-4 * * 1-5'
     - cron: '0-35/5 5 * * 1-5'
   workflow_dispatch:
@@ -32,8 +34,20 @@ jobs:
           git show origin/main:scripts/capture_intraday.py > scripts/capture_intraday.py
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          # Keep the already-approved five-minute capture cadence even when scheduled starts are delayed.
-          # Concurrency prevents overlapping sessions. Stop on holidays and at market close.
+          # Pre-warm without fetching exchange quotes before the session begins.
+          # A late GitHub schedule cannot be counted as a completed intraday capture.
+          if ! python scripts/capture_intraday.py --trading-day; then
+            echo '::notice::No capture on a holiday or weekend.'
+            exit 0
+          fi
+          while python scripts/capture_intraday.py --preopen-wait; do
+            sleep 30
+          done
+          if ! python scripts/capture_intraday.py --market-open; then
+            echo '::error::GitHub capture started after market close; no intraday snapshot was captured.'
+            exit 1
+          fi
+          # Keep approved 5-minute cadence; no change to app's 6-second live requests.
           while python scripts/capture_intraday.py --market-open; do
             if python scripts/capture_intraday.py; then
               git add data/intraday/latest.json
@@ -48,4 +62,5 @@ jobs:
             fi
             sleep "$((300 - $(date +%s) % 300))"
           done
+          python scripts/capture_intraday.py --verify-session
           rm -f scripts/capture_intraday.py

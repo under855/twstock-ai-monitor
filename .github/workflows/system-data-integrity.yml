@@ -97,6 +97,8 @@ jobs:
         run: |
           node --check detail-candles-pilot.js
           node scripts/verify_detail_candles_pilot.mjs
+      - name: Validate market session pre-warm and genuine capture detection
+        run: python scripts/capture_intraday.py --self-test
       - name: Validate official gold and oil cards independently
         run: |
           python scripts/update_gold_oil.py --self-test

@@ -10,8 +10,15 @@ CODES={
 }
 HOLIDAYS=set('20260101 20260212 20260213 20260216 20260217 20260218 20260219 20260220 20260227 20260403 20260406 20260501 20260619 20260925 20260928 20261009 20261026 20261225 20270101 20270202 20270203 20270204 20270205 20270208 20270209 20270210 20270301 20270405 20270406 20270430 20270609 20270915 20270928 20271011 20271025 20271224 20271231'.split())
 
+def trading_day(now):
+    return now.weekday()<5 and now.strftime('%Y%m%d') not in HOLIDAYS
+
+def preopen_wait(now):
+    minute=now.hour*60+now.minute
+    return trading_day(now) and 8*60+40<=minute<8*60+55
+
 def market_open(now):
-    return now.weekday()<5 and now.strftime('%Y%m%d') not in HOLIDAYS and 8*60+55<=now.hour*60+now.minute<=13*60+35
+    return trading_day(now) and 8*60+55<=now.hour*60+now.minute<=13*60+35
 
 UA={'User-Agent':'Mozilla/5.0 twstock-ai-monitor official-capture/1.0','Accept':'application/json'}
 
@@ -77,6 +84,33 @@ def main():
         print(json.dumps({'ok':True,'date':data['date'],'taiex':len(data['taiex']),'stocks':{k:len(v) for k,v in data['stocks'].items()}},ensure_ascii=False))
     else:print(json.dumps({'ok':True,'changed':False,'date':data['date']},ensure_ascii=False))
 
+def verify_session():
+    now=datetime.datetime.now(TZ)
+    data=load(now.strftime('%Y-%m-%d'))
+    stamps=[int(x.get('stamp',0)) for series in [data.get('taiex',[]),*data.get('stocks',{}).values()] for x in series if isinstance(x,dict)]
+    # Never mark a successful GitHub job when it wrote no verified same-day intraday quote.
+    good=[x for x in stamps if 0<x<=int(now.timestamp()*1000)+30000 and datetime.datetime.fromtimestamp(x/1000,TZ).date()==now.date()]
+    if not good:
+        print('ERROR: Market session finished without any verified same-day MIS snapshot.',file=sys.stderr)
+        return False
+    print('VERIFIED_INTRADAY_SNAPSHOT',now.strftime('%Y-%m-%d'),'latest',datetime.datetime.fromtimestamp(max(good)/1000,TZ).isoformat(),'points',len(good))
+    return True
+
+def self_test():
+    day=datetime.datetime(2026,11,26,8,45,tzinfo=TZ)
+    assert trading_day(day) and preopen_wait(day) and not market_open(day)
+    assert market_open(day.replace(hour=9,minute=0))
+    assert market_open(day.replace(hour=13,minute=35))
+    assert not market_open(day.replace(hour=13,minute=36))
+    assert not preopen_wait(day.replace(hour=9,minute=0))
+    assert not trading_day(day.replace(day=28))
+    print('INTRADAY_CAPTURE_SESSION_SELFTEST_PASS')
+
 if __name__=='__main__':
-    if '--market-open' in sys.argv:sys.exit(0 if market_open(datetime.datetime.now(TZ)) else 1)
+    now=datetime.datetime.now(TZ)
+    if '--self-test' in sys.argv:self_test();sys.exit(0)
+    if '--trading-day' in sys.argv:sys.exit(0 if trading_day(now) else 1)
+    if '--preopen-wait' in sys.argv:sys.exit(0 if preopen_wait(now) else 1)
+    if '--market-open' in sys.argv:sys.exit(0 if market_open(now) else 1)
+    if '--verify-session' in sys.argv:sys.exit(0 if verify_session() else 1)
     main()

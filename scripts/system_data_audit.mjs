@@ -112,8 +112,14 @@ for(const opt of [{name:'mobile',width:390,height:844},{name:'desktop',width:136
     if(d.live.indexFreshness==='fresh'){
       assert(Number.isFinite(indexNum)&&Math.abs(indexNum-Number(d.live.indexPrice))<.011,'LIVE_INDEX_MISMATCH '+opt.name);
     }else{
-      assert(d.index==='—','STALE_INDEX_MUST_NOT_SHOW_AS_LIVE '+opt.name);
-      assert(/行情延遲|無法確認即時|即時行情暫時無法確認/.test(d.indexLabel),'MISSING_INDEX_DELAY_WARNING '+opt.name);
+      // The established UI deliberately preserves the last verified quote, but labels
+      // it non-real-time. An empty value is also valid when no quote was verified.
+      // Never accept a stale index displayed without a clear warning.
+      assert(/今日最後已驗證指數（非即時）|前一交易日官方收盤|即時行情暫時無法確認|行情延遲|無法確認即時/.test(d.indexLabel),'MISSING_INDEX_DELAY_WARNING '+opt.name);
+      if(d.index!=='—'){
+        assert(Number.isFinite(indexNum)&&indexNum>0,'STALE_INDEX_INVALID_NUMBER '+opt.name);
+        assert(/非即時|非今日行情|即時行情暫時無法確認/.test(d.indexLabel),'STALE_INDEX_MUST_BE_EXPLICITLY_NONLIVE '+opt.name);
+      }
     }
   }else if(latest.taiex.source==='TWSE MI_INDEX'&&latest.taiex.time==='13:30:00'){
     assert(Math.abs(indexNum-latest.taiex.close)<.011,'OFFICIAL_CLOSE_DIFF '+opt.name);

@@ -4,6 +4,7 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'scripts/system_data_audit.mjs'
       - 'live-v091.js'
       - 'index.html'
       - 'gold-oil-board.js'

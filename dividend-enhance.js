@@ -62,8 +62,6 @@
       try{
         const rows=await loadSharedOfficialDividendRows();
         if(rows.length){etfCache.rows=rows;etfCache.loaded=true;return rows;}
-      }catch{}etfCache.rows=rows;etfCache.loaded=true;return rows;}
-        }
       }catch{}
       try{
         const end=new Date(),start=new Date(end);start.setFullYear(start.getFullYear()-1);
@@ -89,8 +87,6 @@
       try{
         const rows=await loadSharedOfficialDividendRows();
         if(rows.length){eventCache.rows=rows;eventCache.loaded=true;return rows;}
-      }catch{}eventCache.rows=rows;eventCache.loaded=true;return rows;}
-        }
       }catch{}
       const [twsePre,tpexPre,tpexDaily,twseDist]=await Promise.allSettled([
         jsonPublic('https://openapi.twse.com.tw/v1/exchangeReport/TWT48U_ALL',7000),

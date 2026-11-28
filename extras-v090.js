@@ -408,7 +408,10 @@
   function startTodayOnlyMainCharts(){
     let timer=null;const run=()=>enforceTodayOnlyMainCharts(),watch=document.getElementById('watch');
     if(watch)new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(run,80)}).observe(watch,{childList:true,subtree:true});
-    setTimeout(run,150);setTimeout(run,900);setTimeout(run,2500);setInterval(()=>{if(stockTradeOpen())run()},4000);setInterval(()=>{if(stockTradeOpen())refreshTodayFallbackCharts(true).catch(()=>{})},30000);return true;
+    setTimeout(run,150);setTimeout(run,900);setTimeout(run,2500);
+    // Live quote updates already redraw main charts. One scheduled fallback refresh
+    // per source-cache minute replaces the redundant 4s scan + forced 30s fetch.
+    setInterval(()=>{if(stockTradeOpen())refreshTodayFallbackCharts(false).catch(()=>{})},60000);return true;
   }
 
   const detailModeByCode=new Map();

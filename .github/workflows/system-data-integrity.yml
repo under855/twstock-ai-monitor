@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - 'scripts/system_data_audit.mjs'
+      - 'dividend-enhance.js'
+      - 'extras-v090.js'
+      - 'scripts/verify_shared_checks.mjs'
       - 'live-v091.js'
       - 'index.html'
       - 'gold-oil-board.js'
@@ -94,6 +97,8 @@ jobs:
           for f in live-v091.js foreign-live-test.js split-layout-v095.js paper-trading-v100.js paper-trading-reset-v101.js pilot-chart-00878-v1.js extras-v090.js dividend-enhance.js foreign-flow-card.js sw.js; do
             node --check "$f"
           done
+      - name: Verify shared dividend fetch and reduced chart timers
+        run: node scripts/verify_shared_checks.mjs
       - name: Verify detail-only K line pilot
         run: |
           node --check detail-candles-pilot.js

@@ -37,16 +37,31 @@
   }
   function first(obj,keys){for(const k of keys){if(obj?.[k]!=null&&String(obj[k]).trim()!=='')return obj[k];}return null;}
 
+  // Both ETF and corporate event readers share one verified file and one pending request.
+  // Only explicit dividend refresh invalidates the cache; fallback sources stay independent.
+  let officialDividendRows=null,officialDividendPending=null;
+  async function loadSharedOfficialDividendRows(){
+    if(officialDividendRows?.length)return officialDividendRows;
+    if(officialDividendPending)return officialDividendPending;
+    const pending=(async()=>{
+      const r=await fetch(`./data/dividends.json?ts=${Date.now()}`,{cache:'no-store'});
+      if(!r.ok)throw Error('Official dividends HTTP '+r.status);
+      const j=await r.json(),rows=Array.isArray(j?.items)?j.items:[];
+      if(!rows.length)throw Error('Official dividend file has no verified items');
+      officialDividendRows=rows;
+      return rows;
+    })();
+    officialDividendPending=pending;
+    try{return await pending}finally{if(officialDividendPending===pending)officialDividendPending=null}
+  }
+
   async function loadEtfRows(){
     if(etfCache.loaded&&etfCache.rows.length)return etfCache.rows;
     if(etfCache.loading)return etfCache.loading;
     etfCache.loading=(async()=>{
       try{
-        const r=await fetch(`./data/dividends.json?ts=${Date.now()}`,{cache:'no-store'});
-        if(r.ok){
-          const j=await r.json(),rows=Array.isArray(j?.items)?j.items:[];
-          if(rows.length){etfCache.rows=rows;etfCache.loaded=true;return rows;}
-        }
+        const rows=await loadSharedOfficialDividendRows();
+        if(rows.length){etfCache.rows=rows;etfCache.loaded=true;return rows;}
       }catch{}
       try{
         const end=new Date(),start=new Date(end);start.setFullYear(start.getFullYear()-1);
@@ -70,11 +85,8 @@
     eventCache.loading=(async()=>{
       // v070: 正式資料優先讀本站由 GitHub 端預先整理的官方資料，避免手機跨網域失敗。
       try{
-        const r=await fetch(`./data/dividends.json?ts=${Date.now()}`,{cache:'no-store'});
-        if(r.ok){
-          const j=await r.json(),rows=Array.isArray(j?.items)?j.items:[];
-          if(rows.length){eventCache.rows=rows;eventCache.loaded=true;return rows;}
-        }
+        const rows=await loadSharedOfficialDividendRows();
+        if(rows.length){eventCache.rows=rows;eventCache.loaded=true;return rows;}
       }catch{}
       const [twsePre,tpexPre,tpexDaily,twseDist]=await Promise.allSettled([
         jsonPublic('https://openapi.twse.com.tw/v1/exchangeReport/TWT48U_ALL',7000),
@@ -254,9 +266,9 @@
   };
   let dividendRefreshBusy=false;
   window.__TW_DIVIDEND_REFRESH__=async()=>{
-    etfCache.loaded=false;eventCache.loaded=false;
     if(dividendRefreshBusy||!active||document.visibilityState==='hidden'||!document.getElementById('sheet')?.classList.contains('show'))return;
     dividendRefreshBusy=true;
+    officialDividendRows=null;etfCache.loaded=false;eventCache.loaded=false;
     try{await renderDividendDetail(String(active));window.__TW_UPDATE_HEALTH__?.('配股配息',true)}
     catch{window.__TW_UPDATE_HEALTH__?.('配股配息',false)}finally{dividendRefreshBusy=false}
   };
